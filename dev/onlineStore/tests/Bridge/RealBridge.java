@@ -1,10 +1,7 @@
 package Bridge;
 
-import AcceptenceTests.StoreTests.StoreEmployeeRequests;
-import DomainLayer.Facade;
-import DomainLayer.Response;
-//TODO: IMPLEMENT BRIDGE AND DO IT.
+//TODO: IMPLEMENT BRIDGE AND DO IT. DO IT ALL.
 public class RealBridge {
-    Facade facade=Facade.getInstance();
+   // Facade facade=Facade.getInstance();
     //TODO
 }
