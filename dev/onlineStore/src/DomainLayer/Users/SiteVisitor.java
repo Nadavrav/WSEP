@@ -1,5 +1,7 @@
 package DomainLayer.Users;
 
+import DomainLayer.Stores.StoreProduct;
+
 public class SiteVisitor {
     private Cart cart;
     private int visitorId;
@@ -23,5 +25,13 @@ public class SiteVisitor {
 
     public void setVisitorId(int visitorId) {
         this.visitorId = visitorId;
+    }
+
+    public void addProductToCart(int storeId, StoreProduct product) {
+        cart.addProductToCart(storeId,product);
+    }
+
+    public String cartToString() {
+        return cart.cartToString();
     }
 }

@@ -1,17 +1,38 @@
 package DomainLayer;
 
+import DomainLayer.Stores.Store;
+import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Users.Admin;
 import DomainLayer.Users.RegisteredUser;
 import DomainLayer.Users.SiteVisitor;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Facade {
+    private  static  Facade instanceFacade =null;
     private static AtomicInteger VisitorID_GENERATOR = new AtomicInteger(1);
-    LinkedList<AtomicInteger> FreeVisitorID;
-    Map<Integer,SiteVisitor> onlineList;//online
-    Map<String, RegisteredUser> registeredUserList;
+    private LinkedList<AtomicInteger> FreeVisitorID;
+    private Map<Integer,SiteVisitor> onlineList;//online
+    private Map<String, RegisteredUser> registeredUserList;
+    private Map<Integer,Store> storesList;
+
+    private Facade(){
+        FreeVisitorID = new LinkedList<>();
+        onlineList = new HashMap<>();
+        registeredUserList = new HashMap<>();
+        storesList = new HashMap<>();
+    }
+    public static synchronized Facade getInstance(){
+        if(instanceFacade==null){
+            instanceFacade= new Facade();
+        }
+        return instanceFacade;
+    }
+
+
 
 
 
@@ -84,7 +105,54 @@ public class Facade {
         return new Response<>(visitorId);
 
     }
+    public Response<?> addProductToCart(String productId,int visitorId){//2.3
+        SiteVisitor user= onlineList.get(visitorId);
+        if(user==null){
+            return new Response<>("Invalid Visitor ID",true);
+        }
+        if(!isValidProductId(productId)){
+            return new Response<>("Invalid product ID",true);
+        }
+        int storeId= getStoreIdByProductId(productId);
+        Store store = storesList.get(storeId);
+        if(store==null){
+            return new Response<>("Invalid product ID",true);
+        }
+        StoreProduct product =store.getProductByID(productId);//TO-DO(majd)
+        if(product==null){
+            return new Response<>("Invalid product ID",true);
+        }
+        user.addProductToCart(storeId,product);
+        return new Response<>("success",false);
+    }
+    public Response<?> getProductsInMyCart(int visitorId){//2.4
+        SiteVisitor user= onlineList.get(visitorId);
+        if(user==null){
+            return new Response<>("Invalid Visitor ID",true);
+        }
+       return new Response<>(user.cartToString());
+    }
 
+    private int getStoreIdByProductId(String productId) {
+        int index = productId.indexOf('-');
+        String storeId= productId.substring(0,index);
+        return Integer.parseInt(storeId);
+
+    }
+    private boolean isValidProductId(String productId) {
+        int index = productId.indexOf('-');
+        if(index<1 || index>= productId.length())
+            return false;
+        return checkIfNumber(productId.substring(0,index)) && checkIfNumber(productId.substring(index,productId.length()));
+    }
+    private boolean checkIfNumber(String s){
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)>'9'||s.charAt(i)< '0'){
+                return false;
+            }
+        }
+        return true;
+    }
 
     private Response<?> isValidPassword(String password) {
         if(password.length()<8){
