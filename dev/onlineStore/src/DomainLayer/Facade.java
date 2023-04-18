@@ -2,14 +2,15 @@ package DomainLayer;
 
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
-import DomainLayer.Users.Admin;
-import DomainLayer.Users.RegisteredUser;
-import DomainLayer.Users.SiteVisitor;
+import DomainLayer.Users.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
+import static DomainLayer.Stores.StoreProduct.isValidProductId;
 
 public class Facade {
     private  static  Facade instanceFacade =null;
@@ -18,12 +19,14 @@ public class Facade {
     private Map<Integer,SiteVisitor> onlineList;//online
     private Map<String, RegisteredUser> registeredUserList;
     private Map<Integer,Store> storesList;
+    private Map<String,Map<Integer, Employment>> employmentList;//
 
     private Facade(){
         FreeVisitorID = new LinkedList<>();
         onlineList = new HashMap<>();
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
+        employmentList = new HashMap<>();
     }
     public static synchronized Facade getInstance(){
         if(instanceFacade==null){
@@ -72,17 +75,15 @@ public class Facade {
     }
     public Response<?> login(int visitorId, String userName, String password){//1.4
         RegisteredUser user=registeredUserList.get(userName);
-        if(onlineList.get(visitorId)==null){
+        if(onlineList.get(visitorId)==null){//check if the user is entered to the system
             return new Response<>("Invalid Visitor ID",true);
         }
-        if(user==null){
+        if(user==null){//check if he has account
             return new Response<>("UserName not Found",true);
         }
-        if(!(user.getPassword().equals(password))){
-            return new Response<>("wrong password",true);
-        }
-        if(user.getVisitorId()!=0){//visitorId =0 mean the user is logout
-            return new Response<>("this user is already login",true);
+        Response<?> response=user.login(password);
+        if(response.isError){// try to login
+            return response;
         }
         //
         user.setVisitorId(visitorId);// online
@@ -106,7 +107,7 @@ public class Facade {
 
     }
     public Response<?> addProductToCart(String productId,int visitorId){//2.3
-        SiteVisitor user= onlineList.get(visitorId);
+        SiteVisitor user = onlineList.get(visitorId);
         if(user==null){
             return new Response<>("Invalid Visitor ID",true);
         }
@@ -132,27 +133,75 @@ public class Facade {
         }
        return new Response<>(user.cartToString());
     }
-
-    private int getStoreIdByProductId(String productId) {
-        int index = productId.indexOf('-');
-        String storeId= productId.substring(0,index);
-        return Integer.parseInt(storeId);
-
-    }
-    private boolean isValidProductId(String productId) {
-        int index = productId.indexOf('-');
-        if(index<1 || index>= productId.length())
-            return false;
-        return checkIfNumber(productId.substring(0,index)) && checkIfNumber(productId.substring(index,productId.length()));
-    }
-    private boolean checkIfNumber(String s){
-        for(int i=0;i<s.length();i++){
-            if(s.charAt(i)>'9'||s.charAt(i)< '0'){
-                return false;
-            }
+    public Response<?> appointNewStoreOwner(int appointerId,String appointedUserName,int storeId){//4.4
+        //check appointerId and registerd user
+        SiteVisitor appointer = onlineList.get(appointerId);
+        if(appointer==null || ! (appointer  instanceof RegisteredUser)){
+            return new Response<>("inValid appointer Id",true);
         }
-        return true;
+        // check if store id exist
+        Store store=storesList.get(storeId);
+        if(store==null){
+            return new Response<>("inValid store Id",true);
+        }
+        // check appointer is owner of storeId
+        Employment appointerEmployment =null;
+        try{
+            appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);//check this
+        }catch (Exception e){
+            return new Response<>("the appointer is not owner of store id",true);
+        }
+
+        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
+            return new Response<>("the appointer is not owner of store id",true);
+        }
+        // check if appointedUserName is registered
+        RegisteredUser appointed = registeredUserList.get(appointedUserName);
+        if(appointed==null){
+            return new Response<>("inValid appointed UserName",true);
+        }
+        // check if appointedUserName has appointment with storeId as storeOwner
+        Employment appointedEmployment=null;
+        try{
+            appointedEmployment = employmentList.get(appointedUserName).get(storeId);//check this
+        }catch (Exception e){
+
+        }
+
+        if(appointedEmployment!=null && appointedEmployment.checkIfOwner()){
+            return new Response<>("appointedUserName is already Owner of stor Id",true);
+        }
+        //add appointedUserName as store owner
+        appointedEmployment = new Employment((RegisteredUser) appointer,appointed,store,Role.StoreOwner);
+        if(employmentList.get(appointedUserName)== null) {
+            Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+            employmentList.put(appointedUserName, newEmploymentMap);
+        }
+        employmentList.get(appointedUserName).put(storeId,appointedEmployment);
+        return  new Response<>("success");
     }
+
+
+//    private int getStoreIdByProductId(String productId) {
+//        int index = productId.indexOf('-');
+//        String storeId= productId.substring(0,index);
+//        return Integer.parseInt(storeId);
+//
+//    }
+//    private boolean isValidProductId(String productId) {
+//        int index = productId.indexOf('-');
+//        if(index<1 || index>= productId.length())
+//            return false;
+//        return checkIfNumber(productId.substring(0,index)) && checkIfNumber(productId.substring(index,productId.length()));
+//    }
+//    private boolean checkIfNumber(String s){
+//        for(int i=0;i<s.length();i++){
+//            if(s.charAt(i)>'9'||s.charAt(i)< '0'){
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
 
     private Response<?> isValidPassword(String password) {
         if(password.length()<8){
