@@ -169,7 +169,7 @@ public class Facade {
         }
 
         if(appointedEmployment!=null && appointedEmployment.checkIfOwner()){
-            return new Response<>("appointedUserName is already Owner of stor Id",true);
+            return new Response<>("appointedUserName is already Owner of store Id",true);
         }
         //add appointedUserName as store owner
         appointedEmployment = new Employment((RegisteredUser) appointer,appointed,store,Role.StoreOwner);
@@ -181,7 +181,53 @@ public class Facade {
         return  new Response<>("success");
     }
 
+    public Response<?> appointNewStoreManager(int appointerId,String appointedUserName,int storeId){//4.6
+        //check if appointerId is logged in and registered to system
+        SiteVisitor appointer = onlineList.get(appointerId);
+        if(appointer == null || ! (appointer  instanceof RegisteredUser)){
+            return new Response<>("invalid appointer Id",true);
+        }
+        // check if store id exist
+        Store store=storesList.get(storeId);
+        if(store==null){
+            return new Response<>("inValid store Id",true);
+        }
+        // check if appointer is owner (or founder) of storeId
+        Employment appointerEmployment =null;
+        try{
+            appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+        }catch (Exception e){
+            return new Response<>("the appointer is not owner of store id",true);
+        }
 
+        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
+            return new Response<>("the appointer is not owner of store id",true);
+        }
+        // check if appointedUserName is registered to system
+        RegisteredUser appointed = registeredUserList.get(appointedUserName);
+        if(appointed==null){
+            return new Response<>("inValid appointed UserName",true);
+        }
+        // check if appointedUserName has appointment with storeId as storeOwner or as storeManager
+        Employment appointedEmployment=null;
+        try{
+            appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+        }catch (Exception e){
+
+        }
+
+        if(appointedEmployment!=null && (appointedEmployment.checkIfOwner() || appointedEmployment.checkIfManager())){
+            return new Response<>("appointedUserName is already owner or manager of store Id",true);
+        }
+        //add appointedUserName as store manager
+        appointedEmployment = new Employment((RegisteredUser) appointer,appointed,store,Role.StoreManager);
+        if(employmentList.get(appointedUserName)== null) {
+            Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+            employmentList.put(appointedUserName, newEmploymentMap);
+        }
+        employmentList.get(appointedUserName).put(storeId,appointedEmployment);
+        return new Response<>("success");
+    }
 //    private int getStoreIdByProductId(String productId) {
 //        int index = productId.indexOf('-');
 //        String storeId= productId.substring(0,index);
