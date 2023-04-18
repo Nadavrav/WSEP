@@ -17,10 +17,8 @@ public class Employment {
         this.store=store;
         this.role=role;
         permissions = new LinkedList<>();
-        if(role == Role.StoreFounder){
 
-        }
-        else if(role == Role.StoreOwner){
+        if(role == Role.StoreOwner){
 
         }
         else if(role == Role.StoreManager){
@@ -28,6 +26,7 @@ public class Employment {
             permissions.add(Permission.CanSeePurchaseHistory);
         }
     }
+
     public RegisteredUser getAppointer() {
         return appointer;
     }
