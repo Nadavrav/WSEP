@@ -126,6 +126,7 @@ public class Store {
         Rate = rate;
     }
 
+
     public void SetRateMap(RegisteredUser registeredUser,Rating rating){
        RateMap.put(registeredUser,rating);
     }

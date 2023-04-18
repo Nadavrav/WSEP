@@ -256,6 +256,7 @@ public class Facade {
         return new Response<>("Just the owner can Close the Store ", true);
     }
 
+
     // ניהול מלאי 4.1
     public Response<?> AddProduct(String UserId, int StoreId, StoreProduct storeProduct) {
         Employment employment = employmentList.get(UserId).get(StoreId);
