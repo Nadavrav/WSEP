@@ -30,7 +30,7 @@ public class StoreProduct {
     }
 
 
-    
+
     public double getRate(){
         double sum =0;
         for (Rating r : RateMap.values()){
