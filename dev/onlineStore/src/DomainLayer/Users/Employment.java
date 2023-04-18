@@ -51,4 +51,13 @@ public class Employment {
     public boolean checkIfManager() {
         return (getRole()== Role.StoreManager);
     }
+
+    public void togglePermission(Permission p){
+        if(permissions.contains(p)){
+            permissions.remove(p);
+        }
+        else{
+            permissions.add(p);
+        }
+    }
 }
