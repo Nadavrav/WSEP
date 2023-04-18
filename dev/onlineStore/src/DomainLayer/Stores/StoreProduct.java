@@ -41,22 +41,6 @@ public class StoreProduct {
     public void SetRateMap(RegisteredUser registeredUser,Rating rating){
         RateMap.put(registeredUser,rating);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void setProductId(String productId) {
         this.productId = productId;
     }

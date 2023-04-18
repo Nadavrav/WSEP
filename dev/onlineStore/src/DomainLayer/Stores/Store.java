@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import DomainLayer.Users.RegisteredUser;
 
 public class Store {
-    public  String Id ;
+    public  int Id ;
     public String Name;
     public Boolean Active;
 
@@ -18,12 +18,13 @@ public class Store {
     public Double Rate ;
 
 
-    public Store(String StoreId,String name )
+    public Store(int StoreId,String name )
     {
         Id=StoreId;
         Name = name;
         History = new History();
         products= new ConcurrentHashMap<>();
+
     }
 
 
@@ -38,8 +39,8 @@ public class Store {
         return Rate;
     }
     //2.1
-    public String getInfo(String StoreID){
-        String s="Store Name is"+ this.Name + "Store Rate is:"+ this.Rate;
+    public String getInfo(){
+        String s="Store Name is"+ this.Name + "Store Rate is:"+ getRate();
         for (StoreProduct i :products.values()) {
             s+= " Product Name is :" + i.getName() + "The Rate is : "+i.getRate()+ "/n";
 
@@ -47,29 +48,24 @@ public class Store {
         return s;
     }
     // 3.2 4.9
-    public void OpenStore(String UserID){
-
+    public void OpenStore(){
            Active = true;
     }
-    public void CloseStore(String UserID){
-
+    public void CloseStore(){
             Active = false;
-
     }
    // history 6.4
-    public LinkedList<Bag> GetStorePurchaseHistory(String userID)
+    public LinkedList<Bag> GetStorePurchaseHistory()
     {
-
             return this.History.ShoppingBags;
-
     }
 
 
 
     // ADD , UPDATE, REMOVE, SEARCH PRODUCT IS DONE ניהול מלאי 4.1
-    public Response<?> AddNewProduct( String productID, String productName, Double price, int initialQuantity, String category, LinkedList<String> keyWords)
+    public Response<?> AddNewProduct( String productID, String productName, Double price, int Quantity, String category, LinkedList<String> keyWords)
     {
-            StoreProduct storeProduct= new StoreProduct(productID,productName,price,category,initialQuantity,keyWords);
+            StoreProduct storeProduct= new StoreProduct(productID,productName,price,category,Quantity,keyWords);
             products.put(productID,storeProduct);
             products.get(productID).Quantity++;
             return new Response<>("Success",false);
@@ -105,9 +101,9 @@ public class Store {
             return new Response<>("product Removed", false);
     }
     //2.2
-    public List<StoreProduct> SearchProduct(String Search)
+    public LinkedList<StoreProduct> SearchProduct(String Search)
     {
-        LinkedList<StoreProduct> searchResults =null;
+        LinkedList<StoreProduct> searchResults=new LinkedList<>();
         if (getActive()) {
              searchResults = new LinkedList<StoreProduct>();
             for (StoreProduct product : this.products.values()) {

@@ -34,4 +34,7 @@ public class Employment {
     public boolean checkIfOwner() {
         return (getRole()== Role.StoreFounder ||  getRole()==Role.StoreOwner);
     }
+    public boolean checkIfStoreManager() {
+        return (getRole()== Role.StoreFounder ||  getRole()==Role.StoreManager);
+    }
 }
