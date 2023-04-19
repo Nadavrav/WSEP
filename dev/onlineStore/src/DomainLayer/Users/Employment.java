@@ -47,6 +47,7 @@ public class Employment {
     public boolean checkIfOwner() {
         return (getRole()== Role.StoreFounder ||  getRole()==Role.StoreOwner);
     }
+
     public boolean checkIfManager() {
         return (getRole()== Role.StoreManager);
     }
@@ -58,5 +59,9 @@ public class Employment {
         else{
             permissions.add(p);
         }
+}
+    public boolean checkIfStoreManager() {
+        return (getRole()== Role.StoreFounder ||  getRole()==Role.StoreManager);
+
     }
 }
