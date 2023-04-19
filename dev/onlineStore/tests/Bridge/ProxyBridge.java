@@ -5,9 +5,15 @@ import DomainLayer.Response;
 import java.util.List;
 
 /**
- * all stubs, to change when service and domain are implemented
+ * all stubs, deprecated when real bridge is implemented
  */
 public class ProxyBridge implements Bridge {
+
+
+    @Override
+    public Response<?> initialize() {
+        return null;
+    }
 
     @Override
     public Response<?> login(String UserName, String Password) {
@@ -15,42 +21,52 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public Response<?> StoreAndProductSearch(int userId, String query) {
+    public Response<?> StoreAndProductSearch(String query) {
         return null;
     }
 
     @Override
-    public Response<?> SearchProduct(int userId, List<?> filters) {
+    public Response<?> SearchProduct(List<?> filters) {
         return null;
     }
 
     @Override
-    public Response<?> OpenNewStore(int userId, String storeName) {
+    public Response<?> OpenNewStore(String storeName) {
         return null;
     }
 
     @Override
-    public Response<?> AddProduct(int userId, String productName, String description) {
+    public Response<?> AddProduct(String productName, String description, int price, int amount) {
         return null;
     }
 
     @Override
-    public Response<?> RemoveProduct(int userId, String productName) {
+    public Response<?> RemoveProduct(String storeName, String productName) {
         return null;
     }
 
     @Override
-    public Response<?> EditProductName(int userId, String OldName, String newName) {
+    public Response<?> EditProductName(String storeName, String OldName, String newName) {
         return null;
     }
 
     @Override
-    public Response<?> EditDescription(int userId, String productName, String newDesc) {
+    public Response<?> EditDescription(String storeName, String productName, String newDesc, int price, int quantity) {
         return null;
     }
 
     @Override
-    public Response<?> PurchaseHistory(int userId, String storeName) {
+    public Response<?> RateProduct(String storeName, String productName, int rating) {
+        return null;
+    }
+
+    @Override
+    public Response<String> UserPurchaseHistory(String storeName) {
+        return null;
+    }
+
+    @Override
+    public Response<String> StorePurchaseHistory() {
         return null;
     }
 }

@@ -1,7 +1,6 @@
 package Bridge;
 
-//TODO: IMPLEMENT BRIDGE AND DO IT. DO IT ALL.
+//TODO: IMPLEMENT BRIDGE AND DO IT.
 public class RealBridge {
-   // Facade facade=Facade.getInstance();
-    //TODO
+
 }
