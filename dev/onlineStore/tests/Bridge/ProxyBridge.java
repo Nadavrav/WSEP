@@ -1,5 +1,6 @@
 package Bridge;
 
+import DomainLayer.Facade;
 import DomainLayer.Response;
 
 import java.util.List;
@@ -9,10 +10,11 @@ import java.util.List;
  */
 public class ProxyBridge implements Bridge {
 
-
+    Facade facade=Facade.getInstance();
     @Override
-    public Response<?> initialize() {
-        return null;
+    public boolean initialize() {
+        Response<?> r=facade.logout(2023);
+        return !facade.logout(2023).isError();
     }
 
     @Override

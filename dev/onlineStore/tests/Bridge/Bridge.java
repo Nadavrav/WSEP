@@ -40,7 +40,7 @@ public interface Bridge {
      * @param description The description of the product to be added
      * @return return corresponding response (fails if a product the same name exists)
      */
-    Response<?> AddProduct(String productName,String description, int price, int amount);
+    Response<?> AddProduct(String storeName,String productName,String description, int price, int amount);
 
     /**
      *
