@@ -10,7 +10,46 @@ public interface Bridge {
      * @return return corresponding response
      */
     Response<?> initialize();
-    Response<?> login(String UserName, String Password);
+    /**
+     * A function to enter the market
+     * @return corresponding response(Should always be success)
+     */
+    Response<?> EnterMarket();
+    /**
+     * A function to exit the market
+     * @return corresponding response(Should always be success)
+     */
+    Response<?> ExitMarket();
+
+    /**
+     * A function to register to the market
+     * @param UserName - The username the user entered
+     * @param Password -  the password the user entered
+     * @return corresponding response(fail/success)
+     */
+    Response<?> Register(String UserName, String Password);
+
+    /**
+     * A function to login into market system
+     * @param UserName - The username of the user you want to log into
+     * @param Password - The password of the user you want to log into
+     * @return corresponding response(fail/success)
+     */
+    Response<?> Login(String UserName, String Password);
+
+    /**
+     * A function to logout of market system
+     * @return corresponding response(fail/success)
+     */
+    Response<?> Logout();
+
+    /**
+     * Function to check if the user is online
+     * @param Username - The name of the user we want to check
+     * @return A response with a value of true/false corresponding to if the user is online
+     */
+    Response<?> IsOnline(String Username);
+
 
     /**
      *
