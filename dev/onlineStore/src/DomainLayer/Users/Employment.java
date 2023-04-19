@@ -11,6 +11,8 @@ public class Employment {
     private Role role;
     private LinkedList<Permission> permissions;
 
+
+
     public Employment (RegisteredUser appointer, RegisteredUser employee, Store store, Role role){
         this.appointer=appointer;
         this.employee=employee;
@@ -64,4 +66,15 @@ public class Employment {
         return (getRole()== Role.StoreFounder ||  getRole()==Role.StoreManager);
 
     }
+    @Override
+    public String toString() {
+        return "Employment{" +
+                "appointer=" + appointer.getUserName() +
+                ", employee=" + employee.getUserName() +
+                ", role=" + role +
+                ", permissions=" + permissions +
+                '}';
+    }
+
+
 }

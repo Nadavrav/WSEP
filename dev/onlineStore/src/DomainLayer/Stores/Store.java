@@ -10,7 +10,6 @@ public class Store {
     public  int Id ;
     public String Name;
     public Boolean Active;
-
     public History History ;
 
     public ConcurrentHashMap <RegisteredUser,Rating> RateMap;
@@ -26,9 +25,6 @@ public class Store {
         products= new ConcurrentHashMap<>();
 
     }
-
-
-
 
     public double getRate(){
         double sum =0;

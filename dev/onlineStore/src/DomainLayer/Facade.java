@@ -141,7 +141,7 @@ public class Facade {
     public Response<?> appointNewStoreOwner(int appointerId, String appointedUserName, int storeId) {//4.4
         //check appointerId and registerd user
         SiteVisitor appointer = onlineList.get(appointerId);
-        if (appointer == null || !(appointer instanceof RegisteredUser)) {
+        if (!(appointer instanceof RegisteredUser)) {
             return new Response<>("inValid appointer Id", true);
         }
         // check if store id exist
@@ -173,7 +173,6 @@ public class Facade {
 
         }
 
-
         if(appointedEmployment!=null && appointedEmployment.checkIfOwner()){
             return new Response<>("appointedUserName is already Owner of store Id",true);
         }
@@ -190,7 +189,7 @@ public class Facade {
     public Response<?> appointNewStoreManager(int appointerId,String appointedUserName,int storeId){//4.6
         //check if appointerId is logged in and registered to system
         SiteVisitor appointer = onlineList.get(appointerId);
-        if(appointer == null || ! (appointer  instanceof RegisteredUser)){
+        if(!(appointer instanceof RegisteredUser)){
             return new Response<>("invalid appointer Id",true);
         }
         // check if store id exist
@@ -234,6 +233,8 @@ public class Facade {
         employmentList.get(appointedUserName).put(storeId,appointedEmployment);
         return new Response<>("success");
     }
+
+
 //    private int getStoreIdByProductId(String productId) {
 //        int index = productId.indexOf('-');
 //        String storeId= productId.substring(0,index);
@@ -273,7 +274,7 @@ public class Facade {
     public Response<?> changeStoreManagerPermission(int visitorID,String username,int storeID,Permission permission){
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorID);
-        if(appointer == null || ! (appointer  instanceof RegisteredUser)){
+        if(!(appointer instanceof RegisteredUser)){
             return new Response<>("invalid visitor Id",true);
         }
 
@@ -316,7 +317,35 @@ public class Facade {
         //Change permission
         appointedEmployment.togglePermission(permission);
         return new Response<>("success");
-}
+    }
+
+    public Response<?> getRolesData(int visitorId,int storeId){//4.11
+        //Check if visitorID is logged in and registered to system
+        SiteVisitor appointer = onlineList.get(visitorId);
+        if(!(appointer instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
+        }
+        //is he storeowner
+
+        try{
+            employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+        }catch (Exception e){
+            return new Response<>("the appointer is not owner of store id",true);
+        }
+        //get employment
+        String output="";
+        for(Map<Integer,Employment> userEmployments : employmentList.values()){
+            if(userEmployments.containsKey(storeId)){
+               output+= userEmployments.get(storeId).toString()+"/n";        //employment.toString
+            }
+        }
+        return new Response<>(output);
+    }
+
+
+
+
+    //----------Store-----------
     // open Store
     public Response<?> OpenStore(String UserId, int StoreId) {
         Employment employment = employmentList.get(UserId).get(StoreId);
