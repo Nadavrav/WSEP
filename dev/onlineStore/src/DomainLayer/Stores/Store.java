@@ -4,22 +4,24 @@ import DomainLayer.Users.Bag;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import DomainLayer.Users.RegisteredUser;
 
 public class Store {
+    private static AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
     public  int Id ;
     public String Name;
     public Boolean Active;
     public History History ;
-
     public ConcurrentHashMap <RegisteredUser,Rating> RateMap;
     public ConcurrentHashMap <String,StoreProduct> products;
     public Double Rate ;
 
 
-    public Store(int StoreId,String name )
+    public Store(String name )
     {
-        Id=StoreId;
+        Id=StoreID_GENERATOR.getAndIncrement();
         Name = name;
         History = new History();
         products= new ConcurrentHashMap<>();
@@ -132,5 +134,9 @@ public class Store {
     }
     public Boolean getActive() {
         return Active;
+    }
+
+    public Integer getID() {
+        return Id;
     }
 }

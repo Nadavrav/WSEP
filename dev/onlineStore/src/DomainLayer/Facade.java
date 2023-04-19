@@ -347,20 +347,26 @@ public class Facade {
 
     //----------Store-----------
     // open Store
-    public Response<?> OpenStore(String UserId, int StoreId) {
-        Employment employment = employmentList.get(UserId).get(StoreId);
-        if (employment == null)
-            return new Response<>("there is no employee with this id ", true);
-        if (employment.checkIfOwner()) {
-            Store store = storesList.get(StoreId);
-            if (store == null) {
-                return new Response<>("there is no store with this id ", true);
-            }
-            store.OpenStore();
-            return new Response<>("the store is open now", false);
+    public Response<?> OpenNewStore(int visitorId,String storeName) {
+        // check if register user
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
         }
+        //open new store ()
+        Store store = new Store(storeName);
+        // add to store list
+        storesList.put(store.getID(),store);
+        //new Employment
+        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreOwner);
+        // andd to employment list
+        if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
+            Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+            employmentList.put(((RegisteredUser) User).getUserName(), newEmploymentMap);
+        }
+        employmentList.get(((RegisteredUser) User).getUserName()).put(store.getID(),employment);
 
-        return new Response<>("Just the owner can open the Store ", true);
+        return new Response<>("success");
     }
 
     //close store
