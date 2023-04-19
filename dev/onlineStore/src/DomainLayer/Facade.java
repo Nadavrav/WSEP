@@ -122,6 +122,9 @@ public class Facade {
         if (store == null) {
             return new Response<>("Invalid product ID", true);
         }
+        if(!store.getActive()){
+            return new Response<>("this is closed Store", true);
+        }
         StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
         if (product == null) {
             return new Response<>("Invalid product ID", true);
@@ -148,6 +151,9 @@ public class Facade {
         Store store = storesList.get(storeId);
         if (store == null) {
             return new Response<>("inValid store Id", true);
+        }
+        if(!store.getActive()){
+            return new Response<>("this is closed Store", true);
         }
         // check appointer is owner of storeId
         Employment appointerEmployment = null;
@@ -196,6 +202,9 @@ public class Facade {
         Store store=storesList.get(storeId);
         if(store==null){
             return new Response<>("inValid store Id",true);
+        }
+        if(!store.getActive()){
+            return new Response<>("this is closed Store", true);
         }
         // check if appointer is owner (or founder) of storeId
         Employment appointerEmployment =null;
@@ -283,6 +292,9 @@ public class Facade {
         if(store==null){
             return new Response<>("invalid store Id",true);
         }
+        if(!store.getActive()){
+            return new Response<>("this is closed Store", true);
+        }
 
         //Check if visitorID is owner of storeID
         Employment appointerEmployment =null;
@@ -325,12 +337,14 @@ public class Facade {
         if(!(appointer instanceof RegisteredUser)){
             return new Response<>("invalid visitor Id",true);
         }
-        //is he storeowner
 
-        try{
-            employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
-        }catch (Exception e){
-            return new Response<>("the appointer is not owner of store id",true);
+        if(!(appointer instanceof Admin)) {
+            //is he storeowner
+            try {
+                employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+            } catch (Exception e) {
+                return new Response<>("the appointer is not owner of store id", true);
+            }
         }
         //get employment
         String output="";
