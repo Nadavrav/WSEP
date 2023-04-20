@@ -383,9 +383,41 @@ public class Facade {
         return new Response<>("success");
     }
 
+    //StoreRate
+    public Response<?> GetStoreRate(int visitorId,int StoreId) {
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
+        }
+        Store store = storesList.get(StoreId);
+        if (store == null) {
+            return new Response<>("there is no store with this id ", true);
+        }
+        return new Response<>(store.getRate());
+    }
+    //ptoductRate
+
+    public Response<?> GetStoreProductRate(int visitorId,int StoreId,String ProductId) {
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
+        }
+        Store store = storesList.get(StoreId);
+        if (store == null) {
+            return new Response<>("there is no store with this id ", true);
+        }
+         Double D =store.getProducts().get(ProductId).getRate(ProductId);
+        return new Response<>(D);
+
+    }
+
     //close store
-    public Response<?> CloseStore(String UserId, int StoreId) {
-        Employment employment = employmentList.get(UserId).get(StoreId);
+    public Response<?> CloseStore(int visitorId, int StoreId) {
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
+        }
+        Employment employment = employmentList.get(visitorId).get(StoreId);
         if (employment == null)
             return new Response<>("there is no employee with this id ", true);
         if (employment.checkIfOwner()) {
@@ -403,8 +435,12 @@ public class Facade {
 
 
     // ניהול מלאי 4.1
-    public Response<?> AddProduct(String UserId, int StoreId, StoreProduct storeProduct) {
-        Employment employment = employmentList.get(UserId).get(StoreId);
+    public Response<?> AddProduct(int visitorId, int StoreId, StoreProduct storeProduct) {
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
+        }
+        Employment employment = employmentList.get(visitorId).get(StoreId);
         if (employment == null)
             return new Response<>("there is no employee with this id ", true);
         if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
@@ -412,15 +448,19 @@ public class Facade {
             if (store == null) {
                 return new Response<>("there is no store with this id ", true);
             }
-            store.AddNewProduct(storeProduct.productId, storeProduct.Name, storeProduct.Price, storeProduct.Quantity, storeProduct.Category, storeProduct.KeyWords);
+            store.AddNewProduct(storeProduct.productId, storeProduct.Name, storeProduct.Price, storeProduct.Quantity, storeProduct.Category, storeProduct.KeyWords,storeProduct.getDesc());
             return new Response<>("the Product is successfully added", false);
         }
 
         return new Response<>("Just the owner can Close the Store ", true);
     }
 
-    public Response<?> RemoveProduct(String UserId, int StoreId, String ProductId) {
-        Employment employment = employmentList.get(UserId).get(StoreId);
+    public Response<?> RemoveProduct(int visitorId, int StoreId, String ProductId) {
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
+        }
+        Employment employment = employmentList.get(visitorId).get(StoreId);
         if (employment == null)
             return new Response<>("there is no employee with this id ", true);
         if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
@@ -435,8 +475,12 @@ public class Facade {
         return new Response<>("Just the owner can Close the Store ", true);
     }
 
-    public Response<?> UpdateStore(String UserId, int StoreId, String productID, String Id, String name, double price, String category, int quantity, LinkedList<String> kws) {
-        Employment employment = employmentList.get(UserId).get(StoreId);
+    public Response<?> UpdateStore(int visitorId, int StoreId, String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) {
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
+        }
+        Employment employment = employmentList.get(visitorId).get(StoreId);
         if (employment == null)
             return new Response<>("there is no employee with this id ", true);
         if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
@@ -444,7 +488,7 @@ public class Facade {
             if (store == null) {
                 return new Response<>("there is no store with this id ", true);
             }
-            store.EditProduct(productID, Id, name, price, category, quantity, kws);
+            store.EditProduct(productID, Id, name, price, category, quantity, kws,desc);
             return new Response<>("the Product is successfully added", false);
         }
 
@@ -452,7 +496,7 @@ public class Facade {
     }
 
     //2.2 search  product
-    public Response<?> SearchProduct(int StoreId, String Pid) {
+    public Response<?> SearchProductByName(int StoreId, String Name) {
         Store store = storesList.get(StoreId);
         if (store == null) {
             return new Response<>("there is no store with this id ", true);
@@ -460,7 +504,29 @@ public class Facade {
         if (!store.getActive()) {
             return new Response<>("the Store is closed now you cant search ", true);
         }
-        LinkedList<StoreProduct> ls = store.SearchProduct(Pid);
+        LinkedList<StoreProduct> ls = store.SearchProductByName(Name);
+        return new Response<>(ls.toString());
+    }
+    public Response<?> SearchProductByCategory(int StoreId, String Category) {
+        Store store = storesList.get(StoreId);
+        if (store == null) {
+            return new Response<>("there is no store with this id ", true);
+        }
+        if (!store.getActive()) {
+            return new Response<>("the Store is closed now you cant search ", true);
+        }
+        LinkedList<StoreProduct> ls = store.SearchProductByCategory(Category);
+        return new Response<>(ls.toString());
+    }
+    public Response<?> SearchProductBykey(int StoreId, String key) {
+        Store store = storesList.get(StoreId);
+        if (store == null) {
+            return new Response<>("there is no store with this id ", true);
+        }
+        if (!store.getActive()) {
+            return new Response<>("the Store is closed now you cant search ", true);
+        }
+        LinkedList<StoreProduct> ls = store.SearchProductByKey(key);
         return new Response<>(ls.toString());
     }
 //2.1
@@ -476,8 +542,12 @@ public class Facade {
     }
 
     //6.4
-    public Response<?> GetIHistoryPurchase(int StoreId, String UserId) {
-        Employment employment = employmentList.get(UserId).get(StoreId);
+    public Response<?> GetIHistoryPurchase(int StoreId, int visitorId) {
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            return new Response<>("invalid visitor Id",true);
+        }
+        Employment employment = employmentList.get(visitorId).get(StoreId);
         LinkedList<Bag> history = null;
         if (employment == null)
             return new Response<>("there is no employee with this id ", true);
@@ -490,4 +560,5 @@ public class Facade {
         }
         return new Response<>(history);
     }
+
 }

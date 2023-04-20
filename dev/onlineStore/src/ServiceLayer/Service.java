@@ -93,14 +93,22 @@ public class Service {
         return facade.RemoveProduct(visitorId, StoreId, ProductId);
     }
 
-    public Response<?> UpdateStore( int StoreId, String productID, String Id, String name, double price, String category, int quantity, LinkedList<String> kws) {
-        return facade.UpdateStore(visitorId, StoreId, productID, Id, name, price, category, quantity, kws);
+    public Response<?> UpdateStore( int StoreId, String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) {
+        return facade.UpdateStore(visitorId, StoreId, productID, Id, name, price, category, quantity, kws,desc);
     }
 
     //2.2 search  product
-    public Response<?> SearchProduct( String Pid) {
-        return facade.SearchProduct(visitorId, Pid);
+    public Response<?> SearchProductByName( String Pid) {
+        return facade.SearchProductByName(visitorId, Pid);
     }
+    public Response<?> SearchProductByCategory( String Pid) {
+        return facade.SearchProductByCategory(visitorId, Pid);
+    }
+
+    public Response<?> SearchProductBykey( String Pid) {
+        return facade.SearchProductBykey(visitorId, Pid);
+    }
+
     //2.1
     public Response<?> GetInformation(int StoreId) {
         return facade.GetInformation(StoreId);

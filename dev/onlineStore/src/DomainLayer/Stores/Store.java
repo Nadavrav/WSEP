@@ -1,6 +1,8 @@
 package DomainLayer.Stores;
 import DomainLayer.Response;
 import DomainLayer.Users.Bag;
+
+import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +16,7 @@ public class Store {
     public String Name;
     public Boolean Active;
     public History History;
-    public ConcurrentHashMap<RegisteredUser, Rating> RateMap;
+    public ConcurrentHashMap<RegisteredUser, Rating> RateMapForStore;
     public ConcurrentHashMap<String, StoreProduct> products;
     public Double Rate;
 
@@ -29,10 +31,13 @@ public class Store {
 
     public double getRate() {
         double sum = 0;
-        for (Rating r : RateMap.values()) {
-            sum = +r.getUserRate();
+        for (Rating r : RateMapForStore.values()) {
+            for (int i =0 ;i<RateMapForStore.size();i++) {
+                RegisteredUser x =RateMapForStore.keys().nextElement();
+                sum = +r.getUserRateForStore(x.getVisitorId());
+            }
         }
-        Rate = sum / RateMap.size();
+        Rate = sum / RateMapForStore.size();
         return Rate;
     }
 
@@ -40,15 +45,10 @@ public class Store {
     public String getInfo() {
         String s = "Store Name is" + this.Name + "Store Rate is:" + getRate();
         for (StoreProduct i : products.values()) {
-            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate() + "/n";
+            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate(i.getProductId()) + "/n";
 
         }
         return s;
-    }
-
-    // 3.2 4.9
-    public void OpenStore() {
-        Active = true;
     }
 
     public void CloseStore() {
@@ -62,14 +62,14 @@ public class Store {
 
 
     // ADD , UPDATE, REMOVE, SEARCH PRODUCT IS DONE ניהול מלאי 4.1
-    public Response<?> AddNewProduct(String productID, String productName, Double price, int Quantity, String category, LinkedList<String> keyWords) {
-        StoreProduct storeProduct = new StoreProduct(productID, productName, price, category, Quantity, keyWords);
+    public Response<?> AddNewProduct(String productID, String productName, Double price, int Quantity, String category,String keyWords,String desc) {
+        StoreProduct storeProduct = new StoreProduct(productID, productName, price, category, Quantity, keyWords,desc);
         products.put(productID, storeProduct);
         products.get(productID).Quantity++;
         return new Response<>("Success", false);
     }
 
-    public Response<Object> EditProduct(String productID, String Id, String name, double price, String category, int quantity, LinkedList<String> kws) {
+    public Response<Object> EditProduct(String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) {
 
         if (products.containsKey(productID)) {
             products.get(productID).setProductId(Id);
@@ -77,6 +77,7 @@ public class Store {
             products.get(productID).setName(name);
             products.get(productID).setQuantity(quantity);
             products.get(productID).setKeyWords(kws);
+            products.get(productID).setDesc(desc);
             return new Response<>("there is no product with this ID to update", false);
 
         } else {
@@ -98,12 +99,40 @@ public class Store {
     }
 
     //2.2
-    public LinkedList<StoreProduct> SearchProduct(String Search) {
+    public LinkedList<StoreProduct> SearchProductByName(String Name) {
         LinkedList<StoreProduct> searchResults = new LinkedList<>();
         if (getActive()) {
             searchResults = new LinkedList<StoreProduct>();
             for (StoreProduct product : this.products.values()) {
-                if (product.Name == Search || product.Category == Search) {
+                if (product.Name == Name) {
+                    if (CheckProduct(product)) {
+                        searchResults.add(product);
+                    }
+                }
+            }
+        }
+        return searchResults;
+    }
+    public LinkedList<StoreProduct> SearchProductByCategory(String category) {
+        LinkedList<StoreProduct> searchResults = new LinkedList<>();
+        if (getActive()) {
+            searchResults = new LinkedList<StoreProduct>();
+            for (StoreProduct product : this.products.values()) {
+                if (product.Category == category) {
+                    if (CheckProduct(product)) {
+                        searchResults.add(product);
+                    }
+                }
+            }
+        }
+        return searchResults;
+    }
+    public LinkedList<StoreProduct> SearchProductByKey(String key) {
+        LinkedList<StoreProduct> searchResults = new LinkedList<>();
+        if (getActive()) {
+            searchResults = new LinkedList<StoreProduct>();
+            for (StoreProduct product : this.products.values()) {
+                if (product.Name.contains(key)|| product.Category.contains(key)) {
                     if (CheckProduct(product)) {
                         searchResults.add(product);
                     }
@@ -125,9 +154,7 @@ public class Store {
     }
 
 
-    public void SetRateMap(RegisteredUser registeredUser, Rating rating) {
-        RateMap.put(registeredUser, rating);
-    }
+
 
     public StoreProduct getProductByID(String productId) {
         return products.get(productId);
@@ -168,15 +195,6 @@ public class Store {
     public void setHistory(DomainLayer.Stores.History history) {
         History = history;
     }
-
-    public ConcurrentHashMap<RegisteredUser, Rating> getRateMap() {
-        return RateMap;
-    }
-
-    public void setRateMap(ConcurrentHashMap<RegisteredUser, Rating> rateMap) {
-        RateMap = rateMap;
-    }
-
     public ConcurrentHashMap<String, StoreProduct> getProducts() {
         return products;
     }

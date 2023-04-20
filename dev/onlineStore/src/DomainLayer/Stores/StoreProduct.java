@@ -1,10 +1,11 @@
 package DomainLayer.Stores;
 import DomainLayer.Users.RegisteredUser;
 
-import java.util.LinkedList;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StoreProduct {
+
 
 
 
@@ -13,26 +14,41 @@ public class StoreProduct {
     public Double Price ;
     public int Quantity;
     public String Category;
-    public LinkedList<String> KeyWords ;
+    public String KeyWords ;
+    public  String Desc;
 
-    public ConcurrentHashMap<RegisteredUser,Rating> RateMap;
+
+
+    public Map<RegisteredUser, Map<String,Rating>> RateMap;
     public Double Rate ;
     public int NumberOfRates ;
 
-    public StoreProduct(String Id ,String name, double price, String category, int quantity, LinkedList<String> kws)
+    public StoreProduct(String Id ,String name, double price, String category, int quantity, String kws,String desc)
     {
         productId = Id;
         Name = name;
         Price = price;
         Category = category;
         Quantity = quantity;
-        KeyWords = kws == null ? new LinkedList<String>() : kws;
+        KeyWords = kws ;
+        Desc=desc;
+        RateMap=new HashMap<>();
+    }
+    public StoreProduct(String Id ,String name, double price, int quantity, String kws,String desc)
+    {
+        productId = Id;
+        Name = name;
+        Price = price;
+        Desc=desc;
+        Quantity = quantity;
+        KeyWords = kws ;
+        RateMap=new HashMap<>();
     }
 
-    public double getRate(){
+    public double getRate(String productId){
         double sum =0;
-        for (Rating r : RateMap.values()){
-            sum =+ r.getUserRate();
+        for (RegisteredUser r : RateMap.keySet()){
+          sum +=  RateMap.get(r).get(productId).getUserRateForProduct(r.getVisitorId());
         }
         Rate =  sum / RateMap.size();
         return Rate;
@@ -59,9 +75,7 @@ public class StoreProduct {
         return true;
     }
 
-    public void SetRateMap(RegisteredUser registeredUser,Rating rating){
-        RateMap.put(registeredUser,rating);
-    }
+
     public void setProductId(String productId) {
         this.productId = productId;
     }
@@ -75,14 +89,29 @@ public class StoreProduct {
     public void setCategory(String category) {
         Category = category;
     }
-    public void setKeyWords(LinkedList<String> keyWords) {
+    public void setKeyWords(String keyWords) {
         KeyWords = keyWords;
     }
     public String getName() {
         return Name;
     }
-
+    public String getDesc() {
+        return Desc;
+    }
     public String getId() {
         return productId;
+    }
+    public void setDesc(String desc) {
+        Desc = desc;
+    }
+    public String getProductId() {
+        return productId;
+    }
+    public Map<RegisteredUser, Map<String, Rating>> getRateMap() {
+        return RateMap;
+    }
+
+    public void setRateMap(Map<RegisteredUser, Map<String, Rating>> rateMap) {
+        RateMap = rateMap;
     }
 }
