@@ -1,5 +1,6 @@
 package Bridge;
 
+import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
 
 import java.util.List;
@@ -181,4 +182,52 @@ public interface Bridge {
      */
     List<String> StorePurchaseHistory();
 
+    /**
+     * A function to add a product to cart
+     * @param productId - The product id number
+     * @return true is done successfully, false otherwise
+     */
+    boolean addToCart(String productId);
+    /**
+     * A function to remove a product to cart
+     * @param productId - The product id number
+     * @return true is done successfully, false otherwise
+     */
+    boolean removeFromCart(String productId);
+
+    /**
+     * Function to open a user's cart
+     * @return A string list of id's of the items in the user's cart
+     */
+    Response<String[]> OpenCart();
+
+    /**
+     * A function to change the quantity of an item in a user's cart
+     * @param productId - the id of the item whose quantity we want to change
+     * @param newQuantity - the new amount of the item
+     * @return true is done successfully, false otherwise
+     */
+    boolean CartChangeItemQuantity(String productId,int newQuantity);
+
+    /**
+     * A function to purchase the contents of the cart
+     * @param credit - the credit card
+     * @return true is done successfully, false otherwise
+     */
+    boolean PurchaseCart(CreditCardProxy credit);
+
+    /**
+     * A function to get a requested item quantity
+     * @param productId - the id of the item
+     * @return the quantity of the item if successful, -1 otherwise
+     */
+    int GetItemQuantity(String productId);
+
+    /**
+     * A function to get the info on an employee
+     * @param EmployeeUserName - the employee username
+     * @param StoreName - the store the employee is from
+     * @return a string array of the employee data(UserName,Etc)
+     */
+    Response<String[]> GetEmployeeInfo(String EmployeeUserName,String StoreName);
 }
