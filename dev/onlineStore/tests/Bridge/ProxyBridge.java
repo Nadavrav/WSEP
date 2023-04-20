@@ -13,53 +13,77 @@ public class ProxyBridge implements Bridge {
     Facade facade=Facade.getInstance();
     @Override
     public boolean initialize() {
-        Response<?> r=facade.logout(2023);
-        return !facade.logout(2023).isError();
+       return true;
     }
 
     @Override
-    public Response<?> login(String UserName, String Password) {
-        return null;
+    public boolean EnterMarket() {
+        return true;
     }
 
     @Override
-    public Response<?> StoreAndProductSearch(String query) {
-        return null;
+    public boolean ExitMarket() {
+        return true;
     }
 
     @Override
-    public Response<?> SearchProduct(List<?> filters) {
-        return null;
+    public boolean Register(String UserName, String Password) {
+        return true;
     }
 
     @Override
-    public Response<?> OpenNewStore(String storeName) {
-        return null;
+    public boolean Login(String UserName, String Password) {
+        return true;
     }
 
     @Override
-    public Response<?> AddProduct(String productName, String description, int price, int amount) {
-        return null;
+    public boolean Logout() {
+        return true;
     }
 
     @Override
-    public Response<?> RemoveProduct(String storeName, String productName) {
-        return null;
+    public boolean IsOnline(String Username) {
+        return true;
     }
 
     @Override
-    public Response<?> EditProductName(String storeName, String OldName, String newName) {
-        return null;
+    public boolean StoreAndProductSearch(String query) {
+        return true;
     }
 
     @Override
-    public Response<?> EditDescription(String storeName, String productName, String newDesc, int price, int quantity) {
-        return null;
+    public boolean SearchProduct(List<?> filters) {
+        return true;
     }
 
     @Override
-    public Response<?> RateProduct(String storeName, String productName, int rating) {
-        return null;
+    public boolean OpenNewStore(String storeName) {
+        return true;
+    }
+
+    @Override
+    public boolean AddProduct(String storeName, String productName, String description, int price, int amount) {
+        return true;
+    }
+
+    @Override
+    public boolean RemoveProduct(String storeName, String productName) {
+        return true;
+    }
+
+    @Override
+    public boolean EditProductName(String storeName, String OldName, String newName) {
+        return true;
+    }
+
+    @Override
+    public boolean EditDescription(String storeName, String productName, String newDesc, int price, int quantity) {
+        return true;
+    }
+
+    @Override
+    public boolean RateProduct(String storeName, String productName, int rating) {
+        return true;
     }
 
     @Override
