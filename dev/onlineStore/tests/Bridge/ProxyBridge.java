@@ -1,5 +1,6 @@
 package Bridge;
 
+import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Facade;
 import DomainLayer.Response;
 
@@ -94,5 +95,51 @@ public class ProxyBridge implements Bridge {
     @Override
     public Response<String> StorePurchaseHistory() {
         return null;
+    }
+
+    @Override
+    public boolean addToCart(String productId) {
+        return false;
+    }
+
+    @Override
+    public boolean removeFromCart(String productId) {
+        return false;
+    }
+
+    @Override
+    public Response<String[]> OpenCart() {
+        String [] arr = {};
+        Response<String[]> r = new Response<>(arr);
+        return r;
+    }
+
+    @Override
+    public boolean CartChangeItemQuantity(String productId, int newQuantity) {
+        return false;
+    }
+
+    @Override
+    public boolean PurchaseCart(CreditCardProxy credit) {
+        return false;
+    }
+
+    @Override
+    public int GetItemQuantity(String productId) {
+        return 0;
+    }
+
+    @Override
+    public Response<String[]> GetEmployeeInfo(String EmployeeUserName, String StoreName) {
+        String [] arr = {};
+        Response<String[]> r = new Response<>(arr);
+        return r;
+    }
+
+    @Override
+    public Response<String[]> GetPurchaseHistory(String StoreName) {
+        String [] arr = {};
+        Response<String[]> r = new Response<>(arr);
+        return r;
     }
 }
