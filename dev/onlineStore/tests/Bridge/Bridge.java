@@ -227,7 +227,14 @@ public interface Bridge {
      * A function to get the info on an employee
      * @param EmployeeUserName - the employee username
      * @param StoreName - the store the employee is from
-     * @return a string array of the employee data(UserName,Etc)
+     * @return a response with a string array of the employee data(UserName,Etc) as its value
      */
     Response<String[]> GetEmployeeInfo(String EmployeeUserName,String StoreName);
+
+    /**
+     * A function to get the purchase history of the store(can only do this if you are the store owner or the admin or have perms)
+     * @param StoreName - the store name
+     * @return a response with a string array of the purchase history as its value
+     */
+    Response<String[]> GetPurchaseHistory(String StoreName);
 }
