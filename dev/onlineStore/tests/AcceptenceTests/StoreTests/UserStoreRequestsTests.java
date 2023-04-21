@@ -334,9 +334,4 @@ public class UserStoreRequestsTests {
         assertTrue(query.contains("Bacon"));
         assertTrue(query.contains("Grill Pack"));
     }
-    @Order(20)
-    @Test
-    public void StoreHistory(){
-        //note: no one is logged in for this test, and no one should be.
-    }
 }
