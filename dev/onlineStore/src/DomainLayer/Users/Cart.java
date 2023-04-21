@@ -33,4 +33,7 @@ public class Cart {
         }
         return s;
     }
+    public Map<Integer,Bag>  getBag(){
+        return bagList;
+    }
 }
