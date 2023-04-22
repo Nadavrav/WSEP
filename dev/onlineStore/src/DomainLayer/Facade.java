@@ -356,20 +356,46 @@ public class Facade {
         return new Response<>(output);
     }
 
-    public Response<?> purchaseCart(int visitorID){
+    public Response<?> purchaseCart(int visitorID,int visitorCard){
         
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorId);
         if (visitor == null) {
             return new Response<>("Invalid Visitor ID", true);
         }
+                
+        LinkedList<String> failedPurchases = new LinkedList<>();
+      
+        for(Bag b : visitor.getCart()){
+           
+            //Calculate amount
+            int amount = b.calculateTotalAmount();
+           
+            //Check if possible to create a supply
+            if(!upplier.isValidAddress()){
+                failedPurchases.add(b.getStore().getName());
+            }
+            
+            //Create a transaction for the store
+            if(!paymentProvider.applyTransaction(amount,visitorCard)){
+                failedPurchases.add(b.getStore().getName());
+            }
+            
+            //Create a request to supply bag's product to customer
+            if(!supplier.supplyProducts()){
+                failedPurchases.add(b.getStore().getName());
+            }
+         
+       }
         
-        //Redirect function to visitor's cart function
-        if(visitor.purchaseCart()){
-            return new Response<>("Succeed to purchase cart's content", true);
-        }
+       if(ailedPurchases.isEmpty()){
+           return new Response<>("success");
+       }
         
-        return new Response<>("Transaction failed", true);
+        return new Response<>("Some purchases failed", true, failedPurchases);
+
+    
+         
         
     }
 
