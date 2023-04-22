@@ -29,6 +29,16 @@ public class Employment {
         }
     }
 
+    public Employment ( RegisteredUser employee, Store store, Role role){
+        this.appointer=null;
+        this.employee=employee;
+        this.store=store;
+        this.role=role;
+        permissions = null;
+
+    }
+
+
     public RegisteredUser getAppointer() {
         return appointer;
     }
