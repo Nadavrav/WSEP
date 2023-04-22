@@ -95,6 +95,9 @@ public class StoreProduct {
     public String getName() {
         return Name;
     }
+    public Double getPrice() {
+        return Price;
+    }
     public String getDesc() {
         return Desc;
     }
