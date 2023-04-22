@@ -372,8 +372,8 @@ public class Facade {
             int amount = b.calculateTotalAmount();
            
             //Check if possible to create a supply
-            if(!upplier.isValidAddress()){
-                failedPurchases.add(b.getStore().getName());
+            if(!supplier.isValidAddress()){
+                failedPurchases.add(b.getStoreName());
             }
             
             //Create a transaction for the store
