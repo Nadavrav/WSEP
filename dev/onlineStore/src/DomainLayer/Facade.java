@@ -356,7 +356,22 @@ public class Facade {
         return new Response<>(output);
     }
 
-
+    public Response<?> purchaseCart(int visitorID){
+        
+        //Validate visitorID
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if (visitor == null) {
+            return new Response<>("Invalid Visitor ID", true);
+        }
+        
+        //Redirect function to visitor's cart function
+        if(visitor.purchaseCart()){
+            return new Response<>("Succeed to purchase cart's content", true);
+        }
+        
+        return new Response<>("Transaction failed", true);
+        
+    }
 
 
     //----------Store-----------
