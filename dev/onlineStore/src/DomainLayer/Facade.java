@@ -373,17 +373,17 @@ public class Facade {
            
             //Check if possible to create a supply
             if(!supplier.isValidAddress()){
-                failedPurchases.add(b.getStoreName());
+                failedPurchases.add(b.getStoreID());
             }
             
             //Create a transaction for the store
             if(!paymentProvider.applyTransaction(amount,visitorCard)){
-                failedPurchases.add(b.getStore().getName());
+                failedPurchases.add(b.getStoreID());
             }
             
             //Create a request to supply bag's product to customer
             if(!supplier.supplyProducts()){
-                failedPurchases.add(b.getStore().getName());
+                failedPurchases.add(b.getStoreID());
             }
          
        }
