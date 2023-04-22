@@ -62,40 +62,37 @@ public class Store {
 
 
     // ADD , UPDATE, REMOVE, SEARCH PRODUCT IS DONE ניהול מלאי 4.1
-    public Response<?> AddNewProduct(String productID, String productName, Double price, int Quantity, String category,String keyWords,String desc) {
-        StoreProduct storeProduct = new StoreProduct(productID, productName, price, category, Quantity, keyWords,desc);
-        products.put(productID, storeProduct);
-        products.get(productID).Quantity++;
-        return new Response<>("Success", false);
+    public void AddNewProduct( String productName, Double price, int Quantity, String category,String keyWords,String desc) {
+        StoreProduct storeProduct = new StoreProduct(Id, productName, price, category, Quantity, keyWords,desc);
+        products.put(storeProduct.getId(), storeProduct);
+
     }
 
-    public Response<Object> EditProduct(String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) {
+    public void EditProduct(String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) throws Exception{
+
 
         if (products.containsKey(productID)) {
-            products.get(productID).setProductId(Id);
-            products.get(productID).setCategory(category);
-            products.get(productID).setName(name);
-            products.get(productID).setQuantity(quantity);
-            products.get(productID).setKeyWords(kws);
-            products.get(productID).setDesc(desc);
-            return new Response<>("there is no product with this ID to update", false);
+            StoreProduct sp = products.get(productID);
+            sp.setProductId(Id);
+            sp.setCategory(category);
+            sp.setName(name);
+            sp.setQuantity(quantity);
+            sp.setKeyWords(kws);
+            sp.setDesc(desc);
+
 
         } else {
-            return new Response<>("there is no product with this ID to update", true);
+            throw new Exception("there is no product with this ID to update");
         }
 
     }
 
     public Response<Object> RemoveProduct(String productID) {
-        StoreProduct sp = null;
-        if (products.containsKey(productID)) {
-            sp = products.get(productID);
-        } else {
-            return new Response<>("there is no product in our products with this ID", true);
+        if (!products.containsKey(productID)) {
+            return new Response<>("There is no product in our products with this ID", true);
         }
-        products.remove(productID, sp);
-        products.get(productID).Quantity++;
-        return new Response<>("product Removed", false);
+        products.remove(productID);
+        return new Response<>("Product removed", false);
     }
 
     //2.2
@@ -158,7 +155,6 @@ public class Store {
 
     public StoreProduct getProductByID(String productId) {
         return products.get(productId);
-
     }
 
     public Boolean getActive() {
@@ -203,4 +199,6 @@ public class Store {
         this.products = products;
     }
 
+    public void addProduct(StoreProduct product) {
+    }
 }

@@ -2,15 +2,38 @@ package DomainLayer.Users;
 
 import DomainLayer.Response;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class RegisteredUser extends SiteVisitor{
     String userName;
     String password;
 
-    public RegisteredUser(SiteVisitor visitor ,String userName, String password){
+    public RegisteredUser(SiteVisitor visitor ,String userName, String password) throws Exception {
         super(visitor);
+        checkUserName(userName);
+        checkPassword(password);
         this.userName=userName;
         this.password=password;
     }
+
+    private void checkPassword(String password) throws Exception {
+        if(password.length()<8){
+            throw new Exception("the password is too short");
+        }
+        if(password.length()>30){
+            throw new Exception("the password is too long");
+        }
+    }
+
+    private void checkUserName(String userName) throws Exception {
+        if(userName.length()<8){
+            throw new Exception("the userName is too short");
+        }
+        if(userName.length()>30){
+            throw new Exception("the useName is too long");
+        }
+    }
+
     public String getPassword() {
         return password;
     }
@@ -18,14 +41,17 @@ public class RegisteredUser extends SiteVisitor{
         return userName;
     }
 
-    public Response<?> login(String password) {
+    public void login(String password, int visitorId) throws Exception {//1.4
         if (!this.password.equals(password)){
-            return new Response<>("wrong password",true);
+            throw  new Exception("wrong password");
         }
         if( getVisitorId()!=0){//visitorId =0 mean the user is logout
-            return new Response<>("this user is already login",true);
+            throw  new Exception("this user is already login");
         }
-        return new Response<>("success");
-
+        setVisitorId(visitorId);
+    }
+    public void logout(){//3.1
+        setVisitorId(0);
+        FreeVisitorID.add(new AtomicInteger(getVisitorId()));
     }
 }
