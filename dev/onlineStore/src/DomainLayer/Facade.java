@@ -299,6 +299,50 @@ public class Facade {
         return output;
     }
 
+
+    public Response<?> purchaseCart(int visitorID,int visitorCard){
+        
+        //Validate visitorID
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if (visitor == null) {
+            return new Response<>("Invalid Visitor ID", true);
+        }
+                
+        LinkedList<String> failedPurchases = new LinkedList<>();
+      
+        for(Bag b : visitor.getCart()){
+           
+            //Calculate amount
+            int amount = b.calculateTotalAmount();
+           
+            //Check if possible to create a supply
+            if(!supplier.isValidAddress()){
+                failedPurchases.add(b.getStoreID());
+            }
+            
+            //Create a transaction for the store
+            if(!paymentProvider.applyTransaction(amount,visitorCard)){
+                failedPurchases.add(b.getStoreID());
+            }
+            
+            //Create a request to supply bag's product to customer
+            if(!supplier.supplyProducts()){
+                failedPurchases.add(b.getStoreID());
+            }
+         
+       }
+        
+       if(ailedPurchases.isEmpty()){
+           return new Response<>("success");
+       }
+        
+        return new Response<>("Some purchases failed", true, failedPurchases);
+
+    
+         
+        
+    }
+
     //----------Store-----------
     // open Store
     public void OpenNewStore(int visitorId,String storeName) throws Exception {
