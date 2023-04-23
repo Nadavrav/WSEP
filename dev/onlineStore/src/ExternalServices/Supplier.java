@@ -1,5 +1,7 @@
 package ExternalServices;
 
+import java.util.List;
+
 public class Supplier {
   
   public Supplier(){

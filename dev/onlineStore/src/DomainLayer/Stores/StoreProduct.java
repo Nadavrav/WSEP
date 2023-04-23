@@ -7,13 +7,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class StoreProduct {
     private static AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
-    public String productId;
-    public String Name ;
-    public Double Price ;
-    public int Quantity;
-    public String Category;
-    public String KeyWords ;
-    public  String Desc;
+    private String productId;
+    private String Name ;
+    private Double Price ;
+    private int Quantity;
+    private String Category;
+    private  String Description;
 
 
 
@@ -22,15 +21,14 @@ public class StoreProduct {
     public int NumberOfRates ;
 
 
-    public StoreProduct(int storeid,String name, double price, String category, int quantity, String kws,String desc)
+    public StoreProduct(int storeid,String name, double price, String category, int quantity,String desc)
     {
         productId = getNewProductId(storeid);
         Name = name;
         Price = price;
         Category = category;
         Quantity = quantity;
-        KeyWords = kws ;
-        Desc=desc;
+        Description =desc;
         RateMap=new HashMap<>();
     }
 
@@ -83,23 +81,21 @@ public class StoreProduct {
     public void setCategory(String category) {
         Category = category;
     }
-    public void setKeyWords(String keyWords) {
-        KeyWords = keyWords;
-    }
+
     public String getName() {
         return Name;
     }
     public Double getPrice() {
         return Price;
     }
-    public String getDesc() {
-        return Desc;
+    public String getDescription() {
+        return Description;
     }
     public String getId() {
         return productId;
     }
-    public void setDesc(String desc) {
-        Desc = desc;
+    public void setDescription(String desc) {
+        Description = desc;
     }
     public String getProductId() {
         return productId;
@@ -107,8 +103,46 @@ public class StoreProduct {
     public Map<RegisteredUser, Map<String, Rating>> getRateMap() {
         return RateMap;
     }
+    public void setPrice(Double price) {
+        Price = price;
+    }
+
+    public int getQuantity() {
+        return Quantity;
+    }
+
+    public Double getRate() {
+        return Rate;
+    }
+
+    public void setRate(Double rate) {
+        Rate = rate;
+    }
+
+    public int getNumberOfRates() {
+        return NumberOfRates;
+    }
+
+    public void setNumberOfRates(int numberOfRates) {
+        NumberOfRates = numberOfRates;
+    }
 
     public void setRateMap(Map<RegisteredUser, Map<String, Rating>> rateMap) {
         RateMap = rateMap;
+    }
+
+    public void UpdateQuantity(int quantity) {
+        setQuantity(quantity);
+    }
+    public void IncreaseQuantity(int quantity) {
+        setQuantity(quantity+this.Quantity);
+    }
+
+    public void setPrice(double price) {
+        this.Price=price;
+    }
+
+    public String getCategory() {
+        return Category;
     }
 }

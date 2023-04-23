@@ -64,7 +64,7 @@ public class SiteVisitor {
     }
 
     //-----------getter / setter-----------------
-    private Cart getCart() {
+    public Cart getCart() {
         return cart;
     }
 
