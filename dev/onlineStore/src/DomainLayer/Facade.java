@@ -230,7 +230,7 @@ public class Facade {
 
 
 
-    public Employment changeStoreManagerPermission(int visitorID,String username,int storeID,Permission permission) throws Exception {
+    public Employment changeStoreManagerPermission(int visitorID,String username,int storeID,LinkedList<Permission> permissions) throws Exception {
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorID);
         if(!(appointer instanceof RegisteredUser)){
@@ -277,7 +277,10 @@ public class Facade {
         }
 
         //Change permission
-        appointedEmployment.togglePermission(permission);
+        for (Permission permission:permissions ) {
+            appointedEmployment.togglePermission(permission);
+        }
+
         return appointedEmployment;
     }
 
@@ -352,7 +355,7 @@ public class Facade {
 
     //----------Store-----------
     // open Store
-    public void OpenNewStore(int visitorId,String storeName) throws Exception {
+    public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
         // check if register user
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
@@ -370,6 +373,7 @@ public class Facade {
             employmentList.put(((RegisteredUser) User).getUserName(), newEmploymentMap);
         }
         employmentList.get(((RegisteredUser) User).getUserName()).put(store.getID(),employment);
+        return store.getId();
     }
 
     //StoreRate
@@ -384,7 +388,21 @@ public class Facade {
         }
         return store.getRate();
     }
+    //StoreRate
+    public void AddStoreRate(int visitorId,int StoreId,int rate) throws Exception {
+        SiteVisitor User = onlineList.get(visitorId);
+        if(! (User instanceof RegisteredUser)){
+            throw  new Exception("invalid visitor Id");
+        }
+        Store store = storesList.get(StoreId);
+        if (store == null || !store.getActive()) {
+            throw  new Exception("there is no store with this id ");
+        }
+        //if(UserVisitedStore(store,)){
+            store.addRating(((RegisteredUser) User).getUserName(),rate);
+        //}
 
+    }
     //productRate
     public double GetStoreProductRate(int visitorId,String ProductId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
@@ -397,10 +415,11 @@ public class Facade {
             throw  new Exception("there is no product with this id ");
         }
 
-         Double D =store.getProductByID(ProductId).getRate(ProductId);
+         Double D =store.getProductByID(ProductId).getRate();
         return D;
 
     }
+    //addProductrate
 
     //close store
     public void CloseStore(int visitorId, int StoreId) throws Exception {
@@ -455,17 +474,19 @@ public class Facade {
 
     }
 
-    public void RemoveProduct(int visitorId, int StoreId, String ProductId)  throws Exception {
+    public void RemoveProduct(int visitorId, String ProductId)  throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
             throw  new Exception("invalid visitor Id");
         }
+        int StoreId = StoreProduct.getStoreIdByProductId(ProductId);
         Employment employment = null;
         try{
             employment = employmentList.get(visitorId).get(StoreId);
         }catch (Exception e){
             throw  new Exception("this user dont have any store");
         }
+
         if (employment == null)
             throw  new Exception("there is no employee with this id ");
         if (employment.checkIfOwner() || employment.checkIfStoreManager()) {

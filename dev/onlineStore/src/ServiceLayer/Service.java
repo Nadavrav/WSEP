@@ -33,9 +33,9 @@ public class Service {
         return new Response<>(visitorId);
     }
 
-    public Response<?> ExitSiteVisitor(int id) {//1.2
+    public Response<?> ExitSiteVisitor() {//1.2
         try{
-            facade.ExitSiteVisitor(id);
+            facade.ExitSiteVisitor(visitorId);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -127,7 +127,7 @@ public class Service {
 
 
     // ??
-    public Response<?> changeStoreManagerPermission( String username, int storeID, Permission permission){
+    public Response<?> changeStoreManagerPermission( String username, int storeID,LinkedList<Permission> permission){
 
         try{
             facade.changeStoreManagerPermission(visitorId,username,storeID,permission);
@@ -153,7 +153,7 @@ public class Service {
 
     //----------Store-----------
     // open Store
-    public Response<?> OpenStore( int StoreId, String storeName) {
+    public Response<?> OpenStore( String storeName) {
 
         try{
             facade.OpenNewStore(visitorId, storeName);
@@ -189,10 +189,10 @@ public class Service {
         return new Response<>("Success");
     }
 
-    public Response<?> RemoveProduct(int StoreId, String ProductId) {
+    public Response<?> RemoveProduct(String ProductId) {
 
         try{
-            facade.RemoveProduct(visitorId, StoreId, ProductId);
+            facade.RemoveProduct(visitorId, ProductId);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
