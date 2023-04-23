@@ -3,12 +3,10 @@ import DomainLayer.Users.RegisteredUser;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class StoreProduct {
-
-
-
-
+    private static AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
     public String productId;
     public String Name ;
     public Double Price ;
@@ -23,9 +21,10 @@ public class StoreProduct {
     public Double Rate ;
     public int NumberOfRates ;
 
-    public StoreProduct(String Id ,String name, double price, String category, int quantity, String kws,String desc)
+
+    public StoreProduct(int storeid,String name, double price, String category, int quantity, String kws,String desc)
     {
-        productId = Id;
+        productId = getNewProductId(storeid);
         Name = name;
         Price = price;
         Category = category;
@@ -34,16 +33,11 @@ public class StoreProduct {
         Desc=desc;
         RateMap=new HashMap<>();
     }
-    public StoreProduct(String Id ,String name, double price, int quantity, String kws,String desc)
-    {
-        productId = Id;
-        Name = name;
-        Price = price;
-        Desc=desc;
-        Quantity = quantity;
-        KeyWords = kws ;
-        RateMap=new HashMap<>();
+
+    private String getNewProductId(int storeid) {
+        return storeid+"-"+ProductID_GENERATOR.getAndIncrement();
     }
+
 
     public double getRate(String productId){
         double sum =0;
@@ -60,19 +54,19 @@ public class StoreProduct {
         return Integer.parseInt(storeId);
 
     }
-    public static boolean isValidProductId(String productId) {
+    public static void isValidProductId(String productId) throws Exception {
         int index = productId.indexOf('-');
         if(index<1 || index>= productId.length())
-            return false;
-        return checkIfNumber(productId.substring(0,index)) && checkIfNumber(productId.substring(index,productId.length()));
+            throw  new Exception("Invalid product ID");
+        checkIfNumber(productId.substring(0,index));
+        checkIfNumber(productId.substring(index+1));
     }
-    public static boolean checkIfNumber(String s){
+    private static void checkIfNumber(String s) throws Exception {
         for(int i=0;i<s.length();i++){
             if(s.charAt(i)>'9'||s.charAt(i)< '0'){
-                return false;
+                throw  new Exception("Invalid product ID");
             }
         }
-        return true;
     }
 
 

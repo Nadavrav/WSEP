@@ -15,15 +15,13 @@ import static DomainLayer.Stores.StoreProduct.isValidProductId;
 
 public class Facade {
     private static Facade instanceFacade = null;
-    private static AtomicInteger VisitorID_GENERATOR = new AtomicInteger(1);
-    private LinkedList<AtomicInteger> FreeVisitorID;
     private Map<Integer, SiteVisitor> onlineList;//online
     private Map<String, RegisteredUser> registeredUserList;
     private Map<Integer, Store> storesList;
     private Map<String, Map<Integer, Employment>> employmentList;//
 
     private Facade() {
-        FreeVisitorID = new LinkedList<>();
+
         onlineList = new HashMap<>();
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
@@ -37,139 +35,121 @@ public class Facade {
         return instanceFacade;
     }
 
-
-    public Response<Integer> EnterNewSiteVisitor() {//1.1
-        int id = getNewVisitorId();
-        onlineList.put(id, new SiteVisitor(id));
-        return new Response<>(id);
+//------------UserPackege-----------------------
+    public int EnterNewSiteVisitor() throws Exception {//1.1
+        SiteVisitor visitor = new SiteVisitor();
+        onlineList.put(visitor.getVisitorId(), new SiteVisitor());
+        return visitor.getVisitorId();
     }
 
-    public Response<?> ExitSiteVisitor(int id) {//1.2
-        AtomicInteger atomicId = new AtomicInteger(id);
-        FreeVisitorID.add(atomicId);
+    public void ExitSiteVisitor(int id) throws Exception {//1.2
+        SiteVisitor.ExitSiteVisitor(id);
         onlineList.remove(id);
-        return new Response<>("Success", false);
     }
 
-    public Response<?> Register(int visitorId, String userName, String password) {//1.3
+    public void Register(int visitorId, String userName, String password) throws Exception {//1.3
         //Valid visitorID
-        if (onlineList.get(visitorId) == null) {
-            return new Response<>("Invalid Visitor ID", true);
+        if (!SiteVisitor.checkVisitorId(visitorId)) {
+           throw  new Exception("Invalid Visitor ID");
         }
         //unique userName
         if (registeredUserList.get(userName) != null) {
-            return new Response<>("This userName already taken", true);
+            throw  new Exception("This userName already taken");
         }
-        //valid password with more than 8 letters
-        Response<?> e;
-        if ((e = isValidPassword(password)).isError) {
-            return e;
-        }
-
         //get site visitor object
         SiteVisitor visitor = onlineList.get(visitorId);
-
         // create new register user
         registeredUserList.put(userName, new RegisteredUser(visitor, userName, password));
-
-        return new Response<>("Success to register", false);
     }
 
-    public Response<?> login(int visitorId, String userName, String password) {//1.4
+    public void login(int visitorId, String userName, String password) throws Exception {//1.4
         RegisteredUser user = registeredUserList.get(userName);
-        if (onlineList.get(visitorId) == null) {//check if the user is entered to the system
-            return new Response<>("Invalid Visitor ID", true);
+        if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
+            throw  new Exception("Invalid Visitor ID");
         }
         if (user == null) {//check if he has account
-            return new Response<>("UserName not Found", true);
+            throw  new Exception("UserName not Found");
         }
-        Response<?> response = user.login(password);
-        if (response.isError) {// try to login
-            return response;
-        }
-        //
-        user.setVisitorId(visitorId);// online
+         user.login(password,visitorId);
+
         onlineList.replace(visitorId, user);
-        return new Response<>(user.getVisitorId());
     }
 
-    public Response<?> logout(int visitorId) {//3.1
+    public int logout(int visitorId) throws Exception {//3.1
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
-            return new Response<>("Invalid Visitor ID", true);
+            throw  new Exception("Invalid Visitor ID");
         }
         if (!(user instanceof RegisteredUser)) {
-            return new Response<>("not logged in", true);
+            throw  new Exception("not logged in");
         }
         //id=0
-        onlineList.get(visitorId).setVisitorId(0);
+        ((RegisteredUser) user).logout();
         //removefrom online list
-        onlineList.replace(visitorId, new SiteVisitor(visitorId));//RegisteredUser turns into SiteVisitor
-        return new Response<>(visitorId);
-
+        user= new SiteVisitor();
+        onlineList.remove(visitorId);
+        onlineList.replace(user.getVisitorId(),user );//RegisteredUser turns into SiteVisitor
+        return user.getVisitorId();
     }
 
-    public Response<?> addProductToCart(String productId, int visitorId) {//2.3
+    public void addProductToCart(String productId, int visitorId) throws Exception {//2.3
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
-            return new Response<>("Invalid Visitor ID", true);
+            throw  new Exception("Invalid Visitor ID");
         }
-        if (!isValidProductId(productId)) {
-            return new Response<>("Invalid product ID", true);
-        }
+        isValidProductId(productId);
         int storeId = getStoreIdByProductId(productId);
         Store store = storesList.get(storeId);
         if (store == null) {
-            return new Response<>("Invalid product ID", true);
+            throw  new Exception("Invalid product ID");
         }
         if(!store.getActive()){
-            return new Response<>("this is closed Store", true);
+            throw  new Exception("this is closed Store");
         }
         StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
         if (product == null) {
-            return new Response<>("Invalid product ID", true);
+            throw  new Exception("Invalid product ID");
         }
         user.addProductToCart(storeId, product);
-        return new Response<>("success", false);
     }
 
-    public Response<?> getProductsInMyCart(int visitorId) {//2.4
+    public String getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
-            return new Response<>("Invalid Visitor ID", true);
+            throw  new Exception("Invalid Visitor ID");
         }
-        return new Response<>(user.cartToString());
+        return user.cartToString();
     }
 
-    public Response<?> appointNewStoreOwner(int appointerId, String appointedUserName, int storeId) {//4.4
+    public void appointNewStoreOwner(int appointerId, String appointedUserName, int storeId) throws Exception {//4.4
         //check appointerId and registerd user
         SiteVisitor appointer = onlineList.get(appointerId);
         if (!(appointer instanceof RegisteredUser)) {
-            return new Response<>("inValid appointer Id", true);
+            throw  new Exception("inValid appointer Id");
         }
         // check if store id exist
         Store store = storesList.get(storeId);
         if (store == null) {
-            return new Response<>("inValid store Id", true);
+            throw  new Exception("inValid store Id");
         }
         if(!store.getActive()){
-            return new Response<>("this is closed Store", true);
+            throw  new Exception("this is closed Store");
         }
         // check appointer is owner of storeId
         Employment appointerEmployment = null;
         try {
             appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);//check this
         } catch (Exception e) {
-            return new Response<>("the appointer is not owner of store id", true);
+            throw  new Exception("the appointer is not owner of store id");
         }
 
         if (appointerEmployment == null || !appointerEmployment.checkIfOwner()) {
-            return new Response<>("the appointer is not owner of store id", true);
+            throw  new Exception("the appointer is not owner of store id");
         }
         // check if appointedUserName is registered
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
         if (appointed == null) {
-            return new Response<>("inValid appointed UserName", true);
+            throw  new Exception("inValid appointed UserName");
         }
         // check if appointedUserName has appointment with storeId as storeOwner
         Employment appointedEmployment = null;
@@ -178,9 +158,8 @@ public class Facade {
         } catch (Exception e) {
 
         }
-
         if(appointedEmployment!=null && appointedEmployment.checkIfOwner()){
-            return new Response<>("appointedUserName is already Owner of store Id",true);
+            throw  new Exception("appointedUserName is already Owner of store Id");
         }
         //add appointedUserName as store owner
         appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
@@ -189,38 +168,37 @@ public class Facade {
             employmentList.put(appointedUserName, newEmploymentMap);
         }
         employmentList.get(appointedUserName).put(storeId, appointedEmployment);
-        return new Response<>("success");
     }
 
-    public Response<?> appointNewStoreManager(int appointerId,String appointedUserName,int storeId){//4.6
+    public void appointNewStoreManager(int appointerId,String appointedUserName,int storeId) throws Exception {//4.6
         //check if appointerId is logged in and registered to system
         SiteVisitor appointer = onlineList.get(appointerId);
         if(!(appointer instanceof RegisteredUser)){
-            return new Response<>("invalid appointer Id",true);
+            throw  new Exception("invalid appointer Id");
         }
         // check if store id exist
         Store store=storesList.get(storeId);
         if(store==null){
-            return new Response<>("inValid store Id",true);
+            throw  new Exception("inValid store Id");
         }
         if(!store.getActive()){
-            return new Response<>("this is closed Store", true);
+            throw  new Exception("this is closed Store");
         }
         // check if appointer is owner (or founder) of storeId
         Employment appointerEmployment =null;
         try{
             appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
         }catch (Exception e){
-            return new Response<>("the appointer is not owner of store id",true);
+            throw  new Exception("the appointer is not owner of store id");
         }
 
         if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
-            return new Response<>("the appointer is not owner of store id",true);
+            throw  new Exception("the appointer is not owner of store id");
         }
         // check if appointedUserName is registered to system
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
         if(appointed==null){
-            return new Response<>("inValid appointed UserName",true);
+            throw  new Exception("inValid appointed UserName");
         }
         // check if appointedUserName has appointment with storeId as storeOwner or as storeManager
         Employment appointedEmployment=null;
@@ -231,7 +209,7 @@ public class Facade {
         }
 
         if(appointedEmployment!=null && (appointedEmployment.checkIfOwner() || appointedEmployment.checkIfManager())){
-            return new Response<>("appointedUserName is already owner or manager of store Id",true);
+            throw  new Exception("appointedUserName is already owner or manager of store Id");
         }
         //add appointedUserName as store manager
         appointedEmployment = new Employment((RegisteredUser) appointer,appointed,store,Role.StoreManager);
@@ -240,60 +218,25 @@ public class Facade {
             employmentList.put(appointedUserName, newEmploymentMap);
         }
         employmentList.get(appointedUserName).put(storeId,appointedEmployment);
-        return new Response<>("success");
+
     }
 
 
-//    private int getStoreIdByProductId(String productId) {
-//        int index = productId.indexOf('-');
-//        String storeId= productId.substring(0,index);
-//        return Integer.parseInt(storeId);
-//
-//    }
-//    private boolean isValidProductId(String productId) {
-//        int index = productId.indexOf('-');
-//        if(index<1 || index>= productId.length())
-//            return false;
-//        return checkIfNumber(productId.substring(0,index)) && checkIfNumber(productId.substring(index,productId.length()));
-//    }
-//    private boolean checkIfNumber(String s){
-//        for(int i=0;i<s.length();i++){
-//            if(s.charAt(i)>'9'||s.charAt(i)< '0'){
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
 
-    private Response<?> isValidPassword(String password) {
-        if (password.length() < 8) {
-            return new Response<>("password is too short", true);
-        }
-        return new Response<>("success", false);
-    }
-
-    private int getNewVisitorId() {
-        if (FreeVisitorID.size() != 0) {
-            return FreeVisitorID.removeFirst().get();
-        }
-        return VisitorID_GENERATOR.getAndIncrement();
-    }
-
-
-    public Response<?> changeStoreManagerPermission(int visitorID,String username,int storeID,Permission permission){
+    public Employment changeStoreManagerPermission(int visitorID,String username,int storeID,Permission permission) throws Exception {
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorID);
         if(!(appointer instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+            throw  new Exception("invalid visitor Id");
         }
 
         //Check if storeID exists
         Store store=storesList.get(storeID);
         if(store==null){
-            return new Response<>("invalid store Id",true);
+            throw  new Exception("invalid store Id");
         }
         if(!store.getActive()){
-            return new Response<>("this is closed Store", true);
+            throw  new Exception("this is closed Store");
         }
 
         //Check if visitorID is owner of storeID
@@ -301,17 +244,17 @@ public class Facade {
         try{
             appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeID);
         }catch (Exception e){
-            return new Response<>("the appointer is not owner of store id",true);
+            throw  new Exception("the appointer is not owner of store id");
         }
 
         if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
-            return new Response<>("the appointer is not owner of store id",true);
+            throw  new Exception("the appointer is not owner of store id");
         }
 
         //Check if username is registered to system
         RegisteredUser appointed = registeredUserList.get(username);
         if(appointed==null){
-            return new Response<>("invalid appointed UserName",true);
+            throw  new Exception("invalid appointed UserName");
         }
 
         //Check if username is manager of storeID
@@ -319,23 +262,23 @@ public class Facade {
         try{
             appointedEmployment = employmentList.get(username).get(storeID);
         }catch (Exception e){
-            return new Response<>("The given username is not associated with any store",true);
+            throw  new Exception("The given username is not associated with any store");
         }
 
         if(appointedEmployment == null ||!appointedEmployment.checkIfManager()){
-            return new Response<>("The given username is not manager of the given store",true);
+            throw  new Exception("The given username is not manager of the given store");
         }
 
         //Change permission
         appointedEmployment.togglePermission(permission);
-        return new Response<>("success");
+        return appointedEmployment;
     }
 
-    public Response<?> getRolesData(int visitorId,int storeId){//4.11
+    public String getRolesData(int visitorId,int storeId) throws Exception {//4.11
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorId);
         if(!(appointer instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+            throw  new Exception("invalid visitor Id");
         }
 
         if(!(appointer instanceof Admin)) {
@@ -343,7 +286,7 @@ public class Facade {
             try {
                 employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
             } catch (Exception e) {
-                return new Response<>("the appointer is not owner of store id", true);
+                throw  new Exception("the appointer is not owner of store id");
             }
         }
         //get employment
@@ -353,8 +296,9 @@ public class Facade {
                output+= userEmployments.get(storeId).toString()+"/n";        //employment.toString
             }
         }
-        return new Response<>(output);
+        return output;
     }
+
 
     public Response<?> purchaseCart(int visitorID,int visitorCard){
         
@@ -399,14 +343,13 @@ public class Facade {
         
     }
 
-
     //----------Store-----------
     // open Store
-    public Response<?> OpenNewStore(int visitorId,String storeName) {
+    public void OpenNewStore(int visitorId,String storeName) throws Exception {
         // check if register user
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+            throw  new Exception("invalid visitor Id");
         }
         //open new store ()
         Store store = new Store(storeName);
@@ -420,133 +363,159 @@ public class Facade {
             employmentList.put(((RegisteredUser) User).getUserName(), newEmploymentMap);
         }
         employmentList.get(((RegisteredUser) User).getUserName()).put(store.getID(),employment);
-
-        return new Response<>("success");
     }
 
     //StoreRate
-    public Response<?> GetStoreRate(int visitorId,int StoreId) {
+    public double GetStoreRate(int visitorId,int StoreId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
-        if(! (User instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+        if(User==null){
+            throw  new Exception("invalid visitor Id");
         }
         Store store = storesList.get(StoreId);
-        if (store == null) {
-            return new Response<>("there is no store with this id ", true);
+        if (store == null || !store.getActive()) {
+            throw  new Exception("there is no store with this id ");
         }
-        return new Response<>(store.getRate());
+        return store.getRate();
     }
-    //ptoductRate
 
-    public Response<?> GetStoreProductRate(int visitorId,int StoreId,String ProductId) {
+    //productRate
+    public double GetStoreProductRate(int visitorId,String ProductId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
-        if(! (User instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+        if(User==null){
+            throw  new Exception("invalid visitor Id");
         }
+        int StoreId = StoreProduct.getStoreIdByProductId(ProductId);
         Store store = storesList.get(StoreId);
-        if (store == null) {
-            return new Response<>("there is no store with this id ", true);
+        if (store == null || !store.getActive()) {
+            throw  new Exception("there is no product with this id ");
         }
-         Double D =store.getProducts().get(ProductId).getRate(ProductId);
-        return new Response<>(D);
+
+         Double D =store.getProductByID(ProductId).getRate(ProductId);
+        return D;
 
     }
 
     //close store
-    public Response<?> CloseStore(int visitorId, int StoreId) {
+    public void CloseStore(int visitorId, int StoreId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+            throw  new Exception("invalid visitor Id");
         }
-        Employment employment = employmentList.get(visitorId).get(StoreId);
+        Employment employment = null;
+        try{
+            employment = employmentList.get(visitorId).get(StoreId);
+        }catch (Exception e){
+            throw  new Exception("this user dont have any store");
+        }
+
         if (employment == null)
-            return new Response<>("there is no employee with this id ", true);
+            throw  new Exception("there is no employee with this id ");
         if (employment.checkIfOwner()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
-                return new Response<>("there is no store with this id ", true);
+                throw  new Exception("there is no store with this id ");
             }
             store.CloseStore();
-            return new Response<>("the store is Close now", false);
+           return;
         }
 
-        return new Response<>("Just the owner can Close the Store ", true);
-
+        throw  new Exception("Just the owner can Close the Store ");
     }
 
 
     // ניהול מלאי 4.1
-    public Response<?> AddProduct(int visitorId, int StoreId, StoreProduct storeProduct) {
+    public void AddProduct(int visitorId,int storeId,String productName, double price, String category, int quantity, String kws,String description) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+            throw  new Exception("invalid visitor Id");
         }
-        Employment employment = employmentList.get(visitorId).get(StoreId);
+        Store store = storesList.get(storeId);
+        if(store==null){
+            throw  new Exception("there is no store with this id ");
+        }
+        Employment employment = null;
+        try{
+            employment = employmentList.get(visitorId).get(storeId);
+        }catch (Exception e){
+            throw  new Exception("this user dont have any store");
+        }
         if (employment == null)
-            return new Response<>("there is no employee with this id ", true);
-        if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
-            Store store = storesList.get(StoreId);
-            if (store == null) {
-                return new Response<>("there is no store with this id ", true);
-            }
-            store.AddNewProduct(storeProduct.productId, storeProduct.Name, storeProduct.Price, storeProduct.Quantity, storeProduct.Category, storeProduct.KeyWords,storeProduct.getDesc());
-            return new Response<>("the Product is successfully added", false);
+            throw  new Exception("there is no employee with this id ");
+        if (!employment.checkIfOwner()) {//check if need manager
+            throw  new Exception("you are not the owner of this store ");
         }
+        store.AddNewProduct(productName,price,quantity,category,kws,description);
 
-        return new Response<>("Just the owner can Close the Store ", true);
     }
 
-    public Response<?> RemoveProduct(int visitorId, int StoreId, String ProductId) {
+    public void RemoveProduct(int visitorId, int StoreId, String ProductId)  throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+            throw  new Exception("invalid visitor Id");
         }
-        Employment employment = employmentList.get(visitorId).get(StoreId);
+        Employment employment = null;
+        try{
+            employment = employmentList.get(visitorId).get(StoreId);
+        }catch (Exception e){
+            throw  new Exception("this user dont have any store");
+        }
         if (employment == null)
-            return new Response<>("there is no employee with this id ", true);
+            throw  new Exception("there is no employee with this id ");
         if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
-                return new Response<>("there is no store with this id ", true);
+                throw  new Exception("there is no store with this id ");
             }
             store.RemoveProduct(ProductId);
-            return new Response<>("the Product is successfully added", false);
+            //return new Response<>("the Product is successfully added", false);
         }
 
-        return new Response<>("Just the owner can Close the Store ", true);
+        throw  new Exception("Just the owner can Close the Store ");
     }
 
-    public Response<?> UpdateStore(int visitorId, int StoreId, String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) {
+    public void UpdateStore(int visitorId, int StoreId, String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) throws Exception{
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
-            return new Response<>("invalid visitor Id",true);
+            throw new Exception("invalid visitor Id");
         }
-        Employment employment = employmentList.get(visitorId).get(StoreId);
+        Employment employment = null;
+        try{
+            employment = employmentList.get(visitorId).get(StoreId);
+        }catch (Exception e){
+            throw new Exception("This user don't have any store");
+        }
         if (employment == null)
-            return new Response<>("there is no employee with this id ", true);
-        if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
+            throw new Exception("there is no employee with this id ");
+        if (employment.checkIfOwner()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
-                return new Response<>("there is no store with this id ", true);
+                throw new Exception("there is no store with this id ");
             }
-            store.EditProduct(productID, Id, name, price, category, quantity, kws,desc);
-            return new Response<>("the Product is successfully added", false);
+            try{
+                store.EditProduct(productID, Id, name, price, category, quantity, kws,desc);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            //return new Response<>("the Product is successfully added", false);
         }
 
-        return new Response<>("Just the owner can Close the Store ", true);
+        throw new Exception("Just the owner can Close the Store ");
     }
 
     //2.2 search  product
-    public Response<?> SearchProductByName(int StoreId, String Name) {
+    public String SearchProductByName(int StoreId, String Name) throws Exception{
         Store store = storesList.get(StoreId);
         if (store == null) {
-            return new Response<>("there is no store with this id ", true);
+            throw new Exception("there is no store with this id ");
         }
         if (!store.getActive()) {
-            return new Response<>("the Store is closed now you cant search ", true);
+            throw new Exception("the Store is closed now. you cant search ");
         }
         LinkedList<StoreProduct> ls = store.SearchProductByName(Name);
-        return new Response<>(ls.toString());
+        return  ls.toString();
     }
     public Response<?> SearchProductByCategory(int StoreId, String Category) {
         Store store = storesList.get(StoreId);
