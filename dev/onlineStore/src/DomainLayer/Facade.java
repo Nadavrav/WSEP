@@ -7,9 +7,7 @@ import DomainLayer.Users.*;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
@@ -230,7 +228,7 @@ public class Facade {
 
 
 
-    public Employment changeStoreManagerPermission(int visitorID,String username,int storeID,Permission permission) throws Exception {
+    public Employment changeStoreManagerPermission(int visitorID, String username, int storeID, List<Permission> permissions) throws Exception {
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorID);
         if(!(appointer instanceof RegisteredUser)){
@@ -277,7 +275,8 @@ public class Facade {
         }
 
         //Change permission
-        appointedEmployment.togglePermission(permission);
+        for(Permission permission:permissions)
+            appointedEmployment.togglePermission(permission);
         return appointedEmployment;
     }
 
@@ -352,7 +351,7 @@ public class Facade {
 
     //----------Store-----------
     // open Store
-    public void OpenNewStore(int visitorId,String storeName) throws Exception {
+    public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
         // check if register user
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
@@ -370,6 +369,7 @@ public class Facade {
             employmentList.put(((RegisteredUser) User).getUserName(), newEmploymentMap);
         }
         employmentList.get(((RegisteredUser) User).getUserName()).put(store.getID(),employment);
+        return store.getID();
     }
 
     //StoreRate
@@ -455,11 +455,12 @@ public class Facade {
 
     }
 
-    public void RemoveProduct(int visitorId, int StoreId, String ProductId)  throws Exception {
+    public void RemoveProduct(int visitorId, String ProductId)  throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
             throw  new Exception("invalid visitor Id");
         }
+        int StoreId=StoreProduct.getStoreIdByProductId(ProductId);
         Employment employment = null;
         try{
             employment = employmentList.get(visitorId).get(StoreId);
@@ -564,10 +565,11 @@ public class Facade {
         }
         return output;
     }
-    public String SearchProductBykey( String key) {
-        String output ="";
+    public List<String> SearchProductBykey( String key) {
+        ArrayList<String> output =new ArrayList<>();
         for (Store store :storesList.values() ) {
-            output+=store.SearchProductByKey(key).toString();
+            for(StoreProduct product: store.SearchProductByKey(key))
+                output.add(product.toString());
         }
         return output;
 
@@ -582,7 +584,7 @@ public class Facade {
     }
 
     //6.4
-    public String GetStoreHistoryPurchase(int StoreId, int visitorId) throws Exception {
+    public List<String> GetStoreHistoryPurchase(int StoreId, int visitorId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof Admin)){
             throw new Exception("invalid visitor Id");
@@ -591,9 +593,11 @@ public class Facade {
         if (store == null) {
             throw new Exception("there is no store with this id ");
         }
-
+        ArrayList<String> output=new ArrayList<>();
         LinkedList<Bag> history = store.GetStorePurchaseHistory();
-        return history.toString();
+        for(Bag bag:history)
+            output.add(bag.toString());
+        return output;
     }
 
     public String GetUserHistoryPurchase(String userName, int visitorId) throws Exception {

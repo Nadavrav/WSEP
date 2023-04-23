@@ -110,7 +110,7 @@ public class Store {
         }
         return searchResults;
     }
-    public LinkedList<StoreProduct> SearchProductByKey(String key) {
+    public List<StoreProduct> SearchProductByKey(String key) {
         LinkedList<StoreProduct> searchResults = new LinkedList<>();
         if (getActive()) {
             searchResults = new LinkedList<StoreProduct>();
