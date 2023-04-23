@@ -12,13 +12,13 @@ import DomainLayer.Users.RegisteredUser;
 
 public class Store {
     private static AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
-    public int Id;
-    public String Name;
-    public Boolean Active;
-    public History History;
-    public ConcurrentHashMap<RegisteredUser, Rating> RateMapForStore;
-    public ConcurrentHashMap<String, StoreProduct> products;
-    public Double Rate;
+    private int Id;
+    private String Name;
+    private Boolean Active;
+    private History History;
+    private ConcurrentHashMap<RegisteredUser, Rating> RateMapForStore;
+    private ConcurrentHashMap<String, StoreProduct> products;
+    private Double Rate;
 
 
     public Store(String name) {
@@ -42,11 +42,13 @@ public class Store {
     }
 
     //2.1
-    public String getInfo() {
+    public String getInfo() throws Exception {
+        if(!getActive()){
+            throw new Exception(" this store is closed");
+        }
         String s = "Store Name is" + this.Name + "Store Rate is:" + getRate();
         for (StoreProduct i : products.values()) {
             s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate(i.getProductId()) + "/n";
-
         }
         return s;
     }
@@ -62,30 +64,13 @@ public class Store {
 
 
     // ADD , UPDATE, REMOVE, SEARCH PRODUCT IS DONE ניהול מלאי 4.1
-    public void AddNewProduct( String productName, Double price, int Quantity, String category,String keyWords,String desc) {
-        StoreProduct storeProduct = new StoreProduct(Id, productName, price, category, Quantity, keyWords,desc);
+    public String AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
+        StoreProduct storeProduct = new StoreProduct(Id, productName, price, category, Quantity,desc);
         products.put(storeProduct.getId(), storeProduct);
+        return storeProduct.getId();
 
     }
 
-    public void EditProduct(String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) throws Exception{
-
-
-        if (products.containsKey(productID)) {
-            StoreProduct sp = products.get(productID);
-            sp.setProductId(Id);
-            sp.setCategory(category);
-            sp.setName(name);
-            sp.setQuantity(quantity);
-            sp.setKeyWords(kws);
-            sp.setDesc(desc);
-
-
-        } else {
-            throw new Exception("there is no product with this ID to update");
-        }
-
-    }
 
     public Response<Object> RemoveProduct(String productID) {
         if (!products.containsKey(productID)) {
@@ -96,17 +81,18 @@ public class Store {
     }
 
     //2.2
-    public LinkedList<StoreProduct> SearchProductByName(String Name) {
+    public LinkedList<StoreProduct> SearchProductByName(String Name) throws Exception {
         LinkedList<StoreProduct> searchResults = new LinkedList<>();
         if (getActive()) {
             searchResults = new LinkedList<StoreProduct>();
             for (StoreProduct product : this.products.values()) {
-                if (product.Name == Name) {
+                if (product.getName().equals(Name)) {
                     if (CheckProduct(product)) {
                         searchResults.add(product);
                     }
                 }
             }
+
         }
         return searchResults;
     }
@@ -115,7 +101,7 @@ public class Store {
         if (getActive()) {
             searchResults = new LinkedList<StoreProduct>();
             for (StoreProduct product : this.products.values()) {
-                if (product.Category == category) {
+                if (product.getCategory().equals(category)) {
                     if (CheckProduct(product)) {
                         searchResults.add(product);
                     }
@@ -129,7 +115,7 @@ public class Store {
         if (getActive()) {
             searchResults = new LinkedList<StoreProduct>();
             for (StoreProduct product : this.products.values()) {
-                if (product.Name.contains(key)|| product.Category.contains(key)) {
+                if (product.getName().contains(key)|| product.getCategory().contains(key)||product.getDescription().contains(key)) {
                     if (CheckProduct(product)) {
                         searchResults.add(product);
                     }
@@ -140,7 +126,7 @@ public class Store {
     }
 
     private boolean CheckProduct(StoreProduct product) {
-        if (product.Quantity > 0) {
+        if (product.getQuantity() > 0) {
             return true;
         }
         return false;
@@ -201,4 +187,28 @@ public class Store {
 
     public void addProduct(StoreProduct product) {
     }
+
+    public void UpdateProductQuantity(String productID, int quantity) {
+        products.get(productID).UpdateQuantity(quantity);
+    }
+    public void IncreaseProductQuantity(String productID, int quantity) {
+        products.get(productID).IncreaseQuantity(quantity);
+    }
+
+    public void UpdateProductName(String productID, String name) {
+        products.get(productID).setName(name);
+    }
+
+    public void UpdateProductPrice(String productID, double price) {
+        products.get(productID).setPrice(price);
+    }
+
+    public void UpdateProductCategory(String productID, String category) {
+        products.get(productID).setCategory(category);
+    }
+
+    public void UpdateProductDescription(String productID, String description) {
+        products.get(productID).setDescription(description);
+    }
+
 }

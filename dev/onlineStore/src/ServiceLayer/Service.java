@@ -178,10 +178,10 @@ public class Service {
 
 
     // ניהול מלאי 4.1
-    public Response<?> AddProduct(int storeId,String productName, double price, String category, int quantity, String kws,String description) {
+    public Response<?> AddProduct(int storeId,String productName, double price, String category, int quantity, String description) {
 
         try{
-            facade.AddProduct(visitorId,storeId,productName,price,category,quantity,kws,description);
+            facade.AddProduct(visitorId,storeId,productName,price,category,quantity,description);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -200,22 +200,65 @@ public class Service {
         return new Response<>("Success");
     }
 
-    public Response<?> UpdateStore( int StoreId, String productID, String Id, String name, double price, String category, int quantity, String kws,String desc) {
-
-        try{
-            facade.UpdateStore(visitorId, StoreId, productID, Id, name, price, category, quantity, kws,desc);
-
+    public Response<?> UpdateProductQuantity( String productID,int quantity) {
+        try {
+            facade.UpdateProductQuantity(visitorId,productID,quantity);
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
         return new Response<>("Success");
     }
+    public Response<?> IncreaseProductQuantity(int visitorId, String productID,int quantity) {
+        try {
+            facade.IncreaseProductQuantity(visitorId,productID,quantity);
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
 
+
+    }
+    public Response<?> UpdateProductName(int visitorId, String productID,String Name) {
+        try {
+            facade.UpdateProductName(visitorId,productID,Name);
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+
+    }
+
+    public Response<?> UpdateProductPrice(int visitorId, String productID,double price) {
+        try {
+            facade.UpdateProductPrice(visitorId,productID,price);
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+    public Response<?> UpdateProductCategory(int visitorId, String productID,String category) {
+        try {
+            facade.UpdateProductCategory(visitorId,productID,category);
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+
+    }
+    public Response<?> UpdateProductDescription(int visitorId, String productID,String description) {
+        try {
+            facade.UpdateProductDescription(visitorId,productID,description);
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+
+    }
     //2.2 search  product
     public Response<?> SearchProductByName( String Pid) {
          String product;
         try{
-            product =facade.SearchProductByName(visitorId, Pid);
+            product =facade.SearchProductByName( Pid);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -227,7 +270,7 @@ public class Service {
     public Response<?> SearchProductByCategory( String Pid) {
 
         try{
-            facade.SearchProductByCategory(visitorId, Pid);
+            facade.SearchProductByCategory(Pid);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -239,7 +282,7 @@ public class Service {
     public Response<?> SearchProductBykey( String Pid) {
 
         try{
-            facade.SearchProductBykey(visitorId, Pid);
+            facade.SearchProductBykey(Pid);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -248,7 +291,7 @@ public class Service {
     }
 
     //2.1
-    //Need to change from response
+
     public Response<?> GetInformation(int StoreId) {
 
         try{
@@ -261,11 +304,20 @@ public class Service {
     }
 
     //6.4
-    //Need to change from response
-    public Response<?> GetIHistoryPurchase(int StoreId) {
 
+    public Response<String> GetStoreHistoryPurchase(int StoreId)  {
         try{
-            facade.GetIHistoryPurchase(StoreId, visitorId);
+            facade.GetStoreHistoryPurchase(StoreId,visitorId);
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+
+    public Response<String> GetUserHistoryPurchase(String userName)  {
+        try{
+            facade.GetUserHistoryPurchase(userName,visitorId);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);

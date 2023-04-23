@@ -1,12 +1,14 @@
 package DomainLayer.Users;
 
 import DomainLayer.Response;
+import DomainLayer.Stores.Purchase;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegisteredUser extends SiteVisitor{
     String userName;
     String password;
+    PurchaseHistory purchaseHistory;
 
     public RegisteredUser(SiteVisitor visitor ,String userName, String password) throws Exception {
         super(visitor);
@@ -14,6 +16,7 @@ public class RegisteredUser extends SiteVisitor{
         checkPassword(password);
         this.userName=userName;
         this.password=password;
+        this.purchaseHistory = new PurchaseHistory();
     }
 
     private void checkPassword(String password) throws Exception {
@@ -53,5 +56,9 @@ public class RegisteredUser extends SiteVisitor{
     public void logout(){//3.1
         setVisitorId(0);
         FreeVisitorID.add(new AtomicInteger(getVisitorId()));
+    }
+
+    public PurchaseHistory getPurchaseHistory(){
+        return purchaseHistory;
     }
 }
