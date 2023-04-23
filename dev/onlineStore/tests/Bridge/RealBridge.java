@@ -93,7 +93,7 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean EditproductName(String productId, String newName) {
+    public boolean EditProductName(String productId, String newName) {
         return !service.UpdateProductName(productId, newName).isError();
     }
 

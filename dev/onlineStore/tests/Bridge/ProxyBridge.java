@@ -81,7 +81,7 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public boolean EditproductName(String productId, String newName) {
+    public boolean EditProductName(String productId, String newName) {
         return false;
     }
 
@@ -168,5 +168,5 @@ public class ProxyBridge implements Bridge {
     @Override
     public Response<List<String>> GetPurchaseHistory(int storeId) {
         return null;
-    }
+    }=
 }

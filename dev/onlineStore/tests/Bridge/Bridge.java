@@ -111,7 +111,7 @@ public interface Bridge {
      * @param newName new name for the product
      * @return true if done successfully, false otherwise
      */
-    boolean EditproductName(String productId,String newName);
+    boolean EditProductName(String productId,String newName);
 
     /**
      *
