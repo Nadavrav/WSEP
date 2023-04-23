@@ -5,32 +5,35 @@ import DomainLayer.Response;
 import java.util.Map;
 
 public class Rating {
-    int MaxRate;
-    int MinRate;
-    Map<Integer, Integer> UserRateForStore;
-    Map<Integer, Integer> UserRateForeProduct;
-    public Rating (){
-        MaxRate=5;
-        MinRate=0;
-    }
-    public Response<?> AddRateForProduct (int visitorID,int Rate){
-       if (Rate > 5 || Rate < 0) {
-           UserRateForeProduct.put(visitorID,Rate);
-           return new Response<>("your Rate is saved ", false);
-       }
-       return new Response<>("Your Rate must be between 0-5",true);
-    }
-    public Response<?> AddRateForStore (int visitorID,int Rate){
-        if (Rate > 5 || Rate < 0) {
-            UserRateForStore.put(visitorID,Rate);
-            return new Response<>("your Rate is saved ", false);
+    int rate;
+    String comment;
+
+    public Rating (int rate) throws Exception {
+        if (rate > 5 || rate < 0) {
+            throw new Exception("Your Rate must be between 0-5 ");
         }
-        return new Response<>("Your Rate must be between 0-5",true);
     }
-    public int getUserRateForProduct(int visitorID) {
-        return UserRateForeProduct.get(visitorID);
+    public Rating (int rate,String comment) throws Exception {
+        if (rate > 5 || rate < 0) {
+            throw new Exception("Your Rate must be between 0-5 ");
+        }
+        this.comment=comment;
     }
-    public int getUserRateForStore(int visitorID) {
-        return UserRateForStore.get(visitorID);
+
+    public int getRate() {
+        return rate;
     }
+
+    public void addComment(String comment){
+        this.comment = comment;
+
+    }
+    public void addRate(int rate) {
+        this.rate = rate;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
 }
