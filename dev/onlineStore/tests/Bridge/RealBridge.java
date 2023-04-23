@@ -104,7 +104,7 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean EditPrice(String productId, int newPrice) {
-        return !service.UpdateProductName(productId, newPrice).isError();
+        return !service.UpdateProductPrice(productId, newPrice).isError();
     }
 
     @Override

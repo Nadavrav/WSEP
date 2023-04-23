@@ -306,12 +306,12 @@ public class Service {
 
     public Response<List<String>> GetStoreHistoryPurchase(int StoreId)  {
         try{
-            facade.GetStoreHistoryPurchase(StoreId,visitorId);
+            return new Response<List<String>>(facade.GetStoreHistoryPurchase(StoreId,visitorId));
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
-        return new Response<>("Success");
+
     }
 
     public Response<String> GetUserHistoryPurchase(String userName) {

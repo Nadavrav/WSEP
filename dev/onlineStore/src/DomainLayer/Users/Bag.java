@@ -17,7 +17,7 @@ public class Bag {
     
     public int calculateTotalAmount(){
         int totalAmount = 0;
-        foreach(StoreProduct sp : productList.Values){
+        for(StoreProduct sp : productList.values()){
             totalAmount += sp.getPrice();
         }
         return totalAmount;
@@ -28,7 +28,7 @@ public class Bag {
             return "";
         }
         else{
-            String productId = productList.get(0);
+            String productId = productList.get(0).getProductId();
             String storeId = productId.substring(0,productId.indexOf('-'));
             return storeId;
         }

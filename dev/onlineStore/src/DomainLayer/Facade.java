@@ -397,7 +397,7 @@ public class Facade {
             throw  new Exception("there is no product with this id ");
         }
 
-         Double D =store.getProductByID(ProductId).getRate(ProductId);
+         Double D =store.getProductByID(ProductId).getRate();
         return D;
 
     }
