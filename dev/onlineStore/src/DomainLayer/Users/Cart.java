@@ -18,11 +18,10 @@ public class Cart {
         Bag bag = bagList.get(storeId);
         if (bag==null)// if false add bag
         {
-            bagList.put(storeId,new Bag());
+            bagList.put(storeId,new Bag(storeId));
         }
         // add product to storebag
         bag.addProduct(product);
-
     }
     
     public void removeProductFromCart(String productId){

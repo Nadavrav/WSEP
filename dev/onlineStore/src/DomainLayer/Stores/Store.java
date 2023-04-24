@@ -47,6 +47,7 @@ public class Store {
 
     //2.1
     public String getInfo() throws Exception {
+
         if(!getActive()){
             throw new Exception(" this store is closed");
         }
