@@ -9,6 +9,7 @@ public class RegisteredUser extends SiteVisitor{
     String userName;
     String password;
     PurchaseHistory purchaseHistory;
+    //add lock
 
     public RegisteredUser(SiteVisitor visitor ,String userName, String password){
         super(visitor);
