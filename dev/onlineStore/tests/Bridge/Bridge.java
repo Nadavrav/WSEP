@@ -2,6 +2,8 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
+import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.List;
 
@@ -44,28 +46,22 @@ public interface Bridge {
      */
     boolean Logout();
 
-    /**
-     * Function to check if the user is online
-     * @param Username - The name of the user we want to check
-     * @return A response with a value of true/false corresponding to if the user is online
-     */
-    boolean IsOnline(String Username);
 
     /**
      *
      * @param storeName new store's name
      * @return true if done successfully, false otherwise
      */
-    boolean OpenNewStore(String storeName);
+    Integer OpenNewStore(String storeName);
 
     /**
      *
-     * @param productName The name of the product to be added
+     * @param productId The name of the product to be added
      * @param description The description of the product to be added
      * @return true if done successfully, false otherwise
      */
 
-    boolean AddProduct(String storeName,String productName,String description, int price, int amount);
+    String AddProduct(int storeId,String productName,String description, int price, int amount);
 
     /**
      *
@@ -73,7 +69,7 @@ public interface Bridge {
      * @param storeName store in which to appoint the user
      * @return true if done successfully, false otherwise
      */
-    boolean AppointOwner(String username,String storeName);
+    boolean AppointOwner(String username,int storeId);
 
     /**
      *
@@ -81,14 +77,14 @@ public interface Bridge {
      * @param storeName store in which the user works in
      * @return true if done successfully, false otherwise
      */
-    boolean RemoveOwner(String username,String storeName);
+    boolean RemoveOwner(String username,int storeId);
     /**
      *
      * @param username username of user to appoint
      * @param storeName store in which to appoint the user
      * @return true if done successfully, false otherwise
      */
-    boolean AppointManager(String username,String storeName);
+    boolean AppointManager(String username,int storeId);
 
     /**
      *
@@ -96,14 +92,14 @@ public interface Bridge {
      * @param storeName store in which the user works in
      * @return true if done successfully, false otherwise
      */
-    boolean RemoveManager(String username,String storeName);
+    boolean RemoveManager(String username,int storeId);
 
     /**
      *
-     * @param productName the name of the product to be removed
+     * @param productId the name of the product to be removed
      * @return true if done successfully, false otherwise
      */
-    boolean RemoveProduct(String storeName,String productName);
+    boolean RemoveProduct(String productId);
 
     /**
      *
@@ -111,15 +107,15 @@ public interface Bridge {
      * @param newName new name for the product
      * @return true if done successfully, false otherwise
      */
-    boolean EditProductName(String storeName,String OldName,String newName);
+    boolean EditProductName(String productId,String newName);
 
     /**
      *
-     * @param productName product whose description change is pending
+     * @param productId product whose description change is pending
      * @param newDesc new description
      * @return true if done successfully, false otherwise
      */
-    boolean EditDescription(String storeName,String productName, String newDesc);
+    boolean EditDescription(String productId, String newDesc);
 
     /**
      *
@@ -128,13 +124,13 @@ public interface Bridge {
      * @param newPrice new price
      * @return true if done successfully, false otherwise
      */
-    boolean EditPrice(String storeName,String prodictName,int newPrice);
+    boolean EditPrice(String productId,int newPrice);
     /**
      *
      * @param storeName store to close
      * @return true if done successfully, false otherwise
      */
-    boolean CloseStore(String storeName);
+    boolean CloseStore(int storeId);
 
     /**
      *
@@ -146,35 +142,35 @@ public interface Bridge {
      *      *              10: Can See Comments And Rating, 11: Can See Purchase History
      * @return true if done successfully, false otherwise
      */
-    boolean AddPermission(String username,String storeName,int[] index);
+    boolean AddPermission(String username,int storeId,int[] index);
 
     /**
      *
      * @param index same as above
      * @return true if done successfully, false otherwise
      */
-    boolean RemovePermission(String username,String storeName,int[] index);
+    boolean RemovePermission(String username,int storeId,int[] index);
 
     /**
      *
-     * @param query product or store search
+     * @param query search query
      * @return return corresponding response (fails if no store and products were found)
      */
     List<String> ProductSearch(String query);
     /**
      *
      * @param storeName name of the store the product is in
-     * @param productName the product's name to rate
+     * @param productId the product's name to rate
      * @param rating the rating to give to the product
      * @return expected return: list of all found product names
      */
-    boolean RateProduct(String storeName,String productName, int rating);
+    boolean RateProduct(int storeId,String productId, int rating);
     /**
      *
      * @param storeName store whose purchase history we expect to return
      * @return return corresponding response (fails if no store of such name exists, or if no purchases were made from store)
      */
-    List<String> UserPurchaseHistory(String storeName);
+    List<String> UserPurchaseHistory(int storeId);
 
     /**
      *
@@ -229,12 +225,13 @@ public interface Bridge {
      * @param StoreName - the store the employee is from
      * @return a response with a string array of the employee data(UserName,Etc) as its value
      */
-    Response<String[]> GetEmployeeInfo(String EmployeeUserName,String StoreName);
+    Response<String[]> GetEmployeeInfo(String EmployeeUserName,int storeId);
 
     /**
      * A function to get the purchase history of the store(can only do this if you are the store owner or the admin or have perms)
      * @param StoreName - the store name
      * @return a response with a string array of the purchase history as its value
      */
-    Response<String[]> GetPurchaseHistory(String StoreName);
+    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId);
+    List<ServiceProduct> FilterSearch(List<Filter> filters);
 }

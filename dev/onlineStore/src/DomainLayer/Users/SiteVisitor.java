@@ -5,7 +5,7 @@ import DomainLayer.Stores.StoreProduct;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SiteVisitor {
+public class SiteVisitor{
     private static AtomicInteger VisitorID_GENERATOR = new AtomicInteger(1);
     protected static LinkedList<AtomicInteger> FreeVisitorID= new LinkedList<>();
     private Cart cart;
@@ -53,10 +53,6 @@ public class SiteVisitor {
         }
         return true;
     }
-
-
-
-
 
 
     public void addProductToCart(int storeId, StoreProduct product) {//2.3
