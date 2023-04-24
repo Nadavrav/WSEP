@@ -8,14 +8,14 @@ public class Rating {
     int rate;
     String comment;
 
-    public Rating (int rate) throws Exception {
+    public Rating (int rate) {
         if (rate > 5 || rate < 0) {
-            throw new Exception("Your Rate must be between 0-5 ");
+            throw new IllegalArgumentException("Your Rate must be between 0-5 ");
         }
     }
-    public Rating (int rate,String comment) throws Exception {
+    public Rating (int rate,String comment){
         if (rate > 5 || rate < 0) {
-            throw new Exception("Your Rate must be between 0-5 ");
+            throw new IllegalArgumentException("Your Rate must be between 0-5 ");
         }
         this.comment=comment;
     }

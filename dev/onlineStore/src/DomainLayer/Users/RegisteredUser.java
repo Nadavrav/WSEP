@@ -11,8 +11,10 @@ public class RegisteredUser extends SiteVisitor{
     PurchaseHistory purchaseHistory;
     //add lock
 
+
     public RegisteredUser(String userName, String password) throws Exception {
         super(0);
+
         checkUserName(userName);
         checkPassword(password);
         this.userName=userName;
@@ -20,21 +22,21 @@ public class RegisteredUser extends SiteVisitor{
         this.purchaseHistory = new PurchaseHistory();
     }
 
-    private void checkPassword(String password) throws Exception {
+    private void checkPassword(String password) {
         if(password.length()<8){
-            throw new Exception("the password is too short");
+            throw new IllegalArgumentException("the password is too short");
         }
         if(password.length()>30){
-            throw new Exception("the password is too long");
+            throw new IllegalArgumentException("the password is too long");
         }
     }
 
-    private void checkUserName(String userName) throws Exception {
+    private void checkUserName(String userName) {
         if(userName.length()<8){
-            throw new Exception("the userName is too short");
+            throw new IllegalArgumentException("the userName is too short");
         }
         if(userName.length()>30){
-            throw new Exception("the useName is too long");
+            throw new IllegalArgumentException("the useName is too long");
         }
     }
 
@@ -47,9 +49,9 @@ public class RegisteredUser extends SiteVisitor{
 
     public void login(String password, int visitorId) throws Exception {//1.4
         if (!this.password.equals(password)){
-            throw  new Exception("wrong password");
+            throw  new IllegalArgumentException("wrong password");
         }
-        if( getVisitorId()!=0){//visitorId =0 mean the user is logout
+        if( getVisitorId()!=0){//visitorId =0 mean the user is logged out
             throw  new Exception("this user is already login");
         }
         setVisitorId(visitorId);

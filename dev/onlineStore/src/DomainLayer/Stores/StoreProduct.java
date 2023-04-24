@@ -1,15 +1,13 @@
 package DomainLayer.Stores;
-import DomainLayer.Users.RegisteredUser;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class StoreProduct {
 
     private String productId;
-    private String Name ;
-    private Double Price ;
+    private String Name;
+    private Double Price;
     private int Quantity;
     private String Category;
     private  String Description;
@@ -113,6 +111,13 @@ public class StoreProduct {
 
     public void setRate(Double rate) {
         Rate = rate;
+    }
+    public double GetAverageRating(){
+        double ratingSum=0;
+        for(Rating rating:RateMap.values()){
+            ratingSum+=rating.getRate();
+        }
+        return ratingSum/getNumberOfRates();
     }
 
     public int getNumberOfRates() {

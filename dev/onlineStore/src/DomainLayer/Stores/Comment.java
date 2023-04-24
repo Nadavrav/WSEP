@@ -8,6 +8,7 @@ public class Comment extends Rating {
 
     private Map<Integer, LinkedList<String>> CommentMap;
     public  Comment(){
+        super(0);
         CommentMap= new ConcurrentHashMap<>();
     }
     public  void  AddComment(int registerId,String comment){
