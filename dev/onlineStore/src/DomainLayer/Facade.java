@@ -67,7 +67,9 @@ public class Facade {
        // visitor =new RegisteredUser(visitor, userName, password);
         //onlineList.put(visitorId,visitor);
         // create new register user
-     //   registeredUserList.put(userName);
+
+        registeredUserList.put(userName, new RegisteredUser(userName, password));
+
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
@@ -94,10 +96,10 @@ public class Facade {
         //id=0
         ((RegisteredUser) user).logout();
         //removefrom online list
-        user= new SiteVisitor();
-        onlineList.remove(visitorId);
-        onlineList.replace(user.getVisitorId(),user );//RegisteredUser turns into SiteVisitor
-        return user.getVisitorId();
+        user= new SiteVisitor(visitorId);
+
+        onlineList.replace(visitorId,user );//RegisteredUser turns into SiteVisitor
+        return visitorId;
     }
 
     public void addProductToCart(String productId, int visitorId) throws Exception {//2.3

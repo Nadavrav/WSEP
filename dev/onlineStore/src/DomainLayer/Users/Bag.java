@@ -7,24 +7,26 @@ import java.util.Map;
 
 public class Bag {
     Map<String,StoreProduct> productList;
-    Map<String,Integer> productAmount;
+    Map<String,Integer> productsAmount;
+    int storeId;
 
-    public Bag (){
+    public Bag (int storeId){
+        this.storeId=storeId;
         productList = new HashMap<>();
         productsAmount = new HashMap<>();
     }
     
     public void addProduct(StoreProduct product) {
         
-         productId = product.getId();
+         String productId = product.getId();
         
-        if(productList.contains(product.getId())){
-            int currentAmount = productAmount.get(productId);
-            productAmount.put(productId,currentAmount + 1);
+        if(productList.containsKey(product.getId())){
+            int currentAmount = productsAmount.get(productId);
+            productsAmount.put(productId,currentAmount + 1);
         }
         else{
             productList.put(productId,product);
-            productAmount.put(productId,1);
+            productsAmount.put(productId,1);
         }
     }
     
@@ -41,9 +43,9 @@ public class Bag {
             return "";
         }
         else{
-            String productId = productList.get(0).getProductId();
-            String storeId = productId.substring(0,productId.indexOf('-'));
-            return storeId;
+
+            return ""+ storeId;
+
         }
     }
     
