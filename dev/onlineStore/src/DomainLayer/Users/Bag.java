@@ -7,12 +7,25 @@ import java.util.Map;
 
 public class Bag {
     Map<String,StoreProduct> productList;
+    Map<String,Integer> productAmount;
 
     public Bag (){
         productList = new HashMap<>();
+        productsAmount = new HashMap<>();
     }
+    
     public void addProduct(StoreProduct product) {
-        productList.put(product.getId(),product);
+        
+         productId = product.getId();
+        
+        if(productList.contains(product.getId())){
+            int currentAmount = productAmount.get(productId);
+            productAmount.put(productId,currentAmount + 1);
+        }
+        else{
+            productList.put(productId,product);
+            productAmount.put(productId,1);
+        }
     }
     
     public int calculateTotalAmount(){
