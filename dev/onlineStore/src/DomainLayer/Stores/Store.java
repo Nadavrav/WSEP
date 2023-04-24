@@ -12,6 +12,7 @@ import DomainLayer.Users.RegisteredUser;
 
 public class Store {
     private static AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
+    private  AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
     private int Id;
     private String Name;
     private Boolean Active;
@@ -27,6 +28,9 @@ public class Store {
         History = new History();
         products = new ConcurrentHashMap<>();
 
+    }
+    private String getNewProductId() {
+        return Id+"-"+ProductID_GENERATOR.getAndIncrement();
     }
 
     private double setRate() {
@@ -65,7 +69,7 @@ public class Store {
 
     // ADD , UPDATE, REMOVE, SEARCH PRODUCT IS DONE ניהול מלאי 4.1
     public String AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
-        StoreProduct storeProduct = new StoreProduct(Id, productName, price, category, Quantity,desc);
+        StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity,desc);
         products.put(storeProduct.getId(), storeProduct);
         return storeProduct.getId();
 

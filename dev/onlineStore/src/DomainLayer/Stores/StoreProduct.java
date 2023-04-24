@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StoreProduct {
-    private static AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
+
     private String productId;
     private String Name ;
     private Double Price ;
@@ -15,12 +15,13 @@ public class StoreProduct {
     private  String Description;
     private double Rate;
     private Map<String,Rating> RateMap;
-    public int NumberOfRates ;
+    public int NumberOfRates;
 
 
-    public StoreProduct(int storeid,String name, double price, String category, int quantity,String desc)
+
+    public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
     {
-        productId = getNewProductId(storeid);
+        productId = productId;
         Name = name;
         Price = price;
         Category = category;
@@ -29,9 +30,7 @@ public class StoreProduct {
         RateMap=new HashMap<>();
     }
 
-    private String getNewProductId(int storeid) {
-        return storeid+"-"+ProductID_GENERATOR.getAndIncrement();
-    }
+
 
 
     private double setRate() {

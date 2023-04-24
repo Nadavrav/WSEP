@@ -54,7 +54,7 @@ public class Facade {
         onlineList.remove(id);
     }
 
-    public void Register(int visitorId, String userName, String password) throws Exception {//1.3
+    public synchronized void Register(int visitorId, String userName, String password) throws Exception {//1.3
         //Valid visitorID
         if (!SiteVisitor.checkVisitorId(visitorId)) {
            throw  new Exception("Invalid Visitor ID");
@@ -69,7 +69,7 @@ public class Facade {
         registeredUserList.put(userName, new RegisteredUser(visitor, userName, password));
     }
 
-    public void login(int visitorId, String userName, String password) throws Exception {//1.4
+    public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
         RegisteredUser user = registeredUserList.get(userName);
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
             throw  new Exception("Invalid Visitor ID");
@@ -82,7 +82,7 @@ public class Facade {
         onlineList.replace(visitorId, user);
     }
 
-    public int logout(int visitorId) throws Exception {//3.1
+    public synchronized int logout(int visitorId) throws Exception {//3.1
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             throw  new Exception("Invalid Visitor ID");
@@ -105,19 +105,27 @@ public class Facade {
             throw  new Exception("Invalid Visitor ID");
         }
         isValidProductId(productId);
-        int storeId = getStoreIdByProductId(productId);
-        Store store = storesList.get(storeId);
-        if (store == null) {
-            throw  new Exception("Invalid product ID");
+        //Get product lock
+        try {
+            int storeId = getStoreIdByProductId(productId);
+
+            Store store = storesList.get(storeId);
+            if (store == null) {
+                throw new Exception("Invalid product ID");
+            }
+            if (!store.getActive()) {
+                throw new Exception("this is closed Store");
+            }
+            StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
+            if (product == null) {
+                throw new Exception("Invalid product ID");
+            }
+            user.addProductToCart(storeId, product);
         }
-        if(!store.getActive()){
-            throw  new Exception("this is closed Store");
+        catch (Exception e){
+            //release lock
+            throw e;
         }
-        StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
-        if (product == null) {
-            throw  new Exception("Invalid product ID");
-        }
-        user.addProductToCart(storeId, product);
     }
 
     public String getProductsInMyCart(int visitorId) throws Exception {//2.4
@@ -125,12 +133,17 @@ public class Facade {
         if (user == null) {
             throw  new Exception("Invalid Visitor ID");
         }
+
         return user.cartToString();
+
     }
 
     public void appointNewStoreOwner(int appointerId, String appointedUserName, int storeId) throws Exception {//4.4
         //check appointerId and registerd user
         SiteVisitor appointer = onlineList.get(appointerId);
+        //lock appointer
+        //variable "appointedlock"
+        //try
         if (!(appointer instanceof RegisteredUser)) {
             throw  new Exception("inValid appointer Id");
         }
@@ -162,6 +175,7 @@ public class Facade {
         Employment appointedEmployment = null;
         try {
             appointedEmployment = employmentList.get(appointedUserName).get(storeId);//check this
+            //lock appointedlock
         } catch (Exception e) {
 
         }
@@ -175,11 +189,18 @@ public class Facade {
             employmentList.put(appointedUserName, newEmploymentMap);
         }
         employmentList.get(appointedUserName).put(storeId, appointedEmployment);
+        //catch
+        //release lock appointer
+        //release lockappointed if locked
+        //throw e
     }
 
     public void appointNewStoreManager(int appointerId,String appointedUserName,int storeId) throws Exception {//4.6
         //check if appointerId is logged in and registered to system
         SiteVisitor appointer = onlineList.get(appointerId);
+        //lock appointer
+        //variable "appointedlock"
+        //try
         if(!(appointer instanceof RegisteredUser)){
             throw  new Exception("invalid appointer Id");
         }
@@ -225,14 +246,19 @@ public class Facade {
             employmentList.put(appointedUserName, newEmploymentMap);
         }
         employmentList.get(appointedUserName).put(storeId,appointedEmployment);
+        //catch
+        //release lock appointer
+        //release lockappointed if locked
+        //throw e
 
     }
-
-
 
     public Employment changeStoreManagerPermission(int visitorID,String username,int storeID,LinkedList<Permission> permissions) throws Exception {
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorID);
+        //lock appointer
+        //variable "appointedlock"
+        //try
         if(!(appointer instanceof RegisteredUser)){
             throw  new Exception("invalid visitor Id");
         }
@@ -282,8 +308,19 @@ public class Facade {
         }
 
         return appointedEmployment;
+        //catch
+        //release lock appointer
+        //release lockappointed if locked
+        //throw e
     }
 
+    /**
+     *
+     * @param visitorId
+     * @param storeId
+     * @return
+     * @throws Exception
+     */
     public String getRolesData(int visitorId,int storeId) throws Exception {//4.11
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorId);
@@ -308,7 +345,6 @@ public class Facade {
         }
         return output;
     }
-
 
     public LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
         
@@ -345,14 +381,8 @@ public class Facade {
        }
 
         return failedPurchases;
-
-
-
-    
-         
         
     }
-
     //----------Store-----------
     // open Store
     public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
@@ -375,7 +405,6 @@ public class Facade {
         employmentList.get(((RegisteredUser) User).getUserName()).put(store.getID(),employment);
         return store.getId();
     }
-
     //StoreRate
     public double GetStoreRate(int visitorId,int StoreId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
@@ -420,10 +449,11 @@ public class Facade {
 
     }
     //addProductrate
-
     //close store
     public void CloseStore(int visitorId, int StoreId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
+        //lock user
+        //try
         if(! (User instanceof RegisteredUser)){
             throw  new Exception("invalid visitor Id");
         }
@@ -446,12 +476,15 @@ public class Facade {
         }
 
         throw  new Exception("Just the owner can Close the Store ");
+        //catch
+        //release lock user
+        //throw e
     }
-
-
     // ניהול מלאי 4.1
     public String AddProduct(int visitorId,int storeId,String productName, double price, String category, int quantity,String description) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
+        //lock user
+        //try
         if(! (User instanceof RegisteredUser)){
             throw  new Exception("invalid visitor Id");
         }
@@ -471,11 +504,16 @@ public class Facade {
             throw  new Exception("you are not the owner of this store ");
         }
         return store.AddNewProduct(productName,price,quantity,category,description);
-
+        //catch
+        //release lock user
+        //throw e
     }
 
     public void RemoveProduct(int visitorId, String ProductId)  throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
+        //lock user
+        //variable productlock
+        //try
         if(! (User instanceof RegisteredUser)){
             throw  new Exception("invalid visitor Id");
         }
@@ -499,23 +537,36 @@ public class Facade {
         }
 
         throw  new Exception("Just the owner can Close the Store ");
+        //catch
+        //release lock user
+        //release productlock if locked
+        //throw e
     }
-
 
     public void UpdateProductQuantity(int visitorId, String productID,int quantity) throws Exception{
-       checkifUserCanUpdateStoreProduct(visitorId,productID);
+        //lock product (get product object)
+        //try
+        checkifUserCanUpdateStoreProduct(visitorId,productID);
         Store store = storesList.get(StoreProduct.getStoreIdByProductId(productID));
         store.UpdateProductQuantity(productID,quantity);
-
+        //catch
+        //release lock product
+        //throw e
 
     }
+
     public void IncreaseProductQuantity(int visitorId, String productID,int quantity) throws Exception{
+        //lock product (get product object)
+        //try
         checkifUserCanUpdateStoreProduct(visitorId,productID);
         Store store = storesList.get(StoreProduct.getStoreIdByProductId(productID));
         store.IncreaseProductQuantity(productID,quantity);
-
+        //catch
+        //release lock product
+        //throw e
 
     }
+
     public void UpdateProductName(int visitorId, String productID,String Name) throws Exception{
         checkifUserCanUpdateStoreProduct(visitorId,productID);
         Store store = storesList.get(StoreProduct.getStoreIdByProductId(productID));
@@ -524,17 +575,24 @@ public class Facade {
     }
 
     public void UpdateProductPrice(int visitorId, String productID,double price) throws Exception{
+        //lock product (get product object)
+        //try
         checkifUserCanUpdateStoreProduct(visitorId,productID);
         Store store = storesList.get(getStoreIdByProductId(productID));
         store.UpdateProductPrice(productID,price);
+        //catch
+        //release lock product
+        //throw e
 
     }
+
     public void UpdateProductCategory(int visitorId, String productID,String category) throws Exception{
         checkifUserCanUpdateStoreProduct(visitorId,productID);
         Store store = storesList.get(getStoreIdByProductId(productID));
         store.UpdateProductCategory(productID,category);
 
     }
+
     public void UpdateProductDescription(int visitorId, String productID,String description) throws Exception{
         checkifUserCanUpdateStoreProduct(visitorId,productID);
         Store store = storesList.get(getStoreIdByProductId(productID));
@@ -568,8 +626,6 @@ public class Facade {
 
         throw new Exception("Just the owner can Close the Store ");
     }
-
-
     //2.2 search  product
     public String SearchProductByName( String Name) throws Exception{
         String output ="";
@@ -578,6 +634,7 @@ public class Facade {
         }
         return output;
     }
+
     public String SearchProductByCategory( String Category) throws Exception {
         String output ="";
         for (Store store :storesList.values() ) {
@@ -585,6 +642,7 @@ public class Facade {
         }
         return output;
     }
+
     public String SearchProductBykey( String key) {
         String output ="";
         for (Store store :storesList.values() ) {
@@ -601,7 +659,6 @@ public class Facade {
         }
         return store.getInfo();
     }
-
     //6.4
     public String GetStoreHistoryPurchase(int StoreId, int visitorId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
