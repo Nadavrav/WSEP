@@ -11,8 +11,8 @@ public class RegisteredUser extends SiteVisitor{
     PurchaseHistory purchaseHistory;
     //add lock
 
-    public RegisteredUser(SiteVisitor visitor ,String userName, String password) throws Exception {
-        super(visitor);
+    public RegisteredUser(String userName, String password) throws Exception {
+        super(0);
         checkUserName(userName);
         checkPassword(password);
         this.userName=userName;
@@ -56,7 +56,7 @@ public class RegisteredUser extends SiteVisitor{
     }
     public void logout(){//3.1
         setVisitorId(0);
-        FreeVisitorID.add(new AtomicInteger(getVisitorId()));
+
     }
 
     public PurchaseHistory getPurchaseHistory(){

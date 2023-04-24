@@ -28,6 +28,10 @@ public class SiteVisitor {
         visitorId=other.getVisitorId();
         cart= other.getCart();
     }
+    public SiteVisitor(int id){
+        visitorId=id;
+        cart= new Cart();
+    }
     private int getNewVisitorId() {
         if (FreeVisitorID.size() != 0) {
             return FreeVisitorID.removeFirst().get();
