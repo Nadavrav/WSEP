@@ -24,7 +24,17 @@ public class Cart {
         bag.addProduct(product);
 
     }
+    
+    public void removeProductFromCart(String productId){
+        //getStoreIdByProductId()
+        //getBag(storeId)
+        //removeProductFromBag (-> removeBagFromCartIfEmpty)
+    }
 
+    public Map<Integer,Bag>  getBags(){
+        return bagList;
+    }
+    
     public String cartToString() {
         String s="";
         for (int i :bagList.keySet()) {
@@ -33,7 +43,5 @@ public class Cart {
         }
         return s;
     }
-    public Map<Integer,Bag>  getBag(){
-        return bagList;
-    }
+    
 }
