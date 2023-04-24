@@ -31,7 +31,7 @@ public class Cart {
         //removeProductFromBag (-> removeBagFromCartIfEmpty)
     }
 
-    public Map<Integer,Bag>  getBags(){
+    public Map<Integer,Bag>  getBag(){
         return bagList;
     }
     
