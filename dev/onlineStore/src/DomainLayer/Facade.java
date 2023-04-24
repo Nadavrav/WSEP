@@ -4,6 +4,7 @@ import DomainLayer.Stores.History;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
+import DomainLayer.Users.Fiters.Filter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
@@ -62,9 +63,11 @@ public class Facade {
             throw  new Exception("This userName already taken");
         }
         //get site visitor object
-        SiteVisitor visitor = onlineList.get(visitorId);
+        //SiteVisitor visitor = onlineList.get(visitorId);
+       // visitor =new RegisteredUser(visitor, userName, password);
+        //onlineList.put(visitorId,visitor);
         // create new register user
-        registeredUserList.put(userName, new RegisteredUser(visitor, userName, password));
+     //   registeredUserList.put(userName);
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
@@ -670,4 +673,26 @@ public class Facade {
         return user.getPurchaseHistory().getPurchases().toString();
     }
 
+    /**
+     *
+     * @param filters list of filter object for whom each product has to pass all of them to be returned
+     * @return list of strings describing product info of products who passed the filter list
+     */
+    public List<StoreProduct> FilterProductSearch(List<Filter> filters) {
+        ArrayList<StoreProduct> products=new ArrayList<>();
+        for(Store store: storesList.values()){ //for each store
+            for(StoreProduct product:store.getProducts().values()){ //for each product in store
+                boolean passedFilter=true;
+                for(Filter filter: filters){ //for each filter
+                    if(!filter.PassFilter(product)) { //product has to pass all filters
+                        passedFilter = false;
+                        break; //if we don't pass a filter, we exit from the filter loop-no need to check the rest
+                    }
+                }
+                if (passedFilter)
+                    products.add(product);
+            }
+        }
+        return products;
+    }
 }

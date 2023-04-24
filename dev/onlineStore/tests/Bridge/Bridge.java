@@ -2,6 +2,8 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
+import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.List;
 
@@ -236,5 +238,6 @@ public interface Bridge {
      * @param StoreName - the store name
      * @return a response with a string array of the purchase history as its value
      */
-    Response<List<String>> GetPurchaseHistory(int storeId);
+    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId);
+    List<ServiceProduct> FilterSearch(List<Filter> filters);
 }

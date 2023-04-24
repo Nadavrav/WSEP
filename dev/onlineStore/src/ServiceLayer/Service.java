@@ -5,11 +5,10 @@ import DomainLayer.Response;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
+import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.ServiceProduct;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
@@ -290,7 +289,19 @@ public class Service {
     }
 
     //2.1
-
+    public Response<List<ServiceProduct>> FilterProductSearch(List<Filter> filters){
+        try{
+            List<StoreProduct> StoreProducts=Facade.getInstance().FilterProductSearch(filters);
+            List<ServiceProduct> products=new ArrayList<>();
+            for(StoreProduct product:StoreProducts){
+                products.add(new ServiceProduct(product));
+            }
+            return new Response<>(products);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
     public Response<?> GetInformation(int StoreId) {
 
         try{

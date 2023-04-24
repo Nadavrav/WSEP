@@ -5,9 +5,12 @@ import Bridge.Driver;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import DomainLayer.Users.Fiters.*;
+import ServiceLayer.ServiceObjects.ServiceProduct;
 import TestObjects.TestUser;
 import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -355,5 +358,41 @@ public class UserStoreRequestsTests {
         List<String> query=bridge.ProductSearch("Bacon"); //query in both name and description
         assertTrue(query.contains("Bacon"));
         assertTrue(query.contains("Grill Pack"));
+    }
+    public void FilterSearchPrep(){
+        String Hamburger=bridge.AddProduct(store1,"Hamburger","contains beef and good taste. kosher",30,70);
+        String Sausage=bridge.AddProduct(store1,"Sausage","contains beef and lots of oil. kosher",15,120); //Ok
+        String Steak=bridge.AddProduct(store3,"Steak","99% beef, 1% olive oil. kosher",70,35); //Ok
+        String Cheeseburger=bridge.AddProduct(store3,"Cheeseburger","contains cheese and beef",40,70); //Ok
+        productIdMap.put("Hamburger",Hamburger);
+        productIdMap.put("Sausage",Sausage);
+        productIdMap.put("Steak",Steak);
+        productIdMap.put("Cheeseburger",Cheeseburger);
+    }
+    public void FilterSearchTests(){
+        ServiceProduct ServiceHamburger=new ServiceProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5);
+        ServiceProduct ServiceSausage=new ServiceProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5);
+        ServiceProduct ServiceSteak=new ServiceProduct("Steak", 70.0,"test","99% beef, 1% olive oil. kosher",5);
+        ServiceProduct ServiceCheeseburger=new ServiceProduct("Cheeseburger", 40.0,"test","contains cheese and beef",5);
+        NameFilter nameFilter=new NameFilter("burger");
+        MaxPriceFilter maxPriceFilter=new MaxPriceFilter(35);
+        ArrayList<Filter> nameFilterList=new ArrayList<>();
+        nameFilterList.add(nameFilter);
+        ArrayList<Filter> maxPriceAndNameFilterList=new ArrayList<>();
+        maxPriceAndNameFilterList.add(nameFilter);
+        maxPriceAndNameFilterList.add(maxPriceFilter);
+        List<ServiceProduct> nameSearch=bridge.FilterSearch(nameFilterList);
+        List<ServiceProduct> nameAndPriceSearch=bridge.FilterSearch(maxPriceAndNameFilterList);
+        //testing name filter
+        assertTrue(nameSearch.contains(ServiceHamburger));
+        assertTrue(nameSearch.contains(ServiceCheeseburger));
+        assertFalse(nameSearch.contains(ServiceSausage));
+        assertFalse(nameSearch.contains(ServiceSteak));
+        //testing name and price filters
+        assertTrue(nameSearch.contains(ServiceHamburger));
+        assertFalse(nameSearch.contains(ServiceCheeseburger));
+        assertFalse(nameSearch.contains(ServiceSausage));
+        assertFalse(nameSearch.contains(ServiceSteak));
+        //TODO: MORE??
     }
 }

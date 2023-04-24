@@ -2,8 +2,10 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
+import DomainLayer.Users.Fiters.Filter;
 import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
+import ServiceLayer.ServiceObjects.ServiceProduct;
 import org.opentest4j.TestAbortedException;
 import org.opentest4j.TestSkippedException;
 
@@ -200,8 +202,16 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Response<List<String>> GetPurchaseHistory(int storeId) {
-        return service.GetStoreHistoryPurchase(storeId);
+    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId) {
+       // return service.GetStoreHistoryPurchase(storeId);
+        return null; //TODO
+    }
+    @Override
+    public List<ServiceProduct> FilterSearch(List<Filter> filters){
+        Response<List<ServiceProduct>> r= service.FilterProductSearch(filters);
+        if(r.isError())
+            throw new TestAbortedException("FILTER SEARCH NOT EXPECTED TO FAIL");
+        return r.getValue();
     }
 
 

@@ -2,6 +2,8 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
+import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.List;
 
@@ -166,7 +168,12 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public Response<List<String>> GetPurchaseHistory(int storeId) {
+    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId) {
         return null;
     }
+    @Override
+    public List<ServiceProduct> FilterSearch(List<Filter> filters){
+        return null;
+    }
+
 }

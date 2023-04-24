@@ -49,7 +49,7 @@ public class RegisteredUser extends SiteVisitor{
         if (!this.password.equals(password)){
             throw  new IllegalArgumentException("wrong password");
         }
-        if( getVisitorId()!=0){//visitorId =0 mean the user is logout
+        if( getVisitorId()!=0){//visitorId =0 mean the user is logged out
             throw  new Exception("this user is already login");
         }
         setVisitorId(visitorId);
