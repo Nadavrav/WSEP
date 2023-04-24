@@ -6,24 +6,22 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class StoreProduct {
-    private static AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
+
     private String productId;
     private String Name ;
     private Double Price ;
     private int Quantity;
     private String Category;
     private  String Description;
+    private double Rate;
+    private Map<String,Rating> RateMap;
+    public int NumberOfRates;
 
 
 
-    public Map<RegisteredUser, Map<String,Rating>> RateMap;
-    public Double Rate ;
-    public int NumberOfRates ;
-
-
-    public StoreProduct(int storeid,String name, double price, String category, int quantity,String desc)
+    public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
     {
-        productId = getNewProductId(storeid);
+        productId = productId;
         Name = name;
         Price = price;
         Category = category;
@@ -32,17 +30,15 @@ public class StoreProduct {
         RateMap=new HashMap<>();
     }
 
-    private String getNewProductId(int storeid) {
-        return storeid+"-"+ProductID_GENERATOR.getAndIncrement();
-    }
 
 
-    public double getRate(String productId){
-        double sum =0;
-        for (RegisteredUser r : RateMap.keySet()){
-          sum +=  RateMap.get(r).get(productId).getUserRateForProduct(r.getVisitorId());
+
+    private double setRate() {
+        double sum = 0;
+        for (Rating rating : RateMap.values()) {
+            sum+=rating.getRate();
         }
-        Rate =  sum / RateMap.size();
+        Rate = sum / RateMap.size();
         return Rate;
     }
 
@@ -100,7 +96,7 @@ public class StoreProduct {
     public String getProductId() {
         return productId;
     }
-    public Map<RegisteredUser, Map<String, Rating>> getRateMap() {
+    public Map<String, Rating> getRateMap() {
         return RateMap;
     }
     public void setPrice(Double price) {
@@ -127,7 +123,7 @@ public class StoreProduct {
         NumberOfRates = numberOfRates;
     }
 
-    public void setRateMap(Map<RegisteredUser, Map<String, Rating>> rateMap) {
+    public void setRateMap(Map<String, Rating> rateMap) {
         RateMap = rateMap;
     }
 
@@ -144,5 +140,23 @@ public class StoreProduct {
 
     public String getCategory() {
         return Category;
+    }
+
+    public void addRating(String userName ,int rate) throws Exception {
+        if(!RateMap.containsKey(userName)){
+            RateMap.put(userName,new Rating(rate));
+        }else{
+            RateMap.get(userName).addRate(rate);
+        }
+        setRate();
+    }
+    public void addRatingAndComment(String userName ,int rate,String comment) throws Exception {
+        if(!RateMap.containsKey(userName)){
+            RateMap.put(userName,new Rating(rate,comment));
+        }else {
+            RateMap.get(userName).addRate(rate);
+            RateMap.get(userName).addComment(comment);
+        }
+        setRate();
     }
 }

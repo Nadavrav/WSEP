@@ -12,11 +12,12 @@ import DomainLayer.Users.RegisteredUser;
 
 public class Store {
     private static AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
+    private  AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
     private int Id;
     private String Name;
     private Boolean Active;
     private History History;
-    private ConcurrentHashMap<RegisteredUser, Rating> RateMapForStore;
+    private ConcurrentHashMap<String, Rating> RateMapForStore;
     private ConcurrentHashMap<String, StoreProduct> products;
     private Double Rate;
 
@@ -28,16 +29,19 @@ public class Store {
         products = new ConcurrentHashMap<>();
 
     }
+    private String getNewProductId() {
+        return Id+"-"+ProductID_GENERATOR.getAndIncrement();
+    }
 
-    public double getRate() {
+    private double setRate() {
         double sum = 0;
-        for (Rating r : RateMapForStore.values()) {
-            for (int i =0 ;i<RateMapForStore.size();i++) {
-                RegisteredUser x =RateMapForStore.keys().nextElement();
-                sum = +r.getUserRateForStore(x.getVisitorId());
-            }
+        for (Rating rating:RateMapForStore.values()) {
+            sum+=rating.getRate();
         }
         Rate = sum / RateMapForStore.size();
+        return Rate;
+    }
+    public double getRate(){
         return Rate;
     }
 
@@ -48,7 +52,7 @@ public class Store {
         }
         String s = "Store Name is" + this.Name + "Store Rate is:" + getRate();
         for (StoreProduct i : products.values()) {
-            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate(i.getProductId()) + "/n";
+            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate() + "/n";
         }
         return s;
     }
@@ -65,7 +69,7 @@ public class Store {
 
     // ADD , UPDATE, REMOVE, SEARCH PRODUCT IS DONE ניהול מלאי 4.1
     public String AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
-        StoreProduct storeProduct = new StoreProduct(Id, productName, price, category, Quantity,desc);
+        StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity,desc);
         products.put(storeProduct.getId(), storeProduct);
         return storeProduct.getId();
 
@@ -209,6 +213,23 @@ public class Store {
 
     public void UpdateProductDescription(String productID, String description) {
         products.get(productID).setDescription(description);
+    }
+    public void addRating(String userName ,int rate) throws Exception {
+        if(!RateMapForStore.containsKey(userName)){
+            RateMapForStore.put(userName,new Rating(rate));
+        }else{
+            RateMapForStore.get(userName).addRate(rate);
+        }
+        setRate();
+    }
+    public void addRatingAndComment(String userName ,int rate,String comment) throws Exception {
+        if(!RateMapForStore.containsKey(userName)){
+            RateMapForStore.put(userName,new Rating(rate,comment));
+        }else {
+            RateMapForStore.get(userName).addRate(rate);
+            RateMapForStore.get(userName).addComment(comment);
+        }
+        setRate();
     }
 
 }
