@@ -18,4 +18,6 @@ public class PurchaseHistory {
     public LinkedList<Purchase> getPurchases(){
         return purchases;
     }
+
+
 }
