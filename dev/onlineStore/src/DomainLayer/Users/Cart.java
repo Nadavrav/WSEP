@@ -2,7 +2,6 @@ package DomainLayer.Users;
 
 import DomainLayer.Stores.StoreProduct;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,16 +23,25 @@ public class Cart {
         bag.addProduct(product);
     }
     
-    public void removeProductFromCart(String productId){
-        //getStoreIdByProductId()
-        //getBag(storeId)
-        //removeProductFromBag (-> removeBagFromCartIfEmpty)
+    public void removeProductFromCart(int storeId,StoreProduct product){
+
+        Bag b = getBag(storeId);
+        b.removeProduct(product);
     }
 
-    public Map<Integer,Bag>  getBag(){
+    public void changeCartProductQuantity(int storeId,StoreProduct product,int newAmount){
+        Bag b = getBag(storeId);
+        b.changeProductAmount(product,newAmount);
+    }
+
+    public Map<Integer,Bag> getBags(){
         return bagList;
     }
-    
+
+    public Bag getBag(int storeId){
+        return bagList.get(storeId);
+    }
+
     public String cartToString() {
         String s="";
         for (int i :bagList.keySet()) {

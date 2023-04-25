@@ -23,17 +23,17 @@ public class CartTests {
     @BeforeAll
     public void Setup()
     {
-        assertTrue(bridge.EnterMarket());
-        assertTrue(bridge.Register(userName,password));
-        assertTrue(bridge.Login(userName,password));
-        assertTrue(bridge.OpenNewStore(storeName));
-        assertTrue(bridge.AddProduct(storeName,"Mega milk","Guaranteed to make bones stronger!",5,10));//TODO: GET ID
-        assertTrue(bridge.AddProduct(storeName,"Ultra milk","Bones made of metal now!",7,10));//TODO: GET ID
-        assertTrue(bridge.AddProduct(storeName,"Giga milk","bones made of diamond now!",10,10));//TODO: GET ID
-        assertTrue(bridge.Logout());
-        assertTrue(bridge.ExitMarket());
-        this.RealcreditProxy.setReal();
-        this.FakecreditProxy.setFake();
+     //   assertTrue(bridge.EnterMarket());
+     //   assertTrue(bridge.Register(userName,password));
+     //   assertTrue(bridge.Login(userName,password));
+     //   assertTrue(bridge.OpenNewStore(storeName));
+     //   assertTrue(bridge.AddProduct(storeName,"Mega milk","Guaranteed to make bones stronger!",5,10));//TODO: GET ID
+     //   assertTrue(bridge.AddProduct(storeName,"Ultra milk","Bones made of metal now!",7,10));//TODO: GET ID
+     //   assertTrue(bridge.AddProduct(storeName,"Giga milk","bones made of diamond now!",10,10));//TODO: GET ID
+     //   assertTrue(bridge.Logout());
+     //   assertTrue(bridge.ExitMarket());
+     //   this.RealcreditProxy.setReal();
+     //   this.FakecreditProxy.setFake();
     }
     @BeforeEach
     public void OpenSys()

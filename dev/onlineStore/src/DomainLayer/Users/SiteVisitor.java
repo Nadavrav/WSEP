@@ -5,10 +5,11 @@ import DomainLayer.Stores.StoreProduct;
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SiteVisitor {
+public class SiteVisitor{
     private static AtomicInteger VisitorID_GENERATOR = new AtomicInteger(1);
     protected static LinkedList<AtomicInteger> FreeVisitorID= new LinkedList<>();
     private Cart cart;
+    protected boolean loggedIn;
     private int visitorId;
 
     public SiteVisitor() throws Exception {
@@ -18,6 +19,7 @@ public class SiteVisitor {
         }catch (Exception e){
             throw new Exception();
         }
+        loggedIn=false;
     }
 //    public SiteVisitor(int visitorId) throws Exception {//to do
 //        if (checkVisitorId(visitorId)) {
@@ -54,13 +56,15 @@ public class SiteVisitor {
         return true;
     }
 
-
-
-
-
-
     public void addProductToCart(int storeId, StoreProduct product) {//2.3
         cart.addProductToCart(storeId,product);
+    }
+
+    public void removeProductFromCart(int storeId, StoreProduct product) {//2.3
+        cart.removeProductFromCart(storeId,product);
+    }
+    public void changeCartProductQuantity(int storeId, StoreProduct product,int newAmount) {//2.3
+        cart.changeCartProductQuantity(storeId,product,newAmount);
     }
 
     public String cartToString() {
