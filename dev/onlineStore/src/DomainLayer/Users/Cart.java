@@ -20,10 +20,10 @@ public class Cart {
         if (bag==null)// if false add bag
         {
             bag = new Bag((storeId));
-            bagList.put(storeId,new Bag(storeId));
         }
         // add product to storebag
         bag.addProduct(product);
+        bagList.put(storeId,bag);
     }
     
     public void removeProductFromCart(String productId){
@@ -39,7 +39,7 @@ public class Cart {
     public String cartToString() {
         String s="";
         for (int i :bagList.keySet()) {
-            s+= "Store Id : "+i+ "/n"+bagList.get(i).bagToString()+"/n";
+            s+= "Store Id : "+i+ "\n"+bagList.get(i).bagToString();
 
         }
         return s;

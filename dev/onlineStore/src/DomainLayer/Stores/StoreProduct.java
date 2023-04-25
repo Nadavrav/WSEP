@@ -164,4 +164,13 @@ public class StoreProduct {
         }
         setRate();
     }
+
+    /**
+     * Function to return the store product as a string for prints
+     * @return a string for prints
+     */
+    public String toStringForCart()
+    {
+        return "Product Id: "+this.productId+" ,Product Name: "+this.Name+" ,Product Price: "+this.Price;
+    }
 }
