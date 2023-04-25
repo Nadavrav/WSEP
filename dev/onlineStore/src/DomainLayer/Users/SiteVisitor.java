@@ -3,6 +3,7 @@ package DomainLayer.Users;
 import DomainLayer.Stores.StoreProduct;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SiteVisitor{
@@ -80,6 +81,9 @@ public class SiteVisitor{
 
     public void setVisitorId(int visitorId) {
         this.visitorId = visitorId;
+    }
+    public static LinkedList<AtomicInteger> getFreeVisitorID() {
+        return FreeVisitorID;
     }
 
 

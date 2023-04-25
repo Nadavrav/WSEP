@@ -2,7 +2,9 @@ package DomainLayer.Users;
 
 import DomainLayer.Stores.StoreProduct;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Bag {
@@ -50,9 +52,10 @@ public class Bag {
     }
     
     public String bagToString() {
+        List<String> bag = new ArrayList<>();
         String s="";
         for (String i :productList.keySet()) {
-            s+= productList.get(i).toString()+"/n";
+            s+= productList.get(i).toString()+"\n";
         }
         return s;
     }

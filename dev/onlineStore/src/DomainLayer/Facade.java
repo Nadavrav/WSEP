@@ -138,7 +138,23 @@ public class Facade {
         }
 
         return user.cartToString();
+        //return user.GetCart
 
+    }
+
+    /**
+     * Returns a cart
+     * @param visitorId - the id of the user whos cart we want
+     * @return - A cart of the user.
+     * @throws Exception - if user id doesnt exist
+     */
+    public Cart getCart(int visitorId) throws Exception
+    {
+        SiteVisitor user = onlineList.get(visitorId);
+        if (user == null) {
+            throw  new Exception("Invalid Visitor ID");
+        }
+        return user.getCart();
     }
 
     public void appointNewStoreOwner(int appointerId, String appointedUserName, int storeId) throws Exception {//4.4

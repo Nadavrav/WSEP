@@ -1,6 +1,7 @@
 package DomainLayer.Users;
 
 import DomainLayer.Stores.StoreProduct;
+import ServiceLayer.ServiceObjects.ServiceBag;
 
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ public class Cart {
         Bag bag = bagList.get(storeId);
         if (bag==null)// if false add bag
         {
+            bag = new Bag((storeId));
             bagList.put(storeId,new Bag(storeId));
         }
         // add product to storebag
@@ -42,5 +44,10 @@ public class Cart {
         }
         return s;
     }
-    
+
+    public Map<Integer,Bag> getBags()
+    {
+        return bagList;
+    }
+
 }
