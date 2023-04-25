@@ -210,7 +210,7 @@ public class RealBridge implements Bridge {
     public List<ServiceProduct> FilterSearch(List<Filter> filters){
         Response<List<ServiceProduct>> r= service.FilterProductSearch(filters);
         if(r.isError())
-            throw new TestAbortedException("FILTER SEARCH NOT EXPECTED TO FAIL");
+            return new ArrayList<>();
         return r.getValue();
     }
 

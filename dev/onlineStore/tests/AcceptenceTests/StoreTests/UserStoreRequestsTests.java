@@ -6,6 +6,7 @@ import Bridge.Driver;
 import static org.junit.jupiter.api.Assertions.*;
 
 import DomainLayer.Users.Fiters.*;
+import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 import TestObjects.TestUser;
 import org.junit.jupiter.api.*;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 
@@ -394,5 +396,33 @@ public class UserStoreRequestsTests {
         assertFalse(nameSearch.contains(ServiceSausage));
         assertFalse(nameSearch.contains(ServiceSteak));
         //TODO: MORE??
+    }
+    @Test
+    //@RepeatedTest(10)
+    public void ConcurrencyTests(){
+        ExecutorService executor= Executors.newFixedThreadPool(2000);
+        final Service user1=new Service();
+        final Service user2=new Service();
+        user1.EnterNewSiteVisitor();
+        user2.EnterNewSiteVisitor();
+        for(int i=1;i<=1000;i++){ //username/pass is i,i and -i,-i - so register & login should always succeed and have no duplicates/invalid lengths
+            final String finalUser1=Integer.toString(i);
+         //   final String finalUser2=Integer.toString(-i);
+            final String finalPass1="My password is: "+ i; //assure length is larger then 8
+            final String finalPass2="My password is: "+ -i;
+            Future<Boolean> f1=executor.submit(() -> user1.Register(finalUser1,finalPass1).isError());
+            Future<Boolean> f2=executor.submit(() -> user2.Register(finalUser1,finalPass2).isError());
+            try {
+             //   assertFalse(f1.get());
+             //   assertFalse(f2.get());
+                boolean r1=f1.get();
+                boolean r2=f2.get();
+                assertTrue( (r1 & !r2) | (!r1 & r2)); //expecting exactly one of them to fail
+            }
+            catch (Exception e){
+                fail("Thread Error");
+            }
+        }
+        executor.shutdown();
     }
 }
