@@ -143,7 +143,7 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public Response<String[]> OpenCart() {
+    public Response<String> OpenCart() {
         return null;
     }
 
