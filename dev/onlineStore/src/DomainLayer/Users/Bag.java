@@ -19,8 +19,7 @@ public class Bag {
     }
     
     public void addProduct(StoreProduct product) {
-        
-         String productId = product.getId();
+        String productId = product.getId();
         
         if(productList.containsKey(product.getId())){
             int currentAmount = productsAmount.get(productId);
@@ -52,10 +51,9 @@ public class Bag {
     }
     
     public String bagToString() {
-        List<String> bag = new ArrayList<>();
         String s="";
         for (String i :productList.keySet()) {
-            s+= productList.get(i).toString()+"\n";
+            s+= productList.get(i).toStringForCart()+"\n";
         }
         return s;
     }
