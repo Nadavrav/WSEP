@@ -2,12 +2,12 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.List;
-
+//TODO: FIX THE DAMN DOCS
 public interface Bridge {
     /**
      *

@@ -2,17 +2,12 @@ package ServiceLayer;
 
 import DomainLayer.Facade;
 import DomainLayer.Response;
-import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
-import static DomainLayer.Stores.StoreProduct.isValidProductId;
 
 public class Service {
 

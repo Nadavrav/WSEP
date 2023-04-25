@@ -1,15 +1,13 @@
 package DomainLayer;
 
-import DomainLayer.Stores.History;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
 import static DomainLayer.Stores.StoreProduct.isValidProductId;
@@ -95,7 +93,7 @@ public class Facade {
         }
         //id=0
         ((RegisteredUser) user).logout();
-        //removefrom online list
+        //remove from online list
         user= new SiteVisitor(visitorId);
 
         onlineList.replace(visitorId,user );//RegisteredUser turns into SiteVisitor
