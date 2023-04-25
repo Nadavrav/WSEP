@@ -19,7 +19,7 @@ public class StoreProduct {
 
     public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
     {
-        productId = productId;
+        this.productId = productId;
         Name = name;
         Price = price;
         Category = category;
