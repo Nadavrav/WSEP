@@ -56,13 +56,15 @@ public class SiteVisitor{
         return true;
     }
 
-
-
-
-
-
     public void addProductToCart(int storeId, StoreProduct product) {//2.3
         cart.addProductToCart(storeId,product);
+    }
+
+    public void removeProductFromCart(int storeId, StoreProduct product) {//2.3
+        cart.removeProductFromCart(storeId,product);
+    }
+    public void changeCartProductQuantity(int storeId, StoreProduct product,int newAmount) {//2.3
+        cart.changeCartProductQuantity(storeId,product,newAmount);
     }
 
     public String cartToString() {

@@ -11,7 +11,7 @@ public class History {
         ShoppingBags = new LinkedList<Bag>();
     }
     public void AddPurchasedShoppingCart(Cart shoppingCart){
-      Map<Integer,Bag> bags = shoppingCart.getBag();
+      Map<Integer,Bag> bags = shoppingCart.getBags();
         for (Bag b: bags.values()) {
             ShoppingBags.addLast( b);
         }
