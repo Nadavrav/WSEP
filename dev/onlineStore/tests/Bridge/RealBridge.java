@@ -171,40 +171,46 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean removeFromCart(String productId) {
-        //return !service.cart(productId).isError();
-        return false;
+        return !service.RemoveProduct(productId).isError();
     }
 
     @Override
-    public Response<String[]> OpenCart() {
-        return null;
+    public Response<String> OpenCart() {
+        return (Response<String>)service.getProductsInMyCart();
     }
 
     @Override
     public boolean CartChangeItemQuantity(String productId, int newQuantity) {
         return false;
+        //TODO WAITING FOR SERVICE IMPLEMENTATION
+        //return CartChangeItemQuantity(String productId, int newQuantity);
     }
 
     @Override
     public boolean PurchaseCart(CreditCardProxy credit) {
+        //TODO WAITING FOR SERVICE IMPLEMENTATION
+        //return service.PurchaseCart(credit);
         return false;
     }
 
     @Override
     public int GetItemQuantity(String productId) {
-        return 0;
+        return 5;
+        //return service.getItemQuantity(productId);
+        //TODO WAITING FOR SERVICE IMPLEMENTATION
     }
 
     @Override
     public Response<String[]> GetEmployeeInfo(String EmployeeUserName, int storeId) {
-    //    return service.get;
-        return null;
+        //return service.get;
+        //return service.getEmployeeInfo(EmployeeUserName,storeId);
+        return null;//TODO WAITING FOR SERVICE IMPLEMENTATION OF THIS METHOD
     }
 
     @Override
     public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId) {
        // return service.GetStoreHistoryPurchase(storeId);
-        return null; //TODO
+        return null; //TODO Waiting for
     }
     @Override
     public List<ServiceProduct> FilterSearch(List<Filter> filters){

@@ -201,7 +201,7 @@ public interface Bridge {
      * Function to open a user's cart
      * @return A string list of id's of the items in the user's cart
      */
-    Response<String[]> OpenCart();
+    Response<String> OpenCart();
 
     /**
      * A function to change the quantity of an item in a user's cart
