@@ -92,6 +92,28 @@ public class Service {
 
     }
 
+    public Response<?> removeProductFromCart(String productId){
+        try{
+            facade.removeProductFromCart(productId,visitorId);
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+
+    }
+
+    public Response<?> changeCartProductQuantity(String productId,int newAmount){
+        try{
+            facade.changeCartProductQuantity(productId,newAmount,visitorId);
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+
+
     public Response<?> getProductsInMyCart() {//2.4
         String products;
         try{

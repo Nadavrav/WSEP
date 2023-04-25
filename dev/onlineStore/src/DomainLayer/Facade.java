@@ -1,6 +1,5 @@
 package DomainLayer;
 
-import DomainLayer.Stores.History;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
@@ -9,7 +8,6 @@ import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
 import static DomainLayer.Stores.StoreProduct.isValidProductId;
@@ -124,6 +122,64 @@ public class Facade {
                 throw new Exception("Invalid product ID");
             }
             user.addProductToCart(storeId, product);
+        }
+        catch (Exception e){
+            //release lock
+            throw e;
+        }
+    }
+
+    public void removeProductFromCart(String productId, int visitorId) throws Exception {
+        SiteVisitor user = onlineList.get(visitorId);
+        if (user == null) {
+            throw new Exception("Invalid Visitor ID");
+        }
+        isValidProductId(productId);
+        //Get product lock
+        try {
+            int storeId = getStoreIdByProductId(productId);
+
+            Store store = storesList.get(storeId);
+            if (store == null) {
+                throw new Exception("Invalid product ID");
+            }
+            if (!store.getActive()) {
+                throw new Exception("this is closed Store");
+            }
+            StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
+            if (product == null) {
+                throw new Exception("Invalid product ID");
+            }
+            user.removeProductFromCart(storeId, product);
+        }
+        catch (Exception e){
+            //release lock
+            throw e;
+        }
+    }
+
+    public void changeCartProductQuantity(String productId,int newAmount, int visitorId) throws Exception {
+        SiteVisitor user = onlineList.get(visitorId);
+        if (user == null) {
+            throw new Exception("Invalid Visitor ID");
+        }
+        isValidProductId(productId);
+        //Get product lock
+        try {
+            int storeId = getStoreIdByProductId(productId);
+
+            Store store = storesList.get(storeId);
+            if (store == null) {
+                throw new Exception("Invalid product ID");
+            }
+            if (!store.getActive()) {
+                throw new Exception("this is closed Store");
+            }
+            StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
+            if (product == null) {
+                throw new Exception("Invalid product ID");
+            }
+            user.removeProductFromCart(storeId, product);
         }
         catch (Exception e){
             //release lock
@@ -358,7 +414,7 @@ public class Facade {
         LinkedList<String> failedPurchases = new LinkedList<>();
 
 
-        for(Bag b : visitor.getCart().getBag().values()){
+        for(Bag b : visitor.getCart().getBags().values()){
            
             //Calculate amount
             int amount = b.calculateTotalAmount();
