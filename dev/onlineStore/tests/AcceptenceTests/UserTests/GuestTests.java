@@ -3,12 +3,10 @@ package AcceptenceTests.UserTests;
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import Bridge.*;
 import DomainLayer.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GuestTests {
 
     Bridge bridge= Driver.getBridge();
@@ -18,6 +16,7 @@ public class GuestTests {
     private final String BasicWorkerName = "BasicWorker";
     private final String password = "12345678";
     private final String storeName = "Super";
+    private int storeId=-1;
     public void RunTests(){
         EnterStore();
         ExitStore();
@@ -31,16 +30,17 @@ public class GuestTests {
     @BeforeAll
     public void Setup()
     {
-    //    int [] perms = {1,2,3,4,5,6,7,8,9,10,11};
-    //    assertTrue(bridge.EnterMarket());
-    //    assertTrue(bridge.Register(StoreOwnerName,password));
-    //    assertTrue(bridge.Register(StoreWorkerName,password));
-    //    assertTrue(bridge.Register(BasicWorkerName,password));
-    //    assertTrue(bridge.Login(StoreOwnerName,password));
-    //    assertTrue(bridge.AddPermission(StoreWorkerName,storeName,perms));
-    //    assertTrue(bridge.OpenNewStore(storeName));
-    //    assertTrue(bridge.Logout());
-    //    assertTrue(bridge.ExitMarket());
+        int [] perms = {1,2,3,4,5,6,7,8,9,10,11};
+        assertTrue(bridge.EnterMarket());
+        assertTrue(bridge.Register(StoreOwnerName,password));
+        assertTrue(bridge.Register(StoreWorkerName,password));
+        assertTrue(bridge.Register(BasicWorkerName,password));
+        assertTrue(bridge.Login(StoreOwnerName,password));
+        storeId=bridge.OpenNewStore(storeName);
+        assertNotEquals(-1,storeId);
+        assertTrue(bridge.AddPermission(StoreWorkerName,storeId,perms));
+        assertTrue(bridge.Logout());
+        assertTrue(bridge.ExitMarket());
     }
     @Test
     public void EnterStore()
@@ -129,19 +129,19 @@ public class GuestTests {
     }
     @Test
     public void GetEmployeeInfo_Success()
-    {
-    //    bridge.EnterMarket();
+    { //    TODO: IMPL WHEN SERVICE IMPL IS DONE
+//        bridge.EnterMarket();
 //
-    //    String [] WorkerInfo = {StoreOwnerName,"Etc",};
-    //    Response<String[]> r = bridge.GetEmployeeInfo(StoreOwnerName,storeName);
-    //    assertFalse(r.isError());
-    //    assertEquals(WorkerInfo, r.getValue());
+//        String [] WorkerInfo = {StoreOwnerName,"Etc",};
+//        Response<String[]> r = bridge.GetEmployeeInfo(StoreOwnerName,storeName);
+//        assertFalse(r.isError());
+//        assertEquals(WorkerInfo, r.getValue());
 //
-    //    bridge.ExitMarket();
+//        bridge.ExitMarket();
     }
     @Test
     public void GetEmployeeInfo_Success_MultipleTimes()
-    {
+    {//    TODO: IMPL WHEN SERVICE IMPL IS DONE
      //   bridge.EnterMarket();
 //
      //   String [] OwnerInfo = {StoreOwnerName,"Etc",};
@@ -157,7 +157,7 @@ public class GuestTests {
     }
     @Test
     public void GetEmployeeInfo_Fail_EmployeeDoesntExist()
-    {
+    {//    TODO: IMPL WHEN SERVICE IMPL IS DONE
      //   bridge.EnterMarket();
 //
      //   Response<String[]> r = bridge.GetEmployeeInfo(StoreOwnerName,storeName);

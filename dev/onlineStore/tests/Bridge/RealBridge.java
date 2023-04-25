@@ -5,11 +5,11 @@ import DomainLayer.Response;
 import DomainLayer.Users.Fiters.Filter;
 import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
+import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 import org.opentest4j.TestAbortedException;
 import org.opentest4j.TestSkippedException;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -208,7 +208,7 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId) {
+    public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId) {
        // return service.GetStoreHistoryPurchase(storeId);
         return null; //TODO Waiting for
     }
