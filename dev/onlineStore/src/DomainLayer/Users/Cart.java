@@ -1,6 +1,8 @@
 package DomainLayer.Users;
 
 import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Logging.UniversalHandler;
+import java.util.logging.*;
 
 import java.util.HashMap;
 import java.util.Map;
