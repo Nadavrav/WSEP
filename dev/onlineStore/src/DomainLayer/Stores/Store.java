@@ -15,11 +15,11 @@ public class Store {
     private  AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
     private int Id;
     private String Name;
-    private Boolean Active;
+    private Boolean Active= true;
     private History History;
     private ConcurrentHashMap<String, Rating> RateMapForStore;
     private ConcurrentHashMap<String, StoreProduct> products;
-    private Double Rate;
+    private Double Rate=5.0;
 
 
     public Store(String name) {
@@ -27,7 +27,7 @@ public class Store {
         Name = name;
         History = new History();
         products = new ConcurrentHashMap<>();
-
+        this.Active=true;
     }
     private String getNewProductId() {
         return Id+"-"+ProductID_GENERATOR.getAndIncrement();
@@ -51,9 +51,9 @@ public class Store {
         if(!getActive()){
             throw new Exception(" this store is closed");
         }
-        String s = "Store Name is" + this.Name + "Store Rate is:" + getRate();
+        String s = "Store Name is " + this.Name + "Store Rate is:" + getRate();
         for (StoreProduct i : products.values()) {
-            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate() + "/n";
+            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate() + "\n";
         }
         return s;
     }
