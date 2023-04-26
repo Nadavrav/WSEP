@@ -702,7 +702,7 @@ public class Facade {
                 throw  new Exception("there is no store with this id ");
             }
             store.RemoveProduct(ProductId);
-            
+
         }
         else {
             throw new Exception("Just the owner can Close the Store ");
@@ -813,7 +813,7 @@ public class Facade {
         return output;
     }
 
-    public List<String> SearchProductBykey( String key) {
+    public List<String> SearchProductBykey( String key) throws Exception {
         ArrayList<String> output =new ArrayList<>();
         for (Store store :storesList.values() ) {
             for(StoreProduct product: store.SearchProductByKey(key))
