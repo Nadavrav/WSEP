@@ -19,6 +19,22 @@ public class StoreProduct {
 
     public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
     {
+        this.getStoreIdByProductId(productId);//Used to check if productId is valid
+        if (name == null) {
+            throw new NullPointerException("Product name cant be null");
+        }
+        if (price < 0) {
+            throw new IllegalArgumentException("Product price cant be negative");
+        }
+        if (category == null) {
+            throw new NullPointerException("Product category cant be null");
+        }
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Product quantity cant be negative");
+        }
+        if (desc == null) {
+            throw new NullPointerException("Product desc cant be null");
+        }
         this.productId = productId;
         Name = name;
         Price = price;
@@ -41,12 +57,23 @@ public class StoreProduct {
     }
 
     public static int getStoreIdByProductId(String productId) {
+        if (productId == null || productId.isEmpty()) {
+            throw new NullPointerException("productId cannot be null or empty");
+        }
         int index = productId.indexOf('-');
+        if (index == -1) {
+            throw new IllegalArgumentException("productId does not contain '-'");
+        }
+        if (index == 0) {
+            throw new IllegalArgumentException("productId is invalid");
+        }
         String storeId= productId.substring(0,index);
         return Integer.parseInt(storeId);
-
     }
     public static void isValidProductId(String productId) throws Exception {
+        if (productId == null || productId.isEmpty()) {
+            throw new NullPointerException("productId cannot be null or empty");
+        }
         int index = productId.indexOf('-');
         if(index<1 || index>= productId.length())
             throw  new Exception("Invalid product ID");
@@ -54,6 +81,8 @@ public class StoreProduct {
         checkIfNumber(productId.substring(index+1));
     }
     private static void checkIfNumber(String s) throws Exception {
+        if(s==null||s.length()==0)
+            throw new NullPointerException("Cant check null number");
         for(int i=0;i<s.length();i++){
             if(s.charAt(i)>'9'||s.charAt(i)< '0'){
                 throw  new Exception("Invalid product ID");
@@ -117,7 +146,10 @@ public class StoreProduct {
         for(Rating rating:RateMap.values()){
             ratingSum+=rating.getRate();
         }
-        return ratingSum/getNumberOfRates();
+        int numOfRates = getNumberOfRates();
+        if(numOfRates == 0)
+            return 0.0;
+        return ratingSum/numOfRates;
     }
 
     public int getNumberOfRates() {
@@ -133,9 +165,13 @@ public class StoreProduct {
     }
 
     public void UpdateQuantity(int quantity) {
+        if(quantity<0)
+            throw new IllegalArgumentException("quantity cant be negative");
         setQuantity(quantity);
     }
     public void IncreaseQuantity(int quantity) {
+        if(quantity<0)
+            throw new IllegalArgumentException("quantity cant be negative");
         setQuantity(quantity+this.Quantity);
     }
 
