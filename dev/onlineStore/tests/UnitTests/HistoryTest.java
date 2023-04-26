@@ -46,6 +46,6 @@ class HistoryTest {
     }
     @Test
     void addPurchasednullCart() {//shouldnt realy happend but we need to check that the system can handle this if it does
-        assertThrows(Exception.class,h.AddPurchasedShoppingCart(null));
+        assertThrows(Exception.class,()->h.AddPurchasedShoppingCart(null));
     }
 }
