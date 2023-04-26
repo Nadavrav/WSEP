@@ -144,8 +144,8 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean RateProduct(int storeId, String productId, int rating) {
-        return false; //TODO IMPL
+    public boolean RateProduct(String productId, int rating) {
+        return false; //TODO: NO PRODUCT RATE WITHOUT COMMENT?
     }
 
     @Override
@@ -215,9 +215,18 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean RateProduct(String productId, int rating) {
-        //Response<?> r=service
-        return false;
+    public boolean RateAndCommentOnProduct(String productId,String comment, int rating) {
+        return !service.addProductRateAndComment(productId,rating,comment).isError();
+
+    }
+    @Override
+    public boolean RateStore(int storeId,int rating){
+        return !service.addStoreRate(storeId,rating).isError();
+    }
+
+    @Override
+    public boolean RateAndCommentOnStore(int storeId,String comment, int rating) {
+        return !service.addStoreRateAndComment(storeId,rating,comment).isError();
     }
 
 

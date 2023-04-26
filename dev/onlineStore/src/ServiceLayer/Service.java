@@ -168,7 +168,7 @@ public class Service {
     }
 
 
-    public Response<?> addStoreRate(int storeID,int rate) throws Exception{
+    public Response<?> addStoreRate(int storeID,int rate){
 
         try{
             facade.addStoreRate(visitorId,storeID,rate);
@@ -178,7 +178,7 @@ public class Service {
         }
         return new Response<>("Success");
     }
-    public Response<?> addStoreRateAndComment(int storeID,int rate,String comment) throws Exception{
+    public Response<?> addStoreRateAndComment(int storeID,int rate,String comment){
         try{
             facade.addStoreRateAndComment(visitorId,storeID,rate,comment);
 
@@ -187,7 +187,7 @@ public class Service {
         }
         return new Response<>("Success");
     }
-    public Response<?> addProductRateAndComment(String productID,int rate,String comment) throws Exception {
+    public Response<?> addProductRateAndComment(String productID,int rate,String comment) {
         try{
             facade.addProductRateAndComment(visitorId,productID,rate,comment);
 

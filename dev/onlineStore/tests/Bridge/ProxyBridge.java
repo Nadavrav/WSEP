@@ -115,7 +115,7 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public boolean RateProduct(int storeId, String productId, int rating) {
+    public boolean RateProduct(String productId, int rating) {
         return false;
     }
 
@@ -174,8 +174,18 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public boolean RateProduct(String productId, int rating) {
+    public boolean RateAndCommentOnProduct(String productId,String comment, int rating) {
         return false;
     }
+    @Override
+    public boolean RateStore(int storeId,int rating){
+        return false;
+    }
+
+    @Override
+    public boolean RateAndCommentOnStore(int storeId,String comment, int rating) {
+        return false;
+    }
+
 
 }

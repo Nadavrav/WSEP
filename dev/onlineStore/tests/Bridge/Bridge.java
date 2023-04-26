@@ -165,7 +165,7 @@ public interface Bridge {
      * @param rating the rating to give to the product
      * @return expected return: list of all found product names
      */
-    boolean RateProduct(int storeId,String productId, int rating);
+    boolean RateProduct(String productId, int rating);
     /**
      *
      * @param storeName store whose purchase history we expect to return
@@ -236,5 +236,7 @@ public interface Bridge {
      */
     public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
     List<ServiceProduct> FilterSearch(List<Filter> filters);
-    public boolean RateProduct(String productId,int rating);
+    boolean RateAndCommentOnProduct(String productId,String comment,int rating);
+    boolean RateStore(int storeId,int rating);
+    boolean RateAndCommentOnStore(int storeId,String comment,int rating);
 }

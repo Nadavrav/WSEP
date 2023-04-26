@@ -403,4 +403,29 @@ public class UserStoreRequestsTests {
         assertFalse(nameSearch.contains(ServiceSausage));
         assertFalse(nameSearch.contains(ServiceSteak));
     }
+    @Order(21)
+    @Test
+    public void StoreRatingTests(){
+        bridge.Login(Customer.getUserName(), Customer.getPassword());
+        assertTrue(bridge.RateStore(store1,4));
+        assertFalse(bridge.RateStore(nonExistentStore,4)); //invalid store
+        assertFalse(bridge.RateStore(store1,6)); //invalid rating
+    }
+    @Order(22)
+    @Test
+    public void StoreRatingAndCommentTests(){
+        bridge.Login(Customer.getUserName(), Customer.getPassword());
+        assertTrue(bridge.RateAndCommentOnStore(store1,"Manager said a bad word",4));
+        assertFalse(bridge.RateAndCommentOnStore(nonExistentStore,"Manager said a bad word",4)); //invalid store
+        assertFalse(bridge.RateAndCommentOnStore(store1,"Manager said a bad word",6)); //invalid rating
+
+    }
+    @Order(23)
+    @Test
+    public void ProductRatingTests(){
+        bridge.Login(Customer.getUserName(), Customer.getPassword());
+        assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"),"I wanted bacon",2));
+        assertFalse(bridge.RateAndCommentOnProduct("nothing","I wanted bacon",2)); //invalid product
+        assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"),"I wanted bacon",6)); //invalid rating
+    }
 }
