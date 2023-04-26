@@ -1,7 +1,9 @@
 package DomainLayer.Stores;
+import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 import DomainLayer.Users.Bag;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,21 +29,13 @@ public class Store {
     private static final Logger logger=Logger.getLogger("Store logger");
 
     public Store(String name) {
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-            Id = StoreID_GENERATOR.getAndIncrement();
-            Name = name;
-            History = new History();
-            products = new ConcurrentHashMap<>();
-            Active=true;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+        Id = StoreID_GENERATOR.getAndIncrement();
+        Name = name;
+        History = new History();
+        products = new ConcurrentHashMap<>();
+        Active=true;
     }
     private String getNewProductId() {
         return Id+"-"+ProductID_GENERATOR.getAndIncrement();

@@ -6,6 +6,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import DomainLayer.Logging.UniversalHandler;
 
 
 public class StoreProduct {
@@ -19,18 +20,15 @@ public class StoreProduct {
     private double Rate;
     private Map<String,Rating> RateMap;
     public int NumberOfRates;
-
+    private static final Logger logger=Logger.getLogger("StoreProduct logger");
 
 
     public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
     {
        try {
-        Handler handler = new FileHandler("Info.txt");
-        Handler handler1 = new FileHandler("Error.txt");
-        logger.addHandler(handler);
-        logger.addHandler(handler1);
-        handler.setFormatter(new SimpleFormatter());
-        handler1.setFormatter(new SimpleFormatter());
+           UniversalHandler.GetInstance().HandleError(logger);
+           UniversalHandler.GetInstance().HandleInfo(logger);
+
         this.getStoreIdByProductId(productId);//Used to check if productId is valid
         if (name == null) {
             throw new NullPointerException("Product name cant be null");
@@ -84,10 +82,12 @@ public class StoreProduct {
         }
          try {
             String storeId= productId.substring(0,index);
+             return Integer.parseInt(storeId);
         } catch (NumberFormatException e) {
             logger.warning("Failed to parse store ID from product ID: " + productId);
+             throw new IllegalArgumentException(e);
         }
-        return Integer.parseInt(storeId);
+
     }
     
     public static void isValidProductId(String productId) throws Exception {
