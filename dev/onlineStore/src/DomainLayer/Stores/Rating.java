@@ -12,11 +12,13 @@ public class Rating {
         if (rate > 5 || rate < 0) {
             throw new IllegalArgumentException("Your Rate must be between 0-5 ");
         }
+        this.rate = rate;
     }
     public Rating (int rate,String comment){
         if (rate > 5 || rate < 0) {
             throw new IllegalArgumentException("Your Rate must be between 0-5 ");
         }
+        this.rate = rate;
         this.comment=comment;
     }
 
