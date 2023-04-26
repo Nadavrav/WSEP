@@ -21,18 +21,17 @@ public class StoreProduct {
     private double Rate;
     private Map<String,Rating> RateMap;
     public int NumberOfRates;
-
+  private static final Logger logger=Logger.getLogger("StoreProduct logger");
 
 
     public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
     {
-       try {
-        Handler handler = new FileHandler("Info.txt");
-        Handler handler1 = new FileHandler("Error.txt");
-        logger.addHandler(handler);
-        logger.addHandler(handler1);
-        handler.setFormatter(new SimpleFormatter());
-        handler1.setFormatter(new SimpleFormatter());
+       try{
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
+        }
+        catch (Exception ignored){
+        }
         this.getStoreIdByProductId(productId);//Used to check if productId is valid
         if (name == null) {
             throw new NullPointerException("Product name cant be null");
@@ -56,9 +55,7 @@ public class StoreProduct {
         Quantity = quantity;
         Description =desc;
         RateMap=new HashMap<>();
-       } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+     
     }
 
 
