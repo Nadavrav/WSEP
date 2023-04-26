@@ -1,7 +1,8 @@
 package DomainLayer.Users;
 
 import DomainLayer.Stores.Store;
-
+import DomainLayer.Logging.UniversalHandler;
+import java.util.logging.*;
 import java.util.LinkedList;
 import java.util.logging.FileHandler;
 import java.util.logging.Handler;
