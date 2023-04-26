@@ -6,6 +6,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+import DomainLayer.Logging.UniversalHandler;
+import java.util.logging.*;
 
 
 public class StoreProduct {
