@@ -15,45 +15,34 @@ public class RegisteredUser extends SiteVisitor{
 
     public RegisteredUser(String userName, String password) throws Exception {
         super(0);
-
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
+        try{
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
+        }
+        catch (Exception ignored){
+        }
             checkUserName(userName);
             checkPassword(password);
             this.userName=userName;
             this.password=password;
             this.purchaseHistory = new PurchaseHistory();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        }
+        
     }
 
      public RegisteredUser(SiteVisitor visitor,String userName, String password) {
         super(visitor);
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
+        try{
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
+        }
+        catch (Exception ignored){
+        }
             checkUserName(userName);
             checkPassword(password);
             this.userName=userName;
             this.password=password;
             this.purchaseHistory = new PurchaseHistory();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        }
+       
     }
 
     private void checkPassword(String password) {
