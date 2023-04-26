@@ -2,6 +2,11 @@ package DomainLayer.Stores;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+
 
 public class StoreProduct {
 
@@ -19,6 +24,13 @@ public class StoreProduct {
 
     public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
     {
+       try {
+        Handler handler = new FileHandler("Info.txt");
+        Handler handler1 = new FileHandler("Error.txt");
+        logger.addHandler(handler);
+        logger.addHandler(handler1);
+        handler.setFormatter(new SimpleFormatter());
+        handler1.setFormatter(new SimpleFormatter());
         this.getStoreIdByProductId(productId);//Used to check if productId is valid
         if (name == null) {
             throw new NullPointerException("Product name cant be null");
@@ -42,6 +54,9 @@ public class StoreProduct {
         Quantity = quantity;
         Description =desc;
         RateMap=new HashMap<>();
+       } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -67,9 +82,14 @@ public class StoreProduct {
         if (index == 0) {
             throw new IllegalArgumentException("productId is invalid");
         }
-        String storeId= productId.substring(0,index);
+         try {
+            String storeId= productId.substring(0,index);
+        } catch (NumberFormatException e) {
+            logger.warning("Failed to parse store ID from product ID: " + productId);
+        }
         return Integer.parseInt(storeId);
     }
+    
     public static void isValidProductId(String productId) throws Exception {
         if (productId == null || productId.isEmpty()) {
             throw new NullPointerException("productId cannot be null or empty");
@@ -79,12 +99,17 @@ public class StoreProduct {
             throw  new Exception("Invalid product ID");
         checkIfNumber(productId.substring(0,index));
         checkIfNumber(productId.substring(index+1));
+        logger.info("valideProductId");
     }
+    
     private static void checkIfNumber(String s) throws Exception {
-        if(s==null||s.length()==0)
+        if(s==null||s.length()==0){
+            logger.warning("null");
             throw new NullPointerException("Cant check null number");
+        }
         for(int i=0;i<s.length();i++){
             if(s.charAt(i)>'9'||s.charAt(i)< '0'){
+               logger.warning("Invalid product ID " + s);
                 throw  new Exception("Invalid product ID");
             }
         }
@@ -143,14 +168,15 @@ public class StoreProduct {
     }
     public double GetAverageRating(){
         double ratingSum=0;
+        if (getNumberOfRates() == 0) {
+            logger.warning("No ratings found for store.");
+            return 0.0;
+        }
         for(Rating rating:RateMap.values()){
             ratingSum+=rating.getRate();
         }
-        int numOfRates = getNumberOfRates();
-        if(numOfRates == 0)
-            return 0.0;
-        return ratingSum/numOfRates;
-    }
+        return ratingSum/getNumberOfRates();
+    }   
 
     public int getNumberOfRates() {
         return NumberOfRates;
@@ -199,6 +225,8 @@ public class StoreProduct {
             RateMap.get(userName).addComment(comment);
         }
         setRate();
+        logger.info("Rating and comment added for user: " + userName + ", Rate: " + rate + ", Comment: " + comment);
+
     }
 
     /**
