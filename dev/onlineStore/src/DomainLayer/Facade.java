@@ -4,7 +4,8 @@ package DomainLayer;
 import DomainLayer.Stores.History;
 
 import DomainLayer.Stores.InstantPurchase;
-
+import DomainLayer.Logging.UniversalHandler;
+import java.util.logging.*;
 
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
