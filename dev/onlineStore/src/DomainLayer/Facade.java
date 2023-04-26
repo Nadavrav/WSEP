@@ -473,7 +473,7 @@ public class Facade {
         for(Bag b : visitor.getCart().getBags().values()){
            
             //Calculate amount
-            int amount = b.calculateTotalAmount();
+            double amount = b.calculateTotalAmount();
            
             //Check if possible to create a supply
             if(!supplier.isValidAddress(address)){

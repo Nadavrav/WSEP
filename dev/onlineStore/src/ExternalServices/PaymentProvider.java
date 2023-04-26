@@ -5,7 +5,7 @@ public class PaymentProvider {
   public PaymentProvider(){
   }
   
-  public boolean applyTransaction(int amount,int cardNumber){
+  public boolean applyTransaction(double amount,int cardNumber){
     return true;
   }
   

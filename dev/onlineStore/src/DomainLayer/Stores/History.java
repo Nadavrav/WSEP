@@ -15,10 +15,16 @@ public class History {
         ShoppingBags = new LinkedList<Bag>();
     }
     public void AddPurchasedShoppingCart(Cart shoppingCart){
-      Map<Integer,Bag> bags = shoppingCart.getBags();
-        for (Bag b: bags.values()) {
-            ShoppingBags.addLast( b);
+        if(shoppingCart == null){
+            throw new IllegalArgumentException("ShoppingCart can not be null");
         }
+        else{
+            Map<Integer,Bag> bags = shoppingCart.getBags();
+            for (Bag b: bags.values()) {
+                ShoppingBags.addLast(b);
+            }
+        }
+
     }
 
     public void AddPurchasedShoppingBag(Bag shoppingBag)

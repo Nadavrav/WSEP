@@ -9,10 +9,10 @@ public class InstantPurchase extends Purchase {
 
     SiteVisitor buyer;
     LinkedList<String> productsList;
-    int totalAmount;
+    double totalAmount;
     Date purchaseDate;
 
-    public InstantPurchase(SiteVisitor buyer,LinkedList productsList,int totalAmount){
+    public InstantPurchase(SiteVisitor buyer,LinkedList productsList,double totalAmount){
         this.buyer = buyer;
         this.productsList = productsList;
         this.totalAmount = totalAmount;
