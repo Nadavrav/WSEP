@@ -2,6 +2,8 @@ package DomainLayer.Users;
 
 import DomainLayer.Response;
 import DomainLayer.Stores.Purchase;
+import DomainLayer.Logging.UniversalHandler;
+import java.util.logging.*;
 
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
