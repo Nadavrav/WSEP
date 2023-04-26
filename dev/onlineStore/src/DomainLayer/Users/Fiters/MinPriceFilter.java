@@ -13,4 +13,5 @@ public class MinPriceFilter implements Filter {
     public boolean PassFilter(StoreProduct product) {
         return product.getPrice() >=min;
     }
+
 }

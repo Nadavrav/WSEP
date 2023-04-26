@@ -36,6 +36,11 @@ public class Facade {
     }
 
     private Map<Integer, Store> storesList;
+
+    public Map<String, Map<Integer, Employment>> getEmploymentList() {
+        return employmentList;
+    }
+
     private Map<String, Map<Integer, Employment>> employmentList;//
     private Supplier supplier;
     private PaymentProvider paymentProvider;
