@@ -168,6 +168,35 @@ public class Service {
     }
 
 
+    public Response<?> addStoreRate(int storeID,int rate) throws Exception{
+
+        try{
+            facade.addStoreRate(visitorId,storeID,rate);
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+    public Response<?> addStoreRateAndComment(int storeID,int rate,String comment) throws Exception{
+        try{
+            facade.addStoreRateAndComment(visitorId,storeID,rate,comment);
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+    public Response<?> addProductRateAndComment(String productID,int rate,String comment) throws Exception {
+        try{
+            facade.addProductRateAndComment(visitorId,productID,rate,comment);
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+
     //----------Store-----------
     // open Store
     public Response<Integer> OpenStore(String storeName) {
@@ -179,6 +208,26 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
+    public Response<?> GetStoreRate(int StoreId) throws Exception {
+        try {
+            return new Response<Double>(facade.GetStoreRate(visitorId, StoreId));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+
+    }
+    public Response<?> GetStoreProductRate(String ProductId) throws Exception{
+        try {
+            return new Response<Double>(facade.GetStoreProductRate(visitorId, ProductId));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+
+    }
+
 
     //close store
     public Response<?> CloseStore(int StoreId) {

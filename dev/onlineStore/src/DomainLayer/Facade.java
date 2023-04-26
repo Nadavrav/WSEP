@@ -1,5 +1,11 @@
 package DomainLayer;
 
+
+import DomainLayer.Stores.History;
+
+import DomainLayer.Stores.InstantPurchase;
+
+
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
@@ -433,11 +439,86 @@ public class Facade {
             if(!supplier.supplyProducts(productsId)){
                 failedPurchases.add(b.getStoreID());
             }
+            else{
+                if(visitor instanceof RegisteredUser){
+                    ((RegisteredUser)visitor).addPurchaseToHistory(new InstantPurchase(visitor,productsId,amount));
+                }
+            }
+
+
        }
         return failedPurchases;
         
     }
-    //----------Store-----------
+    public void addStoreRate(int visitorID,int storeID,int rate) throws Exception {
+        //Check if visitorID is logged in and registered to system
+        SiteVisitor rater = onlineList.get(visitorID);
+        if(!(rater instanceof RegisteredUser)){
+            throw  new Exception("invalid visitor Id");
+        }
+
+        //Check if storeID exists
+        Store store=storesList.get(storeID);
+        if(store==null){
+            throw  new Exception("invalid store Id");
+        }
+        if(!store.getActive()){
+            throw  new Exception("this is closed Store");
+        }
+
+        store.addRating(((RegisteredUser) rater).getUserName(),rate);
+
+
+    }
+
+    public void addStoreRateAndComment(int visitorID,int storeID,int rate,String comment) throws Exception {
+        //Check if visitorID is logged in and registered to system
+        SiteVisitor rater = onlineList.get(visitorID);
+        if(!(rater instanceof RegisteredUser)){
+            throw  new Exception("invalid visitor Id");
+        }
+
+        //Check if storeID exists
+        Store store=storesList.get(storeID);
+        if(store==null){
+            throw  new Exception("invalid store Id");
+        }
+        if(!store.getActive()){
+            throw  new Exception("this is closed Store");
+        }
+
+        store.addRatingAndComment(((RegisteredUser) rater).getUserName(),rate,comment);
+    }
+
+    public void addProductRateAndComment(int visitorID,String productID,int rate,String comment) throws Exception {
+        //Check if visitorID is logged in and registered to system
+        SiteVisitor rater = onlineList.get(visitorID);
+        if (!(rater instanceof RegisteredUser)) {
+            throw new Exception("invalid visitor Id");
+        }
+
+        isValidProductId(productID);
+
+        int storeId = getStoreIdByProductId(productID);
+
+        Store store = storesList.get(storeId);
+        if (store == null) {
+            throw new Exception("Invalid product ID");
+        }
+        if (!store.getActive()) {
+            throw new Exception("this is closed Store");
+        }
+        StoreProduct product = store.getProductByID(productID);//TO-DO(majd)
+        if (product == null) {
+            throw new Exception("Invalid product ID");
+        }
+
+        product.addRatingAndComment(((RegisteredUser) rater).getUserName(),rate,comment);
+
+    }
+
+
+        //----------Store-----------
     // open Store
     public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
         // check if register user
@@ -484,8 +565,7 @@ public class Facade {
             throw  new Exception("there is no product with this id ");
         }
 
-         Double D =store.getProductByID(ProductId).getRate();
-        return D;
+        return store.getProductByID(ProductId).getRate();
 
     }
     //close store

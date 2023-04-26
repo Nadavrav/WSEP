@@ -3,6 +3,7 @@ package DomainLayer.Users;
 import DomainLayer.Response;
 import DomainLayer.Stores.Purchase;
 
+import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegisteredUser extends SiteVisitor{
@@ -72,4 +73,9 @@ public class RegisteredUser extends SiteVisitor{
     public PurchaseHistory getPurchaseHistory(){
         return purchaseHistory;
     }
+
+    public void addPurchaseToHistory(Purchase purchase) {
+        purchaseHistory.addPurchaseToHistory(purchase);
+    }
+
 }
