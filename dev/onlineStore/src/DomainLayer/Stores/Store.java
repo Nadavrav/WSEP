@@ -9,6 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import DomainLayer.Users.RegisteredUser;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class Store {
     private static AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
@@ -19,15 +23,25 @@ public class Store {
     private History History;
     private ConcurrentHashMap<String, Rating> RateMapForStore;
     private ConcurrentHashMap<String, StoreProduct> products;
-    private Double Rate;
-
+    private Double Rate; 
+    private static final Logger logger=Logger.getLogger("Store logger");
 
     public Store(String name) {
-        Id = StoreID_GENERATOR.getAndIncrement();
-        Name = name;
-        History = new History();
-        products = new ConcurrentHashMap<>();
-
+        try {
+            Handler handler = new FileHandler("Info.txt");
+            Handler handler1 = new FileHandler("Error.txt");
+            logger.addHandler(handler);
+            logger.addHandler(handler1);
+            handler.setFormatter(new SimpleFormatter());
+            handler1.setFormatter(new SimpleFormatter());
+            Id = StoreID_GENERATOR.getAndIncrement();
+            Name = name;
+            History = new History();
+            products = new ConcurrentHashMap<>();
+            Active=true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
     private String getNewProductId() {
         return Id+"-"+ProductID_GENERATOR.getAndIncrement();
@@ -46,9 +60,10 @@ public class Store {
     }
 
     //2.1
-    public String getInfo() throws Exception {
+   public String getInfo() throws Exception {
 
         if(!getActive()){
+            logger.warning("Store is closed: " + this.Name);
             throw new Exception(" this store is closed");
         }
         String s = "Store Name is" + this.Name + "Store Rate is:" + getRate();
@@ -72,53 +87,68 @@ public class Store {
     public String AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
         StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity,desc);
         products.put(storeProduct.getId(), storeProduct);
+        logger.info("New product added to store. Product ID: " + storeProduct.getId());
         return storeProduct.getId();
-
     }
 
 
-    public Response<Object> RemoveProduct(String productID) {
+
+
+     public Response<Object> RemoveProduct(String productID) {
         if (!products.containsKey(productID)) {
+            logger.warning("Product not found in store. Product ID: " + productID);
             return new Response<>("There is no product in our products with this ID", true);
         }
         products.remove(productID);
+        logger.info("Product removed from store. Product ID: " + productID);
         return new Response<>("Product removed", false);
     }
 
     //2.2
-    public LinkedList<StoreProduct> SearchProductByName(String Name) throws Exception {
-        LinkedList<StoreProduct> searchResults = new LinkedList<>();
+   public LinkedList<StoreProduct> SearchProductByName(String Name) throws Exception {
+        LinkedList<StoreProduct> searchResults = new LinkedList<StoreProduct>();
         if (getActive()) {
-            searchResults = new LinkedList<StoreProduct>();
             for (StoreProduct product : this.products.values()) {
-                if (product.getName().equals(Name)) {
+                if (product.getName() == (Name)) {
                     if (CheckProduct(product)) {
+                        logger.info("New product added to store");
                         searchResults.add(product);
                     }
                 }
             }
 
+        }  else {
+            logger.warning("Search operation not allowed on an inactive store");
+            throw new Exception("This store is closed");
         }
+        logger.info("Product search by name completed. Search keyword: " + Name + ", Number of results: " + searchResults.size());
+
         return searchResults;
     }
-    public LinkedList<StoreProduct> SearchProductByCategory(String category) {
-        LinkedList<StoreProduct> searchResults = new LinkedList<>();
+    
+   public LinkedList<StoreProduct> SearchProductByCategory(String category) throws Exception {
+        LinkedList<StoreProduct> searchResults = new LinkedList<StoreProduct>();
         if (getActive()) {
-            searchResults = new LinkedList<StoreProduct>();
             for (StoreProduct product : this.products.values()) {
-                if (product.getCategory().equals(category)) {
+                if (product.getCategory() == (category)) {
                     if (CheckProduct(product)) {
                         searchResults.add(product);
                     }
                 }
             }
         }
+        else {
+            logger.warning("Search operation not allowed on an inactive store");
+            throw new Exception("This store is closed");
+        }
+        logger.info("Product search by Category completed. Search keyword: " + Name + ", Number of results: " + searchResults.size());
+
         return searchResults;
     }
-    public List<StoreProduct> SearchProductByKey(String key) {
-        LinkedList<StoreProduct> searchResults = new LinkedList<>();
+    
+   public List<StoreProduct> SearchProductByKey(String key) throws Exception {
+        LinkedList<StoreProduct> searchResults = new LinkedList<StoreProduct>();
         if (getActive()) {
-            searchResults = new LinkedList<StoreProduct>();
             for (StoreProduct product : this.products.values()) {
                 if (product.getName().contains(key)|| product.getCategory().contains(key)||product.getDescription().contains(key)) {
                     if (CheckProduct(product)) {
@@ -126,7 +156,11 @@ public class Store {
                     }
                 }
             }
+        } else {
+            logger.warning("Search operation not allowed on an inactive store");
+            throw new Exception("This store is closed");
         }
+        logger.info("Product search by Key completed. Search keyword: " + Name + ", Number of results: " + searchResults.size());
         return searchResults;
     }
 
@@ -215,13 +249,15 @@ public class Store {
     public void UpdateProductDescription(String productID, String description) {
         products.get(productID).setDescription(description);
     }
-    public void addRating(String userName ,int rate) throws Exception {
+   public void addRating(String userName ,int rate) throws Exception {
         if(!RateMapForStore.containsKey(userName)){
             RateMapForStore.put(userName,new Rating(rate));
         }else{
             RateMapForStore.get(userName).addRate(rate);
         }
         setRate();
+        logger.info("Rating added for user: " + userName + ", Rate: " + rate + ", Current store rate: " + this.Rate);
+
     }
     public void addRatingAndComment(String userName ,int rate,String comment) throws Exception {
         if(!RateMapForStore.containsKey(userName)){
@@ -231,6 +267,7 @@ public class Store {
             RateMapForStore.get(userName).addComment(comment);
         }
         setRate();
+        logger.info("comment added for user: " + userName + ", comment: " + comment);
     }
 
 }
