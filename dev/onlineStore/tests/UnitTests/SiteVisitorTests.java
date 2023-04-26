@@ -112,6 +112,21 @@ class SiteVisitorTest {
         assertEquals("Store Id : 0\nProduct Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\nProduct Id: 0-2 ,Product Name: Butter ,Product Price: 3.4\n",visitor.getCart().cartToString());
     }
     @Test
+    void addProductToCart_MulipleProductsDiffrentShops() {
+        StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProduct p2 = new StoreProduct("1-0","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
+        StoreProduct p3 = new StoreProduct("0-1","Butter",3.4,"Butter",6,"A Golden Brick");
+        StoreProduct p4 = new StoreProduct("1-1","Eggs",6.8,"Eggs",6,"What came first?");
+        int StoreId1 = 0;
+        int StoreId2 = 1;
+        visitor.addProductToCart(StoreId1,p1);
+        visitor.addProductToCart(StoreId1,p3);
+        visitor.addProductToCart(StoreId2,p2);
+        visitor.addProductToCart(StoreId2,p4);
+        assertEquals("Store Id : 0\nProduct Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\nProduct Id: 0-1 ,Product Name: Butter ,Product Price: 3.4\n" +
+                "Store Id : 1\nProduct Id: 1-0 ,Product Name: Bread ,Product Price: 7.2\nProduct Id: 1-1 ,Product Name: Eggs ,Product Price: 6.8\n",visitor.getCart().cartToString());
+    }
+    @Test
     void cartToString_EmptyCart() {
         StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
         StoreProduct p2 = new StoreProduct("0-1","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
