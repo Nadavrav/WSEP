@@ -15,6 +15,8 @@ public class Rating {
         this.rate = rate;
     }
     public Rating (int rate,String comment){
+        if(comment == null)
+            throw new NullPointerException("Comment cant be null");
         if (rate > 5 || rate < 0) {
             throw new IllegalArgumentException("Your Rate must be between 0-5 ");
         }
@@ -27,10 +29,14 @@ public class Rating {
     }
 
     public void addComment(String comment){
+        if(comment == null)
+            throw new NullPointerException("Comment cant be null");
         this.comment = comment;
-
     }
     public void addRate(int rate) {
+        if (rate > 5 || rate < 0) {
+            throw new IllegalArgumentException("Your Rate must be between 0-5 ");
+        }
         this.rate = rate;
     }
 

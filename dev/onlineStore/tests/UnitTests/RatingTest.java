@@ -62,7 +62,6 @@ class RatingTest {
     void addRate_NegVal() {
         int newRating = -8;
         rate = new Rating(3);
-        rate.addRate(newRating);
         assertThrows(IllegalArgumentException.class,()->rate.addRate(newRating));
     }
 }
