@@ -13,4 +13,5 @@ public class MaxPriceFilter implements Filter {
     public boolean PassFilter(StoreProduct product) {
         return product.getPrice() <= max;
     }
+
 }

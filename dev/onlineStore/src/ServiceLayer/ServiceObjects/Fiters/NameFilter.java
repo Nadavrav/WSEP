@@ -11,4 +11,5 @@ public class NameFilter implements Filter{
     public boolean PassFilter(StoreProduct product) {
         return product.getName().equals(name);
     }
+
 }

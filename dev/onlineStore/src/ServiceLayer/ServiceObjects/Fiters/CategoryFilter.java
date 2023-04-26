@@ -13,4 +13,5 @@ public class CategoryFilter implements Filter{
     public boolean PassFilter(StoreProduct product) {
         return product.getCategory().equals(category);
     }
+
 }

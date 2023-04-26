@@ -15,4 +15,5 @@ public class RatingFilter implements Filter {
     public boolean PassFilter(StoreProduct product) {
         return product.GetAverageRating() > rating;
     }
+
 }
