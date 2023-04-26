@@ -1,5 +1,6 @@
 package DomainLayer.Users;
 
+import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.StoreProduct;
 
 import java.util.ArrayList;
@@ -16,12 +17,8 @@ public class Bag {
 
     public Bag (int storeId){
         try{
-            Handler handler=new FileHandler("Info.txt");
-            Handler handler1=new FileHandler("ErrorLog.txt");
-            handler1.setLevel(Level.SEVERE);
-            handler.setLevel(Level.ALL);
-            logger.addHandler(handler);
-            handler.setFormatter(new SimpleFormatter());
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
         }
         catch (Exception ignored){
         }
