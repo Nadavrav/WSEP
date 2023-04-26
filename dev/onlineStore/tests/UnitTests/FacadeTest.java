@@ -440,6 +440,33 @@ class FacadeTest {
         }
     }
     @Test
+    void appointNewStoreOwner_AppointTwice() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
+            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username).get(storeId).getRole());
+            assertThrows(Exception.class,()->f.appointNewStoreOwner(visitorId,Username2,storeId));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
     void appointNewStoreOwner_notAllowedToAppoint() {
         try {
             int visitorId = f.EnterNewSiteVisitor();//Enter Site
@@ -569,7 +596,186 @@ class FacadeTest {
         }
     }
     @Test
-    void appointNewStoreManager() {
+    void appointNewStoreManager_ok() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
+            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username).get(storeId).getRole());
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void appointNewStoreManager_AppointTwice() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
+            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username).get(storeId).getRole());
+            assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,Username2,storeId));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void appointNewStoreManager_notAllowedToAppoint() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.logout(visitorId);
+            f.login(visitorId,Username2,password2);
+            assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,Username2,storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void appointNewStoreManager_badId() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            assertThrows(Exception.class,()->f.appointNewStoreManager(100,Username2,storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void appointNewStoreManager_badStoreId() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,Username2,100));// appoint use2 to be store manager of store 1 which user 1 is the founder of
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void appointNewStoreManager_closedStore() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.CloseStore(visitorId,storeId);
+            assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,Username2,storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void appointNewStoreManager_NonexistentUsername() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.CloseStore(visitorId,storeId);
+            assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,"FakeUsername",storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
