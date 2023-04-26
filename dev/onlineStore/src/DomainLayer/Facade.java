@@ -1,15 +1,13 @@
 package DomainLayer;
 
-import DomainLayer.Stores.History;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
 import static DomainLayer.Stores.StoreProduct.isValidProductId;
@@ -31,7 +29,6 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
-
     }
 
     public static synchronized Facade getInstance() {
@@ -95,7 +92,7 @@ public class Facade {
         }
         //id=0
         ((RegisteredUser) user).logout();
-        //removefrom online list
+        //remove from online list
         user= new SiteVisitor(visitorId);
 
         onlineList.replace(visitorId,user );//RegisteredUser turns into SiteVisitor
@@ -124,6 +121,64 @@ public class Facade {
                 throw new Exception("Invalid product ID");
             }
             user.addProductToCart(storeId, product);
+        }
+        catch (Exception e){
+            //release lock
+            throw e;
+        }
+    }
+
+    public void removeProductFromCart(String productId, int visitorId) throws Exception {
+        SiteVisitor user = onlineList.get(visitorId);
+        if (user == null) {
+            throw new Exception("Invalid Visitor ID");
+        }
+        isValidProductId(productId);
+        //Get product lock
+        try {
+            int storeId = getStoreIdByProductId(productId);
+
+            Store store = storesList.get(storeId);
+            if (store == null) {
+                throw new Exception("Invalid product ID");
+            }
+            if (!store.getActive()) {
+                throw new Exception("this is closed Store");
+            }
+            StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
+            if (product == null) {
+                throw new Exception("Invalid product ID");
+            }
+            user.removeProductFromCart(storeId, product);
+        }
+        catch (Exception e){
+            //release lock
+            throw e;
+        }
+    }
+
+    public void changeCartProductQuantity(String productId,int newAmount, int visitorId) throws Exception {
+        SiteVisitor user = onlineList.get(visitorId);
+        if (user == null) {
+            throw new Exception("Invalid Visitor ID");
+        }
+        isValidProductId(productId);
+        //Get product lock
+        try {
+            int storeId = getStoreIdByProductId(productId);
+
+            Store store = storesList.get(storeId);
+            if (store == null) {
+                throw new Exception("Invalid product ID");
+            }
+            if (!store.getActive()) {
+                throw new Exception("this is closed Store");
+            }
+            StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
+            if (product == null) {
+                throw new Exception("Invalid product ID");
+            }
+            user.removeProductFromCart(storeId, product);
         }
         catch (Exception e){
             //release lock
@@ -347,7 +402,7 @@ public class Facade {
         return output;
     }
 
-    public LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
+    public synchronized LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
         
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
@@ -358,7 +413,7 @@ public class Facade {
         LinkedList<String> failedPurchases = new LinkedList<>();
 
 
-        for(Bag b : visitor.getCart().getBag().values()){
+        for(Bag b : visitor.getCart().getBags().values()){
            
             //Calculate amount
             int amount = b.calculateTotalAmount();
@@ -378,9 +433,7 @@ public class Facade {
             if(!supplier.supplyProducts(productsId)){
                 failedPurchases.add(b.getStoreID());
             }
-         
        }
-
         return failedPurchases;
         
     }
@@ -480,7 +533,7 @@ public class Facade {
         }
         Employment employment = null;
         try{
-            employment = employmentList.get(visitorId).get(storeId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
         }catch (Exception e){
             throw  new Exception("this user dont have any store");
         }
@@ -506,7 +559,7 @@ public class Facade {
         int StoreId=StoreProduct.getStoreIdByProductId(ProductId);
         Employment employment = null;
         try{
-            employment = employmentList.get(visitorId).get(StoreId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
         }catch (Exception e){
             throw  new Exception("this user dont have any store");
         }
@@ -593,7 +646,7 @@ public class Facade {
         Employment employment = null;
         int storeId =StoreProduct.getStoreIdByProductId(productID);
         try{
-            employment = employmentList.get(visitorId).get(storeId);
+            employment = employmentList.get((((RegisteredUser) User).getUserName())).get(storeId);
         }catch (Exception e){
             throw new Exception("This user don't have any store");
         }

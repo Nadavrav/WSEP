@@ -43,10 +43,16 @@ public class Bag {
         logger.info("Add product Succeeded");
 
     }
-    
-    public int calculateTotalAmount(){
+    public void removeProduct(StoreProduct product) {
+        productList.remove(product);
+        productsAmount.remove(product);
+    }
+    public void changeProductAmount(StoreProduct product,int newAmount) {
+        productsAmount.put(product.getId(),newAmount);
+    }
+    public int calculateTotalAmount() {
         int totalAmount = 0;
-        for(StoreProduct sp : productList.values()){
+        for (StoreProduct sp : productList.values()) {
             totalAmount += sp.getPrice();
         }
         return totalAmount;

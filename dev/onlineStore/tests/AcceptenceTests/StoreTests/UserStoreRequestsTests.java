@@ -5,7 +5,9 @@ import Bridge.Driver;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import DomainLayer.Users.Fiters.*;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.MaxPriceFilter;
+import ServiceLayer.ServiceObjects.Fiters.NameFilter;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 import TestObjects.TestUser;
 import org.junit.jupiter.api.*;
@@ -373,6 +375,8 @@ public class UserStoreRequestsTests {
         productIdMap.put("Steak",Steak);
         productIdMap.put("Cheeseburger",Cheeseburger);
     }
+    @Order(20)
+    @Test
     public void FilterSearchTests(){
         ServiceProduct ServiceHamburger=new ServiceProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5);
         ServiceProduct ServiceSausage=new ServiceProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5);
@@ -399,4 +403,5 @@ public class UserStoreRequestsTests {
         assertFalse(nameSearch.contains(ServiceSteak));
         //TODO: MORE??
     }
+
 }

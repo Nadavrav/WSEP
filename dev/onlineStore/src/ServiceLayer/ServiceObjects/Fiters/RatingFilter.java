@@ -1,4 +1,4 @@
-package DomainLayer.Users.Fiters;
+package ServiceLayer.ServiceObjects.Fiters;
 
 
 import DomainLayer.Stores.StoreProduct;

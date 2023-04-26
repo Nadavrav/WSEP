@@ -2,11 +2,12 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.List;
-
+//TODO: FIX THE DAMN DOCS
 public interface Bridge {
     /**
      *
@@ -195,7 +196,7 @@ public interface Bridge {
      * Function to open a user's cart
      * @return A string list of id's of the items in the user's cart
      */
-    Response<String[]> OpenCart();
+    Response<String> OpenCart();
 
     /**
      * A function to change the quantity of an item in a user's cart
@@ -229,9 +230,10 @@ public interface Bridge {
 
     /**
      * A function to get the purchase history of the store(can only do this if you are the store owner or the admin or have perms)
+     *
      * @param StoreName - the store name
      * @return a response with a string array of the purchase history as its value
      */
-    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId);
+    public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
     List<ServiceProduct> FilterSearch(List<Filter> filters);
 }

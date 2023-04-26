@@ -22,6 +22,17 @@ public class RegisteredUser extends SiteVisitor{
         this.purchaseHistory = new PurchaseHistory();
     }
 
+    public RegisteredUser(SiteVisitor visitor,String userName, String password) {
+        super(visitor);
+
+        checkUserName(userName);
+        checkPassword(password);
+        this.userName=userName;
+        this.password=password;
+        this.purchaseHistory = new PurchaseHistory();
+    }
+
+
     private void checkPassword(String password) {
         if(password.length()<8){
             throw new IllegalArgumentException("the password is too short");

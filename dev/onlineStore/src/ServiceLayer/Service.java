@@ -2,17 +2,12 @@ package ServiceLayer;
 
 import DomainLayer.Facade;
 import DomainLayer.Response;
-import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
-import static DomainLayer.Stores.StoreProduct.isValidProductId;
 
 public class Service {
 
@@ -91,6 +86,28 @@ public class Service {
         return new Response<>("Success");
 
     }
+
+    public Response<?> removeProductFromCart(String productId){
+        try{
+            facade.removeProductFromCart(productId,visitorId);
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+
+    }
+
+    public Response<?> changeCartProductQuantity(String productId,int newAmount){
+        try{
+            facade.changeCartProductQuantity(productId,newAmount,visitorId);
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+
 
     public Response<?> getProductsInMyCart() {//2.4
         String products;
@@ -332,5 +349,13 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
         return new Response<>("Success");
+    }
+    public Response<List<String>> PurchaseCart(int visitorCard,String address){
+        try{
+            return new Response<>(facade.purchaseCart(visitorId,visitorCard,address));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
     }
 }
