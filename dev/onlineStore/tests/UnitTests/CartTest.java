@@ -27,7 +27,7 @@ class CartTest {
     public void testAddProductToCartWithNewStore() {
         Cart cart = new Cart();
         cart.addProductToCart(StoreId1, p1);
-        Bag actualBag  = cart.getBag().get(StoreId1);
+        Bag actualBag  = cart.getBags().get(StoreId1);
         assertNotNull(actualBag);
         assertEquals("Product Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n", actualBag.bagToString());
     }
@@ -37,7 +37,7 @@ class CartTest {
         Cart cart = new Cart();
         cart.addProductToCart(StoreId1, p1);
         cart.addProductToCart(StoreId1, p3);
-        Bag actualBag  = cart.getBag().get(StoreId1);
+        Bag actualBag  = cart.getBags().get(StoreId1);
         assertNotNull(actualBag);
         assertEquals("Product Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n" +
                 "Product Id: 0-1 ,Product Name: Butter ,Product Price: 3.4\n", actualBag.bagToString());
@@ -49,8 +49,8 @@ class CartTest {
         cart.addProductToCart(StoreId1, p3);
         cart.addProductToCart(StoreId2, p2);
         cart.addProductToCart(StoreId2, p4);
-        Bag actualBag  = cart.getBag().get(StoreId1);
-        Bag actualBag2  = cart.getBag().get(StoreId2);
+        Bag actualBag  = cart.getBags().get(StoreId1);
+        Bag actualBag2  = cart.getBags().get(StoreId2);
         assertNotNull(actualBag);
         assertEquals("Product Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n" +
                 "Product Id: 0-1 ,Product Name: Butter ,Product Price: 3.4\n", actualBag.bagToString());

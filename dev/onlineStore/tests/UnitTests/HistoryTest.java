@@ -4,7 +4,6 @@ import DomainLayer.Stores.History;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.Cart;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ class HistoryTest {
     void addPurchasedShoppingCart() {
         h.AddPurchasedShoppingCart(shoppingCart);
         LinkedList<Bag> bagsHistory = h.getShoppingBags();
-        assertEquals(shoppingCart.getBag().get(0).bagToString(),bagsHistory.get(0).bagToString());
+        assertEquals(shoppingCart.getBags().get(0).bagToString(),bagsHistory.get(0).bagToString());
     }
     @Test
     void addPurchasedShoppingCart_Multiple() {
@@ -42,7 +41,7 @@ class HistoryTest {
 
         h.AddPurchasedShoppingCart(shoppingCart);
         LinkedList<Bag> bagsHistory = h.getShoppingBags();
-        assertEquals(shoppingCart.getBag().get(0).bagToString()+""+shoppingCart.getBag().get(1).bagToString(),bagsHistory.get(0).bagToString()+""+bagsHistory.get(1).bagToString());
+        assertEquals(shoppingCart.getBags().get(0).bagToString()+""+shoppingCart.getBags().get(1).bagToString(),bagsHistory.get(0).bagToString()+""+bagsHistory.get(1).bagToString());
     }
     @Test
     void addPurchasednullCart() {//shouldnt realy happend but we need to check that the system can handle this if it does

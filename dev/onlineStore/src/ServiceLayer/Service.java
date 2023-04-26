@@ -6,7 +6,6 @@ import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
 
 import ServiceLayer.ServiceObjects.Fiters.Filter;
-import DomainLayer.Users.Fiters.Filter;
 import ServiceLayer.ServiceObjects.ServiceBag;
 
 import ServiceLayer.ServiceObjects.ServiceProduct;

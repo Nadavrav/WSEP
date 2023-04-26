@@ -1,7 +1,6 @@
 package DomainLayer.Users;
 
 import DomainLayer.Stores.StoreProduct;
-import ServiceLayer.ServiceObjects.ServiceBag;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,12 +26,12 @@ public class Cart {
     
     public void removeProductFromCart(int storeId,StoreProduct product){
 
-        Bag b = getBag(storeId);
+        Bag b = getBags(storeId);
         b.removeProduct(product);
     }
 
     public void changeCartProductQuantity(int storeId,StoreProduct product,int newAmount){
-        Bag b = getBag(storeId);
+        Bag b = getBags(storeId);
         b.changeProductAmount(product,newAmount);
     }
 
@@ -40,7 +39,7 @@ public class Cart {
         return bagList;
     }
 
-    public Bag getBag(int storeId){
+    public Bag getBags(int storeId){
         return bagList.get(storeId);
     }
 
@@ -53,9 +52,5 @@ public class Cart {
         return s;
     }
 
-    public Map<Integer,Bag> getBags()
-    {
-        return bagList;
-    }
 
 }
