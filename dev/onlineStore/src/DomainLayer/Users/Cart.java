@@ -15,17 +15,14 @@ public class Cart {
 
 
   public Cart(){
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-            bagList= new HashMap<>();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+       try{
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
         }
+        catch (Exception ignored){
+        }
+            bagList= new HashMap<>();
+      
 
     }
 
@@ -49,13 +46,27 @@ public class Cart {
     
     public void removeProductFromCart(int storeId,StoreProduct product){
 
-        Bag b = getBags(storeId);
-        b.removeProduct(product);
+        Bag b = getBag(storeId);
+        logger.info("enter this function");
+        if (b != null) {
+            // If bag exists, remove the product from the bag
+            b.removeProduct(product);
+            logger.info("Product removed from cart for store with ID: " + storeId);
+        } else {
+            logger.warning("Bag not found for store with ID: " + storeId);
+        }
     }
-
     public void changeCartProductQuantity(int storeId,StoreProduct product,int newAmount){
-        Bag b = getBags(storeId);
-        b.changeProductAmount(product,newAmount);
+        Bag b = getBag(storeId);
+
+        if (b != null) {
+            // If bag exists, change the quantity of the product in the bag
+            b.changeProductAmount(product, newAmount);
+            logger.info("Product quantity changed in cart for store with ID: " + storeId + ", Product: " +
+                    product.getName() + ", New quantity: " + newAmount);
+        } else {
+            logger.warning("Bag not found for store with ID: " + storeId);
+        }
     }
 
     public Map<Integer,Bag> getBags(){
