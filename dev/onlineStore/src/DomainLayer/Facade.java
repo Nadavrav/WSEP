@@ -702,10 +702,11 @@ public class Facade {
                 throw  new Exception("there is no store with this id ");
             }
             store.RemoveProduct(ProductId);
-            //return new Response<>("the Product is successfully added", false);
+            
         }
-
-        throw  new Exception("Just the owner can Close the Store ");
+        else {
+            throw new Exception("Just the owner can Close the Store ");
+        }
         //catch
         //release lock user
         //release productlock if locked
