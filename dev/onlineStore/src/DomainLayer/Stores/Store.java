@@ -6,6 +6,7 @@ import DomainLayer.Logging.UniversalHandler;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.*;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -130,7 +131,7 @@ public class Store {
         LinkedList<StoreProduct> searchResults = new LinkedList<StoreProduct>();
         if (getActive()) {
             for (StoreProduct product : this.products.values()) {
-                if (product.getCategory() == (category)) {
+                if (Objects.equals(product.getCategory(), category)) {
                     if (CheckProduct(product)) {
                         searchResults.add(product);
                     }

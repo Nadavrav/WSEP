@@ -357,7 +357,7 @@ public class Facade {
     }
     
 
-   ublic void appointNewStoreManager(int appointerId,String appointedUserName,int storeId) throws Exception {//4.6
+   public void appointNewStoreManager(int appointerId,String appointedUserName,int storeId) throws Exception {//4.6
         //check if appointerId is logged in and registered to system
         SiteVisitor appointer = onlineList.get(appointerId);
         //lock appointer
@@ -533,7 +533,7 @@ public class Facade {
 
 
         for(Bag b : visitor.getCart().getBags().values()){
-           
+
             //Calculate amount
             double amount = b.calculateTotalAmount();
            

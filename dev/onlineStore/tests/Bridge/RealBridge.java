@@ -203,7 +203,7 @@ public class RealBridge implements Bridge {
 
     @Override
     public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId) {
-       // return service.GetStoreHistoryPurchase(storeId);
+        //return service.GetStoreHistoryPurchase(storeId);
         return null; //TODO Waiting for
     }
     @Override

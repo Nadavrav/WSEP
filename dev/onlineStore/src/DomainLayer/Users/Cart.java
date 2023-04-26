@@ -29,8 +29,9 @@ public class Cart {
     }
 
 
-    public void addProductToCart(int storeId, StoreProduct product) {
-        //check if there is bag to store
+    //public void addProductToCart(int storeId, StoreProduct product) {
+    //    //check if there is bag to store
+    //}
       public void addProductToCart(int storeId, StoreProduct product) {
         Bag bag = bagList.get(storeId);
         if (bag == null) {
@@ -48,7 +49,7 @@ public class Cart {
     
     public void removeProductFromCart(int storeId,StoreProduct product){
 
-        Bag b = getBag(storeId);
+        Bag b = bagList.get(storeId);
         logger.info("enter this function");
         if (b != null) {
             // If bag exists, remove the product from the bag
@@ -59,7 +60,7 @@ public class Cart {
         }
     }
     public void changeCartProductQuantity(int storeId,StoreProduct product,int newAmount){
-        Bag b = getBag(storeId);
+        Bag b = bagList.get(storeId);
 
         if (b != null) {
             // If bag exists, change the quantity of the product in the bag

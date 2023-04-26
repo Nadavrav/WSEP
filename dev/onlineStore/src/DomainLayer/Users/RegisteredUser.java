@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegisteredUser extends SiteVisitor{
+    private static final Logger logger=Logger.getLogger("RegisteredUser logger");
     String userName;
     String password;
     PurchaseHistory purchaseHistory;
@@ -68,10 +69,10 @@ public class RegisteredUser extends SiteVisitor{
             logger.warning("null username");
             throw new IllegalArgumentException("Username cannot be null");
         }
-        if (userName.length() < 8) {
-            logger.warning("invalid username");
-            throw new IllegalArgumentException("the userName is too short");
-        }
+       //if (userName.length() < 8) { //DONT UNCOMMENT THIS WE DON'T NEED THIS PART
+       //    logger.warning("invalid username");
+       //    throw new IllegalArgumentException("the userName is too short");
+       //}
         if (userName.length() > 30) {
             logger.warning("invalid username");
             throw new IllegalArgumentException("the useName is too long");

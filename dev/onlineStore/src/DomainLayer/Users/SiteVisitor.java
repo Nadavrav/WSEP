@@ -38,32 +38,13 @@ public class SiteVisitor{
 //    }
     
     public SiteVisitor(SiteVisitor other){
-       try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-           visitorId=other.getVisitorId();
-          cart= other.getCart();
-            }catch (Exception e){
-            throw new Exception();
-        }
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleError(logger);
     }
     public SiteVisitor(int id){
-         try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-           visitorId=id;
-           cart = new Cart();
-            }catch (Exception e){
-            throw new Exception();
-        }
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+
     }
     private int getNewVisitorId() {
         if (FreeVisitorID.size() != 0) {

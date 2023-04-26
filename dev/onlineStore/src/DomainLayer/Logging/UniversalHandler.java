@@ -27,6 +27,7 @@ public class UniversalHandler {
                 infoHandler = new FileHandler("Info Log.txt");
                 infoHandler.setFormatter(new SimpleFormatter());
                 infoHandler.setLevel(Level.ALL);
+                logger.setUseParentHandlers(false);
             }
             catch (Exception ignored){}
         }
@@ -38,6 +39,7 @@ public class UniversalHandler {
                 errorHandler = new FileHandler("Error Log.txt");
                 errorHandler.setFormatter(new SimpleFormatter());
                 errorHandler.setLevel(Level.SEVERE);
+                logger.setUseParentHandlers(false);
             }
             catch (Exception ignored){}
 

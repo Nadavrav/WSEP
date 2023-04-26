@@ -71,6 +71,7 @@ public class StoreProduct {
     }
 
     public static int getStoreIdByProductId(String productId) {
+        String storeId="-1";
         if (productId == null || productId.isEmpty()) {
             throw new NullPointerException("productId cannot be null or empty");
         }
@@ -82,7 +83,7 @@ public class StoreProduct {
             throw new IllegalArgumentException("productId is invalid");
         }
          try {
-            String storeId= productId.substring(0,index);
+             storeId= productId.substring(0,index);
         } catch (NumberFormatException e) {
             logger.warning("Failed to parse store ID from product ID: " + productId);
         }

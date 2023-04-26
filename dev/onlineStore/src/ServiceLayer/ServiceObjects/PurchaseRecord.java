@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 public class PurchaseRecord {
     private final ServiceProduct serviceProduct;
     private final String userName;
-    private LocalDateTime localDateTime; //TODO: DO WE USE THIS?
 
     public PurchaseRecord(ServiceProduct serviceProduct, String userName) {
         this.serviceProduct = serviceProduct;
