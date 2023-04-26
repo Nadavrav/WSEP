@@ -64,7 +64,7 @@ public class Store {
 
     // history 6.4
     public LinkedList<Bag> GetStorePurchaseHistory() {
-        return this.History.ShoppingBags;
+        return this.History.getShoppingBags();
     }
 
 
