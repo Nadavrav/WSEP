@@ -2,11 +2,12 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.List;
-
+//TODO: FIX THE DAMN DOCS
 public interface Bridge {
     /**
      *
@@ -46,12 +47,6 @@ public interface Bridge {
      */
     boolean Logout();
 
-    /**
-     * Function to check if the user is online
-     * @param Username - The name of the user we want to check
-     * @return A response with a value of true/false corresponding to if the user is online
-     */
-    boolean IsOnline(String Username);
 
     /**
      *
@@ -170,7 +165,7 @@ public interface Bridge {
      * @param rating the rating to give to the product
      * @return expected return: list of all found product names
      */
-    boolean RateProduct(int storeId,String productId, int rating);
+    boolean RateProduct(String productId, int rating);
     /**
      *
      * @param storeName store whose purchase history we expect to return
@@ -201,7 +196,7 @@ public interface Bridge {
      * Function to open a user's cart
      * @return A string list of id's of the items in the user's cart
      */
-    Response<String[]> OpenCart();
+    Response<String> OpenCart();
 
     /**
      * A function to change the quantity of an item in a user's cart
@@ -235,9 +230,13 @@ public interface Bridge {
 
     /**
      * A function to get the purchase history of the store(can only do this if you are the store owner or the admin or have perms)
+     *
      * @param StoreName - the store name
      * @return a response with a string array of the purchase history as its value
      */
-    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId);
+    public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
     List<ServiceProduct> FilterSearch(List<Filter> filters);
+    boolean RateAndCommentOnProduct(String productId,String comment,int rating);
+    boolean RateStore(int storeId,int rating);
+    boolean RateAndCommentOnStore(int storeId,String comment,int rating);
 }

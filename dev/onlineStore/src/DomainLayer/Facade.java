@@ -9,7 +9,7 @@ import DomainLayer.Stores.InstantPurchase;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
@@ -35,7 +35,6 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
-
     }
 
     public static synchronized Facade getInstance() {
@@ -99,7 +98,7 @@ public class Facade {
         }
         //id=0
         ((RegisteredUser) user).logout();
-        //removefrom online list
+        //remove from online list
         user= new SiteVisitor(visitorId);
 
         onlineList.replace(visitorId,user );//RegisteredUser turns into SiteVisitor
@@ -409,7 +408,7 @@ public class Facade {
         return output;
     }
 
-    public LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
+    public synchronized LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
         
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
@@ -446,9 +445,8 @@ public class Facade {
                 }
             }
 
-         
-       }
 
+       }
         return failedPurchases;
         
     }
@@ -615,7 +613,7 @@ public class Facade {
         }
         Employment employment = null;
         try{
-            employment = employmentList.get(visitorId).get(storeId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
         }catch (Exception e){
             throw  new Exception("this user dont have any store");
         }
@@ -641,7 +639,7 @@ public class Facade {
         int StoreId=StoreProduct.getStoreIdByProductId(ProductId);
         Employment employment = null;
         try{
-            employment = employmentList.get(visitorId).get(StoreId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
         }catch (Exception e){
             throw  new Exception("this user dont have any store");
         }
@@ -728,7 +726,7 @@ public class Facade {
         Employment employment = null;
         int storeId =StoreProduct.getStoreIdByProductId(productID);
         try{
-            employment = employmentList.get(visitorId).get(storeId);
+            employment = employmentList.get((((RegisteredUser) User).getUserName())).get(storeId);
         }catch (Exception e){
             throw new Exception("This user don't have any store");
         }
@@ -813,7 +811,7 @@ public class Facade {
     /**
      *
      * @param filters list of filter object for whom each product has to pass all of them to be returned
-     * @return list of strings describing product info of products who passed the filter list
+     * @return list of products who passed the filter list
      */
     public List<StoreProduct> FilterProductSearch(List<Filter> filters) {
         ArrayList<StoreProduct> products=new ArrayList<>();

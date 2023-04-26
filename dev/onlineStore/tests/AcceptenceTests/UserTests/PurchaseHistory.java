@@ -3,16 +3,19 @@ package AcceptenceTests.UserTests;
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import Bridge.*;
 import DomainLayer.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import ServiceLayer.ServiceObjects.PurchaseRecord;
+import ServiceLayer.ServiceObjects.ServiceProduct;
+import org.junit.jupiter.api.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PurchaseHistory {
 
-    private Bridge bridge= Driver.getBridge();
+    private final Bridge bridge= Driver.getBridge();
     private final String AdminUsername = "Admin";
     private final String AdminPassword = "Admin";
     private final String StoreOwnerName = "StoreOwner";
@@ -20,30 +23,43 @@ public class PurchaseHistory {
     private final String NormalUser = "NormalUser";
     private final String password = "12345678";
     private final String storeName = "Super";
-    private final String productId_MegaMilk = "0";//Product that exits
-    private final String productId_UltraMilk = "1";//Product that exits
-    private final String productId_GigaMilk = "2";//Product that exits
+    private int storeId=-1;
+    private String productId_Milk = "-1";//Product that exits
+    private String productId_Cheese = "-1";//Product that exits
+    private String productId_Hamburger = "-1";//Product that exits
     private final String badProductId = "-1";//Product that doesnt exist
-    private CreditCardProxy RealcreditProxy = new CreditCardProxy(); // A credit card Proxy class
-    private CreditCardProxy FakecreditProxy = new CreditCardProxy(); // A credit card Proxy class
+    private final CreditCardProxy RealcreditProxy = new CreditCardProxy(); // A credit card Proxy class
+    private final CreditCardProxy FakecreditProxy = new CreditCardProxy(); // A credit card Proxy class
+  //  private final HashMap<String,String> productIdMapper=new HashMap<>();
+    private final HashMap<String,ServiceProduct> serviceProductMap=new HashMap<>();
     @BeforeAll
     public void Setup()
     {
-     //   int [] perms = {1,2,3,4,5,6,7,8,9,10,11};
-     //   assertTrue(bridge.EnterMarket());
-     //   assertTrue(bridge.Register(StoreOwnerName,password));
-     //   assertTrue(bridge.Register(StoreWorkerNameWithPerms,password));
-     //   assertTrue(bridge.Register(NormalUser,password));
-     //   assertTrue(bridge.Login(StoreOwnerName,password));
-     //   assertTrue(bridge.OpenNewStore(storeName));
-     //   assertTrue(bridge.AddProduct(storeName,"Mega milk","Guaranteed to make bones stronger!",5,10));//TODO: GET ID
-     //   assertTrue(bridge.AddProduct(storeName,"Ultra milk","Bones made of metal now!",7,10));//TODO: GET ID
-     //   assertTrue(bridge.AddProduct(storeName,"Giga milk","bones made of diamond now!",10,10));//TODO: GET ID
-     //   assertTrue(bridge.AddPermission(StoreWorkerNameWithPerms,storeName,perms));
-     //   assertTrue(bridge.Logout());
-     //   assertTrue(bridge.ExitMarket());
-     //   this.RealcreditProxy.setReal();
-     //   this.FakecreditProxy.setFake();
+        int [] perms = {1,2,3,4,5,6,7,8,9,10,11};
+        assertTrue(bridge.EnterMarket());
+        assertTrue(bridge.Register(StoreOwnerName,password));
+        assertTrue(bridge.Register(StoreWorkerNameWithPerms,password));
+        assertTrue(bridge.Register(NormalUser,password));
+        assertTrue(bridge.Login(StoreOwnerName,password));
+        storeId=bridge.OpenNewStore(storeName);
+        assertNotEquals(-1,storeId);
+        productId_Milk =bridge.AddProduct(storeId,"Milk","Made by a cow",5,10);
+        productId_Cheese =bridge.AddProduct(storeId,"Cheese","contains 3% bullet holes",7,10);
+        productId_Hamburger =bridge.AddProduct(storeId,"Hamburger","generously donated by the cow community",10,10);
+        assertNotEquals("-1", productId_Milk);
+        assertNotEquals("-1", productId_Cheese);
+        assertNotEquals("-1", productId_Hamburger);
+        //productIdMapper.put(productId_Milk, productId_Milk);
+        //productIdMapper.put(productId_Cheese, productId_Cheese);
+        //productIdMapper.put(productId_Hamburger, productId_Hamburger);
+        serviceProductMap.put("Milk",new ServiceProduct("Milk",5.0,"test","Made by a cow",2.5));
+        serviceProductMap.put("Cheese",new ServiceProduct("Cheese",7.0,"test","contains 3% bullet holes",2.5));
+        serviceProductMap.put("Hamburger",new ServiceProduct("Hamburger",10.0,"test","generously donated by the cow community",2.5));
+        assertTrue(bridge.AddPermission(StoreWorkerNameWithPerms,storeId,perms));
+        assertTrue(bridge.Logout());
+        assertTrue(bridge.ExitMarket());
+        this.RealcreditProxy.setReal();
+        this.FakecreditProxy.setFake();
     }
     @BeforeEach
     public void OpenSys()
@@ -59,106 +75,108 @@ public class PurchaseHistory {
     @Test
     public void GetPurchaseHistory_Success_StoreOwner_EmptyHistory()
     {
-     //   String[] EmptyList = {};
-     //   assertTrue(bridge.Login(StoreOwnerName,password));
-     //   Response<String[]> r = bridge.GetPurchaseHistory(storeName);
-     //   assertFalse(r.isError());
-     //   assertEquals(EmptyList,r.getValue());
+        assertTrue(bridge.Login(StoreOwnerName,password));
+        Response<List<PurchaseRecord>> r = bridge.GetPurchaseHistory(storeId);
+        assertFalse(r.isError());
+        assertTrue(r.getValue().isEmpty());
     }
     @Test
     public void GetPurchaseHistory_Success_StoreOwner_NotEmptyHistory()
     {
-     //   String[] PurchaseHistory = {"StoreWorker Bought 1 Mega milk","StoreWorker Bought 1 Ultra milk"};
-     //   //Adding items to purchase history
-     //   assertTrue(bridge.Login(NormalUser,password));
-     //   assertTrue(bridge.addToCart(productId_MegaMilk));
-     //   assertTrue(bridge.addToCart(productId_UltraMilk));
-     //   assertTrue(bridge.PurchaseCart(RealcreditProxy));
-     //   assertTrue(bridge.Logout());
-//
-//
-     //   assertTrue(bridge.Login(StoreOwnerName,password));
-     //   Response<String[]> r = bridge.GetPurchaseHistory(storeName);
-     //   assertFalse(r.isError());
-     //   assertEquals(PurchaseHistory,r.getValue());
+        ArrayList<PurchaseRecord> purchaseRecords=new ArrayList<>();
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Milk),NormalUser));
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Cheese),NormalUser));
+        //Adding items to purchase history
+        assertTrue(bridge.Login(NormalUser,password));
+        assertTrue(bridge.addToCart(productId_Milk));
+        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.PurchaseCart(RealcreditProxy));
+        assertTrue(bridge.Logout());
+        assertTrue(bridge.Login(StoreOwnerName,password));
+        Response<List<PurchaseRecord>> r = bridge.GetPurchaseHistory(storeId);
+        assertFalse(r.isError());
+        assertEquals(purchaseRecords,r.getValue());
     }
     @Test
     public void GetPurchaseHistory_Success_StoreOwner_NotEmptyHistory_MultipleUsers()
     {
-     //   String[] PurchaseHistory = {"StoreWorker Bought 1 Mega milk","StoreWorker Bought 1 Ultra milk","NormalUser Bought 1 Ultra milk"};
-     //   //Adding items to purchase history
-     //   assertTrue(bridge.Login(StoreWorkerNameWithPerms,password));
-     //   assertTrue(bridge.addToCart(productId_MegaMilk));
-     //   assertTrue(bridge.addToCart(productId_UltraMilk));
-     //   assertTrue(bridge.PurchaseCart(RealcreditProxy));
-     //   assertTrue(bridge.Logout());
-     //   //Adding more items through a different user
-     //   assertTrue(bridge.Login(NormalUser,password));
-     //   assertTrue(bridge.addToCart(productId_GigaMilk));
-     //   assertTrue(bridge.PurchaseCart(RealcreditProxy));
-     //   assertTrue(bridge.Logout());
-//
-//
-     //   assertTrue(bridge.Login(StoreOwnerName,password));
-     //   Response<String[]> r = bridge.GetPurchaseHistory(storeName);
-     //   assertFalse(r.isError());
-     //   assertEquals(PurchaseHistory,r.getValue());
+        //String[] PurchaseHistory = {"StoreWorker Bought 1 Mega milk","StoreWorker Bought 1 Ultra milk","NormalUser Bought 1 Ultra milk"};
+        ArrayList<PurchaseRecord> purchaseRecords=new ArrayList<>();
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Milk),StoreWorkerNameWithPerms));
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),StoreWorkerNameWithPerms));
+        //Adding items to purchase history
+        assertTrue(bridge.Login(StoreWorkerNameWithPerms,password));
+        assertTrue(bridge.addToCart(productId_Milk));
+        assertTrue(bridge.addToCart(productId_Hamburger));
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Milk),StoreWorkerNameWithPerms));
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),StoreWorkerNameWithPerms));
+        assertTrue(bridge.PurchaseCart(RealcreditProxy));
+        assertTrue(bridge.Logout());
+        //Adding more items through a different user
+        assertTrue(bridge.Login(NormalUser,password));
+        assertTrue(bridge.addToCart(productId_Hamburger));
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),NormalUser));
+        assertTrue(bridge.PurchaseCart(RealcreditProxy));
+        assertTrue(bridge.Logout());
+        assertTrue(bridge.Login(StoreOwnerName,password));
+        Response<List<PurchaseRecord>> r = bridge.GetPurchaseHistory(storeId);
+        assertFalse(r.isError());
+        assertEquals(purchaseRecords,r.getValue());
     }
     @Test
     public void GetPurchaseHistory_Fail_NotStoreOwner_NotLoggedIn()
     {
        // String[] PurchaseHistory = {"NormalUser Bought 1 Mega milk","NormalUser Bought 1 Ultra milk"};
-       // //Adding items to purchase history
-       // assertTrue(bridge.Login(NormalUser,password));
-       // assertTrue(bridge.addToCart(productId_MegaMilk));
-       // assertTrue(bridge.addToCart(productId_UltraMilk));
-       // assertTrue(bridge.PurchaseCart(RealcreditProxy));
-       // assertTrue(bridge.Logout());
-//
-//
-       // Response<String[]> r = bridge.GetPurchaseHistory(storeName);
-       // assertTrue(r.isError());
+        //Adding items to purchase history
+        assertTrue(bridge.Login(NormalUser,password));
+        assertTrue(bridge.addToCart(productId_Milk));
+        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.PurchaseCart(RealcreditProxy));
+        assertTrue(bridge.Logout());
+
+
+        Response<List<PurchaseRecord>> r = bridge.GetPurchaseHistory(storeId);
+        assertTrue(r.isError());
     }
     @Test
     public void GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser()
     {
-        String[] PurchaseHistory = {"NormalUser Bought 1 Mega milk","NormalUser Bought 1 Ultra milk"};
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_MegaMilk));
-        assertTrue(bridge.addToCart(productId_UltraMilk));
+        assertTrue(bridge.addToCart(productId_Milk));
+        assertTrue(bridge.addToCart(productId_Cheese));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
 
-     //   assertTrue(bridge.Login(NormalUser,password));
-     //   Response<String[]> r = bridge.GetPurchaseHistory(storeName);
-     //   assertTrue(r.isError());
+        assertTrue(bridge.Login(NormalUser,password));
+        Response<List<PurchaseRecord>> r = bridge.GetPurchaseHistory(storeId);
+        assertTrue(r.isError());
     }
     @Test
     public void GetPurchaseHistory_Success_Admin_EmptyHistory()
     {
-     //   String[] EmptyList = {};
-     //   assertTrue(bridge.Login(AdminUsername,AdminPassword));
-   //     Response<String[]> r = bridge.GetPurchaseHistory(storeName);
-     //   assertFalse(r.isError());
-     //   assertEquals(EmptyList,r.getValue());
+        assertTrue(bridge.Login(AdminUsername,AdminPassword));
+        Response<List<PurchaseRecord>> r = bridge.GetPurchaseHistory(storeId);
+        assertFalse(r.isError());
+        assertTrue(r.getValue().isEmpty());
     }
     @Test
     public void GetPurchaseHistory_Success_Admin_NotEmptyHistory()
     {
-    //    String[] PurchaseHistory = {"StoreWorker Bought 1 Mega milk","StoreWorker Bought 1 Ultra milk"};
-    //    //Adding items to purchase history
-    //    assertTrue(bridge.Login(NormalUser,password));
-    //    assertTrue(bridge.addToCart(productId_MegaMilk));
-    //    assertTrue(bridge.addToCart(productId_UltraMilk));
-    //    assertTrue(bridge.PurchaseCart(RealcreditProxy));
-    //    assertTrue(bridge.Logout());
-//
-//
-    //    assertTrue(bridge.Login(AdminUsername,AdminPassword));
-    //    Response<String[]> r = bridge.GetPurchaseHistory(storeName);
-    //    assertFalse(r.isError());
-    //    assertEquals(PurchaseHistory,r.getValue());
+        ArrayList<PurchaseRecord> purchaseRecords=new ArrayList<>();
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Milk),NormalUser));
+        purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Cheese),NormalUser));
+        //Adding items to purchase history
+        assertTrue(bridge.Login(NormalUser,password));
+        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.addToCart(productId_Milk));
+        assertTrue(bridge.PurchaseCart(RealcreditProxy));
+        assertTrue(bridge.Logout());
+
+        assertTrue(bridge.Login(AdminUsername,AdminPassword));
+        Response<List<PurchaseRecord>> r = bridge.GetPurchaseHistory(storeId);
+        assertFalse(r.isError());
+        assertEquals(purchaseRecords,r.getValue());
     }
 
 

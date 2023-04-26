@@ -44,9 +44,6 @@ public class RegisteredUser extends SiteVisitor{
     }
 
     private void checkUserName(String userName) {
-        if(userName.length()<8){
-            throw new IllegalArgumentException("the userName is too short");
-        }
         if(userName.length()>30){
             throw new IllegalArgumentException("the useName is too long");
         }

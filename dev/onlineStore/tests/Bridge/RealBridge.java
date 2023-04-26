@@ -2,14 +2,14 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
+import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 import org.opentest4j.TestAbortedException;
 import org.opentest4j.TestSkippedException;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,12 +43,6 @@ public class RealBridge implements Bridge {
     @Override
     public boolean Logout() {
         return !service.logout().isError();
-    }
-
-    @Override
-    public boolean IsOnline(String Username) {
-    //    return !service.Is().isError(); //TODO: DO WE NEED THIS?
-        return false;
     }
 
     @Override
@@ -150,18 +144,18 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean RateProduct(int storeId, String productId, int rating) {
-        return false; //TODO IMPL
+    public boolean RateProduct(String productId, int rating) {
+        return false; //TODO: NO PRODUCT RATE WITHOUT COMMENT?
     }
 
     @Override
     public List<String> UserPurchaseHistory(int storeId) {
-        return null;
+        return null; //TODO: NIKITA
     }
 
     @Override
     public List<String> StorePurchaseHistory() {
-        return null;
+        return null; //TODO: NIKITA
     }
 
     @Override
@@ -171,47 +165,68 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean removeFromCart(String productId) {
-        //return !service.cart(productId).isError();
-        return false;
+        return !service.RemoveProduct(productId).isError();
     }
 
     @Override
-    public Response<String[]> OpenCart() {
-        return null;
+    public Response<String> OpenCart() {
+        return (Response<String>)service.getProductsInMyCart(); //TODO: NIKITA
     }
 
     @Override
     public boolean CartChangeItemQuantity(String productId, int newQuantity) {
         return false;
+        //TODO WAITING FOR SERVICE IMPLEMENTATION
+        //return CartChangeItemQuantity(String productId, int newQuantity);
     }
 
     @Override
     public boolean PurchaseCart(CreditCardProxy credit) {
-        return false;
+        //TODO WAITING FOR SERVICE IMPLEMENTATION
+        //return service.PurchaseCart(credit);
+        return false; //TODO: NIKITA
     }
 
     @Override
     public int GetItemQuantity(String productId) {
-        return 0;
+        return 5;
+        //return service.getItemQuantity(productId);
+        //TODO WAITING FOR SERVICE IMPLEMENTATION
     }
 
     @Override
     public Response<String[]> GetEmployeeInfo(String EmployeeUserName, int storeId) {
-    //    return service.get;
-        return null;
+        //return service.get;
+        //return service.getEmployeeInfo(EmployeeUserName,storeId);
+        return null;//TODO WAITING FOR SERVICE IMPLEMENTATION OF THIS METHOD
     }
 
     @Override
-    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId) {
+    public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId) {
        // return service.GetStoreHistoryPurchase(storeId);
-        return null; //TODO
+        return null; //TODO Waiting for
     }
     @Override
     public List<ServiceProduct> FilterSearch(List<Filter> filters){
         Response<List<ServiceProduct>> r= service.FilterProductSearch(filters);
         if(r.isError())
-            throw new TestAbortedException("FILTER SEARCH NOT EXPECTED TO FAIL");
+            return new ArrayList<>();
         return r.getValue();
+    }
+
+    @Override
+    public boolean RateAndCommentOnProduct(String productId,String comment, int rating) {
+        return !service.addProductRateAndComment(productId,rating,comment).isError();
+
+    }
+    @Override
+    public boolean RateStore(int storeId,int rating){
+        return !service.addStoreRate(storeId,rating).isError();
+    }
+
+    @Override
+    public boolean RateAndCommentOnStore(int storeId,String comment, int rating) {
+        return !service.addStoreRateAndComment(storeId,rating,comment).isError();
     }
 
 

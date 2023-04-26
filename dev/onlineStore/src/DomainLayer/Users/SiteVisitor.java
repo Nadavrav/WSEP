@@ -9,7 +9,6 @@ public class SiteVisitor{
     private static AtomicInteger VisitorID_GENERATOR = new AtomicInteger(1);
     protected static LinkedList<AtomicInteger> FreeVisitorID= new LinkedList<>();
     private Cart cart;
-    protected boolean loggedIn;
     private int visitorId;
 
     public SiteVisitor() throws Exception {
@@ -19,7 +18,6 @@ public class SiteVisitor{
         }catch (Exception e){
             throw new Exception();
         }
-        loggedIn=false;
     }
 //    public SiteVisitor(int visitorId) throws Exception {//to do
 //        if (checkVisitorId(visitorId)) {

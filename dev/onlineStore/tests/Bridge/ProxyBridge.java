@@ -2,7 +2,8 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
-import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.List;
@@ -42,10 +43,6 @@ public class ProxyBridge implements Bridge {
         return false;
     }
 
-    @Override
-    public boolean IsOnline(String Username) {
-        return false;
-    }
 
     @Override
     public Integer OpenNewStore(String storeName) {
@@ -118,7 +115,7 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public boolean RateProduct(int storeId, String productId, int rating) {
+    public boolean RateProduct(String productId, int rating) {
         return false;
     }
 
@@ -143,7 +140,7 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public Response<String[]> OpenCart() {
+    public Response<String> OpenCart() {
         return null;
     }
 
@@ -168,12 +165,27 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
-    public Response<List<ServiceProduct>> GetPurchaseHistory(int storeId) {
+    public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId) {
         return null;
     }
     @Override
     public List<ServiceProduct> FilterSearch(List<Filter> filters){
         return null;
     }
+
+    @Override
+    public boolean RateAndCommentOnProduct(String productId,String comment, int rating) {
+        return false;
+    }
+    @Override
+    public boolean RateStore(int storeId,int rating){
+        return false;
+    }
+
+    @Override
+    public boolean RateAndCommentOnStore(int storeId,String comment, int rating) {
+        return false;
+    }
+
 
 }

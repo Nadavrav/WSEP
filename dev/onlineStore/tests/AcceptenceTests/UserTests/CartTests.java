@@ -2,38 +2,38 @@ package AcceptenceTests.UserTests;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import Bridge.*;
-import DomainLayer.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 public class CartTests {
     private Bridge bridge= Driver.getBridge();
     private final String userName = "User";
     private final String password = "12345678";
     private final String storeName = "Super";
-    private final String productId_MegaMilk = "0";//Product that exits
-    private final String productId_UltraMilk = "1";//Product that exits
-    private final String productId_GigaMilk = "2";//Product that exits
-    private final String badProductId = "-1";//Product that doesnt exist
+    private int storeId=-1;
+    private String productId_MegaMilk = "-1";//Product that exits
+    private String productId_UltraMilk = "-1";//Product that exits
+    private String productId_GigaMilk = "-1";//Product that exits
+    private final String badProductId = "-1";//Product that doesn't exist
     private CreditCardProxy RealcreditProxy = new CreditCardProxy(); // A credit card Proxy class
     private CreditCardProxy FakecreditProxy = new CreditCardProxy(); // A credit card Proxy class
     @BeforeAll
     public void Setup()
     {
-     //   assertTrue(bridge.EnterMarket());
-     //   assertTrue(bridge.Register(userName,password));
-     //   assertTrue(bridge.Login(userName,password));
-     //   assertTrue(bridge.OpenNewStore(storeName));
-     //   assertTrue(bridge.AddProduct(storeName,"Mega milk","Guaranteed to make bones stronger!",5,10));//TODO: GET ID
-     //   assertTrue(bridge.AddProduct(storeName,"Ultra milk","Bones made of metal now!",7,10));//TODO: GET ID
-     //   assertTrue(bridge.AddProduct(storeName,"Giga milk","bones made of diamond now!",10,10));//TODO: GET ID
-     //   assertTrue(bridge.Logout());
-     //   assertTrue(bridge.ExitMarket());
-     //   this.RealcreditProxy.setReal();
-     //   this.FakecreditProxy.setFake();
+        assertTrue(bridge.EnterMarket());
+        assertTrue(bridge.Register(userName,password));
+        assertTrue(bridge.Login(userName,password));
+        storeId=bridge.OpenNewStore(storeName);
+        assertNotEquals(-1,storeId);
+        productId_MegaMilk = bridge.AddProduct(storeId,"Mega milk","Guaranteed to make bones stronger!",5,10);
+        productId_MegaMilk = bridge.AddProduct(storeId,"Ultra milk","Bones made of metal now!",7,10);
+      productId_MegaMilk = bridge.AddProduct(storeId,"Giga milk","bones made of diamond now!",10,10);
+        assertTrue(bridge.Logout());
+        assertTrue(bridge.ExitMarket());
+        this.RealcreditProxy.setReal();
+        this.FakecreditProxy.setFake();
     }
     @BeforeEach
     public void OpenSys()
@@ -115,7 +115,7 @@ public class CartTests {
     @Test
     public void OpenCart_Success_EmptyCart()
     {
-        String [] EmptyList = {};
+        String EmptyList = "";
         assertFalse(bridge.OpenCart().isError());
         assertEquals(EmptyList,bridge.OpenCart().getValue());
     }
@@ -123,7 +123,7 @@ public class CartTests {
     public void OpenCart_Success_CartWithOneItem()
     {
         assertTrue(bridge.addToCart(productId_MegaMilk));
-        String [] ProductList = {productId_MegaMilk};
+        String ProductList = "Store Id : 0\n0-1\n\n";
         assertFalse(bridge.OpenCart().isError());
         assertEquals(ProductList,bridge.OpenCart().getValue());
     }
@@ -134,7 +134,7 @@ public class CartTests {
         assertTrue(bridge.addToCart(productId_GigaMilk));
         assertTrue(bridge.addToCart(productId_UltraMilk));
 
-        String [] ProductList = {productId_MegaMilk,productId_GigaMilk,productId_UltraMilk};
+        String ProductList = "Store Id : 0\n0-1\n0-2\n0-3\n\n";
         assertFalse(bridge.OpenCart().isError());
         assertEquals(ProductList,bridge.OpenCart().getValue());
     }
