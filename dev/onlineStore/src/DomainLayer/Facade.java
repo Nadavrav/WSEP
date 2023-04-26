@@ -29,7 +29,6 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
-
     }
 
     public static synchronized Facade getInstance() {
@@ -403,7 +402,7 @@ public class Facade {
         return output;
     }
 
-    public LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
+    public synchronized LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
         
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
@@ -434,9 +433,7 @@ public class Facade {
             if(!supplier.supplyProducts(productsId)){
                 failedPurchases.add(b.getStoreID());
             }
-         
        }
-
         return failedPurchases;
         
     }
@@ -536,7 +533,7 @@ public class Facade {
         }
         Employment employment = null;
         try{
-            employment = employmentList.get(visitorId).get(storeId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
         }catch (Exception e){
             throw  new Exception("this user dont have any store");
         }
@@ -562,7 +559,7 @@ public class Facade {
         int StoreId=StoreProduct.getStoreIdByProductId(ProductId);
         Employment employment = null;
         try{
-            employment = employmentList.get(visitorId).get(StoreId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
         }catch (Exception e){
             throw  new Exception("this user dont have any store");
         }
@@ -649,7 +646,7 @@ public class Facade {
         Employment employment = null;
         int storeId =StoreProduct.getStoreIdByProductId(productID);
         try{
-            employment = employmentList.get(visitorId).get(storeId);
+            employment = employmentList.get((((RegisteredUser) User).getUserName())).get(storeId);
         }catch (Exception e){
             throw new Exception("This user don't have any store");
         }

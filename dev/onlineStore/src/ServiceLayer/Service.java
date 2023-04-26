@@ -350,4 +350,12 @@ public class Service {
         }
         return new Response<>("Success");
     }
+    public Response<List<String>> PurchaseCart(int visitorCard,String address){
+        try{
+            return new Response<>(facade.purchaseCart(visitorId,visitorCard,address));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
 }

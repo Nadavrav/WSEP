@@ -28,7 +28,6 @@ public class ConcurrencyCartTests {
     private String productId_GigaMilk = "-1";//Product that exits
     private final String badProductId = "-1";//Product that doesn't exist
     private CreditCardProxy RealcreditProxy = new CreditCardProxy(); // A credit card Proxy class
-    private CreditCardProxy FakecreditProxy = new CreditCardProxy(); // A credit card Proxy class
     @BeforeAll
     public void Setup()
     {
@@ -42,32 +41,24 @@ public class ConcurrencyCartTests {
         productId_MegaMilk = bridge.AddProduct(storeId,"Ultra milk","Bones made of metal now!",7,10);
         productId_MegaMilk = bridge.AddProduct(storeId,"Giga milk","bones made of diamond now!",10,10);
         assertTrue(bridge.Logout());
-        assertTrue(bridge.ExitMarket());
         this.RealcreditProxy.setReal();
-        this.FakecreditProxy.setFake();
     }
     @Test
     public void ConcurrencyPurchaseTests(){
-        ExecutorService executor= Executors.newFixedThreadPool(2000);
+        ExecutorService executor= Executors.newFixedThreadPool(2);
         final Service user1=new Service();
         final Service user2=new Service();
         user1.EnterNewSiteVisitor();
         user2.EnterNewSiteVisitor();
-        for(int i=1;i<=1000;i++){ //username/pass is i,i and -i,-i - so register & login should always succeed and have no duplicates/invalid lengths
-            final String finalUser1="Concurrency Test User "+i;
-            //   final String finalUser2=Integer.toString(-i);
-            final String finalPass1="My password is: "+ i; //assure length is larger then 8
-            final String finalPass2="My password is: "+ -i;
-            Future<Boolean> f1=executor.submit(() -> {user1.login(finalUser1,finalPass1); user1.addProductToCart(productId_MegaMilk); user1.});
-            Future<Boolean> f2=executor.submit(() -> user2.login(finalUser1,finalPass2));
-            try {
-                boolean r1=f1.get();
-                boolean r2=f2.get();
-                assertTrue( (r1 & !r2) | (!r1 & r2)); //expecting exactly one of them to fail and one to pass
-            }
-            catch (Exception e){
-                fail("Thread Error - see exception type doc");
-            }
+        Future<Boolean> f1=executor.submit(() -> {user1.login(userName2,password2); user1.addProductToCart(productId_MegaMilk); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
+        Future<Boolean> f2=executor.submit(() -> {user2.login(userName1,password1); user1.addProductToCart(productId_MegaMilk); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
+        try {
+            boolean r1=f1.get();
+            boolean r2=f2.get();
+            assertTrue( (r1 & !r2) | (!r1 & r2)); //expecting exactly one of them to fail and one to pass
+        }
+        catch (Exception e){
+            fail("Thread Error - see exception type doc");
         }
         executor.shutdown();
     }
