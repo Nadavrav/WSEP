@@ -53,10 +53,10 @@ public class Bag {
     public void changeProductAmount(StoreProduct product,int newAmount) {
         productsAmount.put(product.getId(),newAmount);
     }
-    public int calculateTotalAmount() {
+    public double calculateTotalAmount() {
         int totalAmount = 0;
         for (StoreProduct sp : productList.values()) {
-            totalAmount += sp.getPrice();
+            totalAmount += sp.getPrice()*productsAmount.get(sp.getId());
         }
         return totalAmount;
     }

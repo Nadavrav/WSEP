@@ -11,7 +11,11 @@ public class Comment extends Rating {
         super(0);
         CommentMap= new ConcurrentHashMap<>();
     }
-    public  void  AddComment(int registerId,String comment){
+    public void AddComment(int registerId,String comment){
+        if(comment == null)
+        {
+            throw new IllegalArgumentException("Comment can not be null");
+        }
         if (CommentMap.get(registerId)==null) {
             LinkedList list = new LinkedList<>();
             list.add(comment);

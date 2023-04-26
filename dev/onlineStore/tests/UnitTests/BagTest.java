@@ -52,8 +52,8 @@ class BagTest {
     @Test
     public void testCalculateTotalAmountWithNoProducts() {
         Bag bag = new Bag(StoreId1);
-        int actualTotalAmount = bag.calculateTotalAmount();
-        int expectedTotalAmount = 0;
+        double actualTotalAmount = bag.calculateTotalAmount();
+        double expectedTotalAmount = 0;
         assertEquals(expectedTotalAmount, actualTotalAmount);
     }
     @Test
