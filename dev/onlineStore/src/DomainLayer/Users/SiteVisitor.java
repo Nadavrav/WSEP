@@ -1,7 +1,8 @@
 package DomainLayer.Users;
 
 import DomainLayer.Stores.StoreProduct;
-
+import DomainLayer.Logging.UniversalHandler;
+import java.util.logging.*;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
