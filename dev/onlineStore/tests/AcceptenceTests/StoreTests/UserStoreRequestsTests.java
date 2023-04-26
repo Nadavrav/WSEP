@@ -378,6 +378,7 @@ public class UserStoreRequestsTests {
     @Order(20)
     @Test
     public void FilterSearchTests(){
+        FilterSearchPrep();
         ServiceProduct ServiceHamburger=new ServiceProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5);
         ServiceProduct ServiceSausage=new ServiceProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5);
         ServiceProduct ServiceSteak=new ServiceProduct("Steak", 70.0,"test","99% beef, 1% olive oil. kosher",5);
@@ -401,7 +402,5 @@ public class UserStoreRequestsTests {
         assertFalse(nameSearch.contains(ServiceCheeseburger));
         assertFalse(nameSearch.contains(ServiceSausage));
         assertFalse(nameSearch.contains(ServiceSteak));
-        //TODO: MORE??
     }
-
 }

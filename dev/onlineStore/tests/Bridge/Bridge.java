@@ -236,4 +236,5 @@ public interface Bridge {
      */
     public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
     List<ServiceProduct> FilterSearch(List<Filter> filters);
+    public boolean RateProduct(String productId,int rating);
 }

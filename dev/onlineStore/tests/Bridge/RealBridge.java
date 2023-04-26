@@ -214,5 +214,11 @@ public class RealBridge implements Bridge {
         return r.getValue();
     }
 
+    @Override
+    public boolean RateProduct(String productId, int rating) {
+        //Response<?> r=service
+        return false;
+    }
+
 
 }

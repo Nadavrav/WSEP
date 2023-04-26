@@ -731,7 +731,7 @@ public class Facade {
     /**
      *
      * @param filters list of filter object for whom each product has to pass all of them to be returned
-     * @return list of strings describing product info of products who passed the filter list
+     * @return list of products who passed the filter list
      */
     public List<StoreProduct> FilterProductSearch(List<Filter> filters) {
         ArrayList<StoreProduct> products=new ArrayList<>();

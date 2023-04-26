@@ -173,4 +173,9 @@ public class ProxyBridge implements Bridge {
         return null;
     }
 
+    @Override
+    public boolean RateProduct(String productId, int rating) {
+        return false;
+    }
+
 }
