@@ -2,7 +2,9 @@ package DomainLayer.Users;
 
 import DomainLayer.Stores.StoreProduct;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.*;
 
@@ -29,9 +31,10 @@ public class Bag {
     }
     
     public void addProduct(StoreProduct product) {
+
         logger.info("Starting add product");
          String productId = product.getId();
-        
+
         if(productList.containsKey(product.getId())){
             int currentAmount = productsAmount.get(productId);
             productsAmount.put(productId,currentAmount + 1);
@@ -72,7 +75,7 @@ public class Bag {
     public String bagToString() {
         String s="";
         for (String i :productList.keySet()) {
-            s+= productList.get(i).toString()+"/n";
+            s+= productList.get(i).toStringForCart()+"\n";
         }
         return s;
     }

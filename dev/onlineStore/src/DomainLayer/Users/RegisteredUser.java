@@ -35,6 +35,9 @@ public class RegisteredUser extends SiteVisitor{
 
 
     private void checkPassword(String password) {
+        if(password==null) {
+            throw new IllegalArgumentException("Username cannot be null");
+        }
         if(password.length()<8){
             throw new IllegalArgumentException("the password is too short");
         }
@@ -44,7 +47,14 @@ public class RegisteredUser extends SiteVisitor{
     }
 
     private void checkUserName(String userName) {
-        if(userName.length()>30){
+
+        if (userName == null) {
+            throw new IllegalArgumentException("Username cannot be null");
+        }
+        if (userName.length() < 8) {
+            throw new IllegalArgumentException("the userName is too short");
+        }
+        if (userName.length() > 30) {
             throw new IllegalArgumentException("the useName is too long");
         }
     }

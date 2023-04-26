@@ -4,7 +4,11 @@ import DomainLayer.Facade;
 import DomainLayer.Response;
 import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.*;
+
 import ServiceLayer.ServiceObjects.Fiters.Filter;
+import DomainLayer.Users.Fiters.Filter;
+import ServiceLayer.ServiceObjects.ServiceBag;
+
 import ServiceLayer.ServiceObjects.ServiceProduct;
 
 import java.util.*;
@@ -87,6 +91,7 @@ public class Service {
 
     }
 
+
     public Response<?> removeProductFromCart(String productId){
         try{
             facade.removeProductFromCart(productId,visitorId);
@@ -111,15 +116,31 @@ public class Service {
 
     public Response<?> getProductsInMyCart() {//2.4
         String products;
-        try{
-             products = facade.getProductsInMyCart(visitorId);
+        try {
+            products = facade.getProductsInMyCart(visitorId);
 
-        }catch (Exception e){
-            return new Response<>(e.getMessage(),true);
+        } catch (Exception e) {
+            return new Response<>(e.getMessage(), true);
         }
         return new Response<>(products);
     }
+    /*public Response<?> getProductsInMyCart1()
+    {
+        try
+        {
+            Map<Integer,Bag> cart = facade.getCart(visitorId).getBags();//Map from store id to bag
+            List<ServiceBag> serviceCart;
+            for (Integer key: cart.keySet()) {
+                //serviceCart.add(new ServiceBag(cart.get(key),key));
+            }
+        }
+        catch (Exception e)
+        {
 
+        }
+        return null;
+    }
+  */
     public Response<?> appointNewStoreOwner( String appointedUserName, int storeId) {//4.4
 
         try{

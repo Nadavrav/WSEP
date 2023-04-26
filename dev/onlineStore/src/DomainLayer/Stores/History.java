@@ -4,7 +4,11 @@ import DomainLayer.Users.Cart;
 import java.util.LinkedList;
 import java.util.Map;
 public class History {
-    public LinkedList<Bag> ShoppingBags ;
+    public LinkedList<Bag> getShoppingBags() {
+        return ShoppingBags;
+    }
+
+    private LinkedList<Bag> ShoppingBags ;
 
     public History()
     {

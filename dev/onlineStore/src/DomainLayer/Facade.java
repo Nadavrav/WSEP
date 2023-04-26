@@ -20,8 +20,25 @@ import static DomainLayer.Stores.StoreProduct.isValidProductId;
 
 public class Facade {
     private static Facade instanceFacade = null;
+
+    //Getter for tests
+    public Map<Integer, SiteVisitor> getOnlineList() {
+        return onlineList;
+    }
+
     private Map<Integer, SiteVisitor> onlineList;//online
+    //Getter for tests
+    public Map<String, RegisteredUser> getRegisteredUserList() {
+        return registeredUserList;
+    }
+
     private Map<String, RegisteredUser> registeredUserList;
+
+    //Getter for tests
+    public Map<Integer, Store> getStoresList() {
+        return storesList;
+    }
+
     private Map<Integer, Store> storesList;
     private Map<String, Map<Integer, Employment>> employmentList;//
     private Supplier supplier;
@@ -37,6 +54,19 @@ public class Facade {
         paymentProvider= new PaymentProvider();
     }
 
+    /**
+     * Function used by test inorder to reset the data in the facade and make the tests independent of one another.
+     */
+    public void resetData()
+    {
+        onlineList = new HashMap<>();
+        registeredUserList = new HashMap<>();
+        storesList = new HashMap<>();
+        employmentList = new HashMap<>();
+        supplier= new Supplier();
+        paymentProvider= new PaymentProvider();
+
+    }
     public static synchronized Facade getInstance() {
         if (instanceFacade == null) {
             instanceFacade = new Facade();
@@ -199,7 +229,23 @@ public class Facade {
         }
 
         return user.cartToString();
+        //return user.GetCart
 
+    }
+
+    /**
+     * Returns a cart
+     * @param visitorId - the id of the user whos cart we want
+     * @return - A cart of the user.
+     * @throws Exception - if user id doesnt exist
+     */
+    public Cart getCart(int visitorId) throws Exception
+    {
+        SiteVisitor user = onlineList.get(visitorId);
+        if (user == null) {
+            throw  new Exception("Invalid Visitor ID");
+        }
+        return user.getCart();
     }
 
     public void appointNewStoreOwner(int appointerId, String appointedUserName, int storeId) throws Exception {//4.4
