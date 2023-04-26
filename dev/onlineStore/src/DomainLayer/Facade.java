@@ -14,12 +14,19 @@ import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
 import java.util.*;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.Level;
 
 import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
 import static DomainLayer.Stores.StoreProduct.isValidProductId;
 
 public class Facade {
     private static Facade instanceFacade = null;
+    private  static final Logger logger = Logger.getLogger("Facade Logger");
 
     //Getter for tests
     public Map<Integer, SiteVisitor> getOnlineList() {
