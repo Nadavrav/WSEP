@@ -19,18 +19,15 @@ public class SiteVisitor{
     private static final Logger logger=Logger.getLogger("SiteVisitor logger");
     
       public SiteVisitor() throws Exception {
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-            this.visitorId = getNewVisitorId();
-            cart = new Cart();
-        }catch (Exception e){
-            throw new Exception();
+       
+        try{
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
         }
+        catch (Exception ignored){
+        }
+        this.visitorId = getNewVisitorId();
+        cart = new Cart();
         loggedIn=false;
     }
 //    public SiteVisitor(int visitorId) throws Exception {//to do
