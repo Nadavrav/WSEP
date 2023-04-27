@@ -1,5 +1,6 @@
 package DomainLayer.Users;
 
+import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.StoreProduct;
 
 import java.util.HashMap;
@@ -15,19 +16,9 @@ public class Cart {
 
 
   public Cart(){
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-            bagList= new HashMap<>();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-    }
+      UniversalHandler.GetInstance().HandleInfo(logger);
+      UniversalHandler.GetInstance().HandleError(logger);
+  }
 
 
 
@@ -76,4 +67,3 @@ public class Cart {
         }
 
     }
-}

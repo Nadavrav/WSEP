@@ -40,11 +40,13 @@ public class SiteVisitor{
     public SiteVisitor(SiteVisitor other){
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleError(logger);
+        cart=new Cart();
+
     }
     public SiteVisitor(int id){
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
-
+        cart=new Cart();
     }
     private int getNewVisitorId() {
         if (FreeVisitorID.size() != 0) {
