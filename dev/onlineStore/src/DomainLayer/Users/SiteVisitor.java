@@ -1,7 +1,8 @@
 package DomainLayer.Users;
 
 import DomainLayer.Stores.StoreProduct;
-
+import DomainLayer.Logging.UniversalHandler;
+import java.util.logging.*;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,18 +20,15 @@ public class SiteVisitor{
     private static final Logger logger=Logger.getLogger("SiteVisitor logger");
     
       public SiteVisitor() throws Exception {
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-            this.visitorId = getNewVisitorId();
-            cart = new Cart();
-        }catch (Exception e){
-            throw new Exception();
+       
+        try{
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
         }
+        catch (Exception ignored){
+        }
+        this.visitorId = getNewVisitorId();
+        cart = new Cart();
         loggedIn=false;
     }
 //    public SiteVisitor(int visitorId) throws Exception {//to do
@@ -40,32 +38,13 @@ public class SiteVisitor{
 //    }
     
     public SiteVisitor(SiteVisitor other){
-       try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-           visitorId=other.getVisitorId();
-          cart= other.getCart();
-            }catch (Exception e){
-            throw new Exception();
-        }
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleError(logger);
     }
     public SiteVisitor(int id){
-         try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
-           visitorId=id;
-           cart = new Cart();
-            }catch (Exception e){
-            throw new Exception();
-        }
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+
     }
     private int getNewVisitorId() {
         if (FreeVisitorID.size() != 0) {

@@ -2,11 +2,14 @@ package DomainLayer.Users;
 
 import DomainLayer.Response;
 import DomainLayer.Stores.Purchase;
+import DomainLayer.Logging.UniversalHandler;
+import java.util.logging.*;
 
 import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegisteredUser extends SiteVisitor{
+    private static final Logger logger=Logger.getLogger("RegisteredUser logger");
     String userName;
     String password;
     PurchaseHistory purchaseHistory;
@@ -15,45 +18,34 @@ public class RegisteredUser extends SiteVisitor{
 
     public RegisteredUser(String userName, String password) throws Exception {
         super(0);
-
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
+        try{
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
+        }
+        catch (Exception ignored){
+        }
             checkUserName(userName);
             checkPassword(password);
             this.userName=userName;
             this.password=password;
             this.purchaseHistory = new PurchaseHistory();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        }
+        
     }
 
      public RegisteredUser(SiteVisitor visitor,String userName, String password) {
         super(visitor);
-        try {
-            Handler handler = new FileHandler("Info.txt");
-            Handler handler1 = new FileHandler("Error.txt");
-            logger.addHandler(handler);
-            logger.addHandler(handler1);
-            handler.setFormatter(new SimpleFormatter());
-            handler1.setFormatter(new SimpleFormatter());
+        try{
+            UniversalHandler.GetInstance().HandleError(logger);
+            UniversalHandler.GetInstance().HandleInfo(logger);
+        }
+        catch (Exception ignored){
+        }
             checkUserName(userName);
             checkPassword(password);
             this.userName=userName;
             this.password=password;
             this.purchaseHistory = new PurchaseHistory();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        }
+       
     }
 
     private void checkPassword(String password) {
@@ -77,10 +69,10 @@ public class RegisteredUser extends SiteVisitor{
             logger.warning("null username");
             throw new IllegalArgumentException("Username cannot be null");
         }
-        if (userName.length() < 8) {
-            logger.warning("invalid username");
-            throw new IllegalArgumentException("the userName is too short");
-        }
+       //if (userName.length() < 8) { //DONT UNCOMMENT THIS WE DON'T NEED THIS PART
+       //    logger.warning("invalid username");
+       //    throw new IllegalArgumentException("the userName is too short");
+       //}
         if (userName.length() > 30) {
             logger.warning("invalid username");
             throw new IllegalArgumentException("the useName is too long");

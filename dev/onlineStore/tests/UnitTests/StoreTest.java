@@ -91,37 +91,47 @@ class StoreTest {
     @Test
     void searchProductByCategory() {
         setup();
-        LinkedList<StoreProduct> searchResults = s.SearchProductByCategory(p1Cate);
-        assertTrue(searchResults.contains(p1));
-        assertFalse(searchResults.contains(p2));
-        s.setActive(false);
-        searchResults = s.SearchProductByCategory(p1Cate);
-        assertEquals(0, searchResults.size());
-        // for s1
-        LinkedList<StoreProduct> searchResults1 = s1.SearchProductByCategory(p1Cate);
-        assertTrue(searchResults1.contains(p1));
-        assertFalse(searchResults1.contains(p2));
-        s.setActive(false);
-        searchResults1 = s1.SearchProductByCategory(p1Cate);
-        assertEquals(0, searchResults1.size());
+        try {
+            LinkedList<StoreProduct> searchResults = s.SearchProductByCategory(p1Cate);
+            assertTrue(searchResults.contains(p1));
+            assertFalse(searchResults.contains(p2));
+            s.setActive(false);
+            searchResults = s.SearchProductByCategory(p1Cate);
+            assertEquals(0, searchResults.size());
+            // for s1
+            LinkedList<StoreProduct> searchResults1 = s1.SearchProductByCategory(p1Cate);
+            assertTrue(searchResults1.contains(p1));
+            assertFalse(searchResults1.contains(p2));
+            s.setActive(false);
+            searchResults1 = s1.SearchProductByCategory(p1Cate);
+            assertEquals(0, searchResults1.size());
+        }
+        catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
     void searchProductByKey() {
         setup();
-        LinkedList<StoreProduct> searchResults = (LinkedList<StoreProduct>) s.SearchProductByKey("Milk");
-        assertTrue(searchResults.contains(p1));
-        assertFalse(searchResults.contains(p2));
-        s.setActive(false);
-        searchResults = (LinkedList<StoreProduct>) s.SearchProductByKey("Milk");
-        assertEquals(0, searchResults.size());
-        // for s1
-        LinkedList<StoreProduct> searchResults1 = (LinkedList<StoreProduct>) s1.SearchProductByKey("Milk");
-        assertTrue(searchResults1.contains(p1));
-        assertFalse(searchResults1.contains(p2));
-        s.setActive(false);
-        searchResults1 = (LinkedList<StoreProduct>) s1.SearchProductByKey("Milk");
-        assertEquals(0, searchResults1.size());
+        try {
+            LinkedList<StoreProduct> searchResults = (LinkedList<StoreProduct>) s.SearchProductByKey("Milk");
+            assertTrue(searchResults.contains(p1));
+            assertFalse(searchResults.contains(p2));
+            s.setActive(false);
+            searchResults = (LinkedList<StoreProduct>) s.SearchProductByKey("Milk");
+            assertEquals(0, searchResults.size());
+            // for s1
+            LinkedList<StoreProduct> searchResults1 = (LinkedList<StoreProduct>) s1.SearchProductByKey("Milk");
+            assertTrue(searchResults1.contains(p1));
+            assertFalse(searchResults1.contains(p2));
+            s.setActive(false);
+            searchResults1 = (LinkedList<StoreProduct>) s1.SearchProductByKey("Milk");
+            assertEquals(0, searchResults1.size());
+        }
+        catch (Exception e){
+            fail();
+        }
     }
 
     @Test
