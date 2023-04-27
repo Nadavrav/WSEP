@@ -110,7 +110,7 @@ public class Store {
         LinkedList<StoreProduct> searchResults = new LinkedList<StoreProduct>();
         if (getActive()) {
             for (StoreProduct product : this.products.values()) {
-                if (product.getName() == (Name)) {
+                if (product.getName().equals (Name)) {
                     if (CheckProduct(product)) {
                         logger.info("New product added to store");
                         searchResults.add(product);

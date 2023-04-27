@@ -1,512 +1,332 @@
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor ExitSiteVisitor
-WARNING: exception occurred
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor ExitSiteVisitor
-WARNING: exception occurred
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor ExitSiteVisitor
-WARNING: exception occurred
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor ExitSiteVisitor
-WARNING: Error occurred: This id for user does not exist or is not online
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor ExitSiteVisitor
-WARNING: Error occurred: This id for user does not exist or is not online
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor ExitSiteVisitor
-WARNING: Error occurred: This id for user does not exist or is not online
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-2 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-2 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-2 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-2 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-0 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 0-1 to cart for store with ID 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 0
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-0 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-0 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-0 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-0 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-0 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-0 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-0 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-0 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: New bag created for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
-INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-1 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-1 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-1 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-1 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-1 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-1 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-1 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor addProductToCart
-INFO: Adding product with ID 1-1 to cart for store with ID 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Starting add product
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Bag addProduct
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
 INFO: Add product Succeeded
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.Cart addProductToCart
-INFO: Product added to cart for store with ID: 1
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
-Apr 27, 2023 1:24:13 AM DomainLayer.Users.SiteVisitor checkVisitorId
-WARNING: Invalid visitor ID: 123
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Starting add product
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded
+Apr 27, 2023 11:50:59 AM DomainLayer.Users.Bag addProduct
+INFO: Add product Succeeded

@@ -58,12 +58,8 @@ public class Facade {
     private PaymentProvider paymentProvider;
 
     private Facade() {
-         try{
-            UniversalHandler.GetInstance().HandleError(logger);
-            UniversalHandler.GetInstance().HandleInfo(logger);
-        }
-        catch (Exception ignored){
-        }
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
         onlineList = new HashMap<>();
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
@@ -716,7 +712,7 @@ public class Facade {
         }
         Employment employment = null;
         try{
-            employment = employmentList.get(visitorId).get(StoreId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
         }catch (Exception e){
             logger.warning("there is no store to this user");
             throw  new Exception("this user dont have any store");
@@ -792,7 +788,7 @@ public class Facade {
         int StoreId=StoreProduct.getStoreIdByProductId(ProductId);
         Employment employment = null;
         try{
-            employment = employmentList.get(visitorId).get(StoreId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
         }catch (Exception e){
             logger.severe("User does not have any store: " + visitorId);
             throw  new Exception("this user dont have any store");
@@ -906,7 +902,7 @@ public class Facade {
         Employment employment = null;
         int storeId =StoreProduct.getStoreIdByProductId(productID);
         try{
-            employment = employmentList.get(visitorId).get(storeId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
         }catch (Exception e){
             throw new Exception("This user don't have any store");
         }
