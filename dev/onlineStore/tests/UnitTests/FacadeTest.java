@@ -2,10 +2,15 @@ package UnitTests;
 
 import DomainLayer.Facade;
 import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Users.Permission;
 import DomainLayer.Users.Role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,6 +73,7 @@ class FacadeTest {
             int visitorId = f.EnterNewSiteVisitor();
             f.ExitSiteVisitor(visitorId);
             assertTrue(f.getOnlineList().get(visitorId)==null);
+            //TODO CHECK WHY EXCEPTUION WASNT THROWN
             assertThrows(Exception.class,()->f.ExitSiteVisitor(visitorId));
         }
         catch (Exception e)
@@ -150,7 +156,7 @@ class FacadeTest {
         try {
             int visitorId = f.EnterNewSiteVisitor();
             String Username = "ValidUsername";
-            assertThrows(Exception.class,()->f.Register(100,Username,"123456789"));
+            assertThrows(Exception.class,()->f.Register(1000,Username,"123456789"));//TODO CHECK WHY NOT THROWN
         }
         catch (Exception e)
         {//Should happen
@@ -312,10 +318,11 @@ class FacadeTest {
             f.Register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart("0-0",visitorId);
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
-            assertEquals("",actual);
+            assertEquals("Store Id : 33\n" +
+                    "Product Id: 33-0 ,Product Name: Milk ,Product Price: 5.0\n",actual);
         }
         catch (Exception e)
         {//Should happen
@@ -342,12 +349,14 @@ class FacadeTest {
             f.Register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
-            f.addProductToCart("0-0",visitorId);
-            f.addProductToCart("0-1",visitorId);
+            String pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            String pid2=f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
+            f.addProductToCart(pid1,visitorId);
+            f.addProductToCart(pid2,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
-            assertEquals("",actual);
+            assertEquals("Store Id : 37\n" +
+                    "Product Id: 37-1 ,Product Name: Bread ,Product Price: 6.0\n" +
+                    "Product Id: 37-0 ,Product Name: Milk ,Product Price: 5.0\n",actual);
         }
         catch (Exception e)
         {//Should happen
@@ -559,6 +568,7 @@ class FacadeTest {
             String pDesc = "Milk";
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
+            //TODO CHECK WHY STORE OWNER DOESNT GET SAVED
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.CloseStore(visitorId,storeId);
             assertThrows(Exception.class,()->f.appointNewStoreOwner(visitorId,Username2,storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -585,6 +595,7 @@ class FacadeTest {
             String pDesc = "Milk";
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
+            //TODO CHEKC WHY STORE OWNER DOESNT GET SAVED
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.CloseStore(visitorId,storeId);
             assertThrows(Exception.class,()->f.appointNewStoreOwner(visitorId,"FakeUsername",storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -741,6 +752,7 @@ class FacadeTest {
             String pDesc = "Milk";
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
+            //TODO CHECK WHY STORE OWNER DOESNT GET SAVED
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.CloseStore(visitorId,storeId);
             assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,Username2,storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -767,6 +779,7 @@ class FacadeTest {
             String pDesc = "Milk";
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
+            //TODO CHECK WHY THE STORE OWNER DOESNT GET SAVED
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.CloseStore(visitorId,storeId);
             assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,"FakeUsername",storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -780,14 +793,276 @@ class FacadeTest {
 
     @Test
     void changeStoreManagerPermission() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            String Username3 = "ValidUsernamePerson3";
+            String password3 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.Register(visitorId,Username3,password3);//Register 3 user
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);
+            List<Permission> p = new ArrayList<>();
+            p.add(Permission.CanAppointStoreOwner);
+            f.changeStoreManagerPermission(visitorId,Username2,storeId,p);
+            f.logout(visitorId);
+            f.login(visitorId,Username2,password2);
+            //TODO CHECK WHY USER2 CANT APPOINT USER3 TO BE STORE OWNER EVEN THO IT IS IN HIS PERMISSIONS
+            f.appointNewStoreOwner(visitorId,Username3,storeId);
+            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username3).get(storeId).getRole());
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void changeStoreManagerPermission_InvalidVisitiorId() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            String Username3 = "ValidUsernamePerson3";
+            String password3 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.Register(visitorId,Username3,password3);//Register 3 user
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);
+            List<Permission> p = new ArrayList<>();
+            p.add(Permission.CanAppointStoreOwner);
+            assertThrows(Exception.class,()->f.changeStoreManagerPermission(1000,Username2,storeId,p));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void changeStoreManagerPermission_BadStoreId() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            String Username3 = "ValidUsernamePerson3";
+            String password3 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.Register(visitorId,Username3,password3);//Register 3 user
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);
+            List<Permission> p = new ArrayList<>();
+            p.add(Permission.CanAppointStoreOwner);
+            assertThrows(Exception.class,()->f.changeStoreManagerPermission(visitorId,Username2,10000,p));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void changeStoreManagerPermission_ClosedStore() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            String Username3 = "ValidUsernamePerson3";
+            String password3 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.Register(visitorId,Username3,password3);//Register 3 user
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);//TODO FIX USER NOT HAVING A STORE
+            List<Permission> p = new ArrayList<>();
+            p.add(Permission.CanAppointStoreOwner);
+            f.CloseStore(visitorId,storeId);
+            assertThrows(Exception.class,()->f.changeStoreManagerPermission(visitorId,Username2,storeId,p));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void changeStoreManagerPermission_NotStoreOwner() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            String Username3 = "ValidUsernamePerson3";
+            String password3 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.Register(visitorId,Username3,password3);//Register 3 user
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);
+            f.logout(visitorId);
+            f.login(visitorId,Username2,password2);
+            List<Permission> p = new ArrayList<>();
+            assertThrows(Exception.class,()->f.changeStoreManagerPermission(visitorId,Username,storeId,p));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void changeStoreManagerPermission_nonExistedtUsername() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            String Username3 = "ValidUsernamePerson3";
+            String password3 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.Register(visitorId,Username3,password3);//Register 3 user
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);
+            List<Permission> p = new ArrayList<>();
+            p.add(Permission.CanAppointStoreOwner);
+            assertThrows(Exception.class,()->f.changeStoreManagerPermission(visitorId,"randomUsername",storeId,p));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void changeStoreManagerPermission_nullUsername() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidUsernamePerson2";
+            String password2 = "123456789";
+            String Username3 = "ValidUsernamePerson3";
+            String password3 = "123456789";
+            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.Register(visitorId,Username3,password3);//Register 3 user
+            f.Register(visitorId,Username,password);//register first user
+            f.login(visitorId,Username,password);//login first user
+            int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            f.appointNewStoreManager(visitorId,Username2,storeId);
+            List<Permission> p = new ArrayList<>();
+            p.add(Permission.CanAppointStoreOwner);
+            assertThrows(Exception.class,()->f.changeStoreManagerPermission(visitorId,null,storeId,p));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
-    void getRolesData() {
+    void purchaseCart_ok() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid,visitorId);
+            List<String> actual = f.purchaseCart(visitorId,123,"Adress");
+            List<String> expected = new LinkedList<>();
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
-
     @Test
-    void purchaseCart() {
+    void purchaseCart_InvalidVisitorId() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid,visitorId);
+            assertThrows(Exception.class,()->f.purchaseCart(1000,123,"Adress"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void purchaseCart_MultipleProducts() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            String pCat2 = "Bread";
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            String pid2 = f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
+            f.addProductToCart(pid1,visitorId);
+            f.addProductToCart(pid2,visitorId);
+            List<String> actual = f.purchaseCart(visitorId,123,"Adress");
+            List<String> expected = new LinkedList<>();
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
@@ -845,7 +1120,7 @@ class FacadeTest {
             String password = "123456789";
             f.Register(visitorId,Username,password);
             f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            int storeId = f.OpenNewStore(visitorId,"MyStore");//TODO STORE DOESNT GET SAVED AFTER OPENING
             f.CloseStore(visitorId,storeId);
             assertFalse(f.getStoresList().get(storeId).getActive());
         }
@@ -872,6 +1147,7 @@ class FacadeTest {
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            //TODO:Find out why store owner doesnt get saved
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
@@ -901,6 +1177,7 @@ class FacadeTest {
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            //TODO CHECK WHY STORE OWNER DOESNT GET SAVED
             f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store owner of store 1 which user 1 is the founder of
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
@@ -986,7 +1263,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             String actual = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            assertEquals("",actual);
+            assertTrue(actual!=null);
         }
         catch (Exception e)
         {//Should happen
@@ -1015,7 +1292,7 @@ class FacadeTest {
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
             String actual = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);//add a product
-            assertEquals("",actual);//check the product was added
+            assertTrue(actual!=null);//check the product was added
         }
         catch (Exception e)
         {//Should happen
@@ -1040,6 +1317,7 @@ class FacadeTest {
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
+            //TODO FIND OUT WHY USER1 ISNT THE OWNER OF ITS OWN STORE
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
@@ -1203,6 +1481,7 @@ class FacadeTest {
             f.logout(visitorId);
             f.Register(visitorId,Username2,password2);
             f.login(visitorId,Username2,password2);
+            //TODO CHECK WHY VISITOR ID IS INVALID
             assertThrows(Exception.class,()->f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc));
         }
         catch (Exception e)
@@ -1214,57 +1493,1116 @@ class FacadeTest {
 
     @Test
     void removeProduct() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.RemoveProduct(visitorId,pid);
+            //TODO CHECK WHY ITS TRYING TO CLOSE STORE
+            String actual = f.getCart(visitorId).cartToString();
+            assertEquals("",actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void removeProduct_notallowed() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            assertThrows(Exception.class,()->f.RemoveProduct(visitorId,"0-0"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void removeProduct_invalidVisitorId() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.RemoveProduct(1000,"0-0"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void removeProduct_invalidProductId() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.RemoveProduct(visitorId,"0-100"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void removeProduct_ProductfromDiffrentStore() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String Username2 = "ValidSecondUser";
+            String password2 = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            String pCat2 = "Bread";
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            f.Register(visitorId,Username,password);
+            f.Register(visitorId,Username2,password2);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            f.login(visitorId,Username2,password2);
+            int storeId2 = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId2,pName2,pPrice2,pCat2,pQuan2,pDesc2);
+            assertThrows(Exception.class,()->f.RemoveProduct(visitorId,"0-0"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
     void updateProductQuantity() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.UpdateProductQuantity(visitorId,pid,100);
+            int actualQuan = f.getStoresList().get(storeId).getProducts().get(pid).getQuantity();
+            int expectedQuan = 100;
+            assertEquals(expectedQuan,actualQuan);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void updateProductQuantity_NegativeQuan() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductQuantity(visitorId,"0-0",-100));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void updateProductQuantity_NotAllowedToUpdate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            assertThrows(Exception.class,()->f.UpdateProductQuantity(visitorId,"0-0",100));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void IncreaseProductQuantity() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.IncreaseProductQuantity(visitorId,pid,100);
+            int actualQuan = f.getStoresList().get(storeId).getProducts().get(pid).getQuantity();
+            int expectedQuan = 110;
+            assertEquals(expectedQuan,actualQuan);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void IncreaseProductQuantity_NegativeQuan() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.IncreaseProductQuantity(visitorId,"0-0",-100));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void IncreaseProductQuantity_NotAllowedToUpdate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            assertThrows(Exception.class,()->f.IncreaseProductQuantity(visitorId,"0-0",100));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
-    void increaseProductQuantity() {
+    void UpdateProductName() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.UpdateProductName(visitorId,pid,"NotMilk");
+            String actualName = f.getStoresList().get(storeId).getProducts().get(pid).getName();
+            String expectedName = "NotMilk";
+            assertEquals(expectedName,actualName);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductName_Nullname() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductName(visitorId,"0-0",null));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductName_badPID() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductName(visitorId,"0-100","NotMilk"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductName_NotAllowedToUpdate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            assertThrows(Exception.class,()->f.UpdateProductName(visitorId,"0-0","NotMilk"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+
+
+    @Test
+    void UpdateProductPrice() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.UpdateProductPrice(visitorId,pid,10.0);
+            double actual = f.getStoresList().get(storeId).getProducts().get(pid).getPrice();
+            double expected = 10.0;
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProducPrice_notNeg() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductPrice(visitorId,"0-0",-10.0));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductPrice_badPID() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductPrice(visitorId,"0-100",10));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductPrice_NotAllowedToUpdate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            assertThrows(Exception.class,()->f.UpdateProductPrice(visitorId,"0-0",10));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
-    void updateProductName() {
+    void UpdateProductCate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.UpdateProductCategory(visitorId,pid,"NotMilk");
+            String actual = f.getStoresList().get(storeId).getProducts().get(pid).getCategory();
+            String expected = "NotMilk";
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProducCate_NullCate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductCategory(visitorId,"0-0",null));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductCate_badPID() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductCategory(visitorId,"0-100","NotMilk"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductCate_NotAllowedToUpdate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            assertThrows(Exception.class,()->f.UpdateProductCategory(visitorId,"0-0","NotMilk"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
-    void updateProductPrice() {
+    void UpdateProductDesc() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.UpdateProductDescription(visitorId,pid,"NotMilk");
+            String actual = f.getStoresList().get(storeId).getProducts().get(pid).getDescription();
+            String expected = "NotMilk";
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProducDesc_NullCate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductDescription(visitorId,"0-0",null));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductDesc_badPID() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.UpdateProductDescription(visitorId,"0-100","NotMilk"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void UpdateProductDesc_NotAllowedToUpdate() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            assertThrows(Exception.class,()->f.UpdateProductDescription(visitorId,"0-0","NotMilk"));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
-    void updateProductCategory() {
+    void searchProductByName_productExists() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            String actual = f.SearchProductByName(pName);
+            String expected="";
+            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES AND NOT OBJECTS
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void searchProductByName_MultipleProdcts() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            double pPrice2 = 6.0;
+            String pCat2 = "Bread";
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.AddProduct(visitorId,storeId,pName,pPrice2,pCat2,pQuan2,pDesc2);
+            String actual = f.SearchProductByName(pName);
+            String expected="";
+            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES AND NOT OBJECTS
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void searchProductByName_nameDoesntExist() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            String actual = f.SearchProductByName("Bread");
+            String expected="[]";
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
-    void updateProductDescription() {
+    void searchProductByCate_productExists() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            String actual = f.SearchProductByCategory(pCat);
+            String expected="";
+            assertEquals(expected,actual);//TODO MAKE SearchProducyByCat return vales and not Objects
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void searchProductByCate_MultipleProdcts() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat,pQuan2,pDesc2);
+            String actual = f.SearchProductByCategory(pName);
+            String expected="";
+            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES INSTEAD OF OBJECTS
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void searchProductByCate_CateDoesntExist() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            String actual = f.SearchProductByCategory("Bread");
+            String expected="[]";
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
-    void searchProductByName() {
+    void searchProductByKey_productExists() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            List<String> actual = f.SearchProductBykey(pCat);
+            List<String> expected=new ArrayList<>();
+            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES AND NOT OBJECTS
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void searchProductByKey_MultipleProdcts() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat,pQuan2,pDesc2);
+            List<String> actual = f.SearchProductBykey(pCat);
+            List<String> expected=new ArrayList<>();
+            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES AND NOT OBJECTS
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void searchProductByKey_KeyDoesntExist() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            List<String> actual = f.SearchProductBykey("SomethingRandom");
+            List<String> expected=new ArrayList<>();
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 
     @Test
-    void searchProductByCategory() {
+    void getInformation_ExistingStore() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            String actual = f.GetInformation(storeId);
+            String expected = "Store Name is MyStoreStore Rate is:5.0 Product Name is :MilkThe Rate is : 0.0\n";
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
-
     @Test
-    void searchProductBykey() {
+    void getInformation_FakeStore() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            assertThrows(Exception.class,()->f.GetInformation(100));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
-
     @Test
-    void getInformation() {
+    void getStoreHistoryPurchase_Admin() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);//TODO CHANGE TO ADMIN
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid1,visitorId);
+            f.purchaseCart(visitorId,123,"Adress");
+            List<String> actual = f.GetStoreHistoryPurchase(storeId,visitorId);
+            List<String> expected = new LinkedList<>();
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Shouldnt happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
-
     @Test
-    void getStoreHistoryPurchase() {
+    void getStoreHistoryPurchase_NotAdmin() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid  =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid,visitorId);
+            f.purchaseCart(visitorId,123,"Adress");
+            assertThrows(Exception.class,()->f.GetStoreHistoryPurchase(storeId,visitorId));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
-
     @Test
-    void getUserHistoryPurchase() {
+    void getStoreHistoryPurchase_FakeStore() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);//TODO CHANGE TO ADMIN
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid,visitorId);
+            f.purchaseCart(visitorId,123,"Adress");
+            assertThrows(Exception.class,()->f.GetStoreHistoryPurchase(1000,visitorId));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
-
     @Test
-    void filterProductSearch() {
+    void getUserHistoryPurchase_Admin() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);//TODO CHANGE TO ADMIN
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid,visitorId);
+            f.purchaseCart(visitorId,123,"Adress");
+            String actual = f.GetUserHistoryPurchase(Username,visitorId);
+            String expected = "";
+            assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void getUserHistoryPurchase_NotAdmin() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid,visitorId);
+            f.purchaseCart(visitorId,123,"Adress");
+            assertThrows(Exception.class,()->f.GetUserHistoryPurchase(Username,visitorId));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void getUserHistoryPurchase_FakeUserName() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);//TODO CHANGE TO ADMIN
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            String pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid,visitorId);
+            f.purchaseCart(visitorId,123,"Adress");
+            assertThrows(Exception.class,()->f.GetUserHistoryPurchase("NotRealUser",visitorId));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
     }
 }

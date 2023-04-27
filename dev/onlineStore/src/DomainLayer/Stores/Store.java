@@ -1,14 +1,12 @@
 package DomainLayer.Stores;
+import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 import DomainLayer.Users.Bag;
 
-import DomainLayer.Logging.UniversalHandler;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.*;
-
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -23,26 +21,23 @@ public class Store {
     private  AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
     private int Id;
     private String Name;
-    private Boolean Active;
+    private Boolean Active= true;
     private History History;
     private ConcurrentHashMap<String, Rating> RateMapForStore;
     private ConcurrentHashMap<String, StoreProduct> products;
-    private Double Rate; 
+    private Double Rate=5.0;
     private static final Logger logger=Logger.getLogger("Store logger");
-
+    
     public Store(String name) {
-        try{
-            UniversalHandler.GetInstance().HandleError(logger);
-            UniversalHandler.GetInstance().HandleInfo(logger);
-        }
-        catch (Exception ignored){
-        }
-            Id = StoreID_GENERATOR.getAndIncrement();
-            Name = name;
-            History = new History();
-            products = new ConcurrentHashMap<>();
-            Active=true;
-      
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+        Id = StoreID_GENERATOR.getAndIncrement();
+        Name = name;
+        History = new History();
+        products = new ConcurrentHashMap<>();
+
+        this.Active=true;
+
     }
     private String getNewProductId() {
         return Id+"-"+ProductID_GENERATOR.getAndIncrement();
@@ -67,9 +62,9 @@ public class Store {
             logger.warning("Store is closed: " + this.Name);
             throw new Exception(" this store is closed");
         }
-        String s = "Store Name is" + this.Name + "Store Rate is:" + getRate();
+        String s = "Store Name is " + this.Name + "Store Rate is:" + getRate();
         for (StoreProduct i : products.values()) {
-            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate() + "/n";
+            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate() + "\n";
         }
         return s;
     }
@@ -131,7 +126,7 @@ public class Store {
         LinkedList<StoreProduct> searchResults = new LinkedList<StoreProduct>();
         if (getActive()) {
             for (StoreProduct product : this.products.values()) {
-                if (Objects.equals(product.getCategory(), category)) {
+                if (product.getCategory() == (category)) {
                     if (CheckProduct(product)) {
                         searchResults.add(product);
                     }
