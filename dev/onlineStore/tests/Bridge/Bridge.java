@@ -234,7 +234,7 @@ public interface Bridge {
      * @param StoreName - the store name
      * @return a response with a string array of the purchase history as its value
      */
-    public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
+    Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
     List<ServiceProduct> FilterSearch(List<Filter> filters);
     boolean RateAndCommentOnProduct(String productId,String comment,int rating);
     boolean RateStore(int storeId,int rating);

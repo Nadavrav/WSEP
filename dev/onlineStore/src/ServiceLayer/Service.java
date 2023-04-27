@@ -236,7 +236,6 @@ public class Service {
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
-
     }
     public Response<?> GetStoreProductRate(String ProductId) throws Exception{
         try {
@@ -398,9 +397,7 @@ public class Service {
         }
         return new Response<>("Success");
     }
-
     //6.4
-
     public Response<List<String>> GetStoreHistoryPurchase(int StoreId)  {
         try{
             return new Response<List<String>>(facade.GetStoreHistoryPurchase(StoreId,visitorId));
@@ -408,9 +405,7 @@ public class Service {
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
-
     }
-
     public Response<String> GetUserHistoryPurchase(String userName) {
         try{
             facade.GetUserHistoryPurchase(userName,visitorId);
