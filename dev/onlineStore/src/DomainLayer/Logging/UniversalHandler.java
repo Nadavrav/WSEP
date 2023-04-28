@@ -12,10 +12,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+import java.util.logging.*;
 
 public class UniversalHandler {
     private static UniversalHandler handler = null;
@@ -49,6 +46,7 @@ public class UniversalHandler {
         logger.addHandler(infoHandler);
     }
     public void HandleError(Logger logger){
+
         if(errorHandler==null){
             try {
                 PrepareFolder();
@@ -67,6 +65,12 @@ public class UniversalHandler {
     }
 
     private void PrepareFolder() throws IOException {
+        Handler[] handlers = Logger.getLogger("").getHandlers();
+        for (Handler handler : handlers) {
+            if (handler instanceof ConsoleHandler) {
+                Logger.getLogger("").removeHandler(handler);
+            }
+        }
         Files.createDirectories(Paths.get("dev/logs"));
         File folder = new File("dev/logs");
         File[] files = folder.listFiles();
