@@ -2,11 +2,10 @@ package ServiceLayer;
 
 import DomainLayer.Facade;
 import DomainLayer.Response;
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
 
 import ServiceLayer.ServiceObjects.Fiters.Filter;
-import ServiceLayer.ServiceObjects.ServiceBag;
 
 import ServiceLayer.ServiceObjects.ServiceProduct;
 

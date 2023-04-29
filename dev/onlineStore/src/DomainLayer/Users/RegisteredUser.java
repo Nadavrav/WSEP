@@ -1,12 +1,8 @@
 package DomainLayer.Users;
 
-import DomainLayer.Response;
-import DomainLayer.Stores.Purchase;
+import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Logging.UniversalHandler;
 import java.util.logging.*;
-
-import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegisteredUser extends SiteVisitor{
     private static final Logger logger=Logger.getLogger("RegisteredUser logger");
@@ -16,7 +12,7 @@ public class RegisteredUser extends SiteVisitor{
     //add lock
 
 
-    public RegisteredUser(String userName, String password) throws Exception {
+    public RegisteredUser(String userName, String password){
         super(0);
         try{
             UniversalHandler.GetInstance().HandleError(logger);
@@ -33,25 +29,24 @@ public class RegisteredUser extends SiteVisitor{
     }
 
      public RegisteredUser(SiteVisitor visitor,String userName, String password) {
-        super(visitor);
-        try{
+        super(visitor.getVisitorId());
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
-        }
-        catch (Exception ignored){
-        }
             checkUserName(userName);
             checkPassword(password);
             this.userName=userName;
             this.password=password;
             this.purchaseHistory = new PurchaseHistory();
+            if(this.getCart().getBags().isEmpty() && !visitor.getCart().getBags().isEmpty()){
+                this.ReplaceCart(visitor.getCart());
+            }
        
     }
 
     private void checkPassword(String password) {
         if(password==null) {
-            logger.warning("null password");
-            throw new IllegalArgumentException("Username cannot be null");
+            logger.severe("null password");
+            throw new NullPointerException("Username cannot be null");
         }
         if(password.length()<8){
             logger.warning("invalid password");
@@ -66,8 +61,8 @@ public class RegisteredUser extends SiteVisitor{
     private void checkUserName(String userName) {
 
         if (userName == null) {
-            logger.warning("null username");
-            throw new IllegalArgumentException("Username cannot be null");
+            logger.severe("null username");
+            throw new NullPointerException("Username cannot be null");
         }
        //if (userName.length() < 8) { //DONT UNCOMMENT THIS WE DON'T NEED THIS PART
        //    logger.warning("invalid username");

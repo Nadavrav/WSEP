@@ -2,8 +2,7 @@ package UnitTests;
 
 import DomainLayer.Stores.Rating;
 import DomainLayer.Stores.Store;
-import DomainLayer.Stores.StoreProduct;
-import org.junit.jupiter.api.BeforeAll;
+import DomainLayer.Stores.Products.StoreProduct;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

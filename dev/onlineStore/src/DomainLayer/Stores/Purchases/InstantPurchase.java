@@ -1,4 +1,4 @@
-package DomainLayer.Stores;
+package DomainLayer.Stores.Purchases;
 
 import DomainLayer.Users.SiteVisitor;
 

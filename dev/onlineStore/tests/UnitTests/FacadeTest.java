@@ -1,7 +1,6 @@
 package UnitTests;
 
 import DomainLayer.Facade;
-import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.Permission;
 import DomainLayer.Users.Role;
 import org.junit.jupiter.api.AfterEach;

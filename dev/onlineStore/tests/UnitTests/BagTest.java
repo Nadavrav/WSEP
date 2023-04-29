@@ -1,6 +1,6 @@
 package UnitTests;
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

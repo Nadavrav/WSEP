@@ -1,4 +1,4 @@
-package DomainLayer.Stores;
+package DomainLayer.Stores.Discounts;
 
 public class OpenDiscount extends Discount {
 }

@@ -1,6 +1,6 @@
 package DomainLayer.Users;
 
-import DomainLayer.Stores.Purchase;
+import DomainLayer.Stores.Purchases.Purchase;
 
 import java.util.LinkedList;
 

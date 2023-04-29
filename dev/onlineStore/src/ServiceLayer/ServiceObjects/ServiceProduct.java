@@ -1,6 +1,6 @@
 package ServiceLayer.ServiceObjects;
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 
 public class ServiceProduct {
 

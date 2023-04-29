@@ -1,59 +1,49 @@
 package DomainLayer;
 
 
-import DomainLayer.Stores.History;
-
-import DomainLayer.Stores.InstantPurchase;
+import DomainLayer.Stores.Purchases.InstantPurchase;
 import DomainLayer.Logging.UniversalHandler;
-import java.util.logging.*;
 
 import DomainLayer.Stores.Store;
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
 import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
 import java.util.*;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import java.util.logging.Level;
 
-import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
-import static DomainLayer.Stores.StoreProduct.isValidProductId;
+import static DomainLayer.Stores.Products.StoreProduct.getStoreIdByProductId;
+import static DomainLayer.Stores.Products.StoreProduct.isValidProductId;
 
 public class Facade {
     private static Facade instanceFacade = null;
     private  static final Logger logger = Logger.getLogger("Facade Logger");
 
-    //Getter for tests
-    public Map<Integer, SiteVisitor> getOnlineList() {
-        return onlineList;
-    }
-
     private Map<Integer, SiteVisitor> onlineList;//online
-    //Getter for tests
-    public Map<String, RegisteredUser> getRegisteredUserList() {
-        return registeredUserList;
-    }
+
 
     private Map<String, RegisteredUser> registeredUserList;
 
-    //Getter for tests
+
+    private Map<Integer, Store> storesList;
+    //unit tests getters
+    public Map<Integer, SiteVisitor> getOnlineList() {
+        return onlineList;
+    }
+    public Map<String, RegisteredUser> getRegisteredUserList() {
+        return registeredUserList;
+    }
     public Map<Integer, Store> getStoresList() {
         return storesList;
     }
-
-    private Map<Integer, Store> storesList;
-
     public Map<String, Map<Integer, Employment>> getEmploymentList() {
         return employmentList;
     }
 
-    private Map<String, Map<Integer, Employment>> employmentList;//
+    private Map<String, Map<Integer, Employment>> employmentList;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
 

@@ -1,20 +1,15 @@
 package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 
-import java.io.IOException;
-import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import DomainLayer.Users.RegisteredUser;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Store {
     private static AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);

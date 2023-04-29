@@ -1,0 +1,24 @@
+package DomainLayer.Stores.Products;
+
+public class CartProduct extends Product{
+    int amount;
+    //public CartProduct(String name, double price, String category, String desc) {
+    //    super(name, price, category, desc);
+    //    amount=1;
+    //}
+    public CartProduct(StoreProduct storeProduct){
+        super(storeProduct.Name, storeProduct.Price, storeProduct.category, storeProduct.Description);
+        amount=1;
+    }
+    public int getAmount() {
+        return amount;
+    }
+    public void add(int amount){
+        this.amount+=amount;
+    }
+    public void remove(int amount){
+        if(amount> this.amount)
+            throw new RuntimeException("Product amount can't be negative");
+        this.amount=amount;
+    }
+}

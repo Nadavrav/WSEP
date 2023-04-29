@@ -1,11 +1,8 @@
 package ServiceLayer.ServiceObjects;
 
-import DomainLayer.Stores.StoreProduct;
 import DomainLayer.Users.Bag;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServiceBag {
 

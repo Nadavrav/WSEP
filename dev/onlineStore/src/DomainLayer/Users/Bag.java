@@ -1,54 +1,62 @@
 package DomainLayer.Users;
 
 import DomainLayer.Logging.UniversalHandler;
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.CartProduct;
+import DomainLayer.Stores.Products.Product;
+import DomainLayer.Stores.Products.StoreProduct;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.*;
 
 public class Bag {
-    Map<String,StoreProduct> productList;
-    Map<String,Integer> productsAmount;
+    /**
+     * key: StoreProduct extends Product, Product has only field getters and utility functions so no store product logic or field changes can be
+     * performed on keys
+     * value: cartProduct extends the same Product object (true in equals, not actually the same object) but also contains cart amount field- and uses
+     * observer logic
+     */
+    Map<Product,CartProduct> productList;
+    /**
+     * deprecated: amounts implemented in CartProduct
+     */
+    //Map<String,Integer> productsAmount;
     private static final Logger logger=Logger.getLogger("Bag logger");
     int storeId;
 
     public Bag (int storeId){
-        try{
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
-        }
-        catch (Exception ignored){
-        }
         this.storeId=storeId;
-        productList = new HashMap<>();
-        productsAmount = new HashMap<>();
+        productList = new ;
+       // productsAmount = new HashMap<>();
     }
     
     public void addProduct(StoreProduct product) {
-
         logger.info("Starting add product");
-         String productId = product.getId();
-
-        if(productList.containsKey(product.getId())){
-            int currentAmount = productsAmount.get(productId);
-            productsAmount.put(productId,currentAmount + 1);
-        }
-        else{
-            productList.put(productId,product);
-            productsAmount.put(productId,1);
-        }
+        CartProduct cartProduct=new CartProduct(product);
+        if(productList.get(product)==null)
+            throw new RuntimeException("Cart already contains "+product.getName());
+        productList.put(product,new CartProduct(product));
+        //String productId = product.getId();
+        // if(productList.containsKey(product.getId())){
+        //     int currentAmount = productsAmount.get(productId);
+        //     productsAmount.put(productId,currentAmount + 1);
+        // }
+        // else{
+        //     productList.put(productId,product);
+        //     productsAmount.put(productId,1);
+        // }
         logger.info("Add product Succeeded");
 
     }
     public void removeProduct(StoreProduct product) {
-        productList.remove(product);
-        productsAmount.remove(product);
+        CartProduct cartProduct=new CartProduct(product);
+        if(productList.contains(cartProduct))
+                productList.remove(cartProduct);
+        else throw new RuntimeException();
     }
-    public void changeProductAmount(StoreProduct product,int newAmount) {
-        productsAmount.put(product.getId(),newAmount);
+    public void changeProductAmount(Product product,int newAmount) {
+       CartProduct cartProduct=productList.(product);
     }
     public double calculateTotalAmount() {
         int totalAmount = 0;

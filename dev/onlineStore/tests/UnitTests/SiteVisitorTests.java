@@ -1,9 +1,7 @@
 package UnitTests;
 
-import DomainLayer.Stores.StoreProduct;
-import DomainLayer.Users.Cart;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.SiteVisitor;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

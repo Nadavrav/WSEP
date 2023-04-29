@@ -1,35 +1,35 @@
-package DomainLayer.Stores;
+package DomainLayer.Stores.Products;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
+import java.util.WeakHashMap;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+
 import DomainLayer.Logging.UniversalHandler;
+import DomainLayer.Stores.Rating;
 
 
-public class StoreProduct {
+public class StoreProduct extends Product {
 
     private String productId;
-    private String Name;
-    private Double Price;
+
     private int Quantity;
     private String Category;
-    private  String Description;
     private double Rate;
-    private Map<String,Rating> RateMap;
-    public int NumberOfRates;
+    private Map<String, Rating> RateMap;
+    private final Map<WeakReference<StoreProductObserver>, Object> observers = new WeakHashMap<>();
     private static final Logger logger=Logger.getLogger("StoreProduct logger");
 
 
     public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
     {
+        super(name,price,category,desc);
        try {
            UniversalHandler.GetInstance().HandleError(logger);
            UniversalHandler.GetInstance().HandleInfo(logger);
 
-        this.getStoreIdByProductId(productId);//Used to check if productId is valid
+        getStoreIdByProductId(productId);//Used to check if productId is valid
         if (name == null) {
             throw new NullPointerException("Product name cant be null");
         }
@@ -60,13 +60,12 @@ public class StoreProduct {
 
 
 
-    private double setRate() {
+    private void setRate() {
         double sum = 0;
         for (Rating rating : RateMap.values()) {
             sum+=rating.getRate();
         }
         Rate = sum / RateMap.size();
-        return Rate;
     }
 
     public static int getStoreIdByProductId(String productId) {
@@ -87,7 +86,6 @@ public class StoreProduct {
             logger.warning("Failed to parse store ID from product ID: " + productId);
              throw new IllegalArgumentException(e);
         }
-
     }
     
     public static void isValidProductId(String productId) throws Exception {
@@ -122,12 +120,14 @@ public class StoreProduct {
 
     public void setName(String name) {
         Name = name;
+        notifyObservers();
     }
     public void setQuantity(int quantity) {
-        Quantity = quantity;
+        Quantity = quantity; //only relevant during purchase cart action, no need to notify cart products
     }
     public void setCategory(String category) {
         Category = category;
+        notifyObservers();
     }
 
     public String getName() {
@@ -153,6 +153,7 @@ public class StoreProduct {
     }
     public void setPrice(Double price) {
         Price = price;
+        notifyObservers();
     }
 
     public int getQuantity() {
@@ -164,6 +165,7 @@ public class StoreProduct {
     }
 
     public void setRate(Double rate) {
+        //only relevant when viewing product in its store, no need to notify cart products
         Rate = rate;
     }
     public double GetAverageRating(){
@@ -179,15 +181,7 @@ public class StoreProduct {
     }   
 
     public int getNumberOfRates() {
-        return NumberOfRates;
-    }
-
-    public void setNumberOfRates(int numberOfRates) {
-        NumberOfRates = numberOfRates;
-    }
-
-    public void setRateMap(Map<String, Rating> rateMap) {
-        RateMap = rateMap;
+        return RateMap.keySet().size();
     }
 
     public void UpdateQuantity(int quantity) {
@@ -201,9 +195,7 @@ public class StoreProduct {
         setQuantity(quantity+this.Quantity);
     }
 
-    public void setPrice(double price) {
-        this.Price=price;
-    }
+
 
     public String getCategory() {
         return Category;
@@ -231,10 +223,37 @@ public class StoreProduct {
 
     /**
      * Function to return the store product as a string for prints
-     * @return a string for prints
+     * @return a string for print
      */
     public String toStringForCart()
     {
         return "Product Id: "+this.productId+" ,Product Name: "+this.Name+" ,Product Price: "+this.Price;
+    }
+
+    /**
+     * list of cart products that depend on the fields of this product
+     * @param product product in a cart
+     */
+    public void addObserver(StoreProductObserver product) {
+        observers.put(new WeakReference<>(product), new Object());
+    }
+
+    /**
+     * notify all cart objects to update their fields to be equal to this store product,
+     * called when store name,price,description or category are changed-can be expanded to include discounts and the like if needed
+     * uses weak hash map, if I understood correctly, doesn't prevent CartProduct from being deleted by the garbage collector when all strong references to it
+     * (e.g. references from a user's cart) when notifying cart products if a cart product was deleted it should be null,
+     * stillInCart() is called too in order to double-check and not throw an error
+     */
+    public void notifyObservers() {
+        for (Map.Entry<WeakReference<StoreProductObserver>, Object> entry : observers.entrySet()) {
+            WeakReference<StoreProductObserver> observerRef = entry.getKey();
+            StoreProductObserver observer = observerRef.get();
+            if (observer==null || !observer.stillInCart()) {
+                observers.remove(observerRef);
+            } else {
+                observer.updateFields(this);
+            }
+        }
     }
 }

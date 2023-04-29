@@ -1,15 +1,11 @@
 package DomainLayer.Users;
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Logging.UniversalHandler;
-import java.util.logging.*;
+
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class SiteVisitor{
     private static AtomicInteger VisitorID_GENERATOR = new AtomicInteger(1);
@@ -37,12 +33,11 @@ public class SiteVisitor{
 //        }
 //    }
     
-    public SiteVisitor(SiteVisitor other){
-        UniversalHandler.GetInstance().HandleError(logger);
-        UniversalHandler.GetInstance().HandleError(logger);
-        cart=new Cart();
-
-    }
+   //public SiteVisitor(SiteVisitor other){ //why do we need a copy constructor for site visitor??
+   //    UniversalHandler.GetInstance().HandleError(logger);
+   //    UniversalHandler.GetInstance().HandleError(logger);
+   //    cart=new Cart();
+   //}
     public SiteVisitor(int id){
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
@@ -103,6 +98,9 @@ public class SiteVisitor{
     //-----------getter / setter-----------------
     public Cart getCart() {
         return cart;
+    }
+    public void ReplaceCart(Cart cart){
+          this.cart=cart;
     }
 
     public int getVisitorId(){

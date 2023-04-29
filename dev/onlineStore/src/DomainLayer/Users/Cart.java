@@ -1,14 +1,10 @@
 package DomainLayer.Users;
 
 import DomainLayer.Logging.UniversalHandler;
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Cart {
     Map<Integer,Bag> bagList;
@@ -55,6 +51,10 @@ public class Cart {
 
         public Bag getBags ( int storeId){
             return bagList.get(storeId);
+        }
+
+        private boolean isEmpty(){
+            return bagList.isEmpty();
         }
 
         public String cartToString () {
