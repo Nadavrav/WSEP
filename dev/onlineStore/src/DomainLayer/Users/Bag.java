@@ -27,7 +27,7 @@ public class Bag {
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
         this.storeId=storeId;
-        productList = new ;
+        productList = new HashMap<>();
        // productsAmount = new HashMap<>();
     }
     
@@ -50,38 +50,36 @@ public class Bag {
 
     }
     public void removeProduct(StoreProduct product) {
+        if(product==null)
+            throw new NullPointerException("attempted to remove null product");
+        if(productList.get(product)==null)
+            throw new RuntimeException("product to remove not in cart");
         CartProduct cartProduct=new CartProduct(product);
-        if(productList.contains(cartProduct))
+        if(productList.get(product).equals(cartProduct))
                 productList.remove(cartProduct);
         else throw new RuntimeException();
     }
     public void changeProductAmount(Product product,int newAmount) {
-       CartProduct cartProduct=productList.(product);
+       CartProduct cartProduct=productList.get(product);
+       cartProduct.setAmount(newAmount);
     }
     public double calculateTotalAmount() {
         int totalAmount = 0;
-        for (StoreProduct sp : productList.values()) {
-            totalAmount += sp.getPrice()*productsAmount.get(sp.getId());
+        for (CartProduct cartProduct : productList.values()) {
+            totalAmount += cartProduct.getPrice()*cartProduct.getAmount();
         }
         return totalAmount;
     }
     
-    public String getStoreID(){
-        if(productList.isEmpty()){
-            return "";
-        }
-        else{
-
-            return ""+ storeId;
-
-        }
+    public Integer getStoreID(){
+        return storeId;
     }
     
     public String bagToString() {
-        String s="";
-        for (String i :productList.keySet()) {
-            s+= productList.get(i).toStringForCart()+"\n";
+        StringBuilder s= new StringBuilder();
+        for (CartProduct cartProduct :productList.values()) {
+            s.append(productList.get(cartProduct).toString()).append("\n");
         }
-        return s;
+        return s.toString();
     }
 }

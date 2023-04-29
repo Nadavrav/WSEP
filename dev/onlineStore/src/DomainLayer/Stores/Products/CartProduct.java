@@ -16,9 +16,19 @@ public class CartProduct extends Product{
     public void add(int amount){
         this.amount+=amount;
     }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
     public void remove(int amount){
         if(amount> this.amount)
             throw new RuntimeException("Product amount can't be negative");
         this.amount=amount;
+    }
+    @Override
+    public String toString(){
+        return "Name: "+getName()+" Description: "+getDescription()+"Category"+getCategory()+" price per unit: "+getPrice()+"Amount: "+getAmount()+
+                " total price: "+getPrice()*getAmount();
     }
 }

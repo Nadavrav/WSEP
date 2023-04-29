@@ -16,8 +16,6 @@ public class Cart {
       UniversalHandler.GetInstance().HandleError(logger);
   }
 
-
-
         //check if there is bag to store
         public void addProductToCart ( int storeId, StoreProduct product){
             Bag bag = bagList.get(storeId);
@@ -27,31 +25,31 @@ public class Cart {
                 bagList.put(storeId, bag);
                 logger.info("New bag created for store with ID: " + storeId);
             }
-
-            // Add the product to the store bag
             bag.addProduct(product);
-            bagList.put(storeId, bag);
             logger.info("Product added to cart for store with ID: " + storeId);
         }
 
         public void removeProductFromCart ( int storeId, StoreProduct product){
-
-            Bag b = getBags(storeId);
-            b.removeProduct(product);
+            Bag bag = bagList.get(storeId);
+            if(bag==null)
+                throw new RuntimeException("Cart has no bag from this store!");
+            bag.removeProduct(product);
         }
 
         public void changeCartProductQuantity ( int storeId, StoreProduct product,int newAmount){
-            Bag b = getBags(storeId);
-            b.changeProductAmount(product, newAmount);
+            Bag bag = bagList.get(storeId);
+            if(bag==null)
+                throw new RuntimeException("Cart has no bag from this store!");
+            bag.changeProductAmount(product, newAmount);
         }
 
         public Map<Integer, Bag> getBags () {
             return bagList;
         }
 
-        public Bag getBags ( int storeId){
-            return bagList.get(storeId);
-        }
+        //public Bag getBags ( int storeId){
+        //    return bagList.get(storeId);
+        //}
 
         private boolean isEmpty(){
             return bagList.isEmpty();
