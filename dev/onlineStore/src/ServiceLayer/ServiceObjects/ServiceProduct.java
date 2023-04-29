@@ -22,7 +22,7 @@ public class ServiceProduct {
         Price = product.getPrice();
         Category = product.getCategory();
         Description = product.getDescription();
-        Rating = product.getRating();
+        Rating = product.getProductId();
     }
 
     @Override

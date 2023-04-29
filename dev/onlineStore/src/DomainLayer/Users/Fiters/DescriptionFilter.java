@@ -13,5 +13,4 @@ public class DescriptionFilter implements Filter{
     public boolean PassFilter(StoreProduct product) {
         return product.getDescription().equals(description);
     }
-
 }

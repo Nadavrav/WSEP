@@ -13,7 +13,7 @@ public class RatingFilter implements Filter {
 
     @Override
     public boolean PassFilter(StoreProduct product) {
-        return product.GetAverageRating() > rating;
+        return product.getAverageRating() > rating;
     }
 
 }

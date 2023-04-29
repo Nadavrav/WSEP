@@ -37,17 +37,7 @@ public class Bag {
         if(productList.get(product)==null)
             throw new RuntimeException("Cart already contains "+product.getName());
         productList.put(product,new CartProduct(product));
-        //String productId = product.getId();
-        // if(productList.containsKey(product.getId())){
-        //     int currentAmount = productsAmount.get(productId);
-        //     productsAmount.put(productId,currentAmount + 1);
-        // }
-        // else{
-        //     productList.put(productId,product);
-        //     productsAmount.put(productId,1);
-        // }
         logger.info("Add product Succeeded");
-
     }
     public void removeProduct(StoreProduct product) {
         if(product==null)
@@ -70,7 +60,9 @@ public class Bag {
         }
         return totalAmount;
     }
-    
+    public Collection<CartProduct> getProducts(){
+        return productList.values();
+    }
     public Integer getStoreID(){
         return storeId;
     }

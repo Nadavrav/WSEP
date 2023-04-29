@@ -97,37 +97,37 @@ public class UserStoreRequestsTests {
     @Test
     public void RemoveProductTest(){
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        assertTrue(bridge.RemoveProduct(productIdMap.get("Chicken"))); //Ok
-        assertFalse(bridge.RemoveProduct(productIdMap.get("Chicken"))); //remove removed product
-        assertFalse(bridge.RemoveProduct("")); //empty name
+        assertTrue(bridge.RemoveProduct(productIdMap.get("Chicken"), 1111111111)); //Ok
+        assertFalse(bridge.RemoveProduct(productIdMap.get("Chicken"), 1111111111)); //remove removed product
+        assertFalse(bridge.RemoveProduct("", 1111111111)); //empty name
     }
     @Order(4)
     @Test
     public void EditNameTest(){
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        assertTrue(bridge.EditProductName(productIdMap.get("Cheese"),"Blue Cheese")); //Ok
+        assertTrue(bridge.EditProductName(productIdMap.get("Cheese"), -1, "Blue Cheese")); //Ok
         productIdMap.put("Blue Cheese",productIdMap.get("Cheese"));
         productIdMap.remove("Cheese");
-        assertFalse(bridge.EditProductName(productIdMap.get("Chicken"),"beef")); //editing removed product
-        assertFalse(bridge.EditProductName(productIdMap.get("Blue Cheese"),"Milk")); //editing to existing product name
-        assertFalse(bridge.EditProductName(productIdMap.get("Blue Cheese"),"")); //empty name
+        assertFalse(bridge.EditProductName(productIdMap.get("Chicken"), -1, "beef")); //editing removed product
+        assertFalse(bridge.EditProductName(productIdMap.get("Blue Cheese"), -1, "Milk")); //editing to existing product name
+        assertFalse(bridge.EditProductName(productIdMap.get("Blue Cheese"), -1, "")); //empty name
     }
     @Order(5)
     @Test
     public void EditDescriptionTest(){
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        assertTrue(bridge.EditDescription(productIdMap.get("Blue Cheese"),"40% holes"));
-        assertFalse(bridge.EditDescription(productIdMap.get("Chicken"),"70% bacon!")); //removed product
-        assertFalse(bridge.EditDescription(productIdMap.get("Emptiness"),"")); //empty description
+        assertTrue(bridge.EditDescription(productIdMap.get("Blue Cheese"), 1111111111, "40% holes"));
+        assertFalse(bridge.EditDescription(productIdMap.get("Chicken"), 1111111111, "70% bacon!")); //removed product
+        assertFalse(bridge.EditDescription(productIdMap.get("Emptiness"), 1111111111, "")); //empty description
     }
     @Order(6)
     @Test
     public void EditPriceTest(){
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        assertTrue(bridge.EditPrice(productIdMap.get("Milk"),90));//OK
-        assertFalse(bridge.EditPrice(productIdMap.get("Milk"), 0)); //no price
+        assertTrue(bridge.EditPrice(productIdMap.get("Milk"), 111111111, 90));//OK
+        assertFalse(bridge.EditPrice(productIdMap.get("Milk"), 111111111, 0)); //no price
    //     assertFalse(bridge.EditPrice(store1,"Milk", -99)); //false price
-        assertFalse(bridge.EditPrice(productIdMap.get("Chicken"), 99)); //removed product
+        assertFalse(bridge.EditPrice(productIdMap.get("Chicken"), 111111111, 99)); //removed product
     }
     @Order(7)
     @Test
@@ -179,10 +179,10 @@ public class UserStoreRequestsTests {
         assertFalse(bridge.CloseStore(store4)); //store already closed
         assertFalse(bridge.CloseStore(nonExistentStore)); //store does not exist
         assertEquals("Error",bridge.AddProduct(store4,"Platypus Milk","Contains real beaks!",100,100)); //adding to closed store
-        assertFalse(bridge.RemoveProduct(productIdMap.get("gMilk"))); //remove from closed store
-        assertFalse(bridge.EditDescription(productIdMap.get("gMilk"),"Contains real goat hair!")); //editing description in closed store
-        assertFalse(bridge.EditProductName(productIdMap.get("gMilk"),"Goat Yogurt")); //editing name in closed store
-        assertFalse(bridge.EditPrice(productIdMap.get("gMilk"),999)); //editing price in closed store
+        assertFalse(bridge.RemoveProduct(productIdMap.get("gMilk"), 1111111111)); //remove from closed store
+        assertFalse(bridge.EditDescription(productIdMap.get("gMilk"), 1111111111, "Contains real goat hair!")); //editing description in closed store
+        assertFalse(bridge.EditProductName(productIdMap.get("gMilk"), -1, "Goat Yogurt")); //editing name in closed store
+        assertFalse(bridge.EditPrice(productIdMap.get("gMilk"), 111111111, 999)); //editing price in closed store
     }
     @Order(11)
     @Test
@@ -220,15 +220,15 @@ public class UserStoreRequestsTests {
         productIdMap.put("OChicken",OChicken);
         productIdMap.put("OCheese",OCheese);
         //testing remove product
-        assertTrue(bridge.RemoveProduct(productIdMap.get("OChicken"))); //Ok
+        assertTrue(bridge.RemoveProduct(productIdMap.get("OChicken"), 1111111111)); //Ok
         //testing name edit
-        assertTrue(bridge.EditProductName(productIdMap.get("OCheese"),"OBlue Cheese")); //Ok
+        assertTrue(bridge.EditProductName(productIdMap.get("OCheese"), -1, "OBlue Cheese")); //Ok
         productIdMap.put("OBlue Cheese",productIdMap.get("OCheese"));
         productIdMap.remove("OCheese");
         //testing description edit
-        assertTrue(bridge.EditDescription(productIdMap.get("OEmptiness"),"very empty"));//OK
+        assertTrue(bridge.EditDescription(productIdMap.get("OEmptiness"), 1111111111, "very empty"));//OK
         //testing price edit
-        assertTrue(bridge.EditPrice(productIdMap.get("OMilk"),90));//OK
+        assertTrue(bridge.EditPrice(productIdMap.get("OMilk"), 111111111, 90));//OK
         //owner appointing owner tests
         assertTrue(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //Ok
         //founder appointing manager tests
@@ -257,13 +257,13 @@ public class UserStoreRequestsTests {
         productIdMap.put("MCheese",MCheese);
         //testing add product for the store manager
         //testing remove product
-        assertTrue(bridge.RemoveProduct(productIdMap.get("MChicken"))); //Ok
+        assertTrue(bridge.RemoveProduct(productIdMap.get("MChicken"), 1111111111)); //Ok
         //testing name edit
-        assertTrue(bridge.EditProductName(productIdMap.get("MBlue Cheese"),"MCheese")); //Ok
+        assertTrue(bridge.EditProductName(productIdMap.get("MBlue Cheese"), -1, "MCheese")); //Ok
         //testing description edit
-        assertTrue(bridge.EditDescription(productIdMap.get("MEmptiness"),"very empty"));//OK
+        assertTrue(bridge.EditDescription(productIdMap.get("MEmptiness"), 1111111111, "very empty"));//OK
         //testing price edit
-        assertTrue(bridge.EditPrice(productIdMap.get("MMilk"),90));//OK
+        assertTrue(bridge.EditPrice(productIdMap.get("MMilk"), 111111111, 90));//OK
         //owner appointing owner tests
         assertTrue(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //Ok
         //founder appointing manager tests
@@ -281,13 +281,13 @@ public class UserStoreRequestsTests {
         //testing add product for the store manager
         assertEquals("Error",bridge.AddProduct(store1,"OMilk","is milk",100,100)); //no permissions
         //testing remove product
-        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"))); //no permissions
+        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"), 1111111111)); //no permissions
         //testing name edit
-        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"),"owner's-Cheese")); //no permissions
+        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"), -1, "owner's-Cheese")); //no permissions
         //testing description edit
-        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"),"very empty"));//no permissions
+        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"), 1111111111, "very empty"));//no permissions
         //testing price edit
-        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"),90));//no permissions
+        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"), 111111111, 90));//no permissions
         //owner appointing owner tests
         assertFalse(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //no permissions
         //founder appointing manager tests
@@ -311,13 +311,13 @@ public class UserStoreRequestsTests {
         //testing add product for the store manager
         assertEquals("Error",bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
         //testing remove product
-        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"))); //no permissions
+        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"), 1111111111)); //no permissions
         //testing name edit
-        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"),"owner's-Cheese")); //no permissions
+        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"), -1, "owner's-Cheese")); //no permissions
         //testing description edit
-        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"),"very empty"));//no permissions
+        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"), 1111111111, "very empty"));//no permissions
         //testing price edit
-        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"),90));//no permissions
+        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"), 111111111, 90));//no permissions
         //owner appointing owner tests
         assertFalse(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //no permissions
         //founder appointing manager tests
@@ -330,13 +330,13 @@ public class UserStoreRequestsTests {
     public void NotLoggedInTest(){
         assertEquals("Error",bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
         //testing remove product
-        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"))); //no permissions
+        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"), 1111111111)); //no permissions
         //testing name edit
-        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"),"owner's-Cheese")); //no permissions
+        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"), -1, "owner's-Cheese")); //no permissions
         //testing description edit
-        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"),"very empty"));//no permissions
+        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"), 1111111111, "very empty"));//no permissions
         //testing price edit
-        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"),90));//no permissions
+        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"), 111111111, 90));//no permissions
         //owner appointing owner tests
         assertFalse(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //no permissions
         //founder appointing manager tests
@@ -424,8 +424,8 @@ public class UserStoreRequestsTests {
     @Test
     public void ProductRatingTests(){
         bridge.Login(Customer.getUserName(), Customer.getPassword());
-        assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"),"I wanted bacon",2));
-        assertFalse(bridge.RateAndCommentOnProduct("nothing","I wanted bacon",2)); //invalid product
-        assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"),"I wanted bacon",6)); //invalid rating
+        assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"), 11111111, "I wanted bacon",2));
+        assertFalse(bridge.RateAndCommentOnProduct("nothing", 11111111, "I wanted bacon",2)); //invalid product
+        assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"), 11111111, "I wanted bacon",6)); //invalid rating
     }
 }

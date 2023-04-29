@@ -56,13 +56,12 @@ public interface Bridge {
     Integer OpenNewStore(String storeName);
 
     /**
-     *
-     * @param productId The name of the product to be added
+     * @param productId   The name of the product to be added
      * @param description The description of the product to be added
      * @return true if done successfully, false otherwise
      */
 
-    String AddProduct(int storeId,String productName,String description, int price, int amount);
+    Integer AddProduct(int storeId, String productName, String description, int price, int amount);
 
     /**
      *
@@ -96,36 +95,38 @@ public interface Bridge {
     boolean RemoveManager(String username,int storeId);
 
     /**
-     *
      * @param productId the name of the product to be removed
+     * @param storeId
      * @return true if done successfully, false otherwise
      */
-    boolean RemoveProduct(String productId);
+    boolean RemoveProduct(int productId, int storeId);
 
     /**
-     *
-     * @param OldName name of the product whose name change is pending
-     * @param newName new name for the product
+     * @param OldName   name of the product whose name change is pending
+     * @param productId
+     * @param storeId
+     * @param newName   new name for the product
      * @return true if done successfully, false otherwise
      */
-    boolean EditProductName(String productId,String newName);
+    boolean EditProductName(int productId, int storeId, String newName);
 
     /**
-     *
      * @param productId product whose description change is pending
-     * @param newDesc new description
+     * @param storeId
+     * @param newDesc   new description
      * @return true if done successfully, false otherwise
      */
-    boolean EditDescription(String productId, String newDesc);
+    boolean EditDescription(int productId, int storeId, String newDesc);
 
     /**
-     *
-     * @param storeName store where product is
+     * @param storeName   store where product is
      * @param prodictName product to edit
-     * @param newPrice new price
+     * @param productId
+     * @param storeId
+     * @param newPrice    new price
      * @return true if done successfully, false otherwise
      */
-    boolean EditPrice(String productId,int newPrice);
+    boolean EditPrice(int productId, int storeId, int newPrice);
     /**
      *
      * @param storeName store to close
@@ -157,7 +158,7 @@ public interface Bridge {
      * @param query search query
      * @return return corresponding response (fails if no store and products were found)
      */
-    List<String> ProductSearch(String query);
+  //  List<String> ProductSearch(String query);
     /**
      *
      * @param storeName name of the store the product is in
@@ -181,16 +182,20 @@ public interface Bridge {
 
     /**
      * A function to add a product to cart
+     *
      * @param productId - The product id number
+     * @param storeId
      * @return true is done successfully, false otherwise
      */
-    boolean addToCart(String productId);
+    boolean addToCart(int productId, int storeId);
     /**
      * A function to remove a product to cart
+     *
      * @param productId - The product id number
+     * @param storeId
      * @return true is done successfully, false otherwise
      */
-    boolean removeFromCart(String productId);
+    boolean removeFromCart(int productId, int storeId);
 
     /**
      * Function to open a user's cart
@@ -236,7 +241,7 @@ public interface Bridge {
      */
     Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
     List<ServiceProduct> FilterSearch(List<Filter> filters);
-    boolean RateAndCommentOnProduct(String productId,String comment,int rating);
+    boolean RateAndCommentOnProduct(int productId, int storeId, String comment, int rating);
     boolean RateStore(int storeId,int rating);
     boolean RateAndCommentOnStore(int storeId,String comment,int rating);
 }

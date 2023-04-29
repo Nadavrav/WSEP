@@ -1,19 +1,20 @@
 package ServiceLayer.ServiceObjects;
 
+import DomainLayer.Stores.Products.CartProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 
 import java.util.ArrayList;
 
 public class ServiceBag {
 
-    ArrayList<ServicePurchaseProduct> productList;
+    ArrayList<ServiceCartProduct> productList;
     Integer StoreId;
 
-    public ServiceBag(Bag b, Integer _storeID)
+    public ServiceBag(Bag bag, Integer storeID)
     {
-      /*  productList = new ArrayList<>();
-        for (StoreProduct sp:b.) {
+      for(CartProduct cartProduct: bag.getProducts()){
 
-        }*/
+      }
     }
 }

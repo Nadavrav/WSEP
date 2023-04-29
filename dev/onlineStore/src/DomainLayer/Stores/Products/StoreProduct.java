@@ -12,23 +12,24 @@ import DomainLayer.Stores.Rating;
 
 public class StoreProduct extends Product {
 
-    private String productId;
+    private Integer productId;
 
     private int Quantity;
     private String Category;
     private Map<String, Rating> RateMap;
+    private double avgRating;
     private final Map<WeakReference<StoreProductObserver>, Object> observers = new WeakHashMap<>();
     private static final Logger logger=Logger.getLogger("StoreProduct logger");
 
 
-    public StoreProduct(String productId,String name, double price, String category, int quantity,String desc)
+    public StoreProduct(Integer productId,String name, double price, String category, int quantity,String desc)
     {
         super(name,price,category,desc);
        try {
            UniversalHandler.GetInstance().HandleError(logger);
            UniversalHandler.GetInstance().HandleInfo(logger);
 
-        getStoreIdByProductId(productId);//Used to check if productId is valid
+        //getStoreIdByProductId(productId);//Used to check if productId is valid
         if (name == null) {
             throw new NullPointerException("Product name cant be null");
         }
@@ -87,25 +88,25 @@ public class StoreProduct extends Product {
         }
     }
     
-    public static void isValidProductId(String productId) throws Exception {
-        if (productId == null || productId.isEmpty()) {
-            throw new NullPointerException("productId cannot be null or empty");
-        }
-        int index = productId.indexOf('-');
-        if(index<1 || index>= productId.length())
-            throw  new Exception("Invalid product ID");
-        checkIfNumber(productId.substring(0,index));
-        checkIfNumber(productId.substring(index+1));
-        logger.info("valideProductId");
-    }
+   // public static void isValidProductId(String productId) throws Exception {
+   //     if (productId == null || productId.isEmpty()) {
+   //         throw new NullPointerException("productId cannot be null or empty");
+   //     }
+   //     int index = productId.indexOf('-');
+   //     if(index<1 || index>= productId.length())
+   //         throw  new Exception("Invalid product ID");
+   //     checkIfNumber(productId.substring(0,index));
+   //     checkIfNumber(productId.substring(index+1));
+   //     logger.info("valideProductId");
+   // }
     
 
 
 
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
+   // public void setProductId(String productId) { //is this needed?
+   //     this.productId = productId;
+   // }
+//
     public void setName(String name) {
         Name = name;
         notifyObservers();
@@ -130,13 +131,10 @@ public class StoreProduct extends Product {
     public String getDescription() {
         return Description;
     }
-    public String getId() {
-        return productId;
-    }
     public void setDescription(String desc) {
         Description = desc;
     }
-    public String getProductId() {
+    public Integer getProductId() {
         return productId;
     }
     public Map<String, Rating> getRateMap() {
@@ -162,19 +160,23 @@ public class StoreProduct extends Product {
             RateMap.get(userName).setRating(rate);
             RateMap.get(userName).addComment(comment);
         }
+        updateAvgRatings();
         logger.info("Rating and comment added for user: " + userName + ", Rate: " + rate + ", Comment: " + comment);
 
     }
     public double getAverageRating(){
+        return avgRating;
+    }
+    public void updateAvgRatings(){
         if(RateMap.isEmpty())
-            return 0.0;
+            avgRating= 0.0;
         double ratingSum=0,ratingCount=0;
         for(Rating rating:RateMap.values()){
             ratingSum+=rating.getRating();
             ratingCount++;
         }
-        return (ratingSum / ratingCount);
-    }   
+        avgRating= (ratingSum / ratingCount);
+    }
 
     public int getNumberOfRates() {
         return RateMap.keySet().size();
@@ -206,6 +208,7 @@ public class StoreProduct extends Product {
         else{
             RateMap.get(userName).setRating(rating);
         }
+        updateAvgRatings();
     }
 
 
@@ -246,21 +249,21 @@ public class StoreProduct extends Product {
         }
     }
 
-    /**
-     * check if a string is a valid id containing only numbers
-     * @param s the string to check
-     * @throws Exception todo: proper exception throwing
-     */
-    private static void checkIfNumber(String s) throws Exception {
-        if(s==null||s.length()==0){
-            logger.warning("null");
-            throw new NullPointerException("Cant check null number");
-        }
-        for(int i=0;i<s.length();i++){
-            if(s.charAt(i)>'9'||s.charAt(i)< '0'){
-                logger.warning("Invalid product ID " + s);
-                throw  new Exception("Invalid product ID");
-            }
-        }
-    }
+   // /**
+   //  * check if a string is a valid id containing only numbers
+   //  * @param s the string to check
+   //  * @throws Exception todo: proper exception throwing
+   //  */
+   // private static void checkIfNumber(String s) throws Exception {
+   //     if(s==null||s.length()==0){
+   //         logger.warning("null");
+   //         throw new NullPointerException("Cant check null number");
+   //     }
+   //     for(int i=0;i<s.length();i++){
+   //         if(s.charAt(i)>'9'||s.charAt(i)< '0'){
+   //             logger.warning("Invalid product ID " + s);
+   //             throw  new Exception("Invalid product ID");
+   //         }
+   //     }
+   // }
 }

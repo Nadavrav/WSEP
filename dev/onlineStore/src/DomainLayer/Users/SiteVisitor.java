@@ -74,18 +74,18 @@ public class SiteVisitor{
     }
 
     public void addProductToCart(int storeId, StoreProduct product) {//2.3
-        logger.info("Adding product with ID " + product.getId() + " to cart for store with ID " + storeId);
+        logger.info("Adding product with ID " + product.getProductId() + " to cart for store with ID " + storeId);
 
         cart.addProductToCart(storeId,product);
     }
 
     public void removeProductFromCart(int storeId, StoreProduct product) {//2.3
-        logger.info("Removing product with ID " + product.getId() + " from cart for store with ID " + storeId);
+        logger.info("Removing product with ID " + product.getProductId() + " from cart for store with ID " + storeId);
 
         cart.removeProductFromCart(storeId,product);
     }
     public void changeCartProductQuantity(int storeId, StoreProduct product,int newAmount) {//2.3
-        logger.info("Changing quantity of product with ID " + product.getId() + " in cart for store with ID " + storeId
+        logger.info("Changing quantity of product with ID " + product.getProductId() + " in cart for store with ID " + storeId
                 + " to new amount: " + newAmount);
 
         cart.changeCartProductQuantity(storeId,product,newAmount);

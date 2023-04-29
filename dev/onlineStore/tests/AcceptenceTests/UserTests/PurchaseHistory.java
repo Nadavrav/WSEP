@@ -88,8 +88,8 @@ public class PurchaseHistory {
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Cheese),NormalUser));
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Milk));
-        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
+        assertTrue(bridge.addToCart(productId_Cheese, 1111111));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
         assertTrue(bridge.Login(StoreOwnerName,password));
@@ -106,15 +106,15 @@ public class PurchaseHistory {
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),StoreWorkerNameWithPerms));
         //Adding items to purchase history
         assertTrue(bridge.Login(StoreWorkerNameWithPerms,password));
-        assertTrue(bridge.addToCart(productId_Milk));
-        assertTrue(bridge.addToCart(productId_Hamburger));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
+        assertTrue(bridge.addToCart(productId_Hamburger, 1111111));
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Milk),StoreWorkerNameWithPerms));
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),StoreWorkerNameWithPerms));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
         //Adding more items through a different user
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Hamburger));
+        assertTrue(bridge.addToCart(productId_Hamburger, 1111111));
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),NormalUser));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
@@ -129,8 +129,8 @@ public class PurchaseHistory {
        // String[] PurchaseHistory = {"NormalUser Bought 1 Mega milk","NormalUser Bought 1 Ultra milk"};
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Milk));
-        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
+        assertTrue(bridge.addToCart(productId_Cheese, 1111111));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
 
@@ -143,8 +143,8 @@ public class PurchaseHistory {
     {
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Milk));
-        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
+        assertTrue(bridge.addToCart(productId_Cheese, 1111111));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
 
@@ -168,8 +168,8 @@ public class PurchaseHistory {
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Cheese),NormalUser));
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Cheese));
-        assertTrue(bridge.addToCart(productId_Milk));
+        assertTrue(bridge.addToCart(productId_Cheese, 1111111));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
 

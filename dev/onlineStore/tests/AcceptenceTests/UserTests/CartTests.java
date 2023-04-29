@@ -48,68 +48,68 @@ public class CartTests {
     @Test
     public void Save_Product_Success()
     {
-        boolean r = bridge.addToCart(productId_MegaMilk);
+        boolean r = bridge.addToCart(productId_MegaMilk, 1111111);
         assertTrue(r);
     }
     @Test
     public void Save_Product_Success_MultipleProducts()
     {
-        boolean r = bridge.addToCart(productId_MegaMilk);
+        boolean r = bridge.addToCart(productId_MegaMilk, 1111111);
         assertTrue(r);
-        boolean r1 = bridge.addToCart(productId_GigaMilk);
+        boolean r1 = bridge.addToCart(productId_GigaMilk, 1111111);
         assertTrue(r1);
-        boolean r2 = bridge.addToCart(productId_UltraMilk);
+        boolean r2 = bridge.addToCart(productId_UltraMilk, 1111111);
         assertTrue(r2);
     }
     @Test
     public void Save_Product_Fail_ProductDoesntExits()
     {
-        boolean r = bridge.addToCart(badProductId);
+        boolean r = bridge.addToCart(badProductId, 1111111);
         assertFalse(r);
     }
     @Test
     public void Save_Product_Fail_SavedTwice()
     {
-        boolean r = bridge.addToCart(productId_MegaMilk);
+        boolean r = bridge.addToCart(productId_MegaMilk, 1111111);
         assertTrue(r);
-        boolean r1 = bridge.addToCart(productId_MegaMilk);
+        boolean r1 = bridge.addToCart(productId_MegaMilk, 1111111);
         assertFalse(r1);
     }
     @Test
     public void Remove_Product_Success()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
-        boolean r = bridge.removeFromCart(productId_MegaMilk);
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
+        boolean r = bridge.removeFromCart(productId_MegaMilk, 1111111111);
         assertTrue(r);
     }
     @Test
     public void Remove_Product_Success_MultipleProducts()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
-        assertTrue(bridge.addToCart(productId_GigaMilk));
-        assertTrue(bridge.addToCart(productId_UltraMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
+        assertTrue(bridge.addToCart(productId_GigaMilk, 1111111));
+        assertTrue(bridge.addToCart(productId_UltraMilk, 1111111));
 
-        boolean r = bridge.removeFromCart(productId_MegaMilk);
+        boolean r = bridge.removeFromCart(productId_MegaMilk, 1111111111);
         assertTrue(r);
-        boolean r1 = bridge.removeFromCart(productId_UltraMilk);
+        boolean r1 = bridge.removeFromCart(productId_UltraMilk, 1111111111);
         assertTrue(r1);
-        boolean r2 = bridge.removeFromCart(productId_GigaMilk);
+        boolean r2 = bridge.removeFromCart(productId_GigaMilk, 1111111111);
         assertTrue(r2);
     }
     @Test
     public void Remove_Product_Fail_ProductDoesntExits()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
-        boolean r = bridge.removeFromCart(badProductId);
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
+        boolean r = bridge.removeFromCart(badProductId, 1111111111);
         assertFalse(r);
     }
     @Test
     public void Remove_Product_Fail_RemovedTwice()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
-        boolean r = bridge.removeFromCart(productId_MegaMilk);
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
+        boolean r = bridge.removeFromCart(productId_MegaMilk, 1111111111);
         assertTrue(r);
-        boolean r1 = bridge.removeFromCart(productId_MegaMilk);
+        boolean r1 = bridge.removeFromCart(productId_MegaMilk, 1111111111);
         assertFalse(r1);
     }
     @Test
@@ -122,7 +122,7 @@ public class CartTests {
     @Test
     public void OpenCart_Success_CartWithOneItem()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
         String ProductList = "Store Id : 0\n0-1\n\n";
         assertFalse(bridge.OpenCart().isError());
         assertEquals(ProductList,bridge.OpenCart().getValue());
@@ -130,9 +130,9 @@ public class CartTests {
     @Test
     public void OpenCart_Success_CartWithMultipleItems()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
-        assertTrue(bridge.addToCart(productId_GigaMilk));
-        assertTrue(bridge.addToCart(productId_UltraMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
+        assertTrue(bridge.addToCart(productId_GigaMilk, 1111111));
+        assertTrue(bridge.addToCart(productId_UltraMilk, 1111111));
 
         String ProductList = "Store Id : 0\n0-1\n0-2\n0-3\n\n";
         assertFalse(bridge.OpenCart().isError());
@@ -141,7 +141,7 @@ public class CartTests {
     @Test
     public void Cart_ChangeItemQuantity_Success()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
 
         boolean r = bridge.CartChangeItemQuantity(productId_MegaMilk,5);
         assertTrue(r);
@@ -149,7 +149,7 @@ public class CartTests {
     @Test
     public void Cart_ChangeItemQuantity_Success_MultipleTimes()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
 
         boolean r = bridge.CartChangeItemQuantity(productId_MegaMilk,5);
         assertTrue(r);
@@ -161,7 +161,7 @@ public class CartTests {
     @Test
     public void Cart_ChangeItemQuantity_Fail_IllegalValue()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
 
         boolean r = bridge.CartChangeItemQuantity(productId_MegaMilk,-1);
         assertFalse(r);
@@ -169,7 +169,7 @@ public class CartTests {
     @Test
     public void Cart_ChangeItemQuantity_Fail_ItemNotInCart()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
 
         boolean r = bridge.CartChangeItemQuantity(productId_GigaMilk,5);
         assertFalse(r);
@@ -177,7 +177,7 @@ public class CartTests {
     @Test
     public void Purchase_Cart_Success()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
 
         int BeforePurchaseQuantity = bridge.GetItemQuantity(productId_MegaMilk);
         boolean r = bridge.PurchaseCart(RealcreditProxy);
@@ -188,7 +188,7 @@ public class CartTests {
     @Test
     public void Purchase_Cart_Fail_ItemsNotAvailable()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
 
         int BeforePurchaseQuantity = bridge.GetItemQuantity(productId_MegaMilk);
         assertTrue(bridge.CartChangeItemQuantity(productId_MegaMilk,BeforePurchaseQuantity+1));
@@ -198,7 +198,7 @@ public class CartTests {
     @Test
     public void Purchase_Cart_Fail_FakeCredit()
     {
-        assertTrue(bridge.addToCart(productId_MegaMilk));
+        assertTrue(bridge.addToCart(productId_MegaMilk, 1111111));
 
         int BeforePurchaseQuantity = bridge.GetItemQuantity(productId_MegaMilk);
         assertTrue(bridge.CartChangeItemQuantity(productId_MegaMilk,BeforePurchaseQuantity+1));
