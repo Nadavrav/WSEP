@@ -109,7 +109,6 @@ public class Facade {
         // create new register user
         logger.info("new visitor has register");
         registeredUserList.put(userName, new RegisteredUser(userName, password));
-
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
@@ -514,7 +513,7 @@ public class Facade {
             logger.warning("visitor is null");
             throw new Exception("Invalid Visitor ID");
         }
-                
+
         LinkedList<String> failedPurchases = new LinkedList<>();
 
 
@@ -522,22 +521,22 @@ public class Facade {
 
             //Calculate amount
             double amount = b.calculateTotalAmount();
-           
+
             //Check if possible to create a supply
             if(!supplier.isValidAddress(address)){
                 logger.fine("we can avoid this supply");
-                failedPurchases.add(b.getStoreID());
+                failedPurchases.add(b.getStoreID().toString());
             }
-            
+
             //Create a transaction for the store
             if(!paymentProvider.applyTransaction(amount,visitorCard)){
-                failedPurchases.add(b.getStoreID());
+                failedPurchases.add(b.getStoreID().toString());
             }
             LinkedList<String> productsId = new LinkedList<>();
             productsId.add(b.bagToString());
             //Create a request to supply bag's product to customer
             if(!supplier.supplyProducts(productsId)){
-                failedPurchases.add(b.getStoreID());
+                failedPurchases.add(b.getStoreID().toString());
             }
             else{
                 if(visitor instanceof RegisteredUser){
@@ -548,7 +547,7 @@ public class Facade {
 
        }
         return failedPurchases;
-        
+
     }
     public void addStoreRate(int visitorID,int storeID,int rate) throws Exception {
         //Check if visitorID is logged in and registered to system
@@ -688,7 +687,7 @@ public class Facade {
             throw  new Exception("there is no product with this id ");
         }
 
-        return store.getProductByID(ProductId).getRate();
+        return store.getProductByID(ProductId).getAverageRating();
 
     }
     //close store

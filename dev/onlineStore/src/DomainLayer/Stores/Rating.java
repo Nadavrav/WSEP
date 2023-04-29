@@ -1,31 +1,27 @@
 package DomainLayer.Stores;
 
-import DomainLayer.Response;
-
-import java.util.Map;
-
 public class Rating {
-    int rate;
+    double rating;
     String comment;
 
-    public Rating (int rate) {
-        if (rate > 5 || rate < 0) {
+    public Rating (double rating) {
+        if (rating > 5 || rating < 0) {
             throw new IllegalArgumentException("Your Rate must be between 0-5 ");
         }
-        this.rate = rate;
+        this.rating = rating;
     }
-    public Rating (int rate,String comment){
+    public Rating (double rating, String comment){
         if(comment == null)
             throw new NullPointerException("Comment cant be null");
-        if (rate > 5 || rate < 0) {
+        if (rating > 5 || rating < 0) {
             throw new IllegalArgumentException("Your Rate must be between 0-5 ");
         }
-        this.rate = rate;
+        this.rating = rating;
         this.comment=comment;
     }
 
-    public int getRate() {
-        return rate;
+    public double getRating() {
+        return rating;
     }
 
     public void addComment(String comment){
@@ -33,11 +29,11 @@ public class Rating {
             throw new NullPointerException("Comment cant be null");
         this.comment = comment;
     }
-    public void addRate(int rate) {
+    public void setRating(double rate) {
         if (rate > 5 || rate < 0) {
-            throw new IllegalArgumentException("Your Rate must be between 0-5 ");
+            throw new IllegalArgumentException("Your rating must be between 0-5 ");
         }
-        this.rate = rate;
+        this.rating = rate;
     }
 
     public String getComment() {

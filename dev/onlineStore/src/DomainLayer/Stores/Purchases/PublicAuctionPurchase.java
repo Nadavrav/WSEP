@@ -1,4 +1,4 @@
-package DomainLayer.Stores.Products;
+package DomainLayer.Stores.Purchases;
 
 import DomainLayer.Stores.Purchases.Purchase;
 

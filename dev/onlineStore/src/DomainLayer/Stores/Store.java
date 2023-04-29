@@ -41,7 +41,7 @@ public class Store {
     private double setRate() {
         double sum = 0;
         for (Rating rating:RateMapForStore.values()) {
-            sum+=rating.getRate();
+            sum+=rating.getRating();
         }
         Rate = sum / RateMapForStore.size();
         return Rate;
@@ -59,7 +59,7 @@ public class Store {
         }
         String s = "Store Name is " + this.Name + "Store Rate is:" + getRate();
         for (StoreProduct i : products.values()) {
-            s += " Product Name is :" + i.getName() + "The Rate is : " + i.getRate() + "\n";
+            s += " Product Name is :" + i.getName() + "The rating is : " + i.getAverageRating() + "\n";
         }
         return s;
     }
@@ -244,7 +244,7 @@ public class Store {
         if(!RateMapForStore.containsKey(userName)){
             RateMapForStore.put(userName,new Rating(rate));
         }else{
-            RateMapForStore.get(userName).addRate(rate);
+            RateMapForStore.get(userName).setRating(rate);
         }
         setRate();
         logger.info("Rating added for user: " + userName + ", Rate: " + rate + ", Current store rate: " + this.Rate);
@@ -254,7 +254,7 @@ public class Store {
         if(!RateMapForStore.containsKey(userName)){
             RateMapForStore.put(userName,new Rating(rate,comment));
         }else {
-            RateMapForStore.get(userName).addRate(rate);
+            RateMapForStore.get(userName).setRating(rate);
             RateMapForStore.get(userName).addComment(comment);
         }
         setRate();

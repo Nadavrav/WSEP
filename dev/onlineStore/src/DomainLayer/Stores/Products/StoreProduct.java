@@ -16,7 +16,6 @@ public class StoreProduct extends Product {
 
     private int Quantity;
     private String Category;
-    private double Rate;
     private Map<String, Rating> RateMap;
     private final Map<WeakReference<StoreProductObserver>, Object> observers = new WeakHashMap<>();
     private static final Logger logger=Logger.getLogger("StoreProduct logger");
@@ -59,14 +58,14 @@ public class StoreProduct extends Product {
 
 
 
-
-    private void setRate() {
-        double sum = 0;
-        for (Rating rating : RateMap.values()) {
-            sum+=rating.getRate();
-        }
-        Rate = sum / RateMap.size();
-    }
+    //just make getter return average
+    //private void setRate() {
+    //    double sum = 0;
+    //    for (Rating rating : RateMap.values()) {
+    //        sum+=rating.getRate();
+    //    }
+    //    Rate = sum / RateMap.size();
+    //}
 
     public static int getStoreIdByProductId(String productId) {
         if (productId == null || productId.isEmpty()) {
@@ -100,18 +99,7 @@ public class StoreProduct extends Product {
         logger.info("valideProductId");
     }
     
-    private static void checkIfNumber(String s) throws Exception {
-        if(s==null||s.length()==0){
-            logger.warning("null");
-            throw new NullPointerException("Cant check null number");
-        }
-        for(int i=0;i<s.length();i++){
-            if(s.charAt(i)>'9'||s.charAt(i)< '0'){
-               logger.warning("Invalid product ID " + s);
-                throw  new Exception("Invalid product ID");
-            }
-        }
-    }
+
 
 
     public void setProductId(String productId) {
@@ -128,6 +116,9 @@ public class StoreProduct extends Product {
     public void setCategory(String category) {
         Category = category;
         notifyObservers();
+    }
+    public String getCategory() {
+        return Category;
     }
 
     public String getName() {
@@ -159,25 +150,30 @@ public class StoreProduct extends Product {
     public int getQuantity() {
         return Quantity;
     }
+    //what does this even do??? isn't rating an average of all ratings?
+    //public void setRate(Double rate) {
+    //    //only relevant when viewing product in its store, no need to notify cart products
+    //    Rate = rate;
+    //}
+    public void addRatingAndComment(String userName ,double rate,String comment) {
+        if(!RateMap.containsKey(userName)){
+            RateMap.put(userName,new Rating(rate,comment));
+        }else {
+            RateMap.get(userName).setRating(rate);
+            RateMap.get(userName).addComment(comment);
+        }
+        logger.info("Rating and comment added for user: " + userName + ", Rate: " + rate + ", Comment: " + comment);
 
-    public Double getRate() {
-        return Rate;
     }
-
-    public void setRate(Double rate) {
-        //only relevant when viewing product in its store, no need to notify cart products
-        Rate = rate;
-    }
-    public double GetAverageRating(){
-        double ratingSum=0;
-        if (getNumberOfRates() == 0) {
-            logger.warning("No ratings found for store.");
+    public double getAverageRating(){
+        if(RateMap.isEmpty())
             return 0.0;
-        }
+        double ratingSum=0,ratingCount=0;
         for(Rating rating:RateMap.values()){
-            ratingSum+=rating.getRate();
+            ratingSum+=rating.getRating();
+            ratingCount++;
         }
-        return ratingSum/getNumberOfRates();
+        return (ratingSum / ratingCount);
     }   
 
     public int getNumberOfRates() {
@@ -197,29 +193,21 @@ public class StoreProduct extends Product {
 
 
 
-    public String getCategory() {
-        return Category;
+
+    /**
+     * add or edit rating
+     * @param userName username of the user rating the product
+     * @param rating his rating, ranging from 0-5. supports both int and double (although the average will almost always be a double)
+     */
+    public void EditRating(String userName ,double rating) {
+        if(!RateMap.containsKey(userName)){
+            RateMap.put(userName,new Rating(rating));
+        }
+        else{
+            RateMap.get(userName).setRating(rating);
+        }
     }
 
-    public void addRating(String userName ,int rate) throws Exception {
-        if(!RateMap.containsKey(userName)){
-            RateMap.put(userName,new Rating(rate));
-        }else{
-            RateMap.get(userName).addRate(rate);
-        }
-        setRate();
-    }
-    public void addRatingAndComment(String userName ,int rate,String comment) throws Exception {
-        if(!RateMap.containsKey(userName)){
-            RateMap.put(userName,new Rating(rate,comment));
-        }else {
-            RateMap.get(userName).addRate(rate);
-            RateMap.get(userName).addComment(comment);
-        }
-        setRate();
-        logger.info("Rating and comment added for user: " + userName + ", Rate: " + rate + ", Comment: " + comment);
-
-    }
 
     /**
      * Function to return the store product as a string for prints
@@ -251,8 +239,27 @@ public class StoreProduct extends Product {
             StoreProductObserver observer = observerRef.get();
             if (observer==null || !observer.stillInCart()) {
                 observers.remove(observerRef);
-            } else {
+            }
+            else {
                 observer.updateFields(this);
+            }
+        }
+    }
+
+    /**
+     * check if a string is a valid id containing only numbers
+     * @param s the string to check
+     * @throws Exception todo: proper exception throwing
+     */
+    private static void checkIfNumber(String s) throws Exception {
+        if(s==null||s.length()==0){
+            logger.warning("null");
+            throw new NullPointerException("Cant check null number");
+        }
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)>'9'||s.charAt(i)< '0'){
+                logger.warning("Invalid product ID " + s);
+                throw  new Exception("Invalid product ID");
             }
         }
     }

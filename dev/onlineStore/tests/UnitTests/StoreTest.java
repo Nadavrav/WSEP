@@ -199,10 +199,10 @@ class StoreTest {
         setup();
         p1.addRating("majd",4);
         p1.addRating("natalie",2);
-        assertEquals(3,p1.getRate());
+        assertEquals(3,p1.getRating());
         p2.addRating("majd",5);
         p2.addRating("natalie",3);
-        assertEquals(4,p2.getRate());
+        assertEquals(4,p2.getRating());
 
     }
 

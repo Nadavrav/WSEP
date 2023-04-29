@@ -6,8 +6,13 @@ public class CartProduct extends Product{
     //    super(name, price, category, desc);
     //    amount=1;
     //}
+
+    /**
+     *
+     * @param storeProduct
+     */
     public CartProduct(StoreProduct storeProduct){
-        super(storeProduct.Name, storeProduct.Price, storeProduct.category, storeProduct.Description);
+        super(storeProduct);
         amount=1;
     }
     public int getAmount() {
