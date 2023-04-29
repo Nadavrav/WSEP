@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ServiceLayer.ServiceObjects.Fiters.MaxPriceFilter;
 import ServiceLayer.ServiceObjects.Fiters.NameFilter;
-import ServiceLayer.ServiceObjects.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import TestObjects.TestUser;
 import org.junit.jupiter.api.*;
 

@@ -4,7 +4,7 @@ import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
-import ServiceLayer.ServiceObjects.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
 import java.util.List;
 //TODO: FIX THE DAMN DOCS

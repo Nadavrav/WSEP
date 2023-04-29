@@ -4,7 +4,7 @@ import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import Bridge.*;
 import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
-import ServiceLayer.ServiceObjects.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;

@@ -7,7 +7,8 @@ import DomainLayer.Users.*;
 
 import ServiceLayer.ServiceObjects.Fiters.Filter;
 
-import ServiceLayer.ServiceObjects.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceCart;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
 import java.util.*;
 
@@ -416,7 +417,7 @@ public class Service {
         }
         return new Response<>("Success");
     }
-    public Response<List<String>> PurchaseCart(int visitorCard,String address){
+    public Response<List<String>> PurchaseCart(int visitorCard, String address){
         try{
             return new Response<>(facade.purchaseCart(visitorId,visitorCard,address));
         }

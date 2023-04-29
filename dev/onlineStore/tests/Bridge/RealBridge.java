@@ -6,7 +6,7 @@ import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
-import ServiceLayer.ServiceObjects.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import org.opentest4j.TestSkippedException;
 
 import java.util.ArrayList;

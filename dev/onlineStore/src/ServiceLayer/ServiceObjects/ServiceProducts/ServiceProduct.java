@@ -1,5 +1,6 @@
-package ServiceLayer.ServiceObjects;
+package ServiceLayer.ServiceObjects.ServiceProducts;
 
+import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
 
 public class ServiceProduct {
@@ -8,23 +9,40 @@ public class ServiceProduct {
     private final double Price;
     private final String Category;
     private final  String Description;
-    private final double Rating;
 
-    public ServiceProduct(String name, Double price, String category, String description, double rating) {
+    public ServiceProduct(String name, Double price, String category, String description) {
         Name = name;
         Price = price;
         Category = category;
         Description = description;
-        Rating = rating;
     }
     public ServiceProduct(StoreProduct product){
         Name = product.getName();
         Price = product.getPrice();
         Category = product.getCategory();
         Description = product.getDescription();
-        Rating = product.getProductId();
+    }
+    public ServiceProduct(CartProduct product){
+        Name = product.getName();
+        Price = product.getPrice();
+        Category = product.getCategory();
+        Description = product.getDescription();
+    }
+    public String getCategory() {
+        return Category;
     }
 
+    public String getName() {
+        return Name;
+    }
+
+    public double getPrice() {
+        return Price;
+    }
+
+    public String getDescription() {
+        return Description;
+    }
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof ServiceProduct eq){
@@ -32,4 +50,6 @@ public class ServiceProduct {
         }
         return false;
     }
+
+
 }
