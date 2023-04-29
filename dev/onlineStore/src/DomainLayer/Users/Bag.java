@@ -34,7 +34,7 @@ public class Bag {
     public void addProduct(StoreProduct product) {
         logger.info("Starting add product");
         CartProduct cartProduct=new CartProduct(product);
-        if(productList.get(product)==null)
+        if(productList.get(product)!=null)
             throw new RuntimeException("Cart already contains "+product.getName());
         productList.put(product,new CartProduct(product));
         logger.info("Add product Succeeded");
@@ -54,7 +54,7 @@ public class Bag {
        cartProduct.setAmount(newAmount);
     }
     public double calculateTotalAmount() {
-        int totalAmount = 0;
+        double totalAmount = 0;
         for (CartProduct cartProduct : productList.values()) {
             totalAmount += cartProduct.getPrice()*cartProduct.getAmount();
         }
@@ -69,8 +69,8 @@ public class Bag {
     
     public String bagToString() {
         StringBuilder s= new StringBuilder();
-        for (CartProduct cartProduct :productList.values()) {
-            s.append(productList.get(cartProduct).toString()).append("\n");
+        for (Product cartProduct :productList.values()) {
+            s.append(cartProduct.toString()).append("\n");
         }
         return s.toString();
     }

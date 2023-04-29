@@ -73,7 +73,7 @@ public abstract class Product implements StoreProductObserver {
     }
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Product eq){
+        if(obj instanceof Product eq ){
             return Name.equals(eq.Name) && Description.equals(eq.Description);
         }
         return false;

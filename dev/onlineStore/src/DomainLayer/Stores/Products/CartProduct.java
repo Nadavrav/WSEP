@@ -33,7 +33,7 @@ public class CartProduct extends Product{
     }
     @Override
     public String toString(){
-        return "Name: "+getName()+" Description: "+getDescription()+"Category"+getCategory()+" price per unit: "+getPrice()+"Amount: "+getAmount()+
+        return "Name: "+getName()+" Description: "+getDescription()+" Category: "+getCategory()+" price per unit: "+getPrice()+" Amount: "+getAmount()+
                 " total price: "+getPrice()*getAmount();
     }
 }
