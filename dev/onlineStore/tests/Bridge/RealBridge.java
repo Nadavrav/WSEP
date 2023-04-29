@@ -143,8 +143,8 @@ public class RealBridge implements Bridge {
    // }
 
     @Override
-    public boolean RateProduct(String productId, int rating) {
-        return false; //TODO: NO PRODUCT RATE WITHOUT COMMENT?
+    public boolean RateProduct(int productId, int storeId, int rating) {
+        return service.addProductRateAndComment(productId,storeId,rating,"").isError();
     }
 
     @Override
@@ -173,7 +173,7 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean CartChangeItemQuantity(String productId, int newQuantity) {
+    public boolean CartChangeItemQuantity(int productId,int storeId, int newQuantity) {
         return false;
         //TODO WAITING FOR SERVICE IMPLEMENTATION
         //return CartChangeItemQuantity(String productId, int newQuantity);
@@ -187,7 +187,7 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public int GetItemQuantity(String productId) {
+    public int GetItemQuantity(int productId) {
         return 5;
         //return service.getItemQuantity(productId);
         //TODO WAITING FOR SERVICE IMPLEMENTATION

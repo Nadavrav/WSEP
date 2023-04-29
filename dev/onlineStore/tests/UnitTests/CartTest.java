@@ -14,10 +14,10 @@ class CartTest {
     @BeforeEach
     void setup()
     {
-        p1 = new StoreProduct("0-0","Milk",5,"Milk",20,"Its Milk what did you expect");
-        p2 = new StoreProduct("1-0","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
-        p3 = new StoreProduct("0-1","Butter",3.4,"Butter",6,"A Golden Brick");
-        p4 = new StoreProduct("1-1","Eggs",6.8,"Eggs",6,"What came first?");
+        p1 = new StoreProduct(0,"Milk",5,"Milk",20,"Its Milk what did you expect");
+        p2 = new StoreProduct(1,"Bread",7.2,"Bread",6,"Just a whole loaf of bread");
+        p3 = new StoreProduct(0,"Butter",3.4,"Butter",6,"A Golden Brick");
+        p4 = new StoreProduct(1,"Eggs",6.8,"Eggs",6,"What came first?");
         StoreId1 = 0;
         StoreId2 = 1;
     }

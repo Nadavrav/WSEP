@@ -68,26 +68,26 @@ public class StoreProduct extends Product {
     //    Rate = sum / RateMap.size();
     //}
 
-    public static int getStoreIdByProductId(String productId) {
-        if (productId == null || productId.isEmpty()) {
-            throw new NullPointerException("productId cannot be null or empty");
-        }
-        int index = productId.indexOf('-');
-        if (index == -1) {
-            throw new IllegalArgumentException("productId does not contain '-'");
-        }
-        if (index == 0) {
-            throw new IllegalArgumentException("productId is invalid");
-        }
-         try {
-            String storeId= productId.substring(0,index);
-             return Integer.parseInt(storeId);
-        } catch (NumberFormatException e) {
-            logger.warning("Failed to parse store ID from product ID: " + productId);
-             throw new IllegalArgumentException(e);
-        }
-    }
-    
+    //public static int getStoreIdByProductId(String productId) {
+    //    if (productId == null || productId.isEmpty()) {
+    //        throw new NullPointerException("productId cannot be null or empty");
+    //    }
+    //    int index = productId.indexOf('-');
+    //    if (index == -1) {
+    //        throw new IllegalArgumentException("productId does not contain '-'");
+    //    }
+    //    if (index == 0) {
+    //        throw new IllegalArgumentException("productId is invalid");
+    //    }
+    //     try {
+    //        String storeId= productId.substring(0,index);
+    //         return Integer.parseInt(storeId);
+    //    } catch (NumberFormatException e) {
+    //        logger.warning("Failed to parse store ID from product ID: " + productId);
+    //         throw new IllegalArgumentException(e);
+    //    }
+    //}
+
    // public static void isValidProductId(String productId) throws Exception {
    //     if (productId == null || productId.isEmpty()) {
    //         throw new NullPointerException("productId cannot be null or empty");

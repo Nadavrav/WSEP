@@ -12,10 +12,10 @@ class StoreProductTest {
     @BeforeEach
     void setup()
     {
-        p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
-        p2 = new StoreProduct("1-0","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
-        p3 = new StoreProduct("0-1","Butter",3.4,"Butter",6,"A Golden Brick");
-        p4 = new StoreProduct("1-1","Eggs",6.8,"Eggs",6,"What came first?");
+        p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        p2 = new StoreProduct(1,"Bread",7.2,"Bread",6,"Just a whole loaf of bread");
+        p3 = new StoreProduct(0,"Butter",3.4,"Butter",6,"A Golden Brick");
+        p4 = new StoreProduct(1,"Eggs",6.8,"Eggs",6,"What came first?");
         StoreId1 = 0;
         StoreId2 = 1;
     }
@@ -25,117 +25,117 @@ class StoreProductTest {
     }
     @Test
     void CreateProduct_InvalidId() {
-        assertThrows(IllegalArgumentException.class,()->p1 = new StoreProduct("-0","Milk",5,"Milk",5,"Its Milk what did you expect"));
+        assertThrows(IllegalArgumentException.class,()->p1 = new StoreProduct(-1,"Milk",5,"Milk",5,"Its Milk what did you expect"));
     }
     @Test
     void CreateProduct_Nullname() {
-        assertThrows(NullPointerException.class,()->p1 = new StoreProduct("0-0",null,5,"Milk",5,"Its Milk what did you expect"));
+        assertThrows(NullPointerException.class,()->p1 = new StoreProduct(0,null,5,"Milk",5,"Its Milk what did you expect"));
     }
     @Test
     void CreateProduct_negativePrice() {
-        assertThrows(IllegalArgumentException.class,()->p1 = new StoreProduct("0-0","Milk",-5,"Milk",5,"Its Milk what did you expect"));
+        assertThrows(IllegalArgumentException.class,()->p1 = new StoreProduct(0,"Milk",-5,"Milk",5,"Its Milk what did you expect"));
     }
     @Test
     void CreateProduct_NegativeQuantity() {
-        assertThrows(IllegalArgumentException.class,()->p1 = new StoreProduct("0-0","Milk",5,"Milk",-5,"Its Milk what did you expect"));
+        assertThrows(IllegalArgumentException.class,()->p1 = new StoreProduct(0,"Milk",5,"Milk",-5,"Its Milk what did you expect"));
     }
     @Test
     void CreateProduct_NullCategory() {
-        assertThrows(NullPointerException.class,()->p1 = new StoreProduct("0-0","Milk",5,null,5,"Its Milk what did you expect"));
+        assertThrows(NullPointerException.class,()->p1 = new StoreProduct(0,"Milk",5,null,5,"Its Milk what did you expect"));
     }
     @Test
     void CreateProduct_NullDesc() {
-        assertThrows(NullPointerException.class,()->p1 = new StoreProduct("0-0","Milk",5,"Milk",5,null));
+        assertThrows(NullPointerException.class,()->p1 = new StoreProduct(0,"Milk",5,"Milk",5,null));
     }
-    @Test
-    void getStoreIdByProductId_validId() {
-        assertEquals(0,p1.getStoreIdByProductId("0-0"));
-        assertEquals(0,p1.getStoreIdByProductId("0-1"));
-        assertEquals(1,p1.getStoreIdByProductId("1-0"));
-        assertEquals(1,p1.getStoreIdByProductId("1-1"));
-    }
-    @Test
-    void getStoreIdByProductId_nullId() {
-        assertThrows(NullPointerException.class,()->p1.getStoreIdByProductId(null));
-    }
-    @Test
-    void getStoreIdByProductId_InvalidId() {
-        assertThrows(IllegalArgumentException.class,()->p1.getStoreIdByProductId("-1"));
-    }
-    @Test
-    public void testValidProductId() throws Exception {
-        String productId = "123-456";
-        p1.isValidProductId(productId);
-    }
+    //@Test //store product should not be aware of store id
+    //void getStoreIdByProductId_validId() {
+    //    assertEquals(0,p1.getProductId(0));
+    //    assertEquals(0,p1.getStoreIdByProductId("0-1"));
+    //    assertEquals(1,p1.getStoreIdByProductId("1-0"));
+    //    assertEquals(1,p1.getStoreIdByProductId("1-1"));
+    //}
+   // @Test
+   // void getStoreIdByProductId_nullId() {
+   //     assertThrows(NullPointerException.class,()->p1.getStoreIdByProductId(null));
+   // }
+   // @Test
+   // void getStoreIdByProductId_InvalidId() {
+   //     assertThrows(IllegalArgumentException.class,()->p1.getStoreIdByProductId("-1"));
+   // }
+   // @Test
+   // public void testValidProductId() throws Exception {
+   //     String productId = "123-456";
+   //     p1.isValidProductId(productId);
+   // }
+//
+   // @Test
+   // public void testNullProductId() {
+   //     assertThrows(NullPointerException.class, () -> {
+   //         String productId = null;
+   //         p1.isValidProductId(productId);
+   //     });
+   // }
+//
+   // @Test
+   // public void testEmptyProductId() {
+   //     assertThrows(NullPointerException.class, () -> {
+   //         String productId = "";
+   //         p1.isValidProductId(productId);
+   //     });
+   // }
+//
+   // @Test
+   // public void testInvalidProductId() {
+   //     assertThrows(Exception.class, () -> {
+   //         String productId = "123456";
+   //         p1.isValidProductId(productId);
+   //     });
+   // }
+//
+   // @Test
+   // public void testInvalidProductIdWithDashAtBeginning() {
+   //     assertThrows(Exception.class, () -> {
+   //         String productId = "-456";
+   //         p1.isValidProductId(productId);
+   //     });
+   // }
+//
+   // @Test
+   // public void testInvalidProductIdWithDashAtEnd() {
+   //     assertThrows(NullPointerException.class, () -> {
+   //         String productId = "123-";
+   //         p1.isValidProductId(productId);
+   //     });
+   // }
+//
+   // @Test
+   // public void testInvalidProductIdWithNonNumericPrefix() {
+   //     assertThrows(Exception.class, () -> {
+   //         String productId = "abc-456";
+   //         p1.isValidProductId(productId);
+   //     });
+   // }
+//
+   // @Test
+   // public void testInvalidProductIdWithNonNumericSuffix() {
+   //     assertThrows(Exception.class, () -> {
+   //         String productId = "123-def";
+   //         p1.isValidProductId(productId);
+   //     });
+   // }
 
     @Test
-    public void testNullProductId() {
-        assertThrows(NullPointerException.class, () -> {
-            String productId = null;
-            p1.isValidProductId(productId);
-        });
-    }
-
-    @Test
-    public void testEmptyProductId() {
-        assertThrows(NullPointerException.class, () -> {
-            String productId = "";
-            p1.isValidProductId(productId);
-        });
-    }
-
-    @Test
-    public void testInvalidProductId() {
-        assertThrows(Exception.class, () -> {
-            String productId = "123456";
-            p1.isValidProductId(productId);
-        });
-    }
-
-    @Test
-    public void testInvalidProductIdWithDashAtBeginning() {
-        assertThrows(Exception.class, () -> {
-            String productId = "-456";
-            p1.isValidProductId(productId);
-        });
-    }
-
-    @Test
-    public void testInvalidProductIdWithDashAtEnd() {
-        assertThrows(NullPointerException.class, () -> {
-            String productId = "123-";
-            p1.isValidProductId(productId);
-        });
-    }
-
-    @Test
-    public void testInvalidProductIdWithNonNumericPrefix() {
-        assertThrows(Exception.class, () -> {
-            String productId = "abc-456";
-            p1.isValidProductId(productId);
-        });
-    }
-
-    @Test
-    public void testInvalidProductIdWithNonNumericSuffix() {
-        assertThrows(Exception.class, () -> {
-            String productId = "123-def";
-            p1.isValidProductId(productId);
-        });
-    }
-
-    @Test
-    public void testGetAverageRatingWithNoRatings() {
-        double actualResult = p1.GetAverageRating();
+    public void testgetAverageRatingWithNoRatings() {
+        double actualResult = p1.getAverageRating();
         double expectedResult = 0;
         assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void testGetAverageRatingWithOneRating() {
+    public void testgetAverageRatingWithOneRating() {
         try {
-            p1.addRating("name", 3);
-            double actualResult = p1.GetAverageRating();
+            p1.EditRating("name", 3);
+            double actualResult = p1.getAverageRating();
             double expectedResult = 3.5;
             assertEquals(expectedResult, actualResult);
         }
@@ -147,12 +147,12 @@ class StoreProductTest {
     }
 
     @Test
-    public void testGetAverageRatingWithMultipleRatings() {
+    public void testgetAverageRatingWithMultipleRatings() {
         try {
-            p1.addRating("name", 3);
-            p1.addRating("name1", 3);
-            p1.addRating("name2", 3);
-            double actualResult = p1.GetAverageRating();
+            p1.EditRating("name", 3);
+            p1.EditRating("name1", 3);
+            p1.EditRating("name2", 3);
+            double actualResult = p1.getAverageRating();
             double expectedResult = 3;
             assertEquals(expectedResult, actualResult);
         }
@@ -210,35 +210,35 @@ class StoreProductTest {
     }
 
     @Test
-    public void testAddRatingWithNewUser() throws Exception {
-        p1.addRating("John", 4);
-        double actualResult = p1.GetAverageRating();
+    public void testEditRatingWithNewUser() throws Exception {
+        p1.EditRating("John", 4);
+        double actualResult = p1.getAverageRating();
         double expectedResult = 4.0;
         assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void testAddRatingWithExistingUser() throws Exception {
-        p1.addRating("John", 4);
-        p1.addRating("John", 2);
-        double actualResult = p1.GetAverageRating();
+    public void testEditRatingWithExistingUser() throws Exception {
+        p1.EditRating("John", 4);
+        p1.EditRating("John", 2);
+        double actualResult = p1.getAverageRating();
         double expectedResult = 3.0;
         assertEquals(expectedResult, actualResult);
     }
 
     @Test
-    public void testAddRatingAndCommentWithNewUser() throws Exception {
+    public void testEditRatingAndCommentWithNewUser() throws Exception {
         p1.addRatingAndComment("John", 4, "Great product!");
-        double actualRating = p1.GetAverageRating();
+        double actualRating = p1.getAverageRating();
         double expectedRating = 4.0;
         assertEquals(expectedRating, actualRating);
     }
 
     @Test
-    public void testAddRatingAndCommentWithExistingUser() throws Exception {
+    public void testEditRatingAndCommentWithExistingUser() throws Exception {
         p1.addRatingAndComment("John", 4, "Great product!");
         p1.addRatingAndComment("John", 2, "Not so good");
-        double actualRating = p1.GetAverageRating();
+        double actualRating = p1.getAverageRating();
         double expectedRating = 3.0;
         assertEquals(expectedRating, actualRating);
     }

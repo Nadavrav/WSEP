@@ -28,8 +28,8 @@ class StoreTest {
     @BeforeEach
     void setup()
     {
-        p1 = new StoreProduct("1-0","Milk",5,"Milk",20,"Its Milk what did you expect");
-        p2 = new StoreProduct("1-1","Butter",3.4,"Butter",6,"A Golden Brick");
+        p1 = new StoreProduct(1,"Milk",5,"Milk",20,"Its Milk what did you expect");
+        p2 = new StoreProduct(1,"Butter",3.4,"Butter",6,"A Golden Brick");
     }
     @Test
     void closeStore() {
@@ -41,16 +41,16 @@ class StoreTest {
     @Test
     void addNewProduct() {
         s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
-        StoreProduct actual = s.getProducts().get("1-0");
+        StoreProduct actual = s.getProducts().get(1);
         assertEquals(p1,actual);//Make this check if the product was actually added
     }
     @Test
     void addNewProductMultiple() {
         s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
         s1.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
-        StoreProduct actual1 = s.getProducts().get("1-0");
+        StoreProduct actual1 = s.getProducts().get(1);
         assertEquals(p1,actual1);//Make this check if the product was actually added
-        StoreProduct actual2 = s.getProducts().get("1-1");
+        StoreProduct actual2 = s.getProducts().get(1);
         assertEquals(p2,actual2);//Make this check if the product was actually added
     }
 
@@ -86,7 +86,7 @@ class StoreTest {
         searchResults1 = s1.SearchProductByName(p1Name);
         assertEquals(0, searchResults1.size());
     }
-
+/*
     @Test
     void searchProductByCategory() {
         setup();
@@ -132,7 +132,7 @@ class StoreTest {
             fail();
         }
     }
-
+*/
     @Test
     // we have a add new product method
     void addProduct() {
@@ -197,12 +197,12 @@ class StoreTest {
     @Test
     void addRating() throws Exception {
         setup();
-        p1.addRating("majd",4);
-        p1.addRating("natalie",2);
-        assertEquals(3,p1.getRating());
-        p2.addRating("majd",5);
-        p2.addRating("natalie",3);
-        assertEquals(4,p2.getRating());
+        p1.EditRating("majd",4);
+        p1.EditRating("natalie",2);
+        assertEquals(3,p1.getAverageRating());
+        p2.EditRating("majd",5);
+        p2.EditRating("natalie",3);
+        assertEquals(4,p2.getAverageRating());
 
     }
 

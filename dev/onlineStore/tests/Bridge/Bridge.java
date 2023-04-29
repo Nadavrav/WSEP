@@ -160,13 +160,13 @@ public interface Bridge {
      */
   //  List<String> ProductSearch(String query);
     /**
-     *
      * @param storeName name of the store the product is in
      * @param productId the product's name to rate
-     * @param rating the rating to give to the product
+     * @param storeId
+     * @param rating    the rating to give to the product
      * @return expected return: list of all found product names
      */
-    boolean RateProduct(String productId, int rating);
+    boolean RateProduct(int productId, int storeId, int rating);
     /**
      *
      * @param storeName store whose purchase history we expect to return
@@ -209,7 +209,7 @@ public interface Bridge {
      * @param newQuantity - the new amount of the item
      * @return true is done successfully, false otherwise
      */
-    boolean CartChangeItemQuantity(String productId,int newQuantity);
+    boolean CartChangeItemQuantity(int productId,int storeId,int newQuantity);
 
     /**
      * A function to purchase the contents of the cart
@@ -223,7 +223,7 @@ public interface Bridge {
      * @param productId - the id of the item
      * @return the quantity of the item if successful, -1 otherwise
      */
-    int GetItemQuantity(String productId);
+    int GetItemQuantity(int productId);
 
     /**
      * A function to get the info on an employee
