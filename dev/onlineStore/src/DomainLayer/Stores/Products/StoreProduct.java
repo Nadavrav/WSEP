@@ -12,11 +12,11 @@ import DomainLayer.Stores.Rating;
 
 public class StoreProduct extends Product {
 
-    private Integer productId;
+    private final Integer productId;
 
     private int Quantity;
     private String Category;
-    private Map<String, Rating> RateMap;
+    private final Map<String, Rating> RateMap;
     private double avgRating;
     private final Map<WeakReference<StoreProductObserver>, Object> observers = new WeakHashMap<>();
     private static final Logger logger=Logger.getLogger("StoreProduct logger");
@@ -46,11 +46,11 @@ public class StoreProduct extends Product {
             throw new NullPointerException("Product desc cant be null");
         }
         this.productId = productId;
-        Name = name;
-        Price = price;
+        this.name = name;
+        this.price = price;
         Category = category;
         Quantity = quantity;
-        Description =desc;
+        description =desc;
         RateMap=new HashMap<>();
        } catch (Exception e) {
             throw new RuntimeException(e);
@@ -108,7 +108,7 @@ public class StoreProduct extends Product {
    // }
 //
     public void setName(String name) {
-        Name = name;
+        this.name = name;
         notifyObservers();
     }
     public void setQuantity(int quantity) {
@@ -122,17 +122,8 @@ public class StoreProduct extends Product {
         return Category;
     }
 
-    public String getName() {
-        return Name;
-    }
-    public Double getPrice() {
-        return Price;
-    }
-    public String getDescription() {
-        return Description;
-    }
     public void setDescription(String desc) {
-        Description = desc;
+        description = desc;
     }
     public Integer getProductId() {
         return productId;
@@ -141,7 +132,7 @@ public class StoreProduct extends Product {
         return RateMap;
     }
     public void setPrice(Double price) {
-        Price = price;
+        this.price = price;
         notifyObservers();
     }
 
@@ -150,7 +141,6 @@ public class StoreProduct extends Product {
     }
     //what does this even do??? isn't rating an average of all ratings?
     //public void setRate(Double rate) {
-    //    //only relevant when viewing product in its store, no need to notify cart products
     //    Rate = rate;
     //}
     public void addRatingAndComment(String userName ,double rate,String comment) {
@@ -167,6 +157,11 @@ public class StoreProduct extends Product {
     public double getAverageRating(){
         return avgRating;
     }
+
+    /**
+     * updates store average rating to (ratings sum)/ratings amount.
+     * called each time a rating is added,removed or edited
+     */
     public void updateAvgRatings(){
         if(RateMap.isEmpty())
             avgRating= 0.0;
@@ -178,6 +173,10 @@ public class StoreProduct extends Product {
         avgRating= (ratingSum / ratingCount);
     }
 
+    /**
+     * get number of rating for the store
+     * @return number of ratings
+     */
     public int getNumberOfRates() {
         return RateMap.keySet().size();
     }
@@ -218,7 +217,7 @@ public class StoreProduct extends Product {
      */
     public String toStringForCart()
     {
-        return "Product Id: "+this.productId+" ,Product Name: "+this.Name+" ,Product Price: "+this.Price;
+        return "Product Id: "+this.productId+" ,Product Name: "+this.name +" ,Product Price: "+this.price;
     }
 
     /**
@@ -247,6 +246,20 @@ public class StoreProduct extends Product {
                 observer.updateFields(this);
             }
         }
+    }
+
+    /**
+     * changes all store product's fields to signify a removed product, and notifies
+     * all cart products copy these changes.
+     * most important-price changes to 0, a customer will never pay for a removed product
+     * even in case of a bug during purchasing.
+     */
+    public void notifyRemoval(){
+        name ="NOTICE "+ name +"WAS REMOVED FROM THE STORE";
+        description ="PRODUCT REMOVED FROM STORE";
+        category="";
+        setPrice(0.0);
+        notifyObservers();
     }
 
    // /**

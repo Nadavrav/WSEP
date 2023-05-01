@@ -92,6 +92,7 @@ public class Store {
             logger.warning("Product not found in store. Product ID: " + productID);
             return new Response<>("There is no product in our products with this ID", true);
         }
+        products.get(productID).notifyRemoval();
         products.remove(productID);
         logger.info("Product removed from store. Product ID: " + productID);
         return new Response<>("Product removed", false);

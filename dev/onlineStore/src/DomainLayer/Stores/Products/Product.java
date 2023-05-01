@@ -6,10 +6,10 @@ import java.util.logging.Logger;
 
 public abstract class Product implements StoreProductObserver {
     private static final Logger logger=Logger.getLogger("Product logger");
-    protected String Name;
-    protected Double Price;
+    protected String name;
+    protected Double price;
 
-    protected String Description;
+    protected String description;
     protected String category;
     private boolean stillInCart;
     /**
@@ -43,38 +43,41 @@ public abstract class Product implements StoreProductObserver {
     public Product(StoreProduct product) {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
-        Name=product.getName();
-        Price= product.getPrice();
-        Description=product.getDescription();
+        name =product.getName();
+        price = product.getPrice();
+        description =product.getDescription();
         category=product.getCategory();
         product.addObserver(this);
         stillInCart=true;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
     public void removedFromCart(){
         stillInCart=false;
     }
     public Double getPrice() {
-        return Price;
+        return price;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public String getCategory() {
         return category;
     }
     public void updateFields(Product product){
-
+        name=product.getName();
+        description=product.getDescription();
+        category=product.getCategory();
+        price=product.getPrice();
     }
     @Override
     public boolean equals(Object obj) {
         if(obj instanceof Product eq ){
-            return Name.equals(eq.Name) && Description.equals(eq.Description);
+            return name.equals(eq.name) && description.equals(eq.description);
         }
         return false;
     }
