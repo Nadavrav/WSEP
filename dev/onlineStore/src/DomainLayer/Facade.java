@@ -801,7 +801,7 @@ public class Facade {
                 throw  new Exception("there is no store with this id ");
             }
             store.RemoveProduct(ProductId);
-            //return new Response<>("the Product is successfully added", false);
+            return;
         }
         logger.warning("Only the owner can close the store: " + visitorId);
         logger.fine("Exiting method RemoveProduct()");

@@ -33,20 +33,20 @@ class StoreTest {
         p2 = new StoreProduct("1-1","Butter",3.4,"Butter",6,"A Golden Brick");
     }
     @Test
-    void closeStore() {
+    void closeStore() throws Exception {
 
         s.CloseStore();
         assertFalse(s.getActive());
     }
 
     @Test
-    void addNewProduct() {
+    void addNewProduct() throws Exception {
         s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
         StoreProduct actual = s.getProducts().get("1-0");
         assertEquals(p1,actual);//Make this check if the product was actually added
     }
     @Test
-    void addNewProductMultiple() {
+    void addNewProductMultiple() throws Exception {
         s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
         s1.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
         StoreProduct actual1 = s.getProducts().get("1-0");
@@ -56,7 +56,7 @@ class StoreTest {
     }
 
     @Test
-    void removeProduct() {
+    void removeProduct() throws Exception {
         setup();
         s.RemoveProduct(p1.getProductId());
         s1.RemoveProduct(p1.getProductId());

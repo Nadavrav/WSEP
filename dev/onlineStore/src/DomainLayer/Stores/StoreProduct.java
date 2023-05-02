@@ -121,6 +121,10 @@ public class StoreProduct {
     }
 
     public void setName(String name) {
+        if(name == null || name.equals(""))
+        {
+            throw new IllegalArgumentException("New product name can not be empty");
+        }
         Name = name;
     }
     public void setQuantity(int quantity) {
@@ -202,6 +206,10 @@ public class StoreProduct {
     }
 
     public void setPrice(double price) {
+        if(price<=0)
+        {
+            throw new IllegalArgumentException("New price must be positive");
+        }
         this.Price=price;
     }
 

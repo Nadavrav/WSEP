@@ -69,7 +69,11 @@ public class Store {
         return s;
     }
 
-    public void CloseStore() {
+    public void CloseStore() throws Exception {
+        if(Active==false)
+        {
+            throw new Exception("This store is already closed");
+        }
         Active = false;
     }
 
@@ -80,7 +84,11 @@ public class Store {
 
 
     // ADD , UPDATE, REMOVE, SEARCH PRODUCT IS DONE ניהול מלאי 4.1
-    public String AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
+    public String AddNewProduct( String productName, Double price, int Quantity, String category,String desc) throws Exception {
+        if(Active==false)
+        {
+            throw new Exception("Can't add new product while store is closed");
+        }
         StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity,desc);
         products.put(storeProduct.getId(), storeProduct);
         logger.info("New product added to store. Product ID: " + storeProduct.getId());
@@ -90,14 +98,17 @@ public class Store {
 
 
 
-     public Response<Object> RemoveProduct(String productID) {
+     public void RemoveProduct(String productID) throws Exception {
+         if(Active==false)
+         {
+             throw new Exception("Can't remove product while store is closed");
+         }
         if (!products.containsKey(productID)) {
             logger.warning("Product not found in store. Product ID: " + productID);
-            return new Response<>("There is no product in our products with this ID", true);
+            throw new Exception("There is no product in our products with this ID");
         }
         products.remove(productID);
         logger.info("Product removed from store. Product ID: " + productID);
-        return new Response<>("Product removed", false);
     }
 
     //2.2
@@ -223,26 +234,50 @@ public class Store {
     public void addProduct(StoreProduct product) {
     }
 
-    public void UpdateProductQuantity(String productID, int quantity) {
+    public void UpdateProductQuantity(String productID, int quantity) throws Exception {
+        if(Active==false)
+        {
+            throw new Exception("Can't update while store is closed");
+        }
         products.get(productID).UpdateQuantity(quantity);
     }
-    public void IncreaseProductQuantity(String productID, int quantity) {
+    public void IncreaseProductQuantity(String productID, int quantity) throws Exception {
+        if(Active==false)
+        {
+            throw new Exception("Can't update while store is closed");
+        }
         products.get(productID).IncreaseQuantity(quantity);
     }
 
-    public void UpdateProductName(String productID, String name) {
+    public void UpdateProductName(String productID, String name) throws Exception {
+        if(Active==false)
+        {
+            throw new Exception("Can't update while store is closed");
+        }
         products.get(productID).setName(name);
     }
 
-    public void UpdateProductPrice(String productID, double price) {
+    public void UpdateProductPrice(String productID, double price) throws Exception {
+        if(Active==false)
+        {
+            throw new Exception("Can't update while store is closed");
+        }
         products.get(productID).setPrice(price);
     }
 
-    public void UpdateProductCategory(String productID, String category) {
+    public void UpdateProductCategory(String productID, String category) throws Exception {
+        if(Active==false)
+        {
+            throw new Exception("Can't update while store is closed");
+        }
         products.get(productID).setCategory(category);
     }
 
-    public void UpdateProductDescription(String productID, String description) {
+    public void UpdateProductDescription(String productID, String description) throws Exception {
+        if(Active==false)
+        {
+            throw new Exception("Can't update while store is closed");
+        }
         products.get(productID).setDescription(description);
     }
    public void addRating(String userName ,int rate) throws Exception {
