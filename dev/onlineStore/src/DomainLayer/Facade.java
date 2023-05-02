@@ -657,7 +657,7 @@ public class Facade {
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
-        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreOwner);
+        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreFounder);
         logger.config("adding new employment to the new store ");
         // andd to employment list
         if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
@@ -722,7 +722,7 @@ public class Facade {
             logger.warning(" employment is null");
             throw new Exception("there is no employee with this id ");
         }
-        if (employment.checkIfOwner()) {
+        if (employment.checkIfFounder()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
                 logger.warning(" store is null");
@@ -734,7 +734,7 @@ public class Facade {
            return;
         }
 
-        throw  new Exception("Just the owner can Close the Store ");
+        throw  new Exception("Just the founder can Close the Store ");
         //catch
         //release lock user
         //throw e

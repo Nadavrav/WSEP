@@ -25,11 +25,11 @@ public class UserStoreRequestsTests {
     private final TestUser StoreFounder = new TestUser("Bob", "milk2077"); //a store founder
     private final TestUser StoreOwner = new TestUser("Bob's owner son", "milk2078"); //a store owner
     private final TestUser StoreManager = new TestUser("Bob's manager son", "yogurt2079"); //a store manager appointed by founder
-    private final TestUser StoreManager2 = new TestUser("bob's manager nephew", "ManagerUnderBobsOwnerSonUnderBob2080"); //a store manager appointed by store owner
-    private final TestUser StoreManager3 = new TestUser("bob's manager son of bob's manager nephew", "ManagerUnderBobsOwnerSonBobsOwnerSonUnderBob2081"); //manager appointed by manager 2
-    private final TestUser StoreOwner2 = new TestUser("bob's owner son of bob's manager son of bob's manager nephew", "ChainOfCommandTooLong2081"); //owner appointed by manager 3
+    private final TestUser StoreManager2 = new TestUser("bob's manager nephew", "donfil12"); //a store manager appointed by store owner
+    private final TestUser StoreManager3 = new TestUser("donfil", "donfil12"); //manager appointed by manager 2
+    private final TestUser StoreOwner2 = new TestUser("donfil2", "ChainOfCommandTooLong2081"); //owner appointed by manager 3
     private final TestUser notLoggedIn = new TestUser("Jeff", "Jeff's password"); //NOT LOGGED IN
-    private final TestUser StoreFounder2 = new TestUser("Robert", "ChainOfCommandTooLong2081"); //another store owner
+    private final TestUser StoreFounder2 = new TestUser("Robertal", "ChainOfCommandTooLong2081"); //another store owner
     private final TestUser Admin = new TestUser("adminMan", "AbsolutePower2023");
     private int store1 = -1;
     private int store3 = -1;
@@ -60,8 +60,8 @@ public class UserStoreRequestsTests {
         bridge.Register(Customer.getUserName(), Customer.getPassword());
         bridge.Register(StoreFounder.getUserName(), StoreFounder.getPassword());
         bridge.Register(StoreOwner.getUserName(), StoreOwner.getPassword());
-        bridge.Register(StoreOwner2.getUserName(), StoreFounder2.getPassword());
-        bridge.Register(StoreManager2.getUserName(), StoreManager.getPassword());
+        bridge.Register(StoreOwner2.getUserName(), StoreOwner2.getPassword());
+        bridge.Register(StoreManager2.getUserName(), StoreManager2.getPassword());
         bridge.Register(Admin.getUserName(), Admin.getPassword());
         bridge.Register(StoreManager.getUserName(), StoreManager.getPassword());
         bridge.Register(notLoggedIn.getUserName(), notLoggedIn.getPassword());
@@ -215,7 +215,9 @@ public class UserStoreRequestsTests {
         assertFalse(bridge.RemovePermission(StoreFounder.getUserName(), store1, new int[]{1})); //self has no permission restrictions
         assertFalse(bridge.RemovePermission(StoreManager.getUserName(), nonExistentStore, new int[]{1})); //invalid store
         assertFalse(bridge.AddPermission(StoreManager.getUserName(), nonExistentStore, new int[]{1})); //invalid store
+
     }
+
 
     @Order(12)
     @Test

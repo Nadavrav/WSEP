@@ -79,6 +79,10 @@ public class Employment {
         return (getRole()== Role.StoreFounder ||  getRole()==Role.StoreOwner);
     }
 
+    public boolean checkIfFounder(){
+         return getRole()==Role.StoreFounder;
+    }
+
     public boolean checkIfManager() {
         return (getRole()== Role.StoreManager);
     }
