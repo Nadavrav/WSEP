@@ -426,6 +426,18 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
+    public Response<?> deleteUser(String userName){
+        try{
+            facade.deleteUser(visitorId,userName);
+            return new Response<>("Success");
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+            
+
     public Response<List<ServiceUser>> getRegisteredUsersInfo(){
         try {
             ArrayList<ServiceUser> serviceUsers = new ArrayList<>();
@@ -433,6 +445,7 @@ public class Service {
             for (RegisteredUser registeredUser : userMap.values())
                 serviceUsers.add(new ServiceUser(registeredUser));
             return new Response<>(serviceUsers);
+
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
