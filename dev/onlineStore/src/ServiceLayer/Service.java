@@ -422,4 +422,13 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+    public Response<?> deleteUser(String userName){
+        try{
+            facade.deleteUser(visitorId,userName);
+            return new Response<>("Success");
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
 }

@@ -1055,4 +1055,18 @@ public class Facade {
         logger.info("Exiting method FilterProductSearch() with filtered products: " + products.toString());
         return products;
     }
+
+    public void deleteUser(int visitorId, String userName) throws Exception {
+        logger.info("Starting user deletion");
+        if(!(onlineList.get(visitorId) instanceof Admin)){
+            logger.info("User deletion failed: "+visitorId+" not admin");
+            throw new Exception("Only admins can delete users");
+        }
+        RegisteredUser registeredUser=registeredUserList.get(userName);
+        if(registeredUser==null) {
+            logger.info("User deletion failed: username "+userName+" does not exist");
+            throw new Exception("username " + userName + " does not exists");
+        }
+        registeredUserList.remove(userName);
+    }
 }
