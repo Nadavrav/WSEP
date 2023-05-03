@@ -1,6 +1,6 @@
 package DomainLayer.Users.Fiters;
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 
 public class DescriptionFilter implements Filter{
     private final String description;
@@ -13,5 +13,4 @@ public class DescriptionFilter implements Filter{
     public boolean PassFilter(StoreProduct product) {
         return product.getDescription().equals(description);
     }
-
 }

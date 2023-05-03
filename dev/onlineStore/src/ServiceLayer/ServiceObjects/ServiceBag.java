@@ -1,22 +1,27 @@
 package ServiceLayer.ServiceObjects;
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ServiceBag {
-
-    ArrayList<ServicePurchaseProduct> productList;
-    Integer StoreId;
-
-    public ServiceBag(Bag b, Integer _storeID)
+    private final int storeId;
+    private final ArrayList<ServiceCartProduct> productList;
+    public ServiceBag(Bag bag)
     {
-      /*  productList = new ArrayList<>();
-        for (StoreProduct sp:b.) {
+        this.storeId= bag.getStoreID();
+        productList=new ArrayList<>();
+      for(CartProduct cartProduct: bag.getProducts()){
+            productList.add(new ServiceCartProduct(cartProduct));
+      }
+    }
 
-        }*/
+    public ArrayList<ServiceCartProduct> getProductList() {
+        return productList;
+    }
+    public int getStoreId() {
+        return storeId;
     }
 }
