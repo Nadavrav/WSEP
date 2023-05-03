@@ -57,7 +57,7 @@ public class Facade {
     private Supplier supplier;
     private PaymentProvider paymentProvider;
 
-    private Facade() {
+    public Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         onlineList = new HashMap<>();
