@@ -10,14 +10,14 @@ import java.util.Arrays;
 import java.util.logging.*;
 
 
-
 public class RegisteredUser extends SiteVisitor{
     private static final Logger logger=Logger.getLogger("RegisteredUser logger");
     String userName;
 
     byte[] password;
     PurchaseHistory purchaseHistory;
-    protected boolean loggedIn;
+
+    private boolean loggedIn;
     //add lock
 
 
@@ -128,5 +128,8 @@ public class RegisteredUser extends SiteVisitor{
 
     public void addPurchaseToHistory(Purchase purchase) {
         purchaseHistory.addPurchaseToHistory(purchase);
+    }
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 }
