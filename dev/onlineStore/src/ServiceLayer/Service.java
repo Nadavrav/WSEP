@@ -10,6 +10,7 @@ import ServiceLayer.ServiceObjects.Fiters.Filter;
 
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceUser;
 
 import java.util.*;
 
