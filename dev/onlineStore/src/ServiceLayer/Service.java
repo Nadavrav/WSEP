@@ -8,8 +8,8 @@ import DomainLayer.Users.*;
 import ServiceLayer.ServiceObjects.Fiters.Filter;
 
 
-import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceUser;
 
 import java.util.*;
 
@@ -433,6 +433,16 @@ public class Service {
             for (RegisteredUser registeredUser : userMap.values())
                 serviceUsers.add(new ServiceUser(registeredUser));
             return new Response<>(serviceUsers);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<?> removeEmployee(int storeId,String userName){
+        try {
+            facade.removeEmployee(visitorId,userName,storeId);
+            return new Response<>("Success");
+
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
