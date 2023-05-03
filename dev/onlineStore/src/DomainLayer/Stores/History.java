@@ -24,7 +24,6 @@ public class History {
                 ShoppingBags.addLast(b);
             }
         }
-
     }
 
     public void AddPurchasedShoppingBag(Bag shoppingBag)

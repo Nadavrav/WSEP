@@ -6,8 +6,7 @@ import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
-import ServiceLayer.ServiceObjects.ServiceProduct;
-import org.opentest4j.TestAbortedException;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import org.opentest4j.TestSkippedException;
 
 import java.util.ArrayList;
@@ -54,11 +53,11 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public String AddProduct(int storeId, String productName, String description, int price, int amount) {
-        Response<String> r= service.AddProduct(storeId,productName,price,"test",amount,description);
+    public Integer AddProduct(int storeId, String productName, String description, int price, int amount) {
+        Response<Integer> r= service.AddProduct(storeId,productName,price,"test",amount,description);
         if(!r.isError())
             return r.getValue();
-        return "Error";
+        return -1;
     }
 
     @Override
@@ -84,23 +83,23 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean RemoveProduct(String productId) {
-        return !service.RemoveProduct(productId).isError();
+    public boolean RemoveProduct(int productId, int storeId) {
+        return !service.RemoveProduct(productId,storeId ).isError();
     }
 
     @Override
-    public boolean EditProductName(String productId, String newName) {
-        return !service.UpdateProductName(productId, newName).isError();
+    public boolean EditProductName(int productId, int storeId, String newName) {
+        return !service.UpdateProductName(productId,storeId, newName).isError();
     }
 
     @Override
-    public boolean EditDescription(String productId, String newDesc) {
-        return !service.UpdateProductName(productId, newDesc).isError();
+    public boolean EditDescription(int productId, int storeId, String newDesc) {
+        return !service.UpdateProductName(productId,storeId, newDesc).isError();
     }
 
     @Override
-    public boolean EditPrice(String productId, int newPrice) {
-        return !service.UpdateProductPrice(productId, newPrice).isError();
+    public boolean EditPrice(int productId, int storeId, int newPrice) {
+        return !service.UpdateProductPrice(productId,storeId, newPrice).isError();
     }
 
     @Override
@@ -134,18 +133,18 @@ public class RealBridge implements Bridge {
         return !service.changeStoreManagerPermission(username,storeId,permissions).isError();
     }
 
-    @Override
-    public List<String> ProductSearch(String query) {
+   // @Override
+   // public List<String> ProductSearch(String query) {
+//
+   //     Response<List<String>> r=service.SearchProductBykey(query);
+   //     if(r.isError())
+   //         throw new TestAbortedException("TEST SHOULD NOT FAIL");
+   //     return r.getValue();
+   // }
 
-        Response<List<String>> r=service.SearchProductBykey(query);
-        if(r.isError())
-            throw new TestAbortedException("TEST SHOULD NOT FAIL");
-        return r.getValue();
-    }
-
     @Override
-    public boolean RateProduct(String productId, int rating) {
-        return false; //TODO: NO PRODUCT RATE WITHOUT COMMENT?
+    public boolean RateProduct(int productId, int storeId, int rating) {
+        return service.addProductRateAndComment(productId,storeId,rating,"").isError();
     }
 
     @Override
@@ -159,13 +158,13 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean addToCart(String productId) {
-        return !service.addProductToCart(productId).isError();
+    public boolean addToCart(int productId, int storeId) {
+        return !service.addProductToCart(productId,storeId ).isError();
     }
 
     @Override
-    public boolean removeFromCart(String productId) {
-        return !service.RemoveProduct(productId).isError();
+    public boolean removeFromCart(int productId, int storeId) {
+        return !service.RemoveProduct(productId,storeId ).isError();
     }
 
     @Override
@@ -174,7 +173,7 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean CartChangeItemQuantity(String productId, int newQuantity) {
+    public boolean CartChangeItemQuantity(int productId,int storeId, int newQuantity) {
         return false;
         //TODO WAITING FOR SERVICE IMPLEMENTATION
         //return CartChangeItemQuantity(String productId, int newQuantity);
@@ -188,7 +187,7 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public int GetItemQuantity(String productId) {
+    public int GetItemQuantity(int productId) {
         return 5;
         //return service.getItemQuantity(productId);
         //TODO WAITING FOR SERVICE IMPLEMENTATION
@@ -215,8 +214,8 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean RateAndCommentOnProduct(String productId,String comment, int rating) {
-        return !service.addProductRateAndComment(productId,rating,comment).isError();
+    public boolean RateAndCommentOnProduct(int productId, int storeId, String comment, int rating) {
+        return !service.addProductRateAndComment(productId,storeId,rating,comment).isError();
 
     }
     @Override

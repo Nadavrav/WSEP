@@ -1,6 +1,6 @@
 package DomainLayer.Users.Fiters;
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 
 public class NameFilter implements Filter{
     private final String name;

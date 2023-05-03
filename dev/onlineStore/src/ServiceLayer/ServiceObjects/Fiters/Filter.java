@@ -1,6 +1,6 @@
 package ServiceLayer.ServiceObjects.Fiters;
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 
 public interface Filter {
     public  boolean PassFilter(StoreProduct product);

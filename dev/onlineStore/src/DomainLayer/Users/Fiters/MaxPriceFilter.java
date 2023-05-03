@@ -1,6 +1,6 @@
 package DomainLayer.Users.Fiters;
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 
 public class MaxPriceFilter implements Filter {
     private final Integer max;

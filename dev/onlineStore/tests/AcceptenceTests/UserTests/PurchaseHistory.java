@@ -4,7 +4,8 @@ import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import Bridge.*;
 import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
-import ServiceLayer.ServiceObjects.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
@@ -24,10 +25,10 @@ public class PurchaseHistory {
     private final String password = "12345678";
     private final String storeName = "Super";
     private int storeId=-1;
-    private String productId_Milk = "-1";//Product that exits
-    private String productId_Cheese = "-1";//Product that exits
-    private String productId_Hamburger = "-1";//Product that exits
-    private final String badProductId = "-1";//Product that doesnt exist
+    private Integer productId_Milk = -1;//Product that exits
+    private Integer productId_Cheese = -1;//Product that exits
+    private Integer productId_Hamburger = -1;//Product that exits
+    private final Integer badProductId = -1;//Product that doesn't exist
     private final CreditCardProxy RealcreditProxy = new CreditCardProxy(); // A credit card Proxy class
     private final CreditCardProxy FakecreditProxy = new CreditCardProxy(); // A credit card Proxy class
   //  private final HashMap<String,String> productIdMapper=new HashMap<>();
@@ -52,9 +53,9 @@ public class PurchaseHistory {
         //productIdMapper.put(productId_Milk, productId_Milk);
         //productIdMapper.put(productId_Cheese, productId_Cheese);
         //productIdMapper.put(productId_Hamburger, productId_Hamburger);
-        serviceProductMap.put("Milk",new ServiceProduct("Milk",5.0,"test","Made by a cow",2.5));
-        serviceProductMap.put("Cheese",new ServiceProduct("Cheese",7.0,"test","contains 3% bullet holes",2.5));
-        serviceProductMap.put("Hamburger",new ServiceProduct("Hamburger",10.0,"test","generously donated by the cow community",2.5));
+        serviceProductMap.put("Milk",new ServiceStoreProduct("Milk",5.0,"test","Made by a cow",2.5));
+        serviceProductMap.put("Cheese",new ServiceStoreProduct("Cheese",7.0,"test","contains 3% bullet holes",2.5));
+        serviceProductMap.put("Hamburger",new ServiceStoreProduct("Hamburger",10.0,"test","generously donated by the cow community",2.5));
         assertTrue(bridge.AddPermission(StoreWorkerNameWithPerms,storeId,perms));
         assertTrue(bridge.Logout());
         assertTrue(bridge.ExitMarket());
@@ -88,8 +89,8 @@ public class PurchaseHistory {
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Cheese),NormalUser));
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Milk));
-        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
+        assertTrue(bridge.addToCart(productId_Cheese, 1111111));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
         assertTrue(bridge.Login(StoreOwnerName,password));
@@ -106,15 +107,15 @@ public class PurchaseHistory {
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),StoreWorkerNameWithPerms));
         //Adding items to purchase history
         assertTrue(bridge.Login(StoreWorkerNameWithPerms,password));
-        assertTrue(bridge.addToCart(productId_Milk));
-        assertTrue(bridge.addToCart(productId_Hamburger));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
+        assertTrue(bridge.addToCart(productId_Hamburger, 1111111));
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Milk),StoreWorkerNameWithPerms));
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),StoreWorkerNameWithPerms));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
         //Adding more items through a different user
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Hamburger));
+        assertTrue(bridge.addToCart(productId_Hamburger, 1111111));
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),NormalUser));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
@@ -129,8 +130,8 @@ public class PurchaseHistory {
        // String[] PurchaseHistory = {"NormalUser Bought 1 Mega milk","NormalUser Bought 1 Ultra milk"};
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Milk));
-        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
+        assertTrue(bridge.addToCart(productId_Cheese, 1111111));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
 
@@ -143,8 +144,8 @@ public class PurchaseHistory {
     {
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Milk));
-        assertTrue(bridge.addToCart(productId_Cheese));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
+        assertTrue(bridge.addToCart(productId_Cheese, 1111111));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
 
@@ -168,8 +169,8 @@ public class PurchaseHistory {
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Cheese),NormalUser));
         //Adding items to purchase history
         assertTrue(bridge.Login(NormalUser,password));
-        assertTrue(bridge.addToCart(productId_Cheese));
-        assertTrue(bridge.addToCart(productId_Milk));
+        assertTrue(bridge.addToCart(productId_Cheese, 1111111));
+        assertTrue(bridge.addToCart(productId_Milk, 1111111));
         assertTrue(bridge.PurchaseCart(RealcreditProxy));
         assertTrue(bridge.Logout());
 
