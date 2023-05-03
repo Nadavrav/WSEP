@@ -1,11 +1,13 @@
 package DomainLayer;
 
 
-import DomainLayer.Stores.InstantPurchase;
+
+import DomainLayer.Stores.Purchases.InstantPurchase;
+
 import DomainLayer.Logging.UniversalHandler;
 
 import DomainLayer.Stores.Store;
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
 import ServiceLayer.ServiceObjects.Fiters.Filter;
 import ExternalServices.PaymentProvider;
@@ -14,39 +16,32 @@ import ExternalServices.Supplier;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-
-import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
-import static DomainLayer.Stores.StoreProduct.isValidProductId;
-
 public class Facade {
     private static Facade instanceFacade = null;
     private  static final Logger logger = Logger.getLogger("Facade Logger");
 
-    //Getter for tests
-    public Map<Integer, SiteVisitor> getOnlineList() {
-        return onlineList;
-    }
-
     private Map<Integer, SiteVisitor> onlineList;//online
-    //Getter for tests
-    public Map<String, RegisteredUser> getRegisteredUserList() {
-        return registeredUserList;
-    }
+
 
     private Map<String, RegisteredUser> registeredUserList;
 
-    //Getter for tests
+
+    private Map<Integer, Store> storesList;
+    //unit tests getters
+    public Map<Integer, SiteVisitor> getOnlineList() {
+        return onlineList;
+    }
+    public Map<String, RegisteredUser> getRegisteredUserList() {
+        return registeredUserList;
+    }
     public Map<Integer, Store> getStoresList() {
         return storesList;
     }
-
-    private Map<Integer, Store> storesList;
-
     public Map<String, Map<Integer, Employment>> getEmploymentList() {
         return employmentList;
     }
 
-    private Map<String, Map<Integer, Employment>> employmentList;//
+    private Map<String, Map<Integer, Employment>> employmentList;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
 
@@ -150,7 +145,6 @@ public class Facade {
         // create new register user
         logger.info("new visitor has register");
         registeredUserList.put(userName, new RegisteredUser(userName, password));
-
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
@@ -189,17 +183,14 @@ public class Facade {
         return visitorId;
     }
 
-     public void addProductToCart(String productId, int visitorId) throws Exception {//2.3
+     public void addProductToCart(int productId,int storeId, int visitorId) throws Exception {//2.3
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("trying to add product from null user");
             throw  new Exception("Invalid Visitor ID");
         }
-        isValidProductId(productId);
         //Get product lock
         try {
-            int storeId = getStoreIdByProductId(productId);
-
             Store store = storesList.get(storeId);
             if (store == null) {
                 logger.warning("trying to add product to store that not exist");
@@ -209,7 +200,7 @@ public class Facade {
                 logger.warning("Add product to close store");
                 throw new Exception("this is closed Store");
             }
-            StoreProduct product = store.getProductByID(productId);//TO-DO(majd)
+            StoreProduct product = store.getProductByID(productId);
             if (product == null) {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
@@ -224,16 +215,14 @@ public class Facade {
     }
     
 
-    public void removeProductFromCart(String productId, int visitorId) throws Exception {
+    public void removeProductFromCart(int productId,int storeId, int visitorId) throws Exception {
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("Invalid Visitor ID");
             throw new Exception("Invalid Visitor ID");
         }
-        isValidProductId(productId);
         //Get product lock
         try {
-            int storeId = getStoreIdByProductId(productId);
 
             Store store = storesList.get(storeId);
             if (store == null) {
@@ -259,16 +248,16 @@ public class Facade {
     }
     
 
-   public void changeCartProductQuantity(String productId,int newAmount, int visitorId) throws Exception {
+   public void changeCartProductQuantity(int productId,int storeId,int newAmount, int visitorId) throws Exception {
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("Invalid Visitor ID");
             throw new Exception("Invalid Visitor ID");
         }
-        isValidProductId(productId);
+       // isValidProductId(productId);
         //Get product lock
         try {
-            int storeId = getStoreIdByProductId(productId);
+       //     int storeId = getStoreIdByProductId(productId);
 
             Store store = storesList.get(storeId);
             if (store == null) {
@@ -284,7 +273,7 @@ public class Facade {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
             }
-            user.removeProductFromCart(storeId, product);
+            user.changeCartProductQuantity(storeId, product,newAmount);
         } catch (Exception e) {
             //release lock
             logger.warning("Error occurred: " + e.getMessage());
@@ -555,7 +544,7 @@ public class Facade {
             logger.warning("visitor is null");
             throw new Exception("Invalid Visitor ID");
         }
-                
+
         LinkedList<String> failedPurchases = new LinkedList<>();
 
 
@@ -563,22 +552,22 @@ public class Facade {
 
             //Calculate amount
             double amount = b.calculateTotalAmount();
-           
+
             //Check if possible to create a supply
             if(!supplier.isValidAddress(address)){
                 logger.fine("we can avoid this supply");
-                failedPurchases.add(b.getStoreID());
+                failedPurchases.add(b.getStoreID().toString());
             }
-            
+
             //Create a transaction for the store
             if(!paymentProvider.applyTransaction(amount,visitorCard)){
-                failedPurchases.add(b.getStoreID());
+                failedPurchases.add(b.getStoreID().toString());
             }
             LinkedList<String> productsId = new LinkedList<>();
             productsId.add(b.bagToString());
             //Create a request to supply bag's product to customer
             if(!supplier.supplyProducts(productsId)){
-                failedPurchases.add(b.getStoreID());
+                failedPurchases.add(b.getStoreID().toString());
             }
             else{
                 if(visitor instanceof RegisteredUser){
@@ -589,9 +578,9 @@ public class Facade {
 
        }
         return failedPurchases;
-        
+
     }
-    public void addStoreRate(int visitorID,int storeID,int rate) throws Exception {
+    public void addStoreRate(int visitorID,int storeID,double rate) throws Exception {
         //Check if visitorID is logged in and registered to system
         logger.info("Entering method addStoreRate() with Visitor ID: " + visitorID +", Store ID: " + storeID + ", Rate: " + rate);
 
@@ -639,7 +628,7 @@ public class Facade {
         logger.info("Exiting method addStoreRateAndComment() with success");
 
     }
-   public void addProductRateAndComment(int visitorID,String productID,int rate,String comment) throws Exception {
+   public void addProductRateAndComment(int visitorID,int productID,int storeId,int rate,String comment) throws Exception {
         //Check if visitorID is logged in and registered to system
         logger.info("Entering method addProductRateAndComment() with visitorID: " + visitorID + ", productID: " + productID + ", rate: " + rate + ", and comment: " + comment);
 
@@ -649,9 +638,9 @@ public class Facade {
             throw new Exception("invalid visitor Id");
         }
 
-        isValidProductId(productID);
+       // isValidProductId(productID);
 
-        int storeId = getStoreIdByProductId(productID);
+       // int storeId = getStoreIdByProductId(productID);
 
         Store store = storesList.get(storeId);
         if (store == null) {
@@ -716,20 +705,19 @@ public class Facade {
     }
 
     //productRate
-    public double GetStoreProductRate(int visitorId,String ProductId) throws Exception {
+    public double GetStoreProductRate(int visitorId,Integer storeId,Integer productId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         if(User==null){
             logger.severe("Invalid visitor Id: " + visitorId);
             throw  new Exception("invalid visitor Id");
         }
-        int StoreId = StoreProduct.getStoreIdByProductId(ProductId);
-        Store store = storesList.get(StoreId);
+        Store store = storesList.get(storeId);
         if (store == null || !store.getActive()) {
             logger.warning(" store is null or the store is closed");
             throw  new Exception("there is no product with this id ");
         }
 
-        return store.getProductByID(ProductId).getRate();
+        return store.getProductByID(productId).getAverageRating();
 
     }
     //close store
@@ -772,7 +760,7 @@ public class Facade {
     }
     
     // ניהול מלאי 4.1
-    public String AddProduct(int visitorId,int storeId,String productName, double price, String category, int quantity,String description) throws Exception {
+    public Integer AddProduct(int visitorId,int storeId,String productName, double price, String category, int quantity,String description) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         //lock user
         //try
@@ -806,7 +794,7 @@ public class Facade {
         //throw e
     }
 
-    public void RemoveProduct(int visitorId, String ProductId)  throws Exception {
+    public void RemoveProduct(int visitorId,int storeId, int ProductId)  throws Exception {
         logger.fine("Entering method RemoveProduct() with visitorId: " + visitorId + ", ProductId: " + ProductId);
         SiteVisitor User = onlineList.get(visitorId);
         //lock user
@@ -816,10 +804,9 @@ public class Facade {
             logger.severe("Invalid visitor Id: " + visitorId);
             throw  new Exception("invalid visitor Id");
         }
-        int StoreId=StoreProduct.getStoreIdByProductId(ProductId);
         Employment employment = null;
         try{
-            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
         }catch (Exception e){
             logger.severe("User does not have any store: " + visitorId);
             throw  new Exception("this user dont have any store");
@@ -827,7 +814,7 @@ public class Facade {
         if (employment == null)
             throw  new Exception("there is no employee with this id ");
         if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
-            Store store = storesList.get(StoreId);
+            Store store = storesList.get(storeId);
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
             }
@@ -845,13 +832,13 @@ public class Facade {
     }
 
 
-    public void UpdateProductQuantity(int visitorId, String productID,int quantity) throws Exception{
+    public void UpdateProductQuantity(int visitorId,int storeId, int productID,int quantity) throws Exception{
         //lock product (get product object)
         //try
                 logger.fine("Entering method UpdateProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", quantity: " + quantity);
 
-        checkifUserCanUpdateStoreProduct(visitorId,productID);
-        Store store = storesList.get(StoreProduct.getStoreIdByProductId(productID));
+        checkifUserCanUpdateStoreProduct(visitorId,storeId,productID);
+        Store store = storesList.get(storeId);
         store.UpdateProductQuantity(productID,quantity);
                 logger.fine("Exiting method UpdateProductQuantity()");
 
@@ -861,14 +848,14 @@ public class Facade {
 
     }
 
-    public void IncreaseProductQuantity(int visitorId, String productID,int quantity) throws Exception{
+    public void IncreaseProductQuantity(int visitorId, int productId,int storeId,int quantity) throws Exception{
         //lock product (get product object)
         //try
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", quantity: " + quantity);
+                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", quantity: " + quantity);
 
-        checkifUserCanUpdateStoreProduct(visitorId,productID);
-        Store store = storesList.get(StoreProduct.getStoreIdByProductId(productID));
-        store.IncreaseProductQuantity(productID,quantity);
+        checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
+        Store store = storesList.get(storeId);
+        store.IncreaseProductQuantity(productId,quantity);
                 logger.fine("Exiting method IncreaseProductQuantity()");
 
         //catch
@@ -877,24 +864,24 @@ public class Facade {
 
     }
 
-    public void UpdateProductName(int visitorId, String productID,String Name) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", name: " + Name);
+    public void UpdateProductName(int visitorId, int productId,int storeId,String Name) throws Exception{
+                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", name: " + Name);
 
-        checkifUserCanUpdateStoreProduct(visitorId,productID);
-        Store store = storesList.get(StoreProduct.getStoreIdByProductId(productID));
-        store.UpdateProductName(productID,Name);
+        checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
+        Store store = storesList.get(storeId);
+        store.UpdateProductName(productId,Name);
         logger.fine("Exiting method UpdateProductName()");
 
     }
 
-    public void UpdateProductPrice(int visitorId, String productID,double price) throws Exception{
+    public void UpdateProductPrice(int visitorId, int productId,int storeId,double price) throws Exception{
         //lock product (get product object)
         //try
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", price: " + price);
+                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", price: " + price);
 
-        checkifUserCanUpdateStoreProduct(visitorId,productID);
-        Store store = storesList.get(getStoreIdByProductId(productID));
-        store.UpdateProductPrice(productID,price);
+        checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
+        Store store = storesList.get(storeId);
+        store.UpdateProductPrice(productId,price);
                 logger.fine("Exiting method UpdateProductPrice()");
 
         //catch
@@ -903,35 +890,34 @@ public class Facade {
 
     }
 
-    public void UpdateProductCategory(int visitorId, String productID,String category) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", category: " + category);
+    public void UpdateProductCategory(int visitorId, int productId,int storeId,String category) throws Exception{
+                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
 
-        checkifUserCanUpdateStoreProduct(visitorId,productID);
-        Store store = storesList.get(getStoreIdByProductId(productID));
-        store.UpdateProductCategory(productID,category);
+        checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
+        Store store = storesList.get(storeId);
+        store.UpdateProductCategory(productId,category);
                 logger.fine("Exiting method UpdateProductCategory()");
 
 
     }
 
-    public void UpdateProductDescription(int visitorId, String productID,String description) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", description: " + description);
+    public void UpdateProductDescription(int visitorId, int productId,int storeId,String description) throws Exception{
+                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
 
-        checkifUserCanUpdateStoreProduct(visitorId,productID);
-        Store store = storesList.get(getStoreIdByProductId(productID));
-        store.UpdateProductDescription(productID,description);
+        checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
+        Store store = storesList.get(productId);
+        store.UpdateProductDescription(productId,description);
         logger.fine("Exiting method UpdateProductDescription()");
 
     }
 
-    private void checkifUserCanUpdateStoreProduct(int visitorId, String productID) throws Exception {
+    private void checkifUserCanUpdateStoreProduct(int visitorId,int storeId, int productID) throws Exception {
         logger.info("Entering method checkifUserCanUpdateStoreProduct() with visitorId: " + visitorId + " and productID: " + productID);
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
             throw new Exception("invalid visitor Id");
         }
         Employment employment = null;
-        int storeId =StoreProduct.getStoreIdByProductId(productID);
         try{
             employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
         }catch (Exception e){
@@ -945,9 +931,6 @@ public class Facade {
                 throw new Exception("there is no store with this id ");
             }
             logger.info("Exiting method checkifUserCanUpdateStoreProduct() with success");
-
-            return;
-
             //return new Response<>("the Product is successfully added", false);
         }
         logger.info("Exiting method checkifUserCanUpdateStoreProduct() with failure");
@@ -956,60 +939,69 @@ public class Facade {
     }
     
     //2.2 search  product
-  public String SearchProductByName( String Name) throws Exception{
-        logger.info("Entering method SearchProductByName() with Name: " + Name);
-        String output ="";
-        try {
-            for (Store store : storesList.values()) {
-                output += store.SearchProductByName(Name).toString();
-            }
-        } catch (Exception e) {
-            // Log the exception
-            logger.log(Level.SEVERE, "An error occurred while searching product by name: " + Name, e);
-            throw e; // Rethrow the exception
-        }
-        logger.info("Exiting method SearchProductByName() with output: " + output);
 
-        return output;
-    }
-    
-
-    public String SearchProductByCategory( String Category) throws Exception {
-        logger.info("Entering method SearchProductByCategory() with Category: " + Category);
-        String output = "";
-        try {
-            for (Store store : storesList.values()) {
-                output += store.SearchProductByCategory(Category).toString();
-            }
-        } catch (Exception e) {
-            // Log the exception
-            logger.log(Level.SEVERE, "An error occurred while searching product by category: " + Category, e);
-            throw e; // Rethrow the exception
-        }
-        logger.info("Exiting method SearchProductByCategory() with output: " + output);
-        return output;
-    }
-
-    public List<String> SearchProductBykey( String key) {
-
-        logger.info("Entering method SearchProductByKey() with Key: " + key);
-
-        ArrayList<String> output = new ArrayList<>();
-        try {
-            for (Store store : storesList.values()) {
-                for (StoreProduct product : store.SearchProductByKey(key)) {
-                    output.add(product.toString());
-                }
-            }
-        } catch (Exception e) {
-            // Log the exception
-            logger.log(Level.SEVERE, "An error occurred while searching product by key: " + key, e);
-        }
-
-        logger.info("Exiting method SearchProductByKey() with output: " + output);
-        return output;
-
-    }
+    /**
+     * can be done with filter search
+     */
+  //public String SearchProductByName( String Name) throws Exception{
+  //      logger.info("Entering method SearchProductByName() with Name: " + Name);
+  //      String output ="";
+  //      try {
+  //          for (Store store : storesList.values()) {
+  //              output += store.SearchProductByName(Name).toString();
+  //          }
+  //      }
+  //      catch (Exception e) {
+  //          // Log the exception
+  //          logger.log(Level.SEVERE, "An error occurred while searching product by name: " + Name, e);
+  //          throw e; // Rethrow the exception
+  //      }
+  //      logger.info("Exiting method SearchProductByName() with output: " + output);
+//
+  //      return output;
+  //  }
+  //
+    /**
+     * can be done with filter search
+     */
+    //public String SearchProductByCategory( String Category) throws Exception {
+    //    logger.info("Entering method SearchProductByCategory() with Category: " + Category);
+    //    String output = "";
+    //    try {
+    //        for (Store store : storesList.values()) {
+    //            output += store.SearchProductByCategory(Category).toString();
+    //        }
+    //    } catch (Exception e) {
+    //        // Log the exception
+    //        logger.log(Level.SEVERE, "An error occurred while searching product by category: " + Category, e);
+    //        throw e; // Rethrow the exception
+    //    }
+    //    logger.info("Exiting method SearchProductByCategory() with output: " + output);
+    //    return output;
+    //}
+    /**
+     * can be done with filter search
+     */
+    //public List<String> SearchProductBykey( String key) {
+//
+    //    logger.info("Entering method SearchProductByKey() with Key: " + key);
+//
+    //    ArrayList<String> output = new ArrayList<>();
+    //    try {
+    //        for (Store store : storesList.values()) {
+    //            for (StoreProduct product : store.SearchProductByKey(key)) {
+    //                output.add(product.toString());
+    //            }
+    //        }
+    //    } catch (Exception e) {
+    //        // Log the exception
+    //        logger.log(Level.SEVERE, "An error occurred while searching product by key: " + key, e);
+    //    }
+//
+    //    logger.info("Exiting method SearchProductByKey() with output: " + output);
+    //    return output;
+//
+    //}
     
 //2.1
    public String GetInformation(int StoreId) throws Exception {

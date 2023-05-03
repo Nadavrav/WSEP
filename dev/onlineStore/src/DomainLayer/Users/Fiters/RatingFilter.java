@@ -1,7 +1,7 @@
 package DomainLayer.Users.Fiters;
 
 
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 
 public class RatingFilter implements Filter {
     private final int rating;
@@ -13,7 +13,7 @@ public class RatingFilter implements Filter {
 
     @Override
     public boolean PassFilter(StoreProduct product) {
-        return product.GetAverageRating() > rating;
+        return product.getAverageRating() > rating;
     }
 
 }

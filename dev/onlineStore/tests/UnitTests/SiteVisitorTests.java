@@ -1,9 +1,7 @@
 package UnitTests;
 
-import DomainLayer.Stores.StoreProduct;
-import DomainLayer.Users.Cart;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.SiteVisitor;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -85,15 +83,15 @@ class SiteVisitorTest {
 
     @Test
     void addProductToCart() {
-        StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
         int StoreId = 0;
         visitor.addProductToCart(StoreId,p1);
         assertEquals("Store Id : 0\nProduct Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n",visitor.getCart().cartToString());
     }
     @Test
     void addProductToCart_MulipleProducts() {
-        StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
-        StoreProduct p2 = new StoreProduct("0-1","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
+        StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProduct p2 = new StoreProduct(0,"Bread",7.2,"Bread",6,"Just a whole loaf of bread");
 
         int StoreId = 0;
         visitor.addProductToCart(StoreId,p1);
@@ -102,10 +100,10 @@ class SiteVisitorTest {
     }
     @Test
     void addProductToCart_MulipleProducts2() {
-        StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
-        StoreProduct p2 = new StoreProduct("0-1","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
-        StoreProduct p3 = new StoreProduct("0-2","Butter",3.4,"Butter",6,"A Golden Brick");
-        StoreProduct p4 = new StoreProduct("0-3","Eggs",6.8,"Eggs",6,"What came first?");
+        StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProduct p2 = new StoreProduct(0,"Bread",7.2,"Bread",6,"Just a whole loaf of bread");
+        StoreProduct p3 = new StoreProduct(2,"Butter",3.4,"Butter",6,"A Golden Brick");
+        StoreProduct p4 = new StoreProduct(2,"Eggs",6.8,"Eggs",6,"What came first?");
         int StoreId = 0;
         visitor.addProductToCart(StoreId,p1);
         visitor.addProductToCart(StoreId,p3);
@@ -113,10 +111,10 @@ class SiteVisitorTest {
     }
     @Test
     void addProductToCart_MulipleProductsDiffrentShops() {
-        StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
-        StoreProduct p2 = new StoreProduct("1-0","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
-        StoreProduct p3 = new StoreProduct("0-1","Butter",3.4,"Butter",6,"A Golden Brick");
-        StoreProduct p4 = new StoreProduct("1-1","Eggs",6.8,"Eggs",6,"What came first?");
+        StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProduct p2 = new StoreProduct(1,"Bread",7.2,"Bread",6,"Just a whole loaf of bread");
+        StoreProduct p3 = new StoreProduct(0,"Butter",3.4,"Butter",6,"A Golden Brick");
+        StoreProduct p4 = new StoreProduct(1,"Eggs",6.8,"Eggs",6,"What came first?");
         int StoreId1 = 0;
         int StoreId2 = 1;
         visitor.addProductToCart(StoreId1,p1);
@@ -128,8 +126,8 @@ class SiteVisitorTest {
     }
     @Test
     void cartToString_EmptyCart() {
-        StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
-        StoreProduct p2 = new StoreProduct("0-1","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
+        StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProduct p2 = new StoreProduct(0,"Bread",7.2,"Bread",6,"Just a whole loaf of bread");
         String expected = "";
         String actual = visitor.cartToString();
         assertEquals(expected,actual);
@@ -137,8 +135,8 @@ class SiteVisitorTest {
     }
     @Test
     void cartToString_NotEmptyCart() {
-        StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
-        StoreProduct p2 = new StoreProduct("0-1","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
+        StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProduct p2 = new StoreProduct(0,"Bread",7.2,"Bread",6,"Just a whole loaf of bread");
         int StoreId = 0;
         visitor.addProductToCart(StoreId,p1);
         visitor.addProductToCart(StoreId,p2);
