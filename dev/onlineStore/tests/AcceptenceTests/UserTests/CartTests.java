@@ -20,16 +20,15 @@ public class CartTests {
     private CreditCardProxy RealcreditProxy = new CreditCardProxy(); // A credit card Proxy class
     private CreditCardProxy FakecreditProxy = new CreditCardProxy(); // A credit card Proxy class
     @BeforeAll
-    public void Setup()
-    {
+    public void Setup() {
         assertTrue(bridge.EnterMarket());
-        assertTrue(bridge.Register(userName,password));
-        assertTrue(bridge.Login(userName,password));
-        storeId=bridge.OpenNewStore(storeName);
-        assertNotEquals(-1,storeId);
-        productId_MegaMilk = bridge.AddProduct(storeId,"Mega milk","Guaranteed to make bones stronger!",5,10);
-        productId_MegaMilk = bridge.AddProduct(storeId,"Ultra milk","Bones made of metal now!",7,10);
-      productId_MegaMilk = bridge.AddProduct(storeId,"Giga milk","bones made of diamond now!",10,10);
+        assertTrue(bridge.Register(userName, password));
+        assertTrue(bridge.Login(userName, password));
+        storeId = bridge.OpenNewStore(storeName);
+        assertNotEquals(-1, storeId);
+        productId_MegaMilk = bridge.AddProduct(storeId, "Mega milk", "Guaranteed to make bones stronger!", 5, 10);
+        productId_MegaMilk = bridge.AddProduct(storeId, "Ultra milk", "Bones made of metal now!", 7, 10);
+        productId_MegaMilk = bridge.AddProduct(storeId, "Giga milk", "bones made of diamond now!", 10, 10);
         assertTrue(bridge.Logout());
         assertTrue(bridge.ExitMarket());
         this.RealcreditProxy.setReal();

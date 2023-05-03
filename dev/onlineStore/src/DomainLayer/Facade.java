@@ -318,7 +318,7 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if (appointerEmployment == null || !appointerEmployment.checkIfOwner()) {
+        if (appointerEmployment == null || (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfCanAppointStoreOwner())) {
             throw  new Exception("the appointer is not owner of store id");
         }
         // check if appointedUserName is registered
@@ -446,7 +446,7 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
+        if(appointerEmployment==null|| (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfCanChangePermissionsForStoreManager())){
             throw  new Exception("the appointer is not owner of store id");
         }
 
@@ -468,6 +468,11 @@ public class Facade {
 
         if(appointedEmployment == null ||!appointedEmployment.checkIfManager()){
             throw  new Exception("The given username is not manager of the given store");
+        }
+
+        if(permissions==null || permissions.size()==0)
+        {
+            throw new IllegalArgumentException("Permissions list can not be empty");
         }
 
         //Change permission
@@ -765,9 +770,9 @@ public class Facade {
             logger.warning("employment is null");
             throw  new Exception("there is no employee with this id ");
         }
-        if (!employment.checkIfOwner()) {//check if need manager
-            logger.warning("user are not the manager trying to add");
-            throw  new Exception("you are not the owner of this store ");
+        if (!employment.checkIfOwner() && !employment.checkIfCanManageStock()) {//check if need manager
+            logger.warning("You don't have permission for that");
+            throw  new Exception("You don't have permission for that");
         }
         return store.AddNewProduct(productName,price,quantity,category,description);
         //catch
@@ -795,7 +800,7 @@ public class Facade {
         }
         if (employment == null)
             throw  new Exception("there is no employee with this id ");
-        if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
+        if (employment.checkIfOwner() || employment.checkIfCanManageStock()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
@@ -908,7 +913,7 @@ public class Facade {
         }
         if (employment == null)
             throw new Exception("invalid store id ");
-        if (employment.checkIfOwner()) {
+        if (employment.checkIfOwner() || employment.checkIfCanManageStock()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw new Exception("there is no store with this id ");
@@ -921,7 +926,7 @@ public class Facade {
         }
         logger.info("Exiting method checkifUserCanUpdateStoreProduct() with failure");
 
-        throw new Exception("Just the owner can Close the Store ");
+        throw new Exception("You do not have permission to update store product ");
     }
     
     //2.2 search  product
@@ -967,7 +972,7 @@ public class Facade {
         try {
             for (Store store : storesList.values()) {
                 for (StoreProduct product : store.SearchProductByKey(key)) {
-                    output.add(product.toString());
+                    output.add(product.getName());
                 }
             }
         } catch (Exception e) {

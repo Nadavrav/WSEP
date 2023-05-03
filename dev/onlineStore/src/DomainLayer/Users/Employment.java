@@ -107,6 +107,39 @@ public class Employment {
         return isStoreManager;
 
     }
+
+    public boolean checkIfCanManageStock(){
+        boolean canManageStock = permissions.contains(Permission.CanManageStock);
+        if (canManageStock) {
+            logger.info("User can manage store.");
+        } else {
+            logger.info("User can't manage store.");
+        }
+        return canManageStock;
+    }
+
+    public boolean checkIfCanAppointStoreOwner(){
+        boolean canAppointStoreOwner = permissions.contains(Permission.CanAppointStoreOwner);
+        if (canAppointStoreOwner) {
+            logger.info("User can appoint store owner.");
+        } else {
+            logger.info("User can't appoint store owner.");
+        }
+        return canAppointStoreOwner;
+    }
+
+    public boolean checkIfCanChangePermissionsForStoreManager(){
+        boolean canChangePermissionsForStoreManager = permissions.contains(Permission.CanChangePermissionsForStoreManager);
+        if (canChangePermissionsForStoreManager) {
+            logger.info("User can change permissions for store manager.");
+        } else {
+            logger.info("User can't change permissions for store manager.");
+        }
+        return canChangePermissionsForStoreManager;
+    }
+
+
+
     @Override
     public String toString() {
         return "Employment{" +

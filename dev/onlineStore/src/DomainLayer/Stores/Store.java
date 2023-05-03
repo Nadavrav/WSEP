@@ -154,7 +154,13 @@ public class Store {
     }
     
    public List<StoreProduct> SearchProductByKey(String key) throws Exception {
-        LinkedList<StoreProduct> searchResults = new LinkedList<StoreProduct>();
+
+        if(key==null || key.equals(""))
+        {
+            throw new IllegalArgumentException("Key to search by can't be empty");
+        }
+
+        LinkedList<StoreProduct> searchResults = new LinkedList<>();
         if (getActive()) {
             for (StoreProduct product : this.products.values()) {
                 if (product.getName().contains(key)|| product.getCategory().contains(key)||product.getDescription().contains(key)) {
