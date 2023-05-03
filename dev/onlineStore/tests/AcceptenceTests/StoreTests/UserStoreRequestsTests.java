@@ -425,10 +425,10 @@ public class UserStoreRequestsTests {
         assertFalse(nameSearch.contains(ServiceSausage));
         assertFalse(nameSearch.contains(ServiceSteak));
         //testing name and price filters
-        assertTrue(nameSearch.contains(ServiceHamburger));
-        assertFalse(nameSearch.contains(ServiceCheeseburger));
-        assertFalse(nameSearch.contains(ServiceSausage));
-        assertFalse(nameSearch.contains(ServiceSteak));
+        assertTrue(nameAndPriceSearch.contains(ServiceHamburger));
+        assertFalse(nameAndPriceSearch.contains(ServiceCheeseburger));
+        assertFalse(nameAndPriceSearch.contains(ServiceSausage));
+        assertFalse(nameAndPriceSearch.contains(ServiceSteak));
     }
 
     @Order(21)

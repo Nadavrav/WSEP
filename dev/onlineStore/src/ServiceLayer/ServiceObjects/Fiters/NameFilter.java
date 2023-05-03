@@ -9,7 +9,7 @@ public class NameFilter implements Filter{
     }
     @Override
     public boolean PassFilter(StoreProduct product) {
-        return product.getName().equals(name);
+        return product.getName().contains(name);
     }
 
 }
