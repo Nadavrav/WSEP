@@ -20,7 +20,8 @@ public class PurchaseRecord {
     }
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof PurchaseRecord eq){
+        if(obj instanceof PurchaseRecord ){
+            PurchaseRecord eq = new PurchaseRecord(serviceProduct,userName);
             return userName.equals(eq.getUserName()) && serviceProduct.equals(eq.getServiceProduct());
         }
         return false;

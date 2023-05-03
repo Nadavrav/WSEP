@@ -27,7 +27,8 @@ public class ServiceProduct {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof ServiceProduct eq){
+        if(obj instanceof ServiceProduct ){
+            ServiceProduct eq = new ServiceProduct(Name,Price,Category,Description,Rating);
             return Name.equals(eq.Name) && Description.equals(eq.Description);
         }
         return false;
