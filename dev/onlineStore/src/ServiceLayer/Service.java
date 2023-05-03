@@ -7,6 +7,7 @@ import DomainLayer.Users.*;
 
 import ServiceLayer.ServiceObjects.Fiters.Filter;
 
+
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
@@ -420,6 +421,18 @@ public class Service {
     public Response<List<String>> PurchaseCart(int visitorCard, String address){
         try{
             return new Response<>(facade.purchaseCart(visitorId,visitorCard,address));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<List<ServiceUser>> getRegisteredUsersInfo(){
+        try {
+            ArrayList<ServiceUser> serviceUsers = new ArrayList<>();
+            Map<String, RegisteredUser> userMap = facade.getRegisteredUserList(visitorId);
+            for (RegisteredUser registeredUser : userMap.values())
+                serviceUsers.add(new ServiceUser(registeredUser));
+            return new Response<>(serviceUsers);
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
