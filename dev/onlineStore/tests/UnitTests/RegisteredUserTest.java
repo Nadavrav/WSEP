@@ -17,7 +17,8 @@ class RegisteredUserTest {
         try {
             user = new RegisteredUser("ValidUserName", "123456789");
             assertEquals("ValidUserName",user.getUserName());
-            assertEquals("123456789",user.getPassword());
+           // assertEquals("123456789",user.getPassword()); //think it's bad to add hash/password getters
+            user.login("123456789",10);
         }
         catch (Exception e)
         {
