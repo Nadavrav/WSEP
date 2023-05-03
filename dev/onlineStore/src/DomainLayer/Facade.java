@@ -1,11 +1,8 @@
 package DomainLayer;
 
 
-import DomainLayer.Stores.History;
-
 import DomainLayer.Stores.InstantPurchase;
 import DomainLayer.Logging.UniversalHandler;
-import java.util.logging.*;
 
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.StoreProduct;
@@ -15,11 +12,7 @@ import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 
 import java.util.*;
-import java.io.IOException;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import java.util.logging.Level;
 
 import static DomainLayer.Stores.StoreProduct.getStoreIdByProductId;
@@ -66,6 +59,7 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
+        registerInitialAdmin();
     }
 
     /**
@@ -101,7 +95,44 @@ public class Facade {
         onlineList.remove(id);
         logger.info("A  visitor with Id:" + id + "has Exit");
     }
+    public synchronized void registerAdmin(int visitorid,String userName,String password) throws Exception{
+        logger.info("Starting admin registration");
+        if(!(onlineList.get(visitorid) instanceof Admin)){
+            logger.info("Failed admin registration: only admin can register other admins");
+            throw new Exception("Only admins can register another admin");
+        }
+        if(registeredUserList.containsKey(userName)) {
+            logger.info("Failed admin registration: username already exists");
+            throw new Exception("Username " + userName + " already exists");
+        }
+        else{
+            Admin admin=new Admin(userName, password);
+            registeredUserList.replace(userName,admin);
+            logger.fine("New admin successfully registered");
+        }
 
+    }
+    private void registerInitialAdmin() {
+        logger.info("Starting initial admin registration");
+        if(registeredUserList.containsKey("admin")) {
+            logger.severe("Failed initial admin registration: username already exists." +
+                    "should no happen");
+            throw new RuntimeException("Username " + "admin" + " already exists");
+        }
+        else{
+            try {
+                Admin admin = new Admin("admin", "admin");
+                registeredUserList.replace("admin",admin);
+
+            }
+            catch (Exception e) {
+                logger.severe("Unexpected error during initial admin registration");
+                throw new RuntimeException(e);
+            }
+            logger.fine("Initial admin successfully registered");
+        }
+
+    }
     public synchronized void Register(int visitorId, String userName, String password) throws Exception {//1.3
         //Valid visitorID
         if (!SiteVisitor.checkVisitorId(visitorId)) {
