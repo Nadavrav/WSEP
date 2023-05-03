@@ -155,6 +155,9 @@ public class ProxyBridge implements Bridge {
     }
 
     @Override
+    public boolean PurchaseCart(int credit,String address){return  false;};
+
+    @Override
     public int GetItemQuantity(String productId) {
         return 0;
     }

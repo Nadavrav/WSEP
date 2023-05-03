@@ -187,6 +187,10 @@ public class RealBridge implements Bridge {
         return false; //TODO: NIKITA
     }
 
+    public boolean PurchaseCart(int credit,String address) {
+        return !service.PurchaseCart(credit,address).isError();
+    }
+
     @Override
     public int GetItemQuantity(String productId) {
         return 5;

@@ -35,7 +35,7 @@ public class Store {
         Name = name;
         History = new History();
         products = new ConcurrentHashMap<>();
-
+        RateMapForStore = new ConcurrentHashMap<>();
         this.Active=true;
 
     }

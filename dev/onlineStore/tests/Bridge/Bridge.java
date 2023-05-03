@@ -213,6 +213,14 @@ public interface Bridge {
      */
     boolean PurchaseCart(CreditCardProxy credit);
 
+    /** TODO NEED TO DELETE THIS FUNCTION AFTER IMPLEMENTING PURCHASE FUNCTION
+     *
+     * @param credit - the card number
+     * @param address - the address to send products
+     * @return true if done successfully, false othewise
+     */
+
+    public boolean PurchaseCart(int credit,String address);
     /**
      * A function to get a requested item quantity
      * @param productId - the id of the item

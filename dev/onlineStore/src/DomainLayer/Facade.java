@@ -532,6 +532,10 @@ public class Facade {
                 
         LinkedList<String> failedPurchases = new LinkedList<>();
 
+        if(visitor.getCart().getBags() == null)
+        {
+            throw new Exception("Can't purchase anything since cart is empty");
+        }
 
         for(Bag b : visitor.getCart().getBags().values()){
 

@@ -391,10 +391,11 @@ public class UserStoreRequestsTests {
     }
 
     public void FilterSearchPrep() {
+        bridge.Login(StoreFounder.getUserName(), StoreFounder.getPassword());
         String Hamburger = bridge.AddProduct(store1, "Hamburger", "contains beef and good taste. kosher", 30, 70);
         String Sausage = bridge.AddProduct(store1, "Sausage", "contains beef and lots of oil. kosher", 15, 120); //Ok
-        String Steak = bridge.AddProduct(store3, "Steak", "99% beef, 1% olive oil. kosher", 70, 35); //Ok
-        String Cheeseburger = bridge.AddProduct(store3, "Cheeseburger", "contains cheese and beef", 40, 70); //Ok
+        String Steak = bridge.AddProduct(store1, "Steak", "99% beef, 1% olive oil. kosher", 70, 35); //Ok
+        String Cheeseburger = bridge.AddProduct(store1, "Cheeseburger", "contains cheese and beef", 40, 70); //Ok
         productIdMap.put("Hamburger", Hamburger);
         productIdMap.put("Sausage", Sausage);
         productIdMap.put("Steak", Steak);
@@ -404,7 +405,7 @@ public class UserStoreRequestsTests {
     @Order(20)
     @Test
     public void FilterSearchTests() {
-      /*  FilterSearchPrep();
+        FilterSearchPrep();
         ServiceProduct ServiceHamburger = new ServiceProduct("Hamburger", 30.0, "test", "contains beef and good taste. kosher", 5);
         ServiceProduct ServiceSausage = new ServiceProduct("Sausage", 15.0, "test", "contains beef and lots of oil. kosher", 5);
         ServiceProduct ServiceSteak = new ServiceProduct("Steak", 70.0, "test", "99% beef, 1% olive oil. kosher", 5);
@@ -427,13 +428,15 @@ public class UserStoreRequestsTests {
         assertTrue(nameSearch.contains(ServiceHamburger));
         assertFalse(nameSearch.contains(ServiceCheeseburger));
         assertFalse(nameSearch.contains(ServiceSausage));
-        assertFalse(nameSearch.contains(ServiceSteak));*/
+        assertFalse(nameSearch.contains(ServiceSteak));
     }
 
     @Order(21)
     @Test
     public void StoreRatingTests() {
         bridge.Login(Customer.getUserName(), Customer.getPassword());
+        bridge.addToCart("0-1");
+        bridge.PurchaseCart(123,"fakeaddress");
         assertTrue(bridge.RateStore(store1, 4));
         assertFalse(bridge.RateStore(nonExistentStore, 4)); //invalid store
         assertFalse(bridge.RateStore(store1, 6)); //invalid rating
@@ -455,6 +458,6 @@ public class UserStoreRequestsTests {
         bridge.Login(Customer.getUserName(), Customer.getPassword());
         assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"), "I wanted bacon", 2));
         assertFalse(bridge.RateAndCommentOnProduct("nothing", "I wanted bacon", 2)); //invalid product
-        assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"), "I wanted bacon", 6)); //invalid rating
+        assertFalse(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"), "I wanted bacon", 6)); //invalid rating
     }
 }
