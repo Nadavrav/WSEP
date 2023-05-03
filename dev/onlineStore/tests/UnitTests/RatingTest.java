@@ -10,7 +10,7 @@ class RatingTest {
     @Test
     void CreateRate_Good() {
         rate = new Rating(3);
-        assertEquals(3,rate.getRate());
+        assertEquals(3,rate.getRating());
     }
     @Test
     void CreateRate_BadRating() {
@@ -24,7 +24,7 @@ class RatingTest {
     void CreateRateWithComment_Good() {
         String comment = "Great product";
         rate = new Rating(5,comment);
-        assertEquals(5,rate.getRate());
+        assertEquals(5,rate.getRating());
         assertEquals(comment,rate.getComment());
     }
     @Test
@@ -49,19 +49,19 @@ class RatingTest {
     void addRate_good() {
         int newRating = 5;
         rate = new Rating(3);
-        rate.addRate(newRating);
-        assertEquals(newRating,rate.getRate());
+        rate.setRating(newRating);
+        assertEquals(newRating,rate.getRating());
     }
     @Test
     void addRate_BadVal() {
         int newRating = 8;
         rate = new Rating(3);
-        assertThrows(IllegalArgumentException.class,()->rate.addRate(newRating));
+        assertThrows(IllegalArgumentException.class,()->rate.setRating(newRating));
     }
     @Test
     void addRate_NegVal() {
         int newRating = -8;
         rate = new Rating(3);
-        assertThrows(IllegalArgumentException.class,()->rate.addRate(newRating));
+        assertThrows(IllegalArgumentException.class,()->rate.setRating(newRating));
     }
 }

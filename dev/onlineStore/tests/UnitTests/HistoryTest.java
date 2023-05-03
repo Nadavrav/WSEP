@@ -1,7 +1,7 @@
 package UnitTests;
 
 import DomainLayer.Stores.History;
-import DomainLayer.Stores.StoreProduct;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.Cart;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ class HistoryTest {
     void setup(){
         shoppingCart = new Cart();
         h= new History();
-        StoreProduct p1 = new StoreProduct("0-0","Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
         int StoreId = 0;
         shoppingCart.addProductToCart(StoreId,p1);
     }
@@ -30,9 +30,9 @@ class HistoryTest {
     }
     @Test
     void addPurchasedShoppingCart_Multiple() {
-        StoreProduct p2 = new StoreProduct("1-0","Bread",7.2,"Bread",6,"Just a whole loaf of bread");
-        StoreProduct p3 = new StoreProduct("0-1","Butter",3.4,"Butter",6,"A Golden Brick");
-        StoreProduct p4 = new StoreProduct("1-1","Eggs",6.8,"Eggs",6,"What came first?");
+        StoreProduct p2 = new StoreProduct(1,"Bread",7.2,"Bread",6,"Just a whole loaf of bread"); //store 0
+        StoreProduct p3 = new StoreProduct(0,"Butter",3.4,"Butter",6,"A Golden Brick"); //store 0
+        StoreProduct p4 = new StoreProduct(1,"Eggs",6.8,"Eggs",6,"What came first?"); //store 1
         int StoreId1 = 0;
         int StoreId2 = 1;
         shoppingCart.addProductToCart(StoreId1,p3);

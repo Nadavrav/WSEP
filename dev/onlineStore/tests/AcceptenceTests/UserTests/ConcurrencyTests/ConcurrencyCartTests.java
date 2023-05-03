@@ -23,10 +23,10 @@ public class ConcurrencyCartTests {
     private final String password2 = "9876543211";
     private final String storeName = "Super";
     private int storeId=-1;
-    private String productId_MegaMilk = "-1";//Product that exits
-    private String productId_UltraMilk = "-1";//Product that exits
-    private String productId_GigaMilk = "-1";//Product that exits
-    private final String badProductId = "-1";//Product that doesn't exist
+    private int productId_MegaMilk = -1;//Product that exits
+    private int productId_UltraMilk = -1;//Product that exits
+    private int productId_GigaMilk = -1;//Product that exits
+    private final int badProductId = -1;//Product that doesn't exist
     private CreditCardProxy RealcreditProxy = new CreditCardProxy(); // A credit card Proxy class
     @BeforeAll
     public void Setup()
@@ -38,8 +38,8 @@ public class ConcurrencyCartTests {
         storeId=bridge.OpenNewStore(storeName);
         assertNotEquals(-1,storeId);
         productId_MegaMilk = bridge.AddProduct(storeId,"Mega milk","Guaranteed to make bones stronger!",5,1);
-        productId_MegaMilk = bridge.AddProduct(storeId,"Ultra milk","Bones made of metal now!",7,10);
-        productId_MegaMilk = bridge.AddProduct(storeId,"Giga milk","bones made of diamond now!",10,10);
+        productId_UltraMilk = bridge.AddProduct(storeId,"Ultra milk","Bones made of metal now!",7,10);
+        productId_GigaMilk = bridge.AddProduct(storeId,"Giga milk","bones made of diamond now!",10,10);
         assertTrue(bridge.Logout());
         this.RealcreditProxy.setReal();
     }
@@ -50,8 +50,8 @@ public class ConcurrencyCartTests {
         final Service user2=new Service();
         user1.EnterNewSiteVisitor();
         user2.EnterNewSiteVisitor();
-        Future<Boolean> f1=executor.submit(() -> {user1.login(userName2,password2); user1.addProductToCart(productId_MegaMilk); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
-        Future<Boolean> f2=executor.submit(() -> {user2.login(userName1,password1); user1.addProductToCart(productId_MegaMilk); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
+        Future<Boolean> f1=executor.submit(() -> {user1.login(userName2,password2); user1.addProductToCart(productId_MegaMilk,storeId ); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
+        Future<Boolean> f2=executor.submit(() -> {user2.login(userName1,password1); user1.addProductToCart(productId_MegaMilk,storeId ); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
         try {
             boolean r1=f1.get();
             boolean r2=f2.get();

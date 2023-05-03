@@ -1,6 +1,6 @@
 package ServiceLayer.ServiceObjects;
 
-import java.time.LocalDateTime;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
 public class PurchaseRecord {
     private final ServiceProduct serviceProduct;
