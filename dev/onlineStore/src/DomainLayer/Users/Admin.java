@@ -6,4 +6,5 @@ public class Admin extends RegisteredUser{
         super(userName,  password);
 
     }
+
 }
