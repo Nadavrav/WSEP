@@ -29,7 +29,7 @@
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
-      <component id="f54b3" class="javax.swing.JButton" binding="btn_signin">
+      <component id="f54b3" class="javax.swing.JButton" binding="signin_btn">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -38,7 +38,7 @@
           <text value="SIGN IN"/>
         </properties>
       </component>
-      <component id="be056" class="javax.swing.JButton" binding="btn_newuser">
+      <component id="be056" class="javax.swing.JButton" binding="newuser_btn">
         <constraints>
           <grid row="2" column="4" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -56,38 +56,6 @@
         <border type="none"/>
         <children/>
       </grid>
-      <component id="aade4" class="javax.swing.JTextField" binding="s1name">
-        <constraints>
-          <grid row="5" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <background color="-5131596"/>
-          <editable value="false"/>
-          <enabled value="true"/>
-          <font swing-font="DesktopIcon.font"/>
-          <foreground color="-12828863"/>
-          <horizontalAlignment value="0"/>
-          <text value="STORE1NAME"/>
-        </properties>
-      </component>
-      <component id="aefdd" class="javax.swing.JTextField" binding="s2name">
-        <constraints>
-          <grid row="5" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <background color="-5131596"/>
-          <editable value="false"/>
-          <enabled value="true"/>
-          <font swing-font="DesktopIcon.font"/>
-          <foreground color="-12828863"/>
-          <horizontalAlignment value="0"/>
-          <text value="STORE2NAME"/>
-        </properties>
-      </component>
       <component id="dc15d" class="javax.swing.JTextField" binding="s3name">
         <constraints>
           <grid row="5" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
@@ -102,22 +70,6 @@
           <foreground color="-12828863"/>
           <horizontalAlignment value="0"/>
           <text value="STORE3NAME"/>
-        </properties>
-      </component>
-      <component id="5505b" class="javax.swing.JTextField" binding="s5name">
-        <constraints>
-          <grid row="6" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <background color="-5131596"/>
-          <editable value="false"/>
-          <enabled value="true"/>
-          <font swing-font="DesktopIcon.font"/>
-          <foreground color="-12828863"/>
-          <horizontalAlignment value="0"/>
-          <text value="STORE5NAME"/>
         </properties>
       </component>
       <component id="44bb4" class="javax.swing.JTextField" binding="s4name">
@@ -326,6 +278,31 @@
           <foreground color="-12828863"/>
           <horizontalAlignment value="0"/>
           <text value="WELCOME TO STORE SHOP"/>
+        </properties>
+      </component>
+      <component id="5505b" class="javax.swing.JTextField" binding="s5name">
+        <constraints>
+          <grid row="6" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties>
+          <background color="-5131596"/>
+          <editable value="false"/>
+          <enabled value="true"/>
+          <font swing-font="DesktopIcon.font"/>
+          <foreground color="-12828863"/>
+          <horizontalAlignment value="0"/>
+          <text value="STORE5NAME"/>
+        </properties>
+      </component>
+      <component id="9e408" class="javax.swing.JLabel" binding="s1name">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <enabled value="false"/>
+          <text value="STORE1NAME"/>
         </properties>
       </component>
     </children>

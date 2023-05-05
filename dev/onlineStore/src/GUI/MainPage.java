@@ -3,10 +3,8 @@ package GUI;
 import javax.swing.*;
 
 public class MainPage {
-    private JButton btn_signin;
-    private JButton btn_newuser;
-    private JTextField s1name;
-    private JTextField s2name;
+    private JButton signin_btn;
+    private JButton newuser_btn;
     private JTextField s3name;
     private JTextField s4name;
     private JTextField s5name;
@@ -17,4 +15,5 @@ public class MainPage {
     private JTextField p4name;
     private JTextField suggestedStoresTextField;
     private JTextField WELCOMETOSTORESHOPTextField;
+    private JLabel s1name;
 }
