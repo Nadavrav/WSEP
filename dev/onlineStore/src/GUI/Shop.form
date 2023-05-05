@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="GUI.Shop">
+  <grid id="27dc6" layout-manager="GridLayoutManager" row-count="7" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="733" height="407"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <hspacer id="819c6">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="8" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="89c30" class="javax.swing.JButton" binding="signin_btn">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="SIGN IN"/>
+        </properties>
+      </component>
+      <component id="5ce33" class="javax.swing.JLabel" binding="s1name">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="STORE1NAME"/>
+        </properties>
+      </component>
+      <component id="3aafc" class="javax.swing.JLabel" binding="s2name">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="STORE2NAME"/>
+        </properties>
+      </component>
+      <component id="6eae8" class="javax.swing.JLabel" binding="s3name">
+        <constraints>
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="STORE3NAME"/>
+        </properties>
+      </component>
+      <component id="b43f8" class="javax.swing.JLabel" binding="s4name">
+        <constraints>
+          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="STORE4NAME"/>
+        </properties>
+      </component>
+      <component id="5192d" class="javax.swing.JLabel" binding="s5name">
+        <constraints>
+          <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="STORE5NAME"/>
+        </properties>
+      </component>
+      <component id="6dc9d" class="javax.swing.JLabel" binding="s6name">
+        <constraints>
+          <grid row="4" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="STORE6NAME"/>
+        </properties>
+      </component>
+      <component id="b0ea0" class="javax.swing.JLabel" binding="p1name">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="PRODUCT1NAME"/>
+        </properties>
+      </component>
+      <component id="772b7" class="javax.swing.JLabel" binding="p2name">
+        <constraints>
+          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="PRODUCT2NAME"/>
+        </properties>
+      </component>
+      <component id="aa04e" class="javax.swing.JLabel" binding="p3name">
+        <constraints>
+          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="PRODUCT3NAME"/>
+        </properties>
+      </component>
+      <component id="4fb15" class="javax.swing.JLabel" binding="p4name">
+        <constraints>
+          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="PRODUCT4NAME"/>
+        </properties>
+      </component>
+      <component id="4da8" class="javax.swing.JLabel" binding="p5name">
+        <constraints>
+          <grid row="6" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="PRODUCT5NAME"/>
+        </properties>
+      </component>
+      <component id="27062" class="javax.swing.JLabel" binding="p6name">
+        <constraints>
+          <grid row="6" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="PRODUCT6NAME"/>
+        </properties>
+      </component>
+      <component id="4344c" class="javax.swing.JButton" binding="newuser_btn">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="NEW USER"/>
+        </properties>
+      </component>
+      <component id="13508" class="javax.swing.JTextArea" binding="welcome_txt">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="WELCOME TO STORE SHOP"/>
+        </properties>
+      </component>
+      <component id="4a8e7" class="javax.swing.JTextArea" binding="suggestedStores_txt">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Suggested Stores"/>
+        </properties>
+      </component>
+      <component id="786f6" class="javax.swing.JTextArea" binding="suggestedProducts_txt">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="5" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="50"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Suggested Products"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
