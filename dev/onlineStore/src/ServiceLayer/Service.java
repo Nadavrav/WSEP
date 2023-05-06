@@ -5,11 +5,12 @@ import DomainLayer.Response;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
 
-import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
 
-import ServiceLayer.ServiceObjects.ServiceCart;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceUser;
 
 import java.util.*;
 
@@ -114,7 +115,7 @@ public class Service {
     }
 
 
-    public Response<?> getProductsInMyCart() {//2.4
+    public Response<String> getProductsInMyCart() {//2.4
         String products;
         try {
             products = facade.getProductsInMyCart(visitorId);
@@ -378,9 +379,9 @@ public class Service {
    // }
 
     //2.1
-    public Response<List<ServiceProduct>> FilterProductSearch(List<Filter> filters){
+    public Response<List<ServiceProduct>> FilterProductSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
         try{
-            List<StoreProduct> StoreProducts=Facade.getInstance().FilterProductSearch(filters);
+            List<StoreProduct> StoreProducts=Facade.getInstance().FilterProductSearch(storeFilters,productFilters);
             List<ServiceProduct> products=new ArrayList<>();
             for(StoreProduct product:StoreProducts){
                 products.add(new ServiceProduct(product));

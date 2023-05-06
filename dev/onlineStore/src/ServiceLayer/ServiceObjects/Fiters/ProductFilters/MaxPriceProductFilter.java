@@ -1,11 +1,11 @@
-package DomainLayer.Users.Fiters;
+package ServiceLayer.ServiceObjects.Fiters.ProductFilters;
 
 import DomainLayer.Stores.Products.StoreProduct;
 
-public class MaxPriceFilter implements Filter {
+public class MaxPriceProductFilter implements ProductFilter {
     private final Integer max;
 
-    public MaxPriceFilter(Integer max) {
+    public MaxPriceProductFilter(Integer max) {
         this.max = max;
     }
 

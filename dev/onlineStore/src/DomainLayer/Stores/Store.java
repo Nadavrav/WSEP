@@ -3,8 +3,11 @@ import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -236,6 +239,21 @@ public class Store {
 
     public void UpdateProductDescription(Integer productId, String description) {
         products.get(productId).setDescription(description);
+    }
+    public List<StoreProduct> filterProducts(List<ProductFilter> productFilters){
+        ArrayList<StoreProduct> filteredProducts=new ArrayList<>();
+        for (StoreProduct product: products.values()) { //for each product in store
+            boolean passedFilter = true;
+            for (ProductFilter productFilter : productFilters) { //for each productFilter
+                if (!productFilter.PassFilter(product)) { //product has to pass all productFilters
+                    passedFilter = false;
+                    break; //if we don't pass a productFilter, we exit from the productFilter loop-no need to check the rest
+                }
+            }
+            if (passedFilter)
+                filteredProducts.add(product);
+        }
+        return filteredProducts;
     }
    public void addRating(String userName ,double rate) {
         if(!rateMapForStore.containsKey(userName)){

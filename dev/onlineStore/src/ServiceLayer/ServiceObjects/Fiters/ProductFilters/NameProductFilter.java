@@ -1,10 +1,10 @@
-package DomainLayer.Users.Fiters;
+package ServiceLayer.ServiceObjects.Fiters.ProductFilters;
 
 import DomainLayer.Stores.Products.StoreProduct;
 
-public class NameFilter implements Filter{
+public class NameProductFilter implements ProductFilter {
     private final String name;
-    public NameFilter(String name){
+    public NameProductFilter(String name){
         this.name=name;
     }
     @Override
