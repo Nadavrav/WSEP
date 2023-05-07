@@ -33,7 +33,6 @@ public class Bag {
     
     public void addProduct(StoreProduct product) {
         logger.info("Starting add product");
-        CartProduct cartProduct=new CartProduct(product);
         if(productList.get(product)!=null)
             throw new RuntimeException("Cart already contains "+product.getName());
         productList.put(product,new CartProduct(product));

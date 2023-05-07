@@ -8,7 +8,7 @@ import DomainLayer.Users.*;
 import ServiceLayer.ServiceObjects.Fiters.Filter;
 
 
-import ServiceLayer.ServiceObjects.ServiceCart;
+import ServiceLayer.ServiceObjects.*;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
 import java.util.*;
@@ -60,7 +60,8 @@ public class Service {
         try{
             facade.login(visitorId,userName,password);
 
-        }catch (Exception e){
+        }
+        catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
         return new Response<>("Success");
@@ -71,8 +72,8 @@ public class Service {
 
         try{
             visitorId=facade.logout(visitorId);
-
-        }catch (Exception e){
+        }
+        catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
         return new Response<>(visitorId);
