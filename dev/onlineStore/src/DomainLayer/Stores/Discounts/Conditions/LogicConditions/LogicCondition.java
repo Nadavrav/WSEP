@@ -6,7 +6,10 @@ public abstract class LogicCondition implements Condition {
     protected Condition firstCondition;
     protected Condition secondCondition;
 
-
+    public LogicCondition(Condition firstCondition,Condition secondCondition){
+        this.firstCondition=firstCondition;
+        this.secondCondition=secondCondition;
+    }
     public Condition getFirstCondition() {
         return firstCondition;
     }

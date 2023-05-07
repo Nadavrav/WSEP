@@ -1,38 +1,28 @@
-package DomainLayer.Stores.Discounts;
+package DomainLayer.Stores.Discounts.Discounts;
 
 import DomainLayer.Stores.Discounts.Conditions.BasicConditions.ProductConditions.NoCondition;
 import DomainLayer.Stores.Discounts.Conditions.Condition;
 import DomainLayer.Stores.Products.CartProduct;
-import DomainLayer.Stores.Products.Product;
 import DomainLayer.Users.Bag;
 
-import java.util.HashSet;
+public class BasicDiscount extends Discount {
 
-public class Discount {
-    private Condition condition;
-    private String description;
     /**
      * 30 for a 30% discount, 55.5 for a 55.5% discount etc...
      */
     private double discount;
 
-    public Discount(String description,double discount){
-        this.description=description;
+    public BasicDiscount(String description, double discount){
+        super(description);
         this.discount=discount;
-        condition=new NoCondition();
     }
-    public Discount(String description,double discount,Condition condition){
-        this.description=description;
+    public BasicDiscount(String description, double discount, Condition condition){
+        super(description,condition);
         this.discount=discount;
-        this.condition=condition;
     }
 
-    /**
-     * calculates the total amount saves by the discount on a product list, for products who pass the condition list
-     * intuitions: run this on all discount for a bag, and remove sum of all discount from total price
-     * @param bag bag to calculate discount to
-     * @return total saved by discounts
-     */
+
+    @Override
     public double calcDiscountAmount(Bag bag){
         if(bag==null)
             throw new NullPointerException("Null bag in discount calculation");
@@ -51,11 +41,6 @@ public class Discount {
         this.discount = discount;
     }
 
-    public Condition getConditions() {
-        return condition;
-    }
-    public void SetCondition(Condition condition){
-        this.condition=condition;
-    }
+
 
 }
