@@ -1,16 +1,15 @@
 package DomainLayer.Stores.Discounts.Conditions.ComplexConditions;
 
-import DomainLayer.Stores.Discounts.Conditions.BasicConditions.BagConditions.MaxBagPriceCondition;
 import DomainLayer.Stores.Discounts.Conditions.Condition;
-import DomainLayer.Stores.Products.Product;
-import DomainLayer.Users.Bag;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 public abstract class CompositeCondition implements Condition {
     protected Collection<Condition> conditions;
+    public CompositeCondition(){
+        conditions=new HashSet<>();
+    }
     public Collection<Condition> getConditions() {
         return conditions;
     }

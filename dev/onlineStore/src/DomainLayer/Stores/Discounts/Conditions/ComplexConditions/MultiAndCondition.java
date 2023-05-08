@@ -8,6 +8,7 @@ import DomainLayer.Users.Bag;
 import java.util.HashSet;
 
 public class MultiAndCondition extends CompositeCondition{
+
     @Override
     public HashSet<CartProduct> passCondition(Bag bag) {
         HashSet<CartProduct> eligibleProducts=new HashSet<>(bag.getProducts());
@@ -16,5 +17,11 @@ public class MultiAndCondition extends CompositeCondition{
             eligibleProducts.removeIf(eligibleProduct -> !passConditionList.contains(eligibleProduct));
         }
         return eligibleProducts;
+    }
+    @Override
+    public boolean equals(Condition condition) {
+        if(condition instanceof MultiAndCondition)
+            return ((MultiAndCondition)condition).getConditions().equals(conditions);
+        return false;
     }
 }

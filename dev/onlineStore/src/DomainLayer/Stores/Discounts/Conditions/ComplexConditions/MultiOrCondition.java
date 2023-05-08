@@ -14,4 +14,10 @@ public class MultiOrCondition extends CompositeCondition{
             eligibleProducts.addAll(condition.passCondition(bag)); //set has no duplicates, so this works for OR
         return eligibleProducts;
     }
+    @Override
+    public boolean equals(Condition condition) {
+        if(condition instanceof MultiOrCondition)
+            return ((MultiOrCondition)condition).getConditions().equals(conditions);
+        return false;
+    }
 }

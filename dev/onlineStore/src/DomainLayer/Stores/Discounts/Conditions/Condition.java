@@ -11,6 +11,7 @@ public interface Condition {
     /**
      * basic condition which iterates over all the products in eligibleProducts and removes products that done pass a condition
      * @return at most all bag products, or a smaller list (can be empty) of products from eligible products that pass the condition.
+     * low priority todo: split condition to filter condition and boolean condition (no new methods for either, see WrapperCondition for reasoning)
      */
     HashSet<CartProduct> passCondition(Bag bag);
 

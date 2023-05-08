@@ -1,7 +1,6 @@
 package DomainLayer.Stores.Discounts.Discounts;
 
-import DomainLayer.Stores.Discounts.Conditions.BasicConditions.ProductConditions.NameCondition;
-import DomainLayer.Stores.Discounts.Conditions.BasicConditions.ProductConditions.NoCondition;
+import DomainLayer.Stores.Discounts.Conditions.BasicConditions.FilterConditions.NoCondition;
 import DomainLayer.Stores.Discounts.Conditions.Condition;
 import DomainLayer.Users.Bag;
 

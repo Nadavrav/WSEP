@@ -1,6 +1,5 @@
 package DomainLayer.Stores.Discounts.Discounts;
 
-import DomainLayer.Stores.Discounts.Conditions.BasicConditions.ProductConditions.NoCondition;
 import DomainLayer.Stores.Discounts.Conditions.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
