@@ -36,9 +36,11 @@ class CartTest {
         cart.addProductToCart(StoreId1, p1);
         cart.addProductToCart(StoreId1, p3);
         Bag actualBag  = cart.getBags().get(StoreId1);
+
         assertNotNull(actualBag);
-        assertEquals("Product Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n" +
-                "Product Id: 0-1 ,Product Name: Butter ,Product Price: 3.4\n", actualBag.bagToString());
+        String actualBagString = actualBag.bagToString();
+        assertEquals("Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
+                "Name: Butter Description: A Golden Brick Category: Butter price per unit: 3.4 Amount: 1 total price: 3.4\n",actualBagString);
     }
     @Test
     public void testAddProductToCartWithMultipleStoreProducts() {
