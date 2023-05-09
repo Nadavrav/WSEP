@@ -9,9 +9,10 @@ import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
-import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -40,7 +41,6 @@ public class Facade {
             throw new Exception("Only admin can fetch user list");
         return registeredUserList;
     }
-    private Map<String, RegisteredUser> registeredUserList;
 
     //Getter for tests
     public Map<Integer, Store> getStoresList() {
@@ -1062,29 +1062,29 @@ public class Facade {
         logger.info("Exiting method GetUserHistoryPurchase() with purchase history: ");
         return user.getPurchaseHistory().getPurchases().toString();
     }
+
     /**
      *
-     * @param filters list of filter object for whom each product has to pass all of them to be returned
-     * @return list of products who passed the filter list
+     * @param storeFilters filters for store in which products are to be filtered
+     * @param productFilters filters who the returned products have to pass
+     * @return product list of all products who passed the filter in the store who passed the filters
      */
-    public List<StoreProduct> FilterProductSearch(List<Filter> filters) {
-                logger.info("Entering method FilterProductSearch() with filters: " + filters.toString());
-
+    public List<StoreProduct> FilterProductSearch(List<StoreFilter> storeFilters,List<ProductFilter> productFilters) {
+        logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
         ArrayList<StoreProduct> products=new ArrayList<>();
         for(Store store: storesList.values()){ //for each store
-            for(StoreProduct product:store.getProducts().values()){ //for each product in store
-                boolean passedFilter=true;
-                for(Filter filter: filters){ //for each filter
-                    if(!filter.PassFilter(product)) { //product has to pass all filters
-                        passedFilter = false;
-                        break; //if we don't pass a filter, we exit from the filter loop-no need to check the rest
-                    }
+            boolean passStoreFilter=true;
+            for(StoreFilter storeFilter:storeFilters){
+                if(!storeFilter.PassFilter(store)) {
+                    passStoreFilter = false;
+                    break;
                 }
-                if (passedFilter)
-                    products.add(product);
+            }
+            if(passStoreFilter) {
+                products.addAll(store.filterProducts(productFilters));
             }
         }
-        logger.info("Exiting method FilterProductSearch() with filtered products: " + products.toString());
+        logger.info("Filtered products done, products found: "+products.size());
         return products;
     }
 

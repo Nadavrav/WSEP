@@ -1,11 +1,11 @@
-package DomainLayer.Users.Fiters;
+package ServiceLayer.ServiceObjects.Fiters.ProductFilters;
 
 import DomainLayer.Stores.Products.StoreProduct;
 
-public class CategoryFilter implements Filter{
+public class CategoryProductFilter implements ProductFilter {
     private final String category;
 
-    public CategoryFilter(String category) {
+    public CategoryProductFilter(String category) {
         this.category = category;
     }
 

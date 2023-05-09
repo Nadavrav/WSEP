@@ -2,7 +2,8 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
-import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
@@ -240,7 +241,7 @@ public interface Bridge {
      * @return a response with a string array of the purchase history as its value
      */
     Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
-    List<ServiceProduct> FilterSearch(List<Filter> filters);
+    List<ServiceProduct> FilterSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters);
     boolean RateAndCommentOnProduct(int productId, int storeId, String comment, int rating);
     boolean RateStore(int storeId,int rating);
     boolean RateAndCommentOnStore(int storeId,String comment,int rating);
