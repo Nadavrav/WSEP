@@ -44,6 +44,18 @@ public class Service {
 
     }
 
+    public Response<?> loadData() throws Exception {
+        try{
+            facade.loadData();
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+
+
+
     public Response<?> Register( String userName, String password) {//1.3
 
         try{

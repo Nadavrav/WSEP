@@ -86,6 +86,56 @@ public class Facade {
         return instanceFacade;
     }
 
+    public void loadData() throws Exception {
+
+        try{
+            //New users
+            int nadavID = EnterNewSiteVisitor();
+            int nadiaID = EnterNewSiteVisitor();
+            int natalieID = EnterNewSiteVisitor();
+            int majdID = EnterNewSiteVisitor();
+            int denisID = EnterNewSiteVisitor();
+            int nikitaID = EnterNewSiteVisitor();
+
+
+            Register(nadavID,"Nadav","123456789");
+            Register(nadiaID,"Nadia","123456789");
+            Register(natalieID,"Natalie","123456789");
+            Register(majdID,"Majd","123456789");
+            Register(denisID,"Denis","123456789");
+            Register(nikitaID,"Nikita","123456789");
+
+            //New Stores
+            int nadavStoreID = OpenNewStore(nadavID,"NadavStore");
+            int nadiaStoreID = OpenNewStore(nadiaID,"NadiaStore");
+            int natalieStoreID = OpenNewStore(natalieID,"NatalieStore");
+            int majdStoreID = OpenNewStore(majdID,"MajdStore");
+            int denisStoreID = OpenNewStore(denisID,"DenisStore");
+            int nikitaStoreID = OpenNewStore(nikitaID,"NikitaStore");
+
+            //New Products
+            AddProduct(nadavID,nadavStoreID,"Milk",6,"Milk",30,"Good milk");
+            AddProduct(nadiaID,nadiaStoreID,"Orange Juice",16,"Juice",90,"Good juice");
+            AddProduct(natalieID,natalieStoreID,"Apples",900,"Fruits",1,"Good apples");
+            AddProduct(majdID,majdStoreID,"Milk",6,"Milk",30,"Good milk");
+            AddProduct(denisID,denisStoreID,"Milk",6,"Milk",30,"Good milk");
+            AddProduct(nikitaID,nikitaStoreID,"Milk",6,"Milk",30,"Good milk");
+
+            logout(nadavID);
+            logout(nadiaID);
+            logout(natalieID);
+            logout(majdID);
+            logout(denisID);
+            logout(nikitaID);
+
+
+        }
+        catch(Exception e){
+            throw new Exception(e);
+        }
+
+    }
+
 //------------UserPackege-----------------------
     public int EnterNewSiteVisitor() throws Exception {//1.1
         SiteVisitor visitor = new SiteVisitor();
@@ -222,7 +272,7 @@ public class Facade {
             throw e;
         }
     }
-    
+
 
     public void removeProductFromCart(int productId,int storeId, int visitorId) throws Exception {
         SiteVisitor user = onlineList.get(visitorId);
@@ -255,7 +305,7 @@ public class Facade {
             throw e;
         }
     }
-    
+
 
    public void changeCartProductQuantity(int productId,int storeId,int newAmount, int visitorId) throws Exception {
         SiteVisitor user = onlineList.get(visitorId);
@@ -289,8 +339,8 @@ public class Facade {
             throw e;
         }
     }
-    
-    
+
+
     public String getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
@@ -380,7 +430,7 @@ public class Facade {
         //release lockappointed if locked
         //throw e
     }
-    
+
 
    public void appointNewStoreManager(int appointerId,String appointedUserName,int storeId) throws Exception {//4.6
         //check if appointerId is logged in and registered to system
@@ -510,7 +560,7 @@ public class Facade {
         //release lockappointed if locked
         //throw e
     }
-        
+
     /**
      *
      * @param visitorId
@@ -546,7 +596,7 @@ public class Facade {
     }
 
     public synchronized LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
-        
+
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
         if (visitor == null) {
@@ -610,9 +660,9 @@ public class Facade {
         store.addRating(((RegisteredUser) rater).getUserName(),rate);
         logger.info("Successfully added store rate. Visitor ID: " + visitorID +", Store ID: " + storeID + ", Rate: " + rate);
     }
-    
-    
-   
+
+
+
     public void addStoreRateAndComment(int visitorID,int storeID,int rate,String comment) throws Exception {
         //Check if visitorID is logged in and registered to system
         logger.info("Entering method addStoreRateAndComment() with visitorID: " + visitorID + ", storeID: " + storeID + ", rate: " + rate + ", and comment: " + comment);
@@ -697,7 +747,7 @@ public class Facade {
         logger.fine("open new store with name" + storeName+" done successfully");
         return store.getID();
     }
-    
+
     //StoreRate
     public double GetStoreRate(int visitorId,int StoreId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
@@ -767,7 +817,7 @@ public class Facade {
         //release lock user
         //throw e
     }
-    
+
     // ניהול מלאי 4.1
     public Integer AddProduct(int visitorId,int storeId,String productName, double price, String category, int quantity,String description) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
@@ -946,7 +996,7 @@ public class Facade {
 
         throw new Exception("Just the owner can Close the Store ");
     }
-    
+
     //2.2 search  product
 
     /**
@@ -1011,7 +1061,7 @@ public class Facade {
     //    return output;
 //
     //}
-    
+
 //2.1
    public String GetInformation(int StoreId) throws Exception {
         logger.info("Entering method GetInformation() with StoreId: " + StoreId);
