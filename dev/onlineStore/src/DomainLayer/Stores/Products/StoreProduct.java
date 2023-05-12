@@ -28,10 +28,20 @@ public class StoreProduct extends Product {
        try {
            UniversalHandler.GetInstance().HandleError(logger);
            UniversalHandler.GetInstance().HandleInfo(logger);
-
+        } catch (Exception e) {
+           throw new RuntimeException(e);
+       }
         //getStoreIdByProductId(productId);//Used to check if productId is valid
         if (name == null) {
             throw new NullPointerException("Product name cant be null");
+        }
+        if(productId == null)
+        {
+            throw new NullPointerException("Product id cant be null");
+        }
+        if(productId < 0)
+        {
+            throw new IllegalArgumentException("Product id cant be negative");
         }
         if (price < 0) {
             throw new IllegalArgumentException("Product price cant be negative");
@@ -52,61 +62,8 @@ public class StoreProduct extends Product {
         Quantity = quantity;
         description =desc;
         RateMap=new HashMap<>();
-       } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
-
-
-    //just make getter return average
-    //private void setRate() {
-    //    double sum = 0;
-    //    for (Rating rating : RateMap.values()) {
-    //        sum+=rating.getRate();
-    //    }
-    //    Rate = sum / RateMap.size();
-    //}
-
-    //public static int getStoreIdByProductId(String productId) {
-    //    if (productId == null || productId.isEmpty()) {
-    //        throw new NullPointerException("productId cannot be null or empty");
-    //    }
-    //    int index = productId.indexOf('-');
-    //    if (index == -1) {
-    //        throw new IllegalArgumentException("productId does not contain '-'");
-    //    }
-    //    if (index == 0) {
-    //        throw new IllegalArgumentException("productId is invalid");
-    //    }
-    //     try {
-    //        String storeId= productId.substring(0,index);
-    //         return Integer.parseInt(storeId);
-    //    } catch (NumberFormatException e) {
-    //        logger.warning("Failed to parse store ID from product ID: " + productId);
-    //         throw new IllegalArgumentException(e);
-    //    }
-    //}
-
-   // public static void isValidProductId(String productId) throws Exception {
-   //     if (productId == null || productId.isEmpty()) {
-   //         throw new NullPointerException("productId cannot be null or empty");
-   //     }
-   //     int index = productId.indexOf('-');
-   //     if(index<1 || index>= productId.length())
-   //         throw  new Exception("Invalid product ID");
-   //     checkIfNumber(productId.substring(0,index));
-   //     checkIfNumber(productId.substring(index+1));
-   //     logger.info("valideProductId");
-   // }
-    
-
-
-
-   // public void setProductId(String productId) { //is this needed?
-   //     this.productId = productId;
-   // }
-//
     public void setName(String name) {
         this.name = name;
         notifyObservers();
@@ -139,11 +96,13 @@ public class StoreProduct extends Product {
     public int getQuantity() {
         return Quantity;
     }
-    //what does this even do??? isn't rating an average of all ratings?
-    //public void setRate(Double rate) {
-    //    Rate = rate;
-    //}
     public void addRatingAndComment(String userName ,double rate,String comment) {
+        if(userName == null)
+            throw new NullPointerException("Username cant be null");
+        if(rate < 0)
+            throw new IllegalArgumentException("Rating cannot be negative");
+        if(rate > 5)
+            throw new IllegalArgumentException("Rating cannot be above 5");
         if(!RateMap.containsKey(userName)){
             RateMap.put(userName,new Rating(rate,comment));
         }else {
@@ -170,7 +129,7 @@ public class StoreProduct extends Product {
             ratingSum+=rating.getRating();
             ratingCount++;
         }
-        avgRating= (ratingSum / ratingCount);
+        avgRating = (ratingSum / ratingCount);
     }
 
     /**
@@ -225,7 +184,10 @@ public class StoreProduct extends Product {
      * @param product product in a cart
      */
     public void addObserver(StoreProductObserver product) {
-        observers.put(new WeakReference<>(product), new Object());
+        if (product == null) {
+            return;//Might need to throw an exception instead
+        }
+        observers.putIfAbsent(new WeakReference<>(product), new Object());
     }
 
     /**
@@ -249,6 +211,13 @@ public class StoreProduct extends Product {
     }
 
     /**
+     * Getter for observers
+     * @return observers
+     */
+    public Map<WeakReference<StoreProductObserver>, Object> getObservers() {
+        return observers;
+    }
+    /**
      * changes all store product's fields to signify a removed product, and notifies
      * all cart products copy these changes.
      * most important-price changes to 0, a customer will never pay for a removed product
@@ -261,22 +230,4 @@ public class StoreProduct extends Product {
         setPrice(0.0);
         notifyObservers();
     }
-
-   // /**
-   //  * check if a string is a valid id containing only numbers
-   //  * @param s the string to check
-   //  * @throws Exception todo: proper exception throwing
-   //  */
-   // private static void checkIfNumber(String s) throws Exception {
-   //     if(s==null||s.length()==0){
-   //         logger.warning("null");
-   //         throw new NullPointerException("Cant check null number");
-   //     }
-   //     for(int i=0;i<s.length();i++){
-   //         if(s.charAt(i)>'9'||s.charAt(i)< '0'){
-   //             logger.warning("Invalid product ID " + s);
-   //             throw  new Exception("Invalid product ID");
-   //         }
-   //     }
-   // }
 }

@@ -84,9 +84,6 @@ public class Store {
         return storeProduct.getProductId();
     }
 
-
-
-
      public Response<?> RemoveProduct(Integer productID) {
         if (!products.containsKey(productID)) {
             logger.warning("Product not found in store. Product ID: " + productID);
@@ -120,44 +117,6 @@ public class Store {
         return searchResults;
     }
 
-  // public LinkedList<StoreProduct> SearchProductByCategory(String category) throws Exception {
-  //      LinkedList<StoreProduct> searchResults = new LinkedList<>();
-  //      if (getActive()) {
-  //          for (StoreProduct product : this.products.values()) {
-  //              if (product.getCategory().equals (category)) {
-  //                  if (CheckProduct(product)) {
-  //                      searchResults.add(product);
-  //                  }
-  //              }
-  //          }
-  //      }
-  //      else {
-  //          logger.warning("Search operation not allowed on an inactive store");
-  //          throw new Exception("This store is closed");
-  //      }
-  //      logger.info("Product search by Category completed. Search keyword: " + Name + ", Number of results: " + searchResults.size());
-//
-  //      return searchResults;
-  //  }
-    
-  // public List<StoreProduct> SearchProductByKey(String key) throws Exception {
-  //      LinkedList<StoreProduct> searchResults = new LinkedList<StoreProduct>();
-  //      if (getActive()) {
-  //          for (StoreProduct product : this.products.values()) {
-  //              if (product.getName().contains(key)|| product.getCategory().contains(key)||product.getDescription().contains(key)) {
-  //                  if (CheckProduct(product)) {
-  //                      searchResults.add(product);
-  //                  }
-  //              }
-  //          }
-  //      } else {
-  //          logger.warning("Search operation not allowed on an inactive store");
-  //          throw new Exception("This store is closed");
-  //      }
-  //      logger.info("Product search by Key completed. Search keyword: " + Name + ", Number of results: " + searchResults.size());
-  //      return searchResults;
-  //  }
-
     private boolean isInStock(StoreProduct product) {
         return product.getQuantity() > 0;
     }
@@ -165,10 +124,6 @@ public class Store {
     public void updateAvgRating(Double rate) {
         Rate = rate;
     }
-
-
-
-
     public StoreProduct getProductByID(Integer productId) {
         return products.get(productId);
     }
@@ -210,11 +165,6 @@ public class Store {
     public ConcurrentHashMap<Integer, StoreProduct> getProducts() {
         return products;
     }
-    //no need for setter, unless a need arises
-    //public void setProducts(ConcurrentHashMap<Integer, StoreProduct> products) {
-    //    this.products = products;
-    //}
-
     public void UpdateProductQuantity(Integer productId, int quantity) {
         products.get(productId).UpdateQuantity(quantity);
     }
