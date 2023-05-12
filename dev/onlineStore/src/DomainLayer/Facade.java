@@ -175,7 +175,7 @@ public class Facade {
         }
         else{
             try {
-                Admin admin = new Admin("admin", "admin");
+                Admin admin = new Admin("admin", "admin1234");
                 registeredUserList.replace("admin",admin);
 
             }
