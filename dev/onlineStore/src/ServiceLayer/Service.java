@@ -3,6 +3,7 @@ package ServiceLayer;
 import DomainLayer.Facade;
 import DomainLayer.Response;
 import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
 
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
@@ -10,6 +11,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
 import java.util.*;
@@ -391,14 +393,16 @@ public class Service {
    // }
 
     //2.1
-    public Response<List<ServiceProduct>> FilterProductSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
+    public Response<List<ServiceStore>> FilterProductSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
         try{
-            List<StoreProduct> StoreProducts=Facade.getInstance().FilterProductSearch(storeFilters,productFilters);
-            List<ServiceProduct> products=new ArrayList<>();
-            for(StoreProduct product:StoreProducts){
-                products.add(new ServiceProduct(product));
+            Map<Store,List<StoreProduct>> productMap =Facade.getInstance().FilterProductSearch(storeFilters,productFilters);
+            List<ServiceStore> stores=new ArrayList<>();
+            for(Store store:productMap.keySet()){
+                ServiceStore serviceStore=new ServiceStore(store);
+                serviceStore.addAll(productMap.get(store));
+                stores.add(serviceStore);
             }
-            return new Response<>(products);
+            return new Response<>(stores);
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);

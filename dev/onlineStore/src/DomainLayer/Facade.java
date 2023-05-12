@@ -1119,9 +1119,9 @@ public class Facade {
      * @param productFilters filters who the returned products have to pass
      * @return product list of all products who passed the filter in the store who passed the filters
      */
-    public List<StoreProduct> FilterProductSearch(List<StoreFilter> storeFilters,List<ProductFilter> productFilters) {
+    public Map<Store,List<StoreProduct>> FilterProductSearch(List<StoreFilter> storeFilters,List<ProductFilter> productFilters) {
         logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
-        ArrayList<StoreProduct> products=new ArrayList<>();
+        HashMap<Store,List<StoreProduct>> storeProducts=new HashMap<>();
         for(Store store: storesList.values()){ //for each store
             boolean passStoreFilter=true;
             for(StoreFilter storeFilter:storeFilters){
@@ -1131,11 +1131,13 @@ public class Facade {
                 }
             }
             if(passStoreFilter) {
-                products.addAll(store.filterProducts(productFilters));
+                ArrayList<StoreProduct> products = new ArrayList<>(store.filterProducts(productFilters));
+                if(!products.isEmpty())
+                    storeProducts.put(store,products);
             }
         }
-        logger.info("Filtered products done, products found: "+products.size());
-        return products;
+        logger.info("Filtered products done, stores found: "+storeProducts.keySet().size());
+        return storeProducts;
     }
 
     public void deleteUser(int visitorId, String userName) throws Exception {
