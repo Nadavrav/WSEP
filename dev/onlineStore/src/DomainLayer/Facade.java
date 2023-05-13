@@ -76,7 +76,7 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
-
+        registerInitialAdmin();
     }
     public static synchronized Facade getInstance() {
         if (instanceFacade == null) {
@@ -124,9 +124,11 @@ public class Facade {
         }
         else{
             try {
-                Admin admin = new Admin("admin", "admin");
-                registeredUserList.replace("admin",admin);
-
+                Admin admin = new Admin("admin", "admin123");
+                if(registeredUserList.containsKey("admin"))
+                    registeredUserList.replace("admin",admin);
+                else
+                    registeredUserList.put("admin",admin);
             }
             catch (Exception e) {
                 logger.severe("Unexpected error during initial admin registration");
@@ -158,6 +160,7 @@ public class Facade {
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
 
         RegisteredUser user = registeredUserList.get(userName);
+        boolean b = registeredUserList.get("admin")!=null;
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
             logger.warning("User IS NOT Entered in the system");
             throw  new Exception("Invalid Visitor ID");
@@ -685,7 +688,7 @@ public class Facade {
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
-        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreOwner);
+        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreFounder);
         logger.config("adding new employment to the new store ");
         // andd to employment list
         if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
@@ -792,9 +795,9 @@ public class Facade {
             logger.warning("employment is null");
             throw  new Exception("there is no employee with this id ");
         }
-        if (!employment.checkIfOwner()) {//check if need manager
-            logger.warning("user are not the manager trying to add");
-            throw  new Exception("you are not the owner of this store ");
+        if (!employment.checkIfOwner() || !employment.checkIfManager()) {
+            logger.warning("user are not allowed to add products");
+            throw  new Exception("you are not allowed to add products to this store");
         }
         return store.AddNewProduct(productName,price,quantity,category,description);
         //catch
