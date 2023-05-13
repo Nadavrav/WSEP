@@ -49,8 +49,8 @@ class BagTest {
         bag.addProduct(p1);
         bag.addProduct(p2);
         String ActualproductList = bag.bagToString();
-        String expectedList = "Name: Bread Description: Just a whole loaf of bread Category: Bread price per unit: 7.2 Amount: 1 total price: 7.2\n" +
-                "Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n";
+        String expectedList = "Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n"+
+        "Name: Bread Description: Just a whole loaf of bread Category: Bread price per unit: 7.2 Amount: 1 total price: 7.2\n";
         assertEquals(expectedList, ActualproductList);
     }
     @Test

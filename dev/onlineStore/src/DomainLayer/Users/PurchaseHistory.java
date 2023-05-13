@@ -19,5 +19,14 @@ public class PurchaseHistory {
         return purchases;
     }
 
+    @Override
+    public String toString(){
+        String output="";
+        for (Purchase p:purchases) {
+            output += p.toString()+"\n";
+        }
+        return output;
+    }
+
 
 }

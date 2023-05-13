@@ -3,13 +3,19 @@ package ServiceLayer;
 import DomainLayer.Facade;
 import DomainLayer.Response;
 import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
 
-import ServiceLayer.ServiceObjects.Fiters.Filter;
+
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
 
-import ServiceLayer.ServiceObjects.*;
+
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceStore;
+import ServiceLayer.ServiceObjects.ServiceUser;
 
 import java.util.*;
 
@@ -42,6 +48,18 @@ public class Service {
         return new Response<>("Success");
 
     }
+
+    public Response<?> loadData() throws Exception {
+        try{
+            facade.loadData();
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
+
+
 
     public Response<?> Register( String userName, String password) {//1.3
 
@@ -115,7 +133,7 @@ public class Service {
     }
 
 
-    public Response<?> getProductsInMyCart() {//2.4
+    public Response<String> getProductsInMyCart() {//2.4
         String products;
         try {
             products = facade.getProductsInMyCart(visitorId);
@@ -379,14 +397,16 @@ public class Service {
    // }
 
     //2.1
-    public Response<List<ServiceProduct>> FilterProductSearch(List<Filter> filters){
+    public Response<List<ServiceStore>> FilterProductSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
         try{
-            List<StoreProduct> StoreProducts=Facade.getInstance().FilterProductSearch(filters);
-            List<ServiceProduct> products=new ArrayList<>();
-            for(StoreProduct product:StoreProducts){
-                products.add(new ServiceProduct(product));
+            Map<Store,List<StoreProduct>> productMap =Facade.getInstance().FilterProductSearch(storeFilters,productFilters);
+            List<ServiceStore> stores=new ArrayList<>();
+            for(Store store:productMap.keySet()){
+                ServiceStore serviceStore=new ServiceStore(store);
+                serviceStore.addAll(productMap.get(store));
+                stores.add(serviceStore);
             }
-            return new Response<>(products);
+            return new Response<>(stores);
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -439,7 +459,7 @@ public class Service {
     }
             
 
-    public Response<List<ServiceUser>> getRegisteredUsersInfo(){
+    /*public Response<List<ServiceUser>> getRegisteredUsersInfo(){
         try {
             ArrayList<ServiceUser> serviceUsers = new ArrayList<>();
             Map<String, RegisteredUser> userMap = facade.getRegisteredUserList(visitorId);
@@ -451,5 +471,5 @@ public class Service {
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
-    }
+    }*/
 }
