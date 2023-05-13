@@ -104,6 +104,18 @@ public class Employment {
         return isStoreManager;
 
     }
+    public boolean canAppointOwner()
+    {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanAppointStoreOwner))
+            return true;
+        return false;
+    }
+    public boolean canAppointManager()
+    {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanAppointStoreManager))
+            return true;
+        return false;
+    }
     @Override
     public String toString() {
         return "Employment{" +

@@ -95,8 +95,14 @@ public class Facade {
 
     public void ExitSiteVisitor(int id) throws Exception {//1.2
         SiteVisitor.ExitSiteVisitor(id);
-        onlineList.remove(id);
-        logger.info("A  visitor with Id:" + id + "has Exit");
+        if(onlineList.containsKey(id)) {
+            onlineList.remove(id);
+            logger.info("A  visitor with Id:" + id + "has Exit");
+        }
+        else {
+            logger.info("Tried to exit A  visitor with Id:" + id + ", this id doesnt exist in online list");
+            throw new IllegalArgumentException("No online user with this id");
+        }
     }
     public synchronized void registerAdmin(int visitorid,String userName,String password) throws Exception{
         logger.info("Starting admin registration");
@@ -349,8 +355,8 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if (appointerEmployment == null || (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfFounder())) {
-            throw  new Exception("the appointer is not owner of store id");
+        if (appointerEmployment == null || !appointerEmployment.canAppointOwner()) {
+            throw  new Exception("User cannot appoint store owner");
         }
         // check if appointedUserName is registered
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
@@ -413,8 +419,8 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if(appointerEmployment==null|| (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfFounder())){
-            throw  new Exception("the appointer is not owner of store id");
+        if(appointerEmployment==null || !appointerEmployment.canAppointManager()){
+            throw  new Exception("User isnt allowed to appoint store manager");
         }
         // check if appointedUserName is registered to system
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
@@ -474,11 +480,11 @@ public class Facade {
         try{
             appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeID);
         }catch (Exception e){
-            throw  new Exception("the appointer is not owner of store id");
+            throw  new Exception("the appointer is not owner of store");
         }
 
-        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
-            throw  new Exception("the appointer is not owner of store id");
+        if(appointerEmployment==null|| (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfFounder())){
+            throw  new Exception("the appointer is not owner of store");
         }
 
         //Check if username is registered to system
@@ -831,6 +837,7 @@ public class Facade {
             }
             store.RemoveProduct(ProductId);
             //return new Response<>("the Product is successfully added", false);
+            return;
         }
         logger.warning("Only the owner can close the store: " + visitorId);
         logger.fine("Exiting method RemoveProduct()");
@@ -913,12 +920,17 @@ public class Facade {
     }
 
     public void UpdateProductDescription(int visitorId, int productId,int storeId,String description) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
-
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
-        Store store = storesList.get(productId);
-        store.UpdateProductDescription(productId,description);
-        logger.fine("Exiting method UpdateProductDescription()");
+        Store store = storesList.get(storeId);
+        if(store != null) {
+            store.UpdateProductDescription(productId, description);
+            logger.fine("Exiting method UpdateProductDescription()");
+        }
+        else {
+            logger.fine("Failed at UpdateProductDescription because there was no store with the requested store Id");
+            throw new IllegalArgumentException("There is no store with this store id :"+storeId);
+        }
 
     }
 
@@ -943,10 +955,10 @@ public class Facade {
             }
             logger.info("Exiting method checkifUserCanUpdateStoreProduct() with success");
             //return new Response<>("the Product is successfully added", false);
+            return;
         }
         logger.info("Exiting method checkifUserCanUpdateStoreProduct() with failure");
-
-        throw new Exception("Just the owner can Close the Store ");
+        throw new Exception("This user isn't allowed to update this product");
     }
     
     //2.2 search  product

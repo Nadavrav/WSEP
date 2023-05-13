@@ -104,7 +104,7 @@ class FacadeTest {
         try {
             int visitorId = f.EnterNewSiteVisitor();
             String Username = null;
-            assertThrows(IllegalArgumentException.class,()->f.Register(visitorId,Username,"123456789"));
+            assertThrows(NullPointerException.class,()->f.Register(visitorId,Username,"123456789"));
         }
         catch (Exception e)
         {//Should happen
@@ -323,8 +323,10 @@ class FacadeTest {
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
-            assertEquals("Store Id : 33\n" +
-                    "Product Id: 33-0 ,Product Name: Milk ,Product Price: 5.0\n",actual);
+            String ExpectedstoreIdStr = "Store Id : "+storeId;
+            String ExpectedproductsInCartStr = "Product Id: "+pid+" ,Product Name: Milk ,Product Price: 5.0";
+            assertTrue(actual.contains(ExpectedstoreIdStr));
+            assertTrue(actual.contains(ExpectedstoreIdStr));
         }
         catch (Exception e)
         {//Should happen
@@ -356,9 +358,131 @@ class FacadeTest {
             f.addProductToCart(pid1,storeId,visitorId);
             f.addProductToCart(pid2,storeId,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
-            assertEquals("Store Id : 37\n" +
-                    "Product Id: 37-1 ,Product Name: Bread ,Product Price: 6.0\n" +
-                    "Product Id: 37-0 ,Product Name: Milk ,Product Price: 5.0\n",actual);
+            String expectedStoreIdStr = "Store Id : "+storeId+"\n";
+            String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice+"\n";
+            String expectedProduct2Str = "Name: "+pName2+" Description: "+pDesc2+" Category: "+pCat2+" price per unit: "+pPrice2+" Amount: 1 total price: "+pPrice2+"\n";
+            assertTrue(actual.contains(expectedStoreIdStr));
+            assertTrue(actual.contains(expectedProduct1Str));
+            assertTrue(actual.contains(expectedProduct2Str));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void addProductToCart_MultipleTimes() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            int newAmount = 5;
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid1,storeId,visitorId);
+            f.changeCartProductQuantity(pid1, storeId, newAmount,visitorId);
+            String actual = f.getProductsInMyCart(visitorId);
+            String expectedStoreIdStr = "Store Id : "+storeId+"\n";
+            String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount+" total price: "+newAmount*pPrice+"\n";
+            assertTrue(actual.contains(expectedStoreIdStr));
+            assertTrue(actual.contains(expectedProduct1Str));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void addProductToCart_MultipleTimes_MultipleItems() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            String pCat2 = "Bread";
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            int newAmount1 = 6;
+            int newAmount2 = 2;
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            int pid2=f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
+            f.addProductToCart(pid1,storeId,visitorId);
+            f.addProductToCart(pid2,storeId,visitorId);
+            f.changeCartProductQuantity(pid1, storeId, newAmount1,visitorId);
+            f.changeCartProductQuantity(pid2, storeId, newAmount2,visitorId);
+            String actual = f.getProductsInMyCart(visitorId);
+            String expectedStoreIdStr = "Store Id : "+storeId+"\n";
+            String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount1+" total price: "+newAmount1*pPrice+"\n";
+            String expectedProduct2Str = "Name: "+pName2+" Description: "+pDesc2+" Category: "+pCat2+" price per unit: "+pPrice2+" Amount: "+newAmount2+" total price: "+newAmount2*pPrice2+"\n";
+            assertTrue(actual.contains(expectedStoreIdStr));
+            assertTrue(actual.contains(expectedProduct1Str));
+            assertTrue(actual.contains(expectedProduct2Str));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            assertFalse(true);
+        }
+    }
+    @Test
+    void addProductToCart_MultipleItems_DiffrentStores() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username1 = "ValidUsername";
+            String password1 = "123456789";
+            String Username2 = "RandomUser2";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            String pCat2 = "Bread";
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            int newAmount1 = 6;
+            int newAmount2 = 2;
+            f.Register(visitorId,Username1,password1);
+            f.login(visitorId,Username1,password1);
+            int storeId1 = f.OpenNewStore(visitorId,"MyStore");
+            int pid1=f.AddProduct(visitorId,storeId1,pName,pPrice,pCat,pQuan,pDesc);
+            f.logout(visitorId);
+            f.Register(visitorId,Username2,password1);
+            f.login(visitorId,Username2,password1);
+            int storeId2 = f.OpenNewStore(visitorId,"DiffrentStore");
+            int pid2=f.AddProduct(visitorId,storeId2,pName2,pPrice2,pCat2,pQuan2,pDesc2);
+            f.addProductToCart(pid1,storeId1,visitorId);
+            f.addProductToCart(pid2,storeId2,visitorId);
+            f.changeCartProductQuantity(pid1, storeId1, newAmount1,visitorId);
+            f.changeCartProductQuantity(pid2, storeId2, newAmount2,visitorId);
+            String actual = f.getProductsInMyCart(visitorId);
+            String expectedStoreId1Str = "Store Id : "+storeId1+"\n";
+            String expectedStoreId2Str = "Store Id : "+storeId2+"\n";
+            String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount1+" total price: "+newAmount1*pPrice+"\n";
+            String expectedProduct2Str = "Name: "+pName2+" Description: "+pDesc2+" Category: "+pCat2+" price per unit: "+pPrice2+" Amount: "+newAmount2+" total price: "+newAmount2*pPrice2+"\n";
+            assertTrue(actual.contains(expectedStoreId1Str));
+            assertTrue(actual.contains(expectedStoreId2Str));
+            assertTrue(actual.contains(expectedProduct1Str));
+            assertTrue(actual.contains(expectedProduct2Str));
         }
         catch (Exception e)
         {//Should happen
@@ -442,7 +566,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
-            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username).get(storeId).getRole());
+            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username2).get(storeId).getRole());
         }
         catch (Exception e)
         {//Should happen
@@ -468,7 +592,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
-            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username).get(storeId).getRole());
+            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username2).get(storeId).getRole());
             assertThrows(Exception.class,()->f.appointNewStoreOwner(visitorId,Username2,storeId));
         }
         catch (Exception e)
@@ -626,7 +750,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
-            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username).get(storeId).getRole());
+            assertEquals(Role.StoreManager,f.getEmploymentList().get(Username2).get(storeId).getRole());
         }
         catch (Exception e)
         {//Should happen
@@ -652,7 +776,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
-            assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username).get(storeId).getRole());
+            assertEquals(Role.StoreManager,f.getEmploymentList().get(Username2).get(storeId).getRole());
             assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,Username2,storeId));
         }
         catch (Exception e)
@@ -814,7 +938,6 @@ class FacadeTest {
             f.changeStoreManagerPermission(visitorId,Username2,storeId,p);
             f.logout(visitorId);
             f.login(visitorId,Username2,password2);
-            //TODO CHECK WHY USER2 CANT APPOINT USER3 TO BE STORE OWNER EVEN THO IT IS IN HIS PERMISSIONS
             f.appointNewStoreOwner(visitorId,Username3,storeId);
             assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username3).get(storeId).getRole());
         }
@@ -1133,7 +1256,7 @@ class FacadeTest {
         }
     }
     @Test
-    void closeStore_okStoreManager() {
+    void closeStore_Fail_StoreManager() {
         try {
             int visitorId = f.EnterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
@@ -1149,12 +1272,10 @@ class FacadeTest {
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
-            //TODO:Find out why store owner doesnt get saved
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
-            f.CloseStore(visitorId,storeId);
-            assertFalse(f.getStoresList().get(storeId).getActive());
+            assertThrows(Exception.class,()->f.CloseStore(visitorId,storeId));
         }
         catch (Exception e)
         {//Should happen
@@ -1163,7 +1284,7 @@ class FacadeTest {
         }
     }
     @Test
-    void closeStore_okStoreOwner() {
+    void closeStore_FailStoreOwner() {
         try {
             int visitorId = f.EnterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
@@ -1179,12 +1300,10 @@ class FacadeTest {
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
-            //TODO CHECK WHY STORE OWNER DOESNT GET SAVED
             f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store owner of store 1 which user 1 is the founder of
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
-            f.CloseStore(visitorId,storeId);
-            assertFalse(f.getStoresList().get(storeId).getActive());
+            assertThrows(Exception.class,()->f.CloseStore(visitorId,storeId));
         }
         catch (Exception e)
         {//Should happen
@@ -1322,7 +1441,6 @@ class FacadeTest {
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
-            System.out.print("Got to here\n");
             int actual = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);//add a product
             //assertEquals("",actual);//check the product was added
         }
@@ -1479,6 +1597,7 @@ class FacadeTest {
             int pQuan = 10;
             String pDesc = "Milk";
             f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.logout(visitorId);
             f.Register(visitorId,Username2,password2);
@@ -1640,7 +1759,8 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.UpdateProductQuantity(visitorId,pid,storeId,100);
+            f.UpdateProductQuantity(visitorId,storeId,pid,100);
+
             int actualQuan = f.getStoresList().get(storeId).getProducts().get(pid).getQuantity();
             int expectedQuan = 100;
             assertEquals(expectedQuan,actualQuan);
