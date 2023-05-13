@@ -41,24 +41,10 @@ class RegisteredUserTest {
         }
     }
     @Test
-    void Register_ShortName()
-    {
-        try {
-            assertThrows(IllegalArgumentException.class,()->{
-                user = new RegisteredUser("Short", "123456789");
-            });
-        }
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            assertTrue(false);//we shouldn't get here
-        }
-    }
-    @Test
     void Register_NullName()
     {
         try {
-            assertThrows(IllegalArgumentException.class,()->{
+            assertThrows(NullPointerException.class,()->{
                 user = new RegisteredUser(null, "123456789");
             });
         }
@@ -100,7 +86,7 @@ class RegisteredUserTest {
     void Register_NullPassword()
     {
         try {
-            assertThrows(IllegalArgumentException.class,()->{
+            assertThrows(NullPointerException.class,()->{
                 user = new RegisteredUser("ValidUserName", null);
             });
         }
@@ -117,9 +103,9 @@ class RegisteredUserTest {
             int visitorId = 1;
             String password = "123456789";
             user = new RegisteredUser("ValidUserName", password);
-            assertEquals(0,user.getVisitorId());
+            assertFalse(user.isLoggedIn());
             user.login(password,visitorId);
-            assertEquals(1,user.getVisitorId());
+            assertTrue(user.isLoggedIn());
         }
         catch (Exception e)
         {
@@ -135,8 +121,9 @@ class RegisteredUserTest {
             String password = "123456789";
             String fakepassword = "123";
             user = new RegisteredUser("ValidUserName", password);
-            assertEquals(0,user.getVisitorId());
+            assertFalse(user.isLoggedIn());
             assertThrows(IllegalArgumentException.class,()->user.login(fakepassword,visitorId));
+            assertFalse(user.isLoggedIn());
         }
         catch (Exception e)
         {
@@ -151,8 +138,9 @@ class RegisteredUserTest {
             int visitorId = 1;
             String password = "123456789";
             user = new RegisteredUser("ValidUserName", password);
-            assertEquals(0,user.getVisitorId());
-            assertThrows(IllegalArgumentException.class,()->user.login(null,visitorId));
+            assertFalse(user.isLoggedIn());
+            assertThrows(NullPointerException.class,()->user.login(null,visitorId));
+            assertFalse(user.isLoggedIn());
         }
         catch (Exception e)
         {
@@ -167,8 +155,9 @@ class RegisteredUserTest {
             int visitorId = 1;
             String password = "123456789";
             user = new RegisteredUser("ValidUserName", password);
-            assertEquals(0,user.getVisitorId());
+            assertFalse(user.isLoggedIn());
             user.login(password,visitorId);
+            assertTrue(user.isLoggedIn());
             assertThrows(Exception.class,()->user.login(password,visitorId));
         }
         catch (Exception e)

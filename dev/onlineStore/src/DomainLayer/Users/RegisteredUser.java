@@ -10,13 +10,14 @@ import java.util.Arrays;
 import java.util.logging.*;
 
 
-
 public class RegisteredUser extends SiteVisitor{
     private static final Logger logger=Logger.getLogger("RegisteredUser logger");
     String userName;
 
     byte[] password;
     PurchaseHistory purchaseHistory;
+
+    private boolean loggedIn;
     //add lock
 
 
@@ -28,11 +29,12 @@ public class RegisteredUser extends SiteVisitor{
         }
         catch (Exception ignored){
         }
-            checkUserName(userName);
-            checkPassword(password);
-            this.userName=userName;
-            this.password=hashString(password);
-            this.purchaseHistory = new PurchaseHistory();
+        checkUserName(userName);
+        checkPassword(password);
+        this.userName=userName;
+        this.password=hashString(password);
+        this.purchaseHistory = new PurchaseHistory();
+        loggedIn=false;
         
     }
     private byte[] hashString(String str) throws NoSuchAlgorithmException{
@@ -50,8 +52,8 @@ public class RegisteredUser extends SiteVisitor{
             this.userName=userName;
             this.password=hashString(password);
             this.purchaseHistory = new PurchaseHistory();
-            if(this.getCart().getBags().isEmpty() && !visitor.getCart().getBags().isEmpty()){
-                this.ReplaceCart(visitor.getCart());
+            if(super.getCart().getBags().isEmpty() && !visitor.getCart().getBags().isEmpty()){
+                super.ReplaceCart(visitor.getCart());
             }
        
     }
@@ -104,19 +106,20 @@ public class RegisteredUser extends SiteVisitor{
             throw new IllegalArgumentException("Wrong password");
         }
         // Check if user is already logged in
-        if (getVisitorId() != 0) {
+        if (loggedIn) {
             // Log login failure
             logger.warning("Failed login attempt for visitor with ID: " + visitorId + ". User is already logged in.");
             throw new Exception("This user is already logged in");
         }
         // Set visitor ID
-        setVisitorId(visitorId);
+        super.setVisitorId(visitorId);//Might not need this
+        this.loggedIn = true;
         // Log successful login
         logger.info("Successfully logged in visitor with ID: " + visitorId);
     }
     public void logout(){//3.1
-        setVisitorId(0);
-
+        super.setVisitorId(0);//Might not need this
+        this.loggedIn = false;
     }
 
     public PurchaseHistory getPurchaseHistory(){
@@ -125,5 +128,8 @@ public class RegisteredUser extends SiteVisitor{
 
     public void addPurchaseToHistory(Purchase purchase) {
         purchaseHistory.addPurchaseToHistory(purchase);
+    }
+    public boolean isLoggedIn() {
+        return loggedIn;
     }
 }
