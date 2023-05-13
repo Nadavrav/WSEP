@@ -21,6 +21,11 @@ public class RegisteredUser extends SiteVisitor{
     //add lock
 
 
+    @Override
+    public String toString(){
+        String output ="UserName : "+userName+" Is logged in :"+loggedIn;
+        return output;
+    }
     public RegisteredUser(String userName, String password) throws NoSuchAlgorithmException {
         super(0);
         try{

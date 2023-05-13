@@ -2,6 +2,7 @@ package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Users.Bag;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
@@ -169,7 +170,10 @@ public class Store {
         Rate = rate;
     }
 
-
+    public void addToStoreHistory(Bag b)
+    {
+        History.AddPurchasedShoppingBag(b);
+    }
 
 
     public StoreProduct getProductByID(Integer productId) {

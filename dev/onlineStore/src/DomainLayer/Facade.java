@@ -77,6 +77,7 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
+        registerInitialAdmin();
 
     }
     public static synchronized Facade getInstance() {
@@ -176,7 +177,7 @@ public class Facade {
         else{
             try {
                 Admin admin = new Admin("admin", "admin1234");
-                registeredUserList.replace("admin",admin);
+                registeredUserList.put("admin",admin);
 
             }
             catch (Exception e) {
@@ -197,6 +198,8 @@ public class Facade {
         if (registeredUserList.get(userName) != null) {
             throw  new Exception("This userName already taken");
         }
+
+
         //get site visitor object
         //SiteVisitor visitor = onlineList.get(visitorId);
        // visitor =new RegisteredUser(visitor, userName, password);
@@ -617,22 +620,32 @@ public class Facade {
                 logger.fine("we can avoid this supply");
                 failedPurchases.add(b.getStoreID().toString());
             }
-
-            //Create a transaction for the store
-            if(!paymentProvider.applyTransaction(amount,visitorCard)){
-                failedPurchases.add(b.getStoreID().toString());
-            }
-            LinkedList<String> productsId = new LinkedList<>();
-            productsId.add(b.bagToString());
-            //Create a request to supply bag's product to customer
-            if(!supplier.supplyProducts(productsId)){
-                failedPurchases.add(b.getStoreID().toString());
-            }
             else{
-                if(visitor instanceof RegisteredUser){
-                    ((RegisteredUser)visitor).addPurchaseToHistory(new InstantPurchase(visitor,productsId,amount));
+                //Create a transaction for the store
+                if(!paymentProvider.applyTransaction(amount,visitorCard)){
+                    failedPurchases.add(b.getStoreID().toString());
                 }
+                else
+                {
+                    LinkedList<String> productsId = new LinkedList<>();
+                    productsId.add(b.bagToString());
+                    //Create a request to supply bag's product to customer
+                    if(!supplier.supplyProducts(productsId)){
+                        failedPurchases.add(b.getStoreID().toString());
+                    }
+                    else{
+                        InstantPurchase p = new InstantPurchase(visitor,productsId,amount);
+                        if(visitor instanceof RegisteredUser){
+                            ((RegisteredUser)visitor).addPurchaseToHistory(p);
+
+                        }
+                        storesList.get(b.getStoreID()).addToStoreHistory(b);
+                    }
+                }
+
             }
+
+
 
 
        }
@@ -1089,7 +1102,7 @@ public class Facade {
         ArrayList<String> output=new ArrayList<>();
         LinkedList<Bag> history = store.GetStorePurchaseHistory();
         for(Bag bag:history)
-            output.add(bag.toString());
+            output.add(bag.bagToString());
         logger.info("Exiting method GetStoreHistoryPurchase() with output size: " + output.size());
         return output;
     }
