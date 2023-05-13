@@ -1,6 +1,9 @@
 package UnitTests;
 
 import DomainLayer.Facade;
+import DomainLayer.Stores.Products.Product;
+import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Users.Bag;
 import DomainLayer.Users.Permission;
 import DomainLayer.Users.Role;
 import org.junit.jupiter.api.AfterEach;
@@ -40,6 +43,12 @@ class FacadeTest {
             assertFalse(true);
         }
     }
+
+    @Test
+    void loadData() throws Exception {
+        f.loadData();
+    }
+
     @Test
     void enterNewSiteVisitorTwice() {
         try {
@@ -2296,6 +2305,7 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             String actual = f.GetInformation(storeId);
+          
             String expected = "Store Name is MyStoreStore Rate is:0.0 Product Name is :Milk The rating is : 0.0\n";
             assertTrue(actual.contains(expected));
         }
@@ -2332,21 +2342,29 @@ class FacadeTest {
     void getStoreHistoryPurchase_Admin() {
         try {
             int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
+            String Username = "admin";
+            String password = "admin1234";
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+
             f.login(visitorId,adminUname,adminPass);
+
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+
             f.addProductToCart(pid1,storeId,visitorId);
             f.purchaseCart(visitorId,123,"Adress");
             List<String> actual = f.GetStoreHistoryPurchase(storeId,visitorId);
             List<String> expected = new LinkedList<>();
-            assertEquals(expected,actual);
+            Bag b = new Bag(storeId);
+            b.addProduct(new StoreProduct(pid1,pName,pPrice,pCat,1,pDesc));
+            expected.add(b.bagToString());
+            String es = expected.get(0);
+            String as = actual.get(0);
+            assertTrue(es.equals(as));
         }
         catch (Exception e)
         {//Shouldnt happen
@@ -2407,15 +2425,16 @@ class FacadeTest {
     void getUserHistoryPurchase_Admin() {
         try {
             int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
+            String Username = "admin";
+            String password = "admin1234";
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+       
             f.login(visitorId,Username,password);
+
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,visitorId);
@@ -2429,6 +2448,7 @@ class FacadeTest {
             String expectedDate = today.toString();
             assertTrue(actual.contains(expected));
             assertTrue(actual.contains(expectedDate));
+
         }
         catch (Exception e)
         {//Should happen

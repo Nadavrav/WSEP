@@ -1,5 +1,6 @@
 package DomainLayer.Stores.Purchases;
 
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.SiteVisitor;
 
 import java.util.Date;
@@ -19,6 +20,7 @@ public class InstantPurchase extends Purchase {
         purchaseDate = new Date(); // Date() constructor gives the current date
 
     }
+
     public String toString()
     {
         String output="Items that were purchased are:\n";
@@ -26,6 +28,7 @@ public class InstantPurchase extends Purchase {
            output+=s;
         }
         output += "The total price was :"+totalAmount+" The date of the purchase was:"+purchaseDate.toString()+"\n";
+
         return output;
     }
 }

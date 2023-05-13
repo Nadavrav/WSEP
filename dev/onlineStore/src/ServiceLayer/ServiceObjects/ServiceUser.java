@@ -1,7 +1,6 @@
 package ServiceLayer.ServiceObjects;
 
 import DomainLayer.Users.RegisteredUser;
-import ServiceLayer.Service;
 
 public class ServiceUser {
     public String userName;

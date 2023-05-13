@@ -13,6 +13,7 @@ public class Cart {
 
 
   public Cart(){
+      bagList = new HashMap<>();
       UniversalHandler.GetInstance().HandleInfo(logger);
       UniversalHandler.GetInstance().HandleError(logger);
       bagList = new HashMap<>();

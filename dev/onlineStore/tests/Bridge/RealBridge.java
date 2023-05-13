@@ -2,11 +2,13 @@ package Bridge;
 
 import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
-import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceStore;
 import org.opentest4j.TestSkippedException;
 
 import java.util.ArrayList;
@@ -169,7 +171,7 @@ public class RealBridge implements Bridge {
 
     @Override
     public Response<String> OpenCart() {
-        return (Response<String>)service.getProductsInMyCart(); //TODO: NIKITA
+        return service.getProductsInMyCart(); //TODO: NIKITA
     }
 
     @Override
@@ -206,8 +208,8 @@ public class RealBridge implements Bridge {
         return null; //TODO Waiting for
     }
     @Override
-    public List<ServiceProduct> FilterSearch(List<Filter> filters){
-        Response<List<ServiceProduct>> r= service.FilterProductSearch(filters);
+    public List<ServiceStore> FilterSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
+        Response<List<ServiceStore>> r= service.FilterProductSearch(productFilters,storeFilters);
         if(r.isError())
             return new ArrayList<>();
         return r.getValue();
