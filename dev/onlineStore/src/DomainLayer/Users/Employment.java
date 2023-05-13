@@ -48,13 +48,11 @@ public class Employment {
         }
         catch (Exception ignored){
         }
-            this.appointer = null;
-            this.employee = employee;
-            this.store = store;
-            this.role = role;
-            permissions = null;
-        
-
+        this.appointer = null;
+        this.employee = employee;
+        this.store = store;
+        this.role = role;
+        permissions = null;
     }
 
 
