@@ -6,6 +6,7 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
 
+
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
 
@@ -455,7 +456,7 @@ public class Service {
     }
             
 
-    public Response<List<ServiceUser>> getRegisteredUsersInfo(){
+    /*public Response<List<ServiceUser>> getRegisteredUsersInfo(){
         try {
             ArrayList<ServiceUser> serviceUsers = new ArrayList<>();
             Map<String, RegisteredUser> userMap = facade.getRegisteredUserList(visitorId);
@@ -467,5 +468,5 @@ public class Service {
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
-    }
+    }*/
 }

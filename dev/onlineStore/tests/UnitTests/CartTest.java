@@ -27,7 +27,7 @@ class CartTest {
         cart.addProductToCart(StoreId1, p1);
         Bag actualBag  = cart.getBags().get(StoreId1);
         assertNotNull(actualBag);
-        assertEquals("Product Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n", actualBag.bagToString());
+        assertEquals("Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n", actualBag.bagToString());
     }
 
     @Test
@@ -36,9 +36,11 @@ class CartTest {
         cart.addProductToCart(StoreId1, p1);
         cart.addProductToCart(StoreId1, p3);
         Bag actualBag  = cart.getBags().get(StoreId1);
+
         assertNotNull(actualBag);
-        assertEquals("Product Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n" +
-                "Product Id: 0-1 ,Product Name: Butter ,Product Price: 3.4\n", actualBag.bagToString());
+        String actualBagString = actualBag.bagToString();
+        assertEquals("Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
+                "Name: Butter Description: A Golden Brick Category: Butter price per unit: 3.4 Amount: 1 total price: 3.4\n",actualBagString);
     }
     @Test
     public void testAddProductToCartWithMultipleStoreProducts() {
@@ -50,11 +52,11 @@ class CartTest {
         Bag actualBag  = cart.getBags().get(StoreId1);
         Bag actualBag2  = cart.getBags().get(StoreId2);
         assertNotNull(actualBag);
-        assertEquals("Product Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n" +
-                "Product Id: 0-1 ,Product Name: Butter ,Product Price: 3.4\n", actualBag.bagToString());
+        assertEquals("Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
+                        "Name: Butter Description: A Golden Brick Category: Butter price per unit: 3.4 Amount: 1 total price: 3.4\n",actualBag.bagToString());
         assertNotNull(actualBag2);
-        assertEquals("Product Id: 1-0 ,Product Name: Bread ,Product Price: 7.2\n" +
-                "Product Id: 1-1 ,Product Name: Eggs ,Product Price: 6.8\n", actualBag2.bagToString());
+        assertEquals("Name: Bread Description: Just a whole loaf of bread Category: Bread price per unit: 7.2 Amount: 1 total price: 7.2\n"+
+                "Name: Eggs Description: What came first? Category: Eggs price per unit: 6.8 Amount: 1 total price: 6.8\n",actualBag2.bagToString());
     }
     @Test
     void removeProductFromCart() {
