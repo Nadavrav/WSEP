@@ -349,7 +349,7 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if (appointerEmployment == null || !appointerEmployment.checkIfOwner()) {
+        if (appointerEmployment == null || (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfFounder())) {
             throw  new Exception("the appointer is not owner of store id");
         }
         // check if appointedUserName is registered
@@ -413,7 +413,7 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
+        if(appointerEmployment==null|| (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfFounder())){
             throw  new Exception("the appointer is not owner of store id");
         }
         // check if appointedUserName is registered to system
@@ -752,7 +752,7 @@ public class Facade {
             logger.warning(" employment is null");
             throw new Exception("there is no employee with this id ");
         }
-        if (employment.checkIfOwner()) {
+        if (employment.checkIfFounder()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
                 logger.warning(" store is null");
@@ -764,7 +764,7 @@ public class Facade {
            return;
         }
 
-        throw  new Exception("Just the owner can Close the Store ");
+        throw  new Exception("Only store founder can close the store ");
         //catch
         //release lock user
         //throw e
@@ -795,7 +795,7 @@ public class Facade {
             logger.warning("employment is null");
             throw  new Exception("there is no employee with this id ");
         }
-        if (!employment.checkIfOwner() || !employment.checkIfManager()) {
+        if (!employment.checkIfFounder() && !employment.checkIfOwner() && !employment.checkIfManager()) {
             logger.warning("user are not allowed to add products");
             throw  new Exception("you are not allowed to add products to this store");
         }
@@ -824,7 +824,7 @@ public class Facade {
         }
         if (employment == null)
             throw  new Exception("there is no employee with this id ");
-        if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
+        if (employment.checkIfFounder() || employment.checkIfOwner() || employment.checkIfStoreManager()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
@@ -936,7 +936,7 @@ public class Facade {
         }
         if (employment == null)
             throw new Exception("invalid store id ");
-        if (employment.checkIfOwner()) {
+        if (employment.checkIfOwner() || employment.checkIfFounder()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw new Exception("there is no store with this id ");
