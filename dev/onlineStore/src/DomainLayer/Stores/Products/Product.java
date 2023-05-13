@@ -4,7 +4,7 @@ import DomainLayer.Logging.UniversalHandler;
 
 import java.util.logging.Logger;
 
-public abstract class Product implements StoreProductObserver {
+public class Product implements StoreProductObserver {
     private static final Logger logger=Logger.getLogger("Product logger");
     protected String name;
     protected Double price;
