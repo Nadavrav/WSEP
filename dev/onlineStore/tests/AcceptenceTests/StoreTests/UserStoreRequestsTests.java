@@ -385,10 +385,10 @@ public class UserStoreRequestsTests {
     @Test
     public void FilterSearchTests(){
         FilterSearchPrep();
-        ServiceStoreProduct ServiceHamburger=new ServiceStoreProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5);
-        ServiceStoreProduct ServiceSausage=new ServiceStoreProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5);
-        ServiceStoreProduct ServiceSteak=new ServiceStoreProduct("Steak", 70.0,"test","99% beef, 1% olive oil. kosher",5);
-        ServiceStoreProduct ServiceCheeseburger=new ServiceStoreProduct("Cheeseburger", 40.0,"test","contains cheese and beef",5);
+        ServiceStoreProduct ServiceHamburger=new ServiceStoreProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5,1);
+        ServiceStoreProduct ServiceSausage=new ServiceStoreProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5,1);
+        ServiceStoreProduct ServiceSteak=new ServiceStoreProduct("Steak", 70.0,"test","99% beef, 1% olive oil. kosher",5,1);
+        ServiceStoreProduct ServiceCheeseburger=new ServiceStoreProduct("Cheeseburger", 40.0,"test","contains cheese and beef",5,1);
         ArrayList<StoreFilter> storeFilters=new ArrayList<>();
         storeFilters.add(new NameStoreFilter("Bob's Milk Emporium"));
         NameProductFilter nameFilter=new NameProductFilter("burger");

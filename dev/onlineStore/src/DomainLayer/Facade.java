@@ -1124,10 +1124,12 @@ public class Facade {
         HashMap<Store,List<StoreProduct>> storeProducts=new HashMap<>();
         for(Store store: storesList.values()){ //for each store
             boolean passStoreFilter=true;
+            if(!storeFilters.isEmpty()) {
             for(StoreFilter storeFilter:storeFilters){
-                if(!storeFilter.PassFilter(store)) {
-                    passStoreFilter = false;
-                    break;
+                    if (!storeFilter.PassFilter(store)) {
+                        passStoreFilter = false;
+                        break;
+                    }
                 }
             }
             if(passStoreFilter) {

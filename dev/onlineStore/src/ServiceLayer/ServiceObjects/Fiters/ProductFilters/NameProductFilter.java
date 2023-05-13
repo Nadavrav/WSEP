@@ -9,6 +9,8 @@ public class NameProductFilter implements ProductFilter {
     }
     @Override
     public boolean PassFilter(StoreProduct product) {
+        if(name.equals(""))
+            return true;
         return product.getName().equals(name);
     }
 
