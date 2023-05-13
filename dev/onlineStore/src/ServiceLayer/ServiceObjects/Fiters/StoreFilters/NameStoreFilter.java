@@ -11,6 +11,8 @@ public class NameStoreFilter implements StoreFilter{
 
     @Override
     public boolean PassFilter(Store store) {
+        if(nameFilter.equals(""))
+            return true;
         return store.getName().equals(nameFilter);
     }
 }

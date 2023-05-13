@@ -8,6 +8,7 @@ import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceStore;
 import org.opentest4j.TestSkippedException;
 
 import java.util.ArrayList;
@@ -207,8 +208,8 @@ public class RealBridge implements Bridge {
         return null; //TODO Waiting for
     }
     @Override
-    public List<ServiceProduct> FilterSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
-        Response<List<ServiceProduct>> r= service.FilterProductSearch(productFilters,storeFilters);
+    public List<ServiceStore> FilterSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
+        Response<List<ServiceStore>> r= service.FilterProductSearch(productFilters,storeFilters);
         if(r.isError())
             return new ArrayList<>();
         return r.getValue();

@@ -11,6 +11,8 @@ public class DescriptionProductFilter implements ProductFilter {
 
     @Override
     public boolean PassFilter(StoreProduct product) {
+        if(description.equals(""))
+            return true;
         return product.getDescription().equals(description);
     }
 

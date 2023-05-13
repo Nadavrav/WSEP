@@ -12,6 +12,7 @@ import ServiceLayer.ServiceObjects.Fiters.StoreFilters.NameStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
+import ServiceLayer.ServiceObjects.ServiceStore;
 import TestObjects.TestUser;
 import org.junit.jupiter.api.*;
 
@@ -370,10 +371,11 @@ public class UserStoreRequestsTests {
     //    assertTrue(query.contains("Grill Pack"));
     }
     public void FilterSearchPrep(){
+        bridge.Login(StoreFounder.getUserName(), StoreFounder.getPassword());
         Integer Hamburger=bridge.AddProduct(store1,"Hamburger","contains beef and good taste. kosher",30,70);
         Integer Sausage=bridge.AddProduct(store1,"Sausage","contains beef and lots of oil. kosher",15,120); //Ok
-        Integer Steak=bridge.AddProduct(store3,"Steak","99% beef, 1% olive oil. kosher",70,35); //Ok
-        Integer Cheeseburger=bridge.AddProduct(store3,"Cheeseburger","contains cheese and beef",40,70); //Ok
+        Integer Steak=bridge.AddProduct(store1,"Steak","99% beef, 1% olive oil. kosher",70,35); //Ok
+        Integer Cheeseburger=bridge.AddProduct(store1,"Cheeseburger","contains cheese and beef",40,70); //Ok
         productIdMap.put("Hamburger",Hamburger);
         productIdMap.put("Sausage",Sausage);
         productIdMap.put("Steak",Steak);
@@ -383,12 +385,12 @@ public class UserStoreRequestsTests {
     @Test
     public void FilterSearchTests(){
         FilterSearchPrep();
-        ServiceStoreProduct ServiceHamburger=new ServiceStoreProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5);
-        ServiceStoreProduct ServiceSausage=new ServiceStoreProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5);
-        ServiceStoreProduct ServiceSteak=new ServiceStoreProduct("Steak", 70.0,"test","99% beef, 1% olive oil. kosher",5);
-        ServiceStoreProduct ServiceCheeseburger=new ServiceStoreProduct("Cheeseburger", 40.0,"test","contains cheese and beef",5);
+        ServiceStoreProduct ServiceHamburger=new ServiceStoreProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5,1);
+        ServiceStoreProduct ServiceSausage=new ServiceStoreProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5,1);
+        ServiceStoreProduct ServiceSteak=new ServiceStoreProduct("Steak", 70.0,"test","99% beef, 1% olive oil. kosher",5,1);
+        ServiceStoreProduct ServiceCheeseburger=new ServiceStoreProduct("Cheeseburger", 40.0,"test","contains cheese and beef",5,1);
         ArrayList<StoreFilter> storeFilters=new ArrayList<>();
-        storeFilters.add(new NameStoreFilter("Milk"));
+        storeFilters.add(new NameStoreFilter("Bob's Milk Emporium"));
         NameProductFilter nameFilter=new NameProductFilter("burger");
         MaxPriceProductFilter maxPriceFilter=new MaxPriceProductFilter(35);
         ArrayList<ProductFilter> nameProductFilterList =new ArrayList<>();
@@ -396,18 +398,18 @@ public class UserStoreRequestsTests {
         ArrayList<ProductFilter> maxPriceAndNameProductFilterList =new ArrayList<>();
         maxPriceAndNameProductFilterList.add(nameFilter);
         maxPriceAndNameProductFilterList.add(maxPriceFilter);
-        List<ServiceProduct> nameSearch=bridge.FilterSearch(nameProductFilterList,storeFilters);
-        List<ServiceProduct> nameAndPriceSearch=bridge.FilterSearch(maxPriceAndNameProductFilterList,storeFilters);
+        List<ServiceStore> nameSearch=bridge.FilterSearch(nameProductFilterList,storeFilters);
+        List<ServiceStore> nameAndPriceSearch=bridge.FilterSearch(maxPriceAndNameProductFilterList,storeFilters);
         //testing name filter
-        assertTrue(nameSearch.contains(ServiceHamburger));
-        assertTrue(nameSearch.contains(ServiceCheeseburger));
-        assertFalse(nameSearch.contains(ServiceSausage));
-        assertFalse(nameSearch.contains(ServiceSteak));
+        assertTrue(nameSearch.get(0).getProductList().contains(ServiceHamburger));
+        assertTrue(nameSearch.get(0).getProductList().contains(ServiceCheeseburger));
+        assertFalse(nameSearch.get(0).getProductList().contains(ServiceSausage));
+        assertFalse(nameSearch.get(0).getProductList().contains(ServiceSteak));
         //testing name and price filters
-        assertTrue(nameSearch.contains(ServiceHamburger));
-        assertFalse(nameSearch.contains(ServiceCheeseburger));
-        assertFalse(nameSearch.contains(ServiceSausage));
-        assertFalse(nameSearch.contains(ServiceSteak));
+        assertTrue(nameAndPriceSearch.get(0).getProductList().contains(ServiceHamburger));
+        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceCheeseburger));
+        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceSausage));
+        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceSteak));
     }
     @Order(21)
     @Test
