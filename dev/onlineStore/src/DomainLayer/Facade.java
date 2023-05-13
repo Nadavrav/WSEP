@@ -147,8 +147,14 @@ public class Facade {
 
     public void ExitSiteVisitor(int id) throws Exception {//1.2
         SiteVisitor.ExitSiteVisitor(id);
-        onlineList.remove(id);
-        logger.info("A  visitor with Id:" + id + "has Exit");
+        if(onlineList.containsKey(id)) {
+            onlineList.remove(id);
+            logger.info("A  visitor with Id:" + id + "has Exit");
+        }
+        else {
+            logger.info("Tried to exit A  visitor with Id:" + id + ", this id doesnt exist in online list");
+            throw new IllegalArgumentException("No online user with this id");
+        }
     }
     public synchronized void registerAdmin(int visitorid,String userName,String password) throws Exception{
         logger.info("Starting admin registration");
@@ -176,8 +182,12 @@ public class Facade {
         }
         else{
             try {
+
                 Admin admin = new Admin("admin", "admin1234");
-                registeredUserList.put("admin",admin);
+                if(registeredUserList.containsKey("admin"))
+                    registeredUserList.replace("admin",admin);
+                else
+                    registeredUserList.put("admin",admin);
 
             }
             catch (Exception e) {
@@ -214,6 +224,7 @@ public class Facade {
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
 
         RegisteredUser user = registeredUserList.get(userName);
+        boolean b = registeredUserList.get("admin")!=null;
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
             logger.warning("User IS NOT Entered in the system");
             throw  new Exception("Invalid Visitor ID");
@@ -402,8 +413,8 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if (appointerEmployment == null || !appointerEmployment.checkIfOwner()) {
-            throw  new Exception("the appointer is not owner of store id");
+        if (appointerEmployment == null || !appointerEmployment.canAppointOwner()) {
+            throw  new Exception("User cannot appoint store owner");
         }
         // check if appointedUserName is registered
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
@@ -466,8 +477,8 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
-            throw  new Exception("the appointer is not owner of store id");
+        if(appointerEmployment==null || !appointerEmployment.canAppointManager()){
+            throw  new Exception("User isnt allowed to appoint store manager");
         }
         // check if appointedUserName is registered to system
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
@@ -527,11 +538,11 @@ public class Facade {
         try{
             appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeID);
         }catch (Exception e){
-            throw  new Exception("the appointer is not owner of store id");
+            throw  new Exception("the appointer is not owner of store");
         }
 
-        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
-            throw  new Exception("the appointer is not owner of store id");
+        if(appointerEmployment==null|| (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfFounder())){
+            throw  new Exception("the appointer is not owner of store");
         }
 
         //Check if username is registered to system
@@ -751,7 +762,7 @@ public class Facade {
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
-        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreOwner);
+        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreFounder);
         logger.config("adding new employment to the new store ");
         // andd to employment list
         if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
@@ -815,7 +826,7 @@ public class Facade {
             logger.warning(" employment is null");
             throw new Exception("there is no employee with this id ");
         }
-        if (employment.checkIfOwner()) {
+        if (employment.checkIfFounder()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
                 logger.warning(" store is null");
@@ -827,7 +838,7 @@ public class Facade {
            return;
         }
 
-        throw  new Exception("Just the owner can Close the Store ");
+        throw  new Exception("Only store founder can close the store ");
         //catch
         //release lock user
         //throw e
@@ -858,9 +869,9 @@ public class Facade {
             logger.warning("employment is null");
             throw  new Exception("there is no employee with this id ");
         }
-        if (!employment.checkIfOwner()) {//check if need manager
-            logger.warning("user are not the manager trying to add");
-            throw  new Exception("you are not the owner of this store ");
+        if (!employment.checkIfFounder() && !employment.checkIfOwner() && !employment.checkIfManager()) {
+            logger.warning("user are not allowed to add products");
+            throw  new Exception("you are not allowed to add products to this store");
         }
         return store.AddNewProduct(productName,price,quantity,category,description);
         //catch
@@ -887,13 +898,14 @@ public class Facade {
         }
         if (employment == null)
             throw  new Exception("there is no employee with this id ");
-        if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
+        if (employment.checkIfFounder() || employment.checkIfOwner() || employment.checkIfStoreManager()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
             }
             store.RemoveProduct(ProductId);
             //return new Response<>("the Product is successfully added", false);
+            return;
         }
         logger.warning("Only the owner can close the store: " + visitorId);
         logger.fine("Exiting method RemoveProduct()");
@@ -976,12 +988,17 @@ public class Facade {
     }
 
     public void UpdateProductDescription(int visitorId, int productId,int storeId,String description) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
-
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
-        Store store = storesList.get(productId);
-        store.UpdateProductDescription(productId,description);
-        logger.fine("Exiting method UpdateProductDescription()");
+        Store store = storesList.get(storeId);
+        if(store != null) {
+            store.UpdateProductDescription(productId, description);
+            logger.fine("Exiting method UpdateProductDescription()");
+        }
+        else {
+            logger.fine("Failed at UpdateProductDescription because there was no store with the requested store Id");
+            throw new IllegalArgumentException("There is no store with this store id :"+storeId);
+        }
 
     }
 
@@ -999,17 +1016,17 @@ public class Facade {
         }
         if (employment == null)
             throw new Exception("invalid store id ");
-        if (employment.checkIfOwner()) {
+        if (employment.checkIfOwner() || employment.checkIfFounder()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw new Exception("there is no store with this id ");
             }
             logger.info("Exiting method checkifUserCanUpdateStoreProduct() with success");
             //return new Response<>("the Product is successfully added", false);
+            return;
         }
         logger.info("Exiting method checkifUserCanUpdateStoreProduct() with failure");
-
-        throw new Exception("Just the owner can Close the Store ");
+        throw new Exception("This user isn't allowed to update this product");
     }
 
     //2.2 search  product

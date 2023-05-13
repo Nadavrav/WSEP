@@ -21,14 +21,14 @@ public class InstantPurchase extends Purchase {
 
     }
 
-    @Override
-    public String toString(){
-        String output="";
-        output += "Buyer : "+buyer.toString()+" Products : ";
-        for (String s:productsList){
-            output += s+"\n";
+    public String toString()
+    {
+        String output="Items that were purchased are:\n";
+        for (String s :productsList) {
+           output+=s;
         }
-        output += " Total amount : "+totalAmount;
+        output += "The total price was :"+totalAmount+" The date of the purchase was:"+purchaseDate.toString()+"\n";
+
         return output;
     }
 }

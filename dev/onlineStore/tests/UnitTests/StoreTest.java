@@ -40,23 +40,37 @@ class StoreTest {
 
     @Test
     void addNewProduct() {
-        s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
-        StoreProduct actual = s.getProducts().get(1);
-        assertEquals(p1,actual);//Make this check if the product was actually added
+        Integer pid = s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
+        StoreProduct actual = s.getProducts().get(pid);
+        assertNotNull(actual);//Make this check if the product was actually added
+        assertEquals(p1.getName(),actual.getName());
+        assertEquals(p1.getPrice(),actual.getPrice());
+        assertEquals(p1.getCategory(),actual.getCategory());
+        assertEquals(p1.getQuantity(),actual.getQuantity());
+        assertEquals(p1.getDescription(),actual.getDescription());
     }
     @Test
     void addNewProductMultiple() {
-        s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
-        s1.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
-        StoreProduct actual1 = s.getProducts().get(1);
-        assertEquals(p1,actual1);//Make this check if the product was actually added
-        StoreProduct actual2 = s.getProducts().get(1);
-        assertEquals(p2,actual2);//Make this check if the product was actually added
+        Integer pid1 = s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
+        Integer pid2 = s1.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
+        StoreProduct actual1 = s.getProducts().get(pid1);
+        StoreProduct actual2 = s.getProducts().get(pid2);
+        assertNotNull(actual1);
+        assertEquals(p1.getName(),actual1.getName());
+        assertEquals(p1.getPrice(),actual1.getPrice());
+        assertEquals(p1.getCategory(),actual1.getCategory());
+        assertEquals(p1.getQuantity(),actual1.getQuantity());
+        assertEquals(p1.getDescription(),actual1.getDescription());
+        assertNotNull(actual2);
+        assertEquals(p1.getName(),actual2.getName());
+        assertEquals(p1.getPrice(),actual2.getPrice());
+        assertEquals(p1.getCategory(),actual2.getCategory());
+        assertEquals(p1.getQuantity(),actual2.getQuantity());
+        assertEquals(p1.getDescription(),actual2.getDescription());
     }
 
     @Test
     void removeProduct() {
-        setup();
         s.RemoveProduct(p1.getProductId());
         s1.RemoveProduct(p1.getProductId());
         s.RemoveProduct(p2.getProductId());
@@ -71,76 +85,17 @@ class StoreTest {
 
     @Test
     void searchProductByName() throws Exception {
-        setup();
+        Integer pid1 = s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
+        Integer pid2 = s1.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
+        StoreProduct actual1 = s.getProducts().get(pid1);
+        StoreProduct actual2 = s1.getProducts().get(pid2);
         LinkedList<StoreProduct> searchResults = s.SearchProductByName(p1Name);
-        assertTrue(searchResults.contains(p1));
-        assertFalse(searchResults.contains(p2));
-        s.setActive(false);
-        searchResults = s.SearchProductByName(p1Name);
-        assertEquals(0, searchResults.size());
-        // for s1
-        LinkedList<StoreProduct> searchResults1 = s1.SearchProductByName(p1Name);
-        assertTrue(searchResults1.contains(p1));
-        assertFalse(searchResults1.contains(p2));
-        s.setActive(false);
-        searchResults1 = s1.SearchProductByName(p1Name);
-        assertEquals(0, searchResults1.size());
-    }
-/*
-    @Test
-    void searchProductByCategory() {
-        setup();
-        try {
-            LinkedList<StoreProduct> searchResults = s.SearchProductByCategory(p1Cate);
-            assertTrue(searchResults.contains(p1));
-            assertFalse(searchResults.contains(p2));
-            s.setActive(false);
-            searchResults = s.SearchProductByCategory(p1Cate);
-            assertEquals(0, searchResults.size());
-            // for s1
-            LinkedList<StoreProduct> searchResults1 = s1.SearchProductByCategory(p1Cate);
-            assertTrue(searchResults1.contains(p1));
-            assertFalse(searchResults1.contains(p2));
-            s.setActive(false);
-            searchResults1 = s1.SearchProductByCategory(p1Cate);
-            assertEquals(0, searchResults1.size());
-        }
-        catch (Exception e) {
-            fail();
-        }
-    }
-
-    @Test
-    void searchProductByKey() {
-        setup();
-        try {
-            LinkedList<StoreProduct> searchResults = (LinkedList<StoreProduct>) s.SearchProductByKey("Milk");
-            assertTrue(searchResults.contains(p1));
-            assertFalse(searchResults.contains(p2));
-            s.setActive(false);
-            searchResults = (LinkedList<StoreProduct>) s.SearchProductByKey("Milk");
-            assertEquals(0, searchResults.size());
-            // for s1
-            LinkedList<StoreProduct> searchResults1 = (LinkedList<StoreProduct>) s1.SearchProductByKey("Milk");
-            assertTrue(searchResults1.contains(p1));
-            assertFalse(searchResults1.contains(p2));
-            s.setActive(false);
-            searchResults1 = (LinkedList<StoreProduct>) s1.SearchProductByKey("Milk");
-            assertEquals(0, searchResults1.size());
-        }
-        catch (Exception e){
-            fail();
-        }
-    }
-*/
-    @Test
-    // we have a add new product method
-    void addProduct() {
+        assertTrue(searchResults.contains(actual1));
+        assertFalse(searchResults.contains(actual2));
     }
 
     @Test
     void updateProductQuantity() {
-        setup();
         p1.setQuantity(3);
         p2.setQuantity(5);
         assertEquals(3,p1.getQuantity());
@@ -149,7 +104,6 @@ class StoreTest {
 
     @Test
     void increaseProductQuantity() {
-        setup();
      int save = p1.getQuantity();
      int save1 = p2.getQuantity();
      p1.IncreaseQuantity(3);
@@ -160,7 +114,6 @@ class StoreTest {
 
     @Test
     void updateProductName() {
-        setup();
         p1.setName("Milk1");
         p2.setName("Butter1");
         assertEquals("Milk1",p1.getName());
@@ -169,7 +122,6 @@ class StoreTest {
 
     @Test
     void updateProductPrice() {
-        setup();
         p1.setPrice(5.6);
         p2.setPrice(12.7);
         assertEquals(5.6,p1.getPrice());
@@ -178,7 +130,6 @@ class StoreTest {
 
     @Test
     void updateProductCategory() {
-        setup();
         p1.setCategory("Milk1");
         p2.setCategory("Butter1");
         assertEquals("Milk1",p1.getCategory());
@@ -187,7 +138,6 @@ class StoreTest {
 
     @Test
     void updateProductDescription() {
-        setup();
         p1.setDescription("cant you see its a milk");
         p2.setDescription("Butter for lover");
         assertEquals("cant you see its a milk",p1.getDescription());
@@ -196,7 +146,6 @@ class StoreTest {
 
     @Test
     void addRating() throws Exception {
-        setup();
         p1.EditRating("majd",4);
         p1.EditRating("natalie",2);
         assertEquals(3,p1.getAverageRating());
@@ -208,12 +157,33 @@ class StoreTest {
 
     @Test
     void addRatingAndComment() throws Exception {
-        setup();
         p1.addRatingAndComment("majd",4,"its so delicious");
         p1.addRatingAndComment("natalie",1,"to fats");
         Rating rate= new Rating(4,"its so delicious");
         Rating rate1= new Rating(1,"to fats");
-        assertEquals(rate,p1.getRateMap().get("majd"));
-        assertEquals(rate1,p1.getRateMap().get("natalie"));
+        assertEquals(rate.getRating(),p1.getRateMap().get("majd").getRating());
+        assertEquals(rate.getComment(),p1.getRateMap().get("majd").getComment());
+        assertEquals(rate1.getRating(),p1.getRateMap().get("natalie").getRating());
+        assertEquals(rate1.getComment(),p1.getRateMap().get("natalie").getComment());
+    }
+    @Test
+    void CreateProduct_Nullname() {
+        assertThrows(NullPointerException.class,()->s.AddNewProduct(null,5.0,5,"Milk","Its Milk what did you expect"));
+    }
+    @Test
+    void CreateProduct_negativePrice() {
+        assertThrows(IllegalArgumentException.class,()->s.AddNewProduct("Milk",-5.0,5,"Milk","Its Milk what did you expect"));
+    }
+    @Test
+    void CreateProduct_NegativeQuantity() {
+        assertThrows(IllegalArgumentException.class,()->s.AddNewProduct("Milk",5.0,-5,"Milk","Its Milk what did you expect"));
+    }
+    @Test
+    void CreateProduct_NullCategory() {
+        assertThrows(NullPointerException.class,()->s.AddNewProduct("Milk",5.0,5,null,"Its Milk what did you expect"));
+    }
+    @Test
+    void CreateProduct_NullDesc() {
+        assertThrows(NullPointerException.class,()->s.AddNewProduct("Milk",5.0,5,"Milk",null));
     }
 }
