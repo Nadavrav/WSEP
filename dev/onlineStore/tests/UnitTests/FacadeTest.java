@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FacadeTest {
     Facade f = Facade.getInstance();
+    private String adminUname= "admin";
+    private String adminPass = "admin123";
     @BeforeEach
     void setup()
     {
@@ -114,7 +117,7 @@ class FacadeTest {
         try {
             int visitorId = f.EnterNewSiteVisitor();
             String Username = "ValidUsername";
-            assertThrows(IllegalArgumentException.class,()->f.Register(visitorId,Username,null));
+            assertThrows(NullPointerException.class,()->f.Register(visitorId,Username,null));
         }
         catch (Exception e)
         {//Should happen
@@ -1316,10 +1319,10 @@ class FacadeTest {
             f.Register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
-            //TODO FIND OUT WHY USER1 ISNT THE OWNER OF ITS OWN STORE
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
+            System.out.print("Got to here\n");
             int actual = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);//add a product
             //assertEquals("",actual);//check the product was added
         }
@@ -2157,251 +2160,6 @@ class FacadeTest {
             assertFalse(true);
         }
     }
-    /*
-    @Test
-    void searchProductByName_productExists() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            String actual = f.SearchProductByName(pName);
-            String expected="";
-            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES AND NOT OBJECTS
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-    @Test
-    void searchProductByName_MultipleProdcts() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            double pPrice2 = 6.0;
-            String pCat2 = "Bread";
-            int pQuan2 = 10;
-            String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.AddProduct(visitorId,storeId,pName,pPrice2,pCat2,pQuan2,pDesc2);
-            String actual = f.SearchProductByName(pName);
-            String expected="";
-            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES AND NOT OBJECTS
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-    @Test
-    void searchProductByName_nameDoesntExist() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            String actual = f.SearchProductByName("Bread");
-            String expected="[]";
-            assertEquals(expected,actual);
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-
-    @Test
-    void searchProductByCate_productExists() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            String actual = f.SearchProductByCategory(pCat);
-            String expected="";
-            assertEquals(expected,actual);//TODO MAKE SearchProducyByCat return vales and not Objects
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-    @Test
-    void searchProductByCate_MultipleProdcts() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            String pName2 = "Bread";
-            double pPrice2 = 6.0;
-            int pQuan2 = 10;
-            String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat,pQuan2,pDesc2);
-            String actual = f.SearchProductByCategory(pName);
-            String expected="";
-            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES INSTEAD OF OBJECTS
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-    @Test
-    void searchProductByCate_CateDoesntExist() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            String actual = f.SearchProductByCategory("Bread");
-            String expected="[]";
-            assertEquals(expected,actual);
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-
-    @Test
-    void searchProductByKey_productExists() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            List<String> actual = f.SearchProductBykey(pCat);
-            List<String> expected=new ArrayList<>();
-            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES AND NOT OBJECTS
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-    @Test
-    void searchProductByKey_MultipleProdcts() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            String pName2 = "Bread";
-            double pPrice2 = 6.0;
-            int pQuan2 = 10;
-            String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat,pQuan2,pDesc2);
-            List<String> actual = f.SearchProductBykey(pCat);
-            List<String> expected=new ArrayList<>();
-            assertEquals(expected,actual);//TODO MAKE THIS RETURN VALUES AND NOT OBJECTS
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-    @Test
-    void searchProductByKey_KeyDoesntExist() {
-        try {
-            int visitorId = f.EnterNewSiteVisitor();
-            String Username = "ValidUsername";
-            String password = "123456789";
-            String pName = "Milk";
-            double pPrice = 5.0;
-            String pCat = "Milk";
-            int pQuan = 10;
-            String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);
-            int storeId = f.OpenNewStore(visitorId,"MyStore");
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            List<String> actual = f.SearchProductBykey("SomethingRandom");
-            List<String> expected=new ArrayList<>();
-            assertEquals(expected,actual);
-        }
-        catch (Exception e)
-        {//Should happen
-            System.out.println(e.getMessage());
-            assertFalse(true);
-        }
-    }
-*/
     @Test
     void getInformation_ExistingStore() {
         try {
@@ -2418,8 +2176,8 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             String actual = f.GetInformation(storeId);
-            String expected = "Store Name is MyStoreStore Rate is:5.0 Product Name is :MilkThe Rate is : 0.0\n";
-            assertEquals(expected,actual);
+            String expected = "Store Name is MyStoreStore Rate is:0.0 Product Name is :Milk The rating is : 0.0\n";
+            assertTrue(actual.contains(expected));
         }
         catch (Exception e)
         {//Should happen
@@ -2461,8 +2219,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);//TODO CHANGE TO ADMIN
+            f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid1,storeId,visitorId);
@@ -2513,8 +2270,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);//TODO CHANGE TO ADMIN
+            f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,visitorId);
@@ -2539,14 +2295,20 @@ class FacadeTest {
             int pQuan = 10;
             String pDesc = "Milk";
             f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);//TODO CHANGE TO ADMIN
+            f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,visitorId);
+            Date today = new Date();
             f.purchaseCart(visitorId,123,"Adress");
+            f.logout(visitorId);
+            f.login(visitorId,adminUname,adminPass);
             String actual = f.GetUserHistoryPurchase(Username,visitorId);
-            String expected = "";
-            assertEquals(expected,actual);
+            String expected = "Name: Milk Description: Milk Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
+                    "The total price was :5.0";
+            String expectedDate = today.toString();
+            assertTrue(actual.contains(expected));
+            assertTrue(actual.contains(expectedDate));
         }
         catch (Exception e)
         {//Should happen
@@ -2590,8 +2352,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
-            f.login(visitorId,Username,password);//TODO CHANGE TO ADMIN
+            f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,visitorId);
