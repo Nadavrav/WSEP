@@ -40,6 +40,12 @@ class FacadeTest {
             assertFalse(true);
         }
     }
+
+    @Test
+    void loadData() throws Exception {
+        f.loadData();
+    }
+
     @Test
     void enterNewSiteVisitorTwice() {
         try {

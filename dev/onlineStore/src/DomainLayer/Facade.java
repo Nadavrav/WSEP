@@ -206,7 +206,9 @@ public class Facade {
         //onlineList.put(visitorId,visitor);
         // create new register user
         logger.info("new visitor has register");
-        registeredUserList.put(userName, new RegisteredUser(userName, password));
+        RegisteredUser r = new RegisteredUser(userName, password);
+        onlineList.replace(visitorId,r);
+        registeredUserList.put(userName, r);
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
