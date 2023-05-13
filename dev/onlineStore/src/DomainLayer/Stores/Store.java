@@ -62,7 +62,7 @@ public class Store {
         }
         StringBuilder s = new StringBuilder("Store Name is " + this.Name + "Store Rate is:" + getRate());
         for (StoreProduct i : products.values()) {
-            s.append(" Product Name is :").append(i.getName()).append("The rating is : ").append(i.getAverageRating()).append("\n");
+            s.append(" Product Name is :").append(i.getName()).append(" The rating is : ").append(i.getAverageRating()).append("\n");
         }
         return s.toString();
     }
