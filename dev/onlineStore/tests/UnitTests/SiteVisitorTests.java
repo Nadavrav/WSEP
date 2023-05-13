@@ -1,6 +1,7 @@
 package UnitTests;
 
 import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Users.Cart;
 import DomainLayer.Users.SiteVisitor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,7 +87,9 @@ class SiteVisitorTest {
         StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
         int StoreId = 0;
         visitor.addProductToCart(StoreId,p1);
-        assertEquals("Store Id : 0\nProduct Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\n",visitor.getCart().cartToString());
+        String expected = "Store Id : 0\n" +
+                "Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n";
+        assertEquals(expected,visitor.getCart().cartToString());
     }
     @Test
     void addProductToCart_MulipleProducts() {
@@ -96,7 +99,10 @@ class SiteVisitorTest {
         int StoreId = 0;
         visitor.addProductToCart(StoreId,p1);
         visitor.addProductToCart(StoreId,p2);
-        assertEquals("Store Id : 0\nProduct Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\nProduct Id: 0-1 ,Product Name: Bread ,Product Price: 7.2\n",visitor.getCart().cartToString());
+        String expected = "Store Id : 0\n" +
+                "Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
+                "Name: Bread Description: Just a whole loaf of bread Category: Bread price per unit: 7.2 Amount: 1 total price: 7.2\n";
+        assertEquals(expected,visitor.getCart().cartToString());
     }
     @Test
     void addProductToCart_MulipleProducts2() {
@@ -107,7 +113,10 @@ class SiteVisitorTest {
         int StoreId = 0;
         visitor.addProductToCart(StoreId,p1);
         visitor.addProductToCart(StoreId,p3);
-        assertEquals("Store Id : 0\nProduct Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\nProduct Id: 0-2 ,Product Name: Butter ,Product Price: 3.4\n",visitor.getCart().cartToString());
+        String expected = "Store Id : 0\n" +
+                "Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
+                "Name: Butter Description: A Golden Brick Category: Butter price per unit: 3.4 Amount: 1 total price: 3.4\n";
+        assertEquals(expected,visitor.getCart().cartToString());
     }
     @Test
     void addProductToCart_MulipleProductsDiffrentShops() {
@@ -121,8 +130,13 @@ class SiteVisitorTest {
         visitor.addProductToCart(StoreId1,p3);
         visitor.addProductToCart(StoreId2,p2);
         visitor.addProductToCart(StoreId2,p4);
-        assertEquals("Store Id : 0\nProduct Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\nProduct Id: 0-1 ,Product Name: Butter ,Product Price: 3.4\n" +
-                "Store Id : 1\nProduct Id: 1-0 ,Product Name: Bread ,Product Price: 7.2\nProduct Id: 1-1 ,Product Name: Eggs ,Product Price: 6.8\n",visitor.getCart().cartToString());
+        String expected = "Store Id : 0\n" +
+                "Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
+                "Name: Butter Description: A Golden Brick Category: Butter price per unit: 3.4 Amount: 1 total price: 3.4\n" +
+                "Store Id : 1\n" +
+                "Name: Bread Description: Just a whole loaf of bread Category: Bread price per unit: 7.2 Amount: 1 total price: 7.2\n" +
+                "Name: Eggs Description: What came first? Category: Eggs price per unit: 6.8 Amount: 1 total price: 6.8\n";
+        assertEquals(expected,visitor.getCart().cartToString());
     }
     @Test
     void cartToString_EmptyCart() {
@@ -140,7 +154,9 @@ class SiteVisitorTest {
         int StoreId = 0;
         visitor.addProductToCart(StoreId,p1);
         visitor.addProductToCart(StoreId,p2);
-        String expected = "Store Id : 0\nProduct Id: 0-0 ,Product Name: Milk ,Product Price: 5.0\nProduct Id: 0-1 ,Product Name: Bread ,Product Price: 7.2\n";
+        String expected = "Store Id : 0\n" +
+                "Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
+                "Name: Bread Description: Just a whole loaf of bread Category: Bread price per unit: 7.2 Amount: 1 total price: 7.2\n";
         String actual = visitor.cartToString();
         assertEquals(expected,actual);
 

@@ -16,6 +16,7 @@ public class Cart {
       bagList = new HashMap<>();
       UniversalHandler.GetInstance().HandleInfo(logger);
       UniversalHandler.GetInstance().HandleError(logger);
+      bagList = new HashMap<>();
   }
 
         //check if there is bag to store
