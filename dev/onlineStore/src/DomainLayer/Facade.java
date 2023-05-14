@@ -2,6 +2,7 @@ package DomainLayer;
 
 
 
+import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
@@ -635,33 +636,47 @@ public class Facade {
 
             //Calculate amount
             double amount = b.calculateTotalAmount();
-
-            //Check if possible to create a supply
-            if(!supplier.isValidAddress(address)){
-                logger.fine("we can avoid this supply");
+            Store s = storesList.get(b.getStoreID());
+            boolean foundProductWithLowQuantity = false;
+            for(CartProduct p : b.getProducts())
+            {
+                if(s.getProducts().get(p).getQuantity() < p.getAmount()) {
+                    foundProductWithLowQuantity = true;
+                }
+            }
+            if(foundProductWithLowQuantity) {
                 failedPurchases.add(b.getStoreID().toString());
             }
-            else{
-                //Create a transaction for the store
-                if(!paymentProvider.applyTransaction(amount,visitorCard)){
+            else
+            {
+                //Check if possible to create a supply
+                if(!supplier.isValidAddress(address)){
+                    logger.fine("we can avoid this supply");
                     failedPurchases.add(b.getStoreID().toString());
                 }
-                else
-                {
-                    LinkedList<String> productsId = new LinkedList<>();
-                    productsId.add(b.bagToString());
-                    //Create a request to supply bag's product to customer
-                    if(!supplier.supplyProducts(productsId)){
+                else{
+                    //Create a transaction for the store
+                    if(!paymentProvider.applyTransaction(amount,visitorCard)){
                         failedPurchases.add(b.getStoreID().toString());
                     }
-                    else{
-                        InstantPurchase p = new InstantPurchase(visitor,productsId,amount);
-                        if(visitor instanceof RegisteredUser){
-                            ((RegisteredUser)visitor).addPurchaseToHistory(p);
-
+                    else
+                    {
+                        LinkedList<String> productsId = new LinkedList<>();
+                        productsId.add(b.bagToString());
+                        //Create a request to supply bag's product to customer
+                        if(!supplier.supplyProducts(productsId)){
+                            failedPurchases.add(b.getStoreID().toString());
                         }
-                        storesList.get(b.getStoreID()).addToStoreHistory(b);
+                        else{
+                            InstantPurchase p = new InstantPurchase(visitor,productsId,amount);
+                            if(visitor instanceof RegisteredUser){
+                                ((RegisteredUser)visitor).addPurchaseToHistory(p);
+
+                            }
+                            storesList.get(b.getStoreID()).addToStoreHistory(b);
+                        }
                     }
+
                 }
 
             }
