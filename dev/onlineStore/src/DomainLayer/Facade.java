@@ -2,6 +2,7 @@ package DomainLayer;
 
 
 
+import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
@@ -9,9 +10,10 @@ import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
-import ServiceLayer.ServiceObjects.Fiters.Filter;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -76,6 +78,7 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
+        registerInitialAdmin();
 
     }
     public static synchronized Facade getInstance() {
@@ -83,6 +86,63 @@ public class Facade {
             instanceFacade = new Facade();
         }
         return instanceFacade;
+    }
+
+    public void loadData() throws Exception {
+
+        try{
+            //New users
+            int nadavID = EnterNewSiteVisitor();
+            int nadiaID = EnterNewSiteVisitor();
+            int natalieID = EnterNewSiteVisitor();
+            int majdID = EnterNewSiteVisitor();
+            int denisID = EnterNewSiteVisitor();
+            int nikitaID = EnterNewSiteVisitor();
+
+
+            Register(nadavID,"Nadav","123456789");
+            Register(nadiaID,"Nadia","123456789");
+            Register(natalieID,"Natalie","123456789");
+            Register(majdID,"Majd","123456789");
+            Register(denisID,"Denis","123456789");
+            Register(nikitaID,"Nikita","123456789");
+
+            login(nadavID,"Nadav","123456789");
+            login(nadiaID,"Nadia","123456789");
+            login(natalieID,"Natalie","123456789");
+            login(majdID,"Majd","123456789");
+            login(denisID,"Denis","123456789");
+            login(nikitaID,"Nikita","123456789");
+
+            //New Stores
+            int nadavStoreID = OpenNewStore(nadavID,"NadavStore");
+            int nadiaStoreID = OpenNewStore(nadiaID,"NadiaStore");
+            int natalieStoreID = OpenNewStore(natalieID,"NatalieStore");
+            int majdStoreID = OpenNewStore(majdID,"MajdStore");
+            int denisStoreID = OpenNewStore(denisID,"DenisStore");
+            int nikitaStoreID = OpenNewStore(nikitaID,"NikitaStore");
+
+            //New Products
+            AddProduct(nadavID,nadavStoreID,"Milk",6,"Milk",30,"Good milk");
+            AddProduct(nadiaID,nadiaStoreID,"Orange Juice",16,"Juice",90,"Good juice");
+            AddProduct(natalieID,natalieStoreID,"Apples",900,"Fruits",1,"Good apples");
+            AddProduct(majdID,majdStoreID,"Milk",6,"Milk",30,"Good milk");
+            AddProduct(denisID,denisStoreID,"Milk",6,"Milk",30,"Good milk");
+            AddProduct(nikitaID,nikitaStoreID,"Milk",6,"Milk",30,"Good milk");
+
+            logout(nadavID);
+            logout(nadiaID);
+            logout(natalieID);
+            logout(majdID);
+            logout(denisID);
+            logout(nikitaID);
+
+
+        }
+        catch(Exception e){
+            throw new Exception(e);
+        }
+
     }
 
 //------------UserPackege-----------------------
@@ -95,8 +155,14 @@ public class Facade {
 
     public void ExitSiteVisitor(int id) throws Exception {//1.2
         SiteVisitor.ExitSiteVisitor(id);
-        onlineList.remove(id);
-        logger.info("A  visitor with Id:" + id + "has Exit");
+        if(onlineList.containsKey(id)) {
+            onlineList.remove(id);
+            logger.info("A  visitor with Id:" + id + "has Exit");
+        }
+        else {
+            logger.info("Tried to exit A  visitor with Id:" + id + ", this id doesnt exist in online list");
+            throw new IllegalArgumentException("No online user with this id");
+        }
     }
     public synchronized void registerAdmin(int visitorid,String userName,String password) throws Exception{
         logger.info("Starting admin registration");
@@ -124,8 +190,12 @@ public class Facade {
         }
         else{
             try {
-                Admin admin = new Admin("admin", "admin");
-                registeredUserList.replace("admin",admin);
+
+                Admin admin = new Admin("admin", "admin1234");
+                if(registeredUserList.containsKey("admin"))
+                    registeredUserList.replace("admin",admin);
+                else
+                    registeredUserList.put("admin",admin);
 
             }
             catch (Exception e) {
@@ -146,18 +216,23 @@ public class Facade {
         if (registeredUserList.get(userName) != null) {
             throw  new Exception("This userName already taken");
         }
+
+
         //get site visitor object
         //SiteVisitor visitor = onlineList.get(visitorId);
        // visitor =new RegisteredUser(visitor, userName, password);
         //onlineList.put(visitorId,visitor);
         // create new register user
         logger.info("new visitor has register");
-        registeredUserList.put(userName, new RegisteredUser(userName, password));
+        RegisteredUser r = new RegisteredUser(userName, password);
+        //onlineList.replace(visitorId,r);
+        registeredUserList.put(userName, r);
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
 
         RegisteredUser user = registeredUserList.get(userName);
+        boolean b = registeredUserList.get("admin")!=null;
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
             logger.warning("User IS NOT Entered in the system");
             throw  new Exception("Invalid Visitor ID");
@@ -170,6 +245,7 @@ public class Facade {
          user.login(password,visitorId);
 
         onlineList.replace(visitorId, user);
+
     }
 
     public synchronized int logout(int visitorId) throws Exception {//3.1
@@ -221,7 +297,7 @@ public class Facade {
             throw e;
         }
     }
-    
+
 
     public void removeProductFromCart(int productId,int storeId, int visitorId) throws Exception {
         SiteVisitor user = onlineList.get(visitorId);
@@ -254,7 +330,7 @@ public class Facade {
             throw e;
         }
     }
-    
+
 
    public void changeCartProductQuantity(int productId,int storeId,int newAmount, int visitorId) throws Exception {
         SiteVisitor user = onlineList.get(visitorId);
@@ -288,8 +364,8 @@ public class Facade {
             throw e;
         }
     }
-    
-    
+
+
     public String getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
@@ -346,8 +422,8 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if (appointerEmployment == null || !appointerEmployment.checkIfOwner()) {
-            throw  new Exception("the appointer is not owner of store id");
+        if (appointerEmployment == null || !appointerEmployment.canAppointOwner()) {
+            throw  new Exception("User cannot appoint store owner");
         }
         // check if appointedUserName is registered
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
@@ -379,7 +455,7 @@ public class Facade {
         //release lockappointed if locked
         //throw e
     }
-    
+
 
    public void appointNewStoreManager(int appointerId,String appointedUserName,int storeId) throws Exception {//4.6
         //check if appointerId is logged in and registered to system
@@ -410,8 +486,8 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store id");
         }
 
-        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
-            throw  new Exception("the appointer is not owner of store id");
+        if(appointerEmployment==null || !appointerEmployment.canAppointManager()){
+            throw  new Exception("User isnt allowed to appoint store manager");
         }
         // check if appointedUserName is registered to system
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
@@ -524,11 +600,11 @@ public class Facade {
         try{
             appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeID);
         }catch (Exception e){
-            throw  new Exception("the appointer is not owner of store id");
+            throw  new Exception("the appointer is not owner of store");
         }
 
-        if(appointerEmployment==null|| !appointerEmployment.checkIfOwner()){
-            throw  new Exception("the appointer is not owner of store id");
+        if(appointerEmployment==null|| (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfFounder())){
+            throw  new Exception("the appointer is not owner of store");
         }
 
         //Check if username is registered to system
@@ -562,8 +638,13 @@ public class Facade {
         //release lockappointed if locked
         //throw e
     }
-        
-
+    /**
+     *
+     * @param visitorId
+     * @param storeId
+     * @return
+     * @throws Exception
+     */
     public String getRolesData(int visitorId,int storeId) throws Exception {//4.11
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorId);
@@ -592,7 +673,7 @@ public class Facade {
     }
 
     public synchronized LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
-        
+
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
         if (visitor == null) {
@@ -607,28 +688,52 @@ public class Facade {
 
             //Calculate amount
             double amount = b.calculateTotalAmount();
-
-            //Check if possible to create a supply
-            if(!supplier.isValidAddress(address)){
-                logger.fine("we can avoid this supply");
-                failedPurchases.add(b.getStoreID().toString());
-            }
-
-            //Create a transaction for the store
-            if(!paymentProvider.applyTransaction(amount,visitorCard)){
-                failedPurchases.add(b.getStoreID().toString());
-            }
-            LinkedList<String> productsId = new LinkedList<>();
-            productsId.add(b.bagToString());
-            //Create a request to supply bag's product to customer
-            if(!supplier.supplyProducts(productsId)){
-                failedPurchases.add(b.getStoreID().toString());
-            }
-            else{
-                if(visitor instanceof RegisteredUser){
-                    ((RegisteredUser)visitor).addPurchaseToHistory(new InstantPurchase(visitor,productsId,amount));
+            Store s = storesList.get(b.getStoreID());
+            boolean foundProductWithLowQuantity = false;
+            for(CartProduct p : b.getProducts())
+            {
+                if(s.getProducts().get(p).getQuantity() < p.getAmount()) {
+                    foundProductWithLowQuantity = true;
                 }
             }
+            if(foundProductWithLowQuantity) {
+                failedPurchases.add(b.getStoreID().toString());
+            }
+            else
+            {
+                //Check if possible to create a supply
+                if(!supplier.isValidAddress(address)){
+                    logger.fine("we can avoid this supply");
+                    failedPurchases.add(b.getStoreID().toString());
+                }
+                else{
+                    //Create a transaction for the store
+                    if(!paymentProvider.applyTransaction(amount,visitorCard)){
+                        failedPurchases.add(b.getStoreID().toString());
+                    }
+                    else
+                    {
+                        LinkedList<String> productsId = new LinkedList<>();
+                        productsId.add(b.bagToString());
+                        //Create a request to supply bag's product to customer
+                        if(!supplier.supplyProducts(productsId)){
+                            failedPurchases.add(b.getStoreID().toString());
+                        }
+                        else{
+                            InstantPurchase p = new InstantPurchase(visitor,productsId,amount);
+                            if(visitor instanceof RegisteredUser){
+                                ((RegisteredUser)visitor).addPurchaseToHistory(p);
+
+                            }
+                            storesList.get(b.getStoreID()).addToStoreHistory(b);
+                        }
+                    }
+
+                }
+
+            }
+
+
 
 
        }
@@ -656,9 +761,9 @@ public class Facade {
         store.addRating(((RegisteredUser) rater).getUserName(),rate);
         logger.info("Successfully added store rate. Visitor ID: " + visitorID +", Store ID: " + storeID + ", Rate: " + rate);
     }
-    
-    
-   
+
+
+
     public void addStoreRateAndComment(int visitorID,int storeID,int rate,String comment) throws Exception {
         //Check if visitorID is logged in and registered to system
         logger.info("Entering method addStoreRateAndComment() with visitorID: " + visitorID + ", storeID: " + storeID + ", rate: " + rate + ", and comment: " + comment);
@@ -732,7 +837,7 @@ public class Facade {
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
-        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreOwner);
+        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreFounder);
         logger.config("adding new employment to the new store ");
         // andd to employment list
         if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
@@ -743,7 +848,7 @@ public class Facade {
         logger.fine("open new store with name" + storeName+" done successfully");
         return store.getID();
     }
-    
+
     //StoreRate
     public double GetStoreRate(int visitorId,int StoreId) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
@@ -796,7 +901,7 @@ public class Facade {
             logger.warning(" employment is null");
             throw new Exception("there is no employee with this id ");
         }
-        if (employment.checkIfOwner()) {
+        if (employment.checkIfFounder()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
                 logger.warning(" store is null");
@@ -808,12 +913,12 @@ public class Facade {
            return;
         }
 
-        throw  new Exception("Just the owner can Close the Store ");
+        throw  new Exception("Only store founder can close the store ");
         //catch
         //release lock user
         //throw e
     }
-    
+
     // ניהול מלאי 4.1
     public Integer AddProduct(int visitorId,int storeId,String productName, double price, String category, int quantity,String description) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
@@ -839,9 +944,9 @@ public class Facade {
             logger.warning("employment is null");
             throw  new Exception("there is no employee with this id ");
         }
-        if (!employment.checkIfOwner()) {//check if need manager
-            logger.warning("user are not the manager trying to add");
-            throw  new Exception("you are not the owner of this store ");
+        if (!employment.checkIfFounder() && !employment.checkIfOwner() && !employment.checkIfManager()) {
+            logger.warning("user are not allowed to add products");
+            throw  new Exception("you are not allowed to add products to this store");
         }
         return store.AddNewProduct(productName,price,quantity,category,description);
         //catch
@@ -868,13 +973,14 @@ public class Facade {
         }
         if (employment == null)
             throw  new Exception("there is no employee with this id ");
-        if (employment.checkIfOwner() || employment.checkIfStoreManager()) {
+        if (employment.checkIfFounder() || employment.checkIfOwner() || employment.checkIfStoreManager()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
             }
             store.RemoveProduct(ProductId);
             //return new Response<>("the Product is successfully added", false);
+            return;
         }
         logger.warning("Only the owner can close the store: " + visitorId);
         logger.fine("Exiting method RemoveProduct()");
@@ -957,12 +1063,17 @@ public class Facade {
     }
 
     public void UpdateProductDescription(int visitorId, int productId,int storeId,String description) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
-
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
-        Store store = storesList.get(productId);
-        store.UpdateProductDescription(productId,description);
-        logger.fine("Exiting method UpdateProductDescription()");
+        Store store = storesList.get(storeId);
+        if(store != null) {
+            store.UpdateProductDescription(productId, description);
+            logger.fine("Exiting method UpdateProductDescription()");
+        }
+        else {
+            logger.fine("Failed at UpdateProductDescription because there was no store with the requested store Id");
+            throw new IllegalArgumentException("There is no store with this store id :"+storeId);
+        }
 
     }
 
@@ -980,19 +1091,19 @@ public class Facade {
         }
         if (employment == null)
             throw new Exception("invalid store id ");
-        if (employment.checkIfOwner()) {
+        if (employment.checkIfOwner() || employment.checkIfFounder()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw new Exception("there is no store with this id ");
             }
             logger.info("Exiting method checkifUserCanUpdateStoreProduct() with success");
             //return new Response<>("the Product is successfully added", false);
+            return;
         }
         logger.info("Exiting method checkifUserCanUpdateStoreProduct() with failure");
-
-        throw new Exception("Just the owner can Close the Store ");
+        throw new Exception("This user isn't allowed to update this product");
     }
-    
+
     //2.2 search  product
 
     /**
@@ -1057,7 +1168,7 @@ public class Facade {
     //    return output;
 //
     //}
-    
+
 //2.1
    public String GetInformation(int StoreId) throws Exception {
         logger.info("Entering method GetInformation() with StoreId: " + StoreId);
@@ -1085,7 +1196,7 @@ public class Facade {
         ArrayList<String> output=new ArrayList<>();
         LinkedList<Bag> history = store.GetStorePurchaseHistory();
         for(Bag bag:history)
-            output.add(bag.toString());
+            output.add(bag.bagToString());
         logger.info("Exiting method GetStoreHistoryPurchase() with output size: " + output.size());
         return output;
     }
@@ -1108,30 +1219,48 @@ public class Facade {
         logger.info("Exiting method GetUserHistoryPurchase() with purchase history: ");
         return user.getPurchaseHistory().getPurchases().toString();
     }
+
     /**
      *
-     * @param filters list of filter object for whom each product has to pass all of them to be returned
-     * @return list of products who passed the filter list
+     * @param storeFilters filters for store in which products are to be filtered
+     * @param productFilters filters who the returned products have to pass
+     * @return product list of all products who passed the filter in the store who passed the filters
      */
-    public List<StoreProduct> FilterProductSearch(List<Filter> filters) {
-                logger.info("Entering method FilterProductSearch() with filters: " + filters.toString());
-
-        ArrayList<StoreProduct> products=new ArrayList<>();
+    public Map<Store,List<StoreProduct>> FilterProductSearch(List<StoreFilter> storeFilters,List<ProductFilter> productFilters) {
+        logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
+        HashMap<Store,List<StoreProduct>> storeProducts=new HashMap<>();
         for(Store store: storesList.values()){ //for each store
-            for(StoreProduct product:store.getProducts().values()){ //for each product in store
-                boolean passedFilter=true;
-                for(Filter filter: filters){ //for each filter
-                    if(!filter.PassFilter(product)) { //product has to pass all filters
-                        passedFilter = false;
-                        break; //if we don't pass a filter, we exit from the filter loop-no need to check the rest
+            boolean passStoreFilter=true;
+            if(!storeFilters.isEmpty()) {
+            for(StoreFilter storeFilter:storeFilters){
+                    if (!storeFilter.PassFilter(store)) {
+                        passStoreFilter = false;
+                        break;
                     }
                 }
-                if (passedFilter)
-                    products.add(product);
+            }
+            if(passStoreFilter) {
+                ArrayList<StoreProduct> products = new ArrayList<>(store.filterProducts(productFilters));
+                if(!products.isEmpty())
+                    storeProducts.put(store,products);
             }
         }
-        logger.info("Exiting method FilterProductSearch() with filtered products: " + products.toString());
-        return products;
+        logger.info("Filtered products done, stores found: "+storeProducts.keySet().size());
+        return storeProducts;
+    }
+
+    public void deleteUser(int visitorId, String userName) throws Exception {
+        logger.info("Starting user deletion");
+        if(!(onlineList.get(visitorId) instanceof Admin)){
+            logger.info("User deletion failed: "+visitorId+" not admin");
+            throw new Exception("Only admins can delete users");
+        }
+        RegisteredUser registeredUser=registeredUserList.get(userName);
+        if(registeredUser==null) {
+            logger.info("User deletion failed: username "+userName+" does not exist");
+            throw new Exception("username " + userName + " does not exists");
+        }
+        registeredUserList.remove(userName);
     }
 
 

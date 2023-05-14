@@ -3,6 +3,7 @@ package DomainLayer.Users;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.Products.StoreProduct;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -12,8 +13,10 @@ public class Cart {
 
 
   public Cart(){
+      bagList = new HashMap<>();
       UniversalHandler.GetInstance().HandleInfo(logger);
       UniversalHandler.GetInstance().HandleError(logger);
+      bagList = new HashMap<>();
   }
 
         //check if there is bag to store

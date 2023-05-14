@@ -12,7 +12,6 @@ public class SiteVisitor{
     protected static LinkedList<AtomicInteger> FreeVisitorID= new LinkedList<>();
     private Cart cart;
     private int visitorId;
-    protected boolean loggedIn;
     private static final Logger logger=Logger.getLogger("SiteVisitor logger");
     
       public SiteVisitor() throws Exception {
@@ -25,7 +24,6 @@ public class SiteVisitor{
         }
         this.visitorId = getNewVisitorId();
         cart = new Cart();
-        loggedIn=false;
     }
 //    public SiteVisitor(int visitorId) throws Exception {//to do
 //        if (checkVisitorId(visitorId)) {

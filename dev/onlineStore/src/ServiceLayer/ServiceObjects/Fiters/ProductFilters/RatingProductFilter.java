@@ -1,18 +1,18 @@
-package ServiceLayer.ServiceObjects.Fiters;
+package ServiceLayer.ServiceObjects.Fiters.ProductFilters;
 
 
 import DomainLayer.Stores.Products.StoreProduct;
 
-public class RatingFilter implements Filter {
+public class RatingProductFilter implements ProductFilter {
     private final int rating;
-    public RatingFilter(int rating) {
-        if(rating>5 || rating<0)
-            throw new IllegalArgumentException("ERROR: Invalid Rating Filter Value");
+    public RatingProductFilter(int rating) {
         this.rating = rating;
     }
 
     @Override
     public boolean PassFilter(StoreProduct product) {
+        if(rating>5 || rating<0)
+           return false;
         return product.getAverageRating() > rating;
     }
 

@@ -48,13 +48,11 @@ public class Employment {
         }
         catch (Exception ignored){
         }
-            this.appointer = null;
-            this.employee = employee;
-            this.store = store;
-            this.role = role;
-            permissions = null;
-        
-
+        this.appointer = null;
+        this.employee = employee;
+        this.store = store;
+        this.role = role;
+        permissions = null;
     }
 
 
@@ -75,8 +73,11 @@ public class Employment {
     }
 
 
+    public boolean checkIfFounder() {
+        return (getRole()== Role.StoreFounder);
+    }
     public boolean checkIfOwner() {
-        return (getRole()== Role.StoreFounder ||  getRole()==Role.StoreOwner);
+        return (getRole()==Role.StoreOwner);
     }
 
     public boolean checkIfManager() {
@@ -102,6 +103,18 @@ public class Employment {
         }
         return isStoreManager;
 
+    }
+    public boolean canAppointOwner()
+    {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanAppointStoreOwner))
+            return true;
+        return false;
+    }
+    public boolean canAppointManager()
+    {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanAppointStoreManager))
+            return true;
+        return false;
     }
     @Override
     public String toString() {

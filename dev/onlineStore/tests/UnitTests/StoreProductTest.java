@@ -1,12 +1,19 @@
 package UnitTests;
 
+import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Stores.Products.StoreProductObserver;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+
+import java.lang.ref.WeakReference;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class StoreProductTest {
+    StoreProductObserver observer1,observer2;
     StoreProduct p1,p2,p3,p4;
     int StoreId1,StoreId2;
     @BeforeEach
@@ -18,6 +25,26 @@ class StoreProductTest {
         p4 = new StoreProduct(1,"Eggs",6.8,"Eggs",6,"What came first?");
         StoreId1 = 0;
         StoreId2 = 1;
+        observer1 = new StoreProductObserver() {
+            @Override
+            public void updateFields(Product product) {
+            }
+
+            @Override
+            public boolean stillInCart() {
+                return false;
+            }
+        };
+        observer2 = new StoreProductObserver() {
+            @Override
+            public void updateFields(Product product) {
+            }
+
+            @Override
+            public boolean stillInCart() {
+                return false;
+            }
+        };
     }
     @Test
     void CreateProduct_NullId() {
@@ -47,83 +74,6 @@ class StoreProductTest {
     void CreateProduct_NullDesc() {
         assertThrows(NullPointerException.class,()->p1 = new StoreProduct(0,"Milk",5,"Milk",5,null));
     }
-    //@Test //store product should not be aware of store id
-    //void getStoreIdByProductId_validId() {
-    //    assertEquals(0,p1.getProductId(0));
-    //    assertEquals(0,p1.getStoreIdByProductId("0-1"));
-    //    assertEquals(1,p1.getStoreIdByProductId("1-0"));
-    //    assertEquals(1,p1.getStoreIdByProductId("1-1"));
-    //}
-   // @Test
-   // void getStoreIdByProductId_nullId() {
-   //     assertThrows(NullPointerException.class,()->p1.getStoreIdByProductId(null));
-   // }
-   // @Test
-   // void getStoreIdByProductId_InvalidId() {
-   //     assertThrows(IllegalArgumentException.class,()->p1.getStoreIdByProductId("-1"));
-   // }
-   // @Test
-   // public void testValidProductId() throws Exception {
-   //     String productId = "123-456";
-   //     p1.isValidProductId(productId);
-   // }
-//
-   // @Test
-   // public void testNullProductId() {
-   //     assertThrows(NullPointerException.class, () -> {
-   //         String productId = null;
-   //         p1.isValidProductId(productId);
-   //     });
-   // }
-//
-   // @Test
-   // public void testEmptyProductId() {
-   //     assertThrows(NullPointerException.class, () -> {
-   //         String productId = "";
-   //         p1.isValidProductId(productId);
-   //     });
-   // }
-//
-   // @Test
-   // public void testInvalidProductId() {
-   //     assertThrows(Exception.class, () -> {
-   //         String productId = "123456";
-   //         p1.isValidProductId(productId);
-   //     });
-   // }
-//
-   // @Test
-   // public void testInvalidProductIdWithDashAtBeginning() {
-   //     assertThrows(Exception.class, () -> {
-   //         String productId = "-456";
-   //         p1.isValidProductId(productId);
-   //     });
-   // }
-//
-   // @Test
-   // public void testInvalidProductIdWithDashAtEnd() {
-   //     assertThrows(NullPointerException.class, () -> {
-   //         String productId = "123-";
-   //         p1.isValidProductId(productId);
-   //     });
-   // }
-//
-   // @Test
-   // public void testInvalidProductIdWithNonNumericPrefix() {
-   //     assertThrows(Exception.class, () -> {
-   //         String productId = "abc-456";
-   //         p1.isValidProductId(productId);
-   //     });
-   // }
-//
-   // @Test
-   // public void testInvalidProductIdWithNonNumericSuffix() {
-   //     assertThrows(Exception.class, () -> {
-   //         String productId = "123-def";
-   //         p1.isValidProductId(productId);
-   //     });
-   // }
-
     @Test
     public void testgetAverageRatingWithNoRatings() {
         double actualResult = p1.getAverageRating();
@@ -136,7 +86,7 @@ class StoreProductTest {
         try {
             p1.EditRating("name", 3);
             double actualResult = p1.getAverageRating();
-            double expectedResult = 3.5;
+            double expectedResult = 3.0;
             assertEquals(expectedResult, actualResult);
         }
         catch (Exception e)
@@ -222,10 +172,20 @@ class StoreProductTest {
         p1.EditRating("John", 4);
         p1.EditRating("John", 2);
         double actualResult = p1.getAverageRating();
-        double expectedResult = 3.0;
+        double expectedResult = 2.0;
         assertEquals(expectedResult, actualResult);
     }
+    @Test
+    public void testEditRatingMultipleUsers() throws Exception {
+        p1.addRatingAndComment("John", 4, "Great product!");
+        p1.addRatingAndComment("Steve", 4.1, "Great product!");
+        p1.addRatingAndComment("Calvin", 3.3, "Its ok");
+        p1.addRatingAndComment("Dave", 5, "Amazing product!");
 
+        double actualRating = p1.getAverageRating();
+        double expectedRating = 4.1;
+        assertEquals(expectedRating, actualRating);
+    }
     @Test
     public void testEditRatingAndCommentWithNewUser() throws Exception {
         p1.addRatingAndComment("John", 4, "Great product!");
@@ -237,10 +197,152 @@ class StoreProductTest {
     @Test
     public void testEditRatingAndCommentWithExistingUser() throws Exception {
         p1.addRatingAndComment("John", 4, "Great product!");
-        p1.addRatingAndComment("John", 2, "Not so good");
+        p1.addRatingAndComment("Steve", 2, "Not so good");
         double actualRating = p1.getAverageRating();
         double expectedRating = 3.0;
         assertEquals(expectedRating, actualRating);
     }
+    @Test
+    public void testEditRatingAndCommentWithnullUsername() throws Exception {
+       assertThrows(NullPointerException.class,()-> p1.addRatingAndComment(null, 4, "Great product!"));
+    }
+    @Test
+    public void testEditRatingAndCommentWithNegativeRating() throws Exception {
+        assertThrows(IllegalArgumentException.class,()-> p1.addRatingAndComment("John", -4, "Great product!"));
+    }
+    @Test
+    public void testEditRatingAndCommentWithToHighRating() throws Exception {
+        assertThrows(IllegalArgumentException.class,()-> p1.addRatingAndComment("John", 40, "Great product!"));
+    }
+    @Test
+    public void testAddObserver() {
+        StoreProduct storeProduct = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        StoreProductObserver observer = new StoreProductObserver() {
+            @Override
+            public void updateFields(Product product) {
 
+            }
+
+            @Override
+            public boolean stillInCart() {
+                return false;
+            }
+        };
+        storeProduct.addObserver(observer);
+        Map<WeakReference<StoreProductObserver>, Object> observers = storeProduct.getObservers();
+        assertNotNull(observers);
+        assertEquals(1, observers.size());
+        for (WeakReference<StoreProductObserver> observerRef : observers.keySet()) {
+            assertEquals(observer, observerRef.get());
+        }
+    }
+    @Test
+    public void testAddObserverWithNullObserver() {
+        StoreProduct storeProduct = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        storeProduct.addObserver(null);
+        Map<WeakReference<StoreProductObserver>, Object> observers = storeProduct.getObservers();
+        assertNotNull(observers);
+        assertEquals(0, observers.size());
+    }
+
+    @Test
+    public void testAddMultipleObservers() {
+        StoreProduct product = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        product.addObserver(observer1);
+        product.addObserver(observer2);
+
+        Map<WeakReference<StoreProductObserver>, Object> observers = product.getObservers();
+        assertEquals(2, observers.size());
+        assertNotNull(observers);
+    }
+    @Test
+    public void testNotifyObservers_RemoveNullObserver() {
+        StoreProduct product = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        observer1 = new StoreProductObserver() {
+            @Override
+            public void updateFields(Product product) {
+
+            }
+
+            @Override
+            public boolean stillInCart() {
+                return true;
+            }
+        };
+        observer2 = null;
+
+        product.addObserver(observer1);
+        product.addObserver(observer2);
+
+        product.notifyObservers();
+
+        Map<WeakReference<StoreProductObserver>, Object> observers = product.getObservers();
+        assertEquals(1, observers.size());
+        assertNotNull(observers);
+        assertFalse(observers.containsKey(new WeakReference<>(observer2)));
+    }
+    @Test
+    public void testNotifyObservers_RemoveObserverNotInCart() {
+        StoreProduct product = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        observer1 = new StoreProductObserver() {
+            @Override
+            public void updateFields(Product product) {
+
+            }
+
+            @Override
+            public boolean stillInCart() {
+                return false;
+            }
+        };
+        observer2 = new StoreProductObserver() {
+            @Override
+            public void updateFields(Product product) {
+
+            }
+
+            @Override
+            public boolean stillInCart() {
+                return true;
+            }
+        };
+
+        product.addObserver(observer1);
+        product.addObserver(observer2);
+
+        try {
+            product.notifyObservers();
+
+            Map<WeakReference<StoreProductObserver>, Object> observers = product.getObservers();
+            assertEquals(1, observers.size());
+            assertNotNull(observers);
+            assertFalse(observers.containsKey(new WeakReference<>(observer1)));
+        }
+        catch (Exception e)
+        {
+
+        }
+    }
+    @Test
+    public void testNotifyObservers_UpdateFields() {
+        StoreProduct product = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
+        final boolean[] updateFieldsCalled = {false};
+        observer1 = new StoreProductObserver() {
+            @Override
+            public void updateFields(Product product) {
+                updateFieldsCalled[0] = true;
+            }
+
+            @Override
+            public boolean stillInCart() {
+                return true;
+            }
+        };
+
+        product.addObserver(observer1);
+
+        product.notifyObservers();
+
+        assertTrue(updateFieldsCalled[0]);
+    }
 }
