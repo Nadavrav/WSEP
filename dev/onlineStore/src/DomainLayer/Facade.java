@@ -106,6 +106,13 @@ public class Facade {
             Register(denisID,"Denis","123456789");
             Register(nikitaID,"Nikita","123456789");
 
+            login(nadavID,"Nadav","123456789");
+            login(nadiaID,"Nadia","123456789");
+            login(natalieID,"Natalie","123456789");
+            login(majdID,"Majd","123456789");
+            login(denisID,"Denis","123456789");
+            login(nikitaID,"Nikita","123456789");
+
             //New Stores
             int nadavStoreID = OpenNewStore(nadavID,"NadavStore");
             int nadiaStoreID = OpenNewStore(nadiaID,"NadiaStore");
@@ -217,7 +224,7 @@ public class Facade {
         // create new register user
         logger.info("new visitor has register");
         RegisteredUser r = new RegisteredUser(userName, password);
-        onlineList.replace(visitorId,r);
+        //onlineList.replace(visitorId,r);
         registeredUserList.put(userName, r);
     }
 
@@ -237,6 +244,7 @@ public class Facade {
          user.login(password,visitorId);
 
         onlineList.replace(visitorId, user);
+
     }
 
     public synchronized int logout(int visitorId) throws Exception {//3.1
