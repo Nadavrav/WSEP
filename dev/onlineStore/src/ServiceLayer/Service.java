@@ -14,7 +14,9 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+
 import ServiceLayer.ServiceObjects.ServiceStore;
+
 import ServiceLayer.ServiceObjects.ServiceUser;
 
 import java.util.*;
@@ -459,7 +461,7 @@ public class Service {
     }
             
 
-    /*public Response<List<ServiceUser>> getRegisteredUsersInfo(){
+    public Response<List<ServiceUser>> getRegisteredUsersInfo(){
         try {
             ArrayList<ServiceUser> serviceUsers = new ArrayList<>();
             Map<String, RegisteredUser> userMap = facade.getRegisteredUserList(visitorId);
@@ -471,5 +473,16 @@ public class Service {
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
-    }*/
+    }
+    public Response<?> removeEmployee(int storeId,String userName){
+        try {
+            facade.removeEmployee(visitorId,userName,storeId);
+            return new Response<>("Success");
+
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
 }

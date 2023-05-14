@@ -520,6 +520,59 @@ public class Facade {
 
     }
 
+    public void removeEmployee(int appointerId, String appointedUserName, int storeId) throws Exception{
+        logger.info("Staring remove employee");
+        SiteVisitor appointer = onlineList.get(appointerId);
+        if (appointedUserName == null) {
+            logger.severe("Null pointer username while removing user");
+            throw new NullPointerException("null username");
+        }
+        if(!(appointer instanceof RegisteredUser)){
+            logger.warning("remove failed: trying to remove from invalid user ");
+            throw  new Exception("invalid remover Id");
+        }
+        // check if store id exist
+        Store store=storesList.get(storeId);
+        if(store==null){
+            logger.warning("remove failed: no store with "+storeId+" store id");
+            throw  new Exception("invalid store Id");
+        }
+        if(!store.getActive()){
+            logger.info("remove failed: store is closed");
+            throw  new Exception("cant remove workers from closed store");
+        }
+        try {
+            Map<Integer, Employment> appointerEmploymentMap = employmentList.get(((RegisteredUser) appointer).getUserName());
+            if (appointerEmploymentMap == null) {
+                throw new Exception("user " + ((RegisteredUser) appointer).getUserName()+" has no appointed employees");
+            }
+            boolean found=false;
+            for(Integer userId:appointerEmploymentMap.keySet()){
+                String workerName=appointerEmploymentMap.get(storeId).getEmployee().getUserName();
+                if (workerName.equals(appointedUserName)) {
+                    found = true;
+                    cascadeRemoveAllEmployees(workerName);
+                    appointerEmploymentMap.remove(userId);
+                    break;
+                }
+            }
+            if(!found)
+                throw new Exception("user has no employee named "+appointedUserName);
+
+        }
+            catch (Exception e){
+            logger.warning("remove employee failed- probably failed while casting");
+            throw new Exception(e.getMessage());
+        }
+    }
+        private void cascadeRemoveAllEmployees(String userName){
+            Map<Integer,Employment> employmentMap=employmentList.get(userName);
+            for(Integer id:employmentMap.keySet()) {
+                cascadeRemoveAllEmployees(employmentMap.get(id).getAppointer().getUserName());
+                employmentMap.remove(id);
+            }
+            employmentList.remove(userName);
+        }
         public Employment changeStoreManagerPermission(int visitorID, String username, int storeID, List<Permission> permissions) throws Exception {
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorID);
@@ -585,7 +638,6 @@ public class Facade {
         //release lockappointed if locked
         //throw e
     }
-
     /**
      *
      * @param visitorId
@@ -1210,4 +1262,6 @@ public class Facade {
         }
         registeredUserList.remove(userName);
     }
+
+
 }
