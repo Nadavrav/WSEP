@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Shop Store Main Page</title>
+    <style>
+        body{
+            /*background-image: url("https://media.istockphoto.com/id/1135672050/photo/coffee-shop-template-for-branding-identity-brown-paper-cup-with-blank-bag-phone-label-card.jpg?s=612x612&w=0&k=20&c=3HVxfYwKKNVO6_zhLrhTLskI8Huf3_gdWQT9OC2kCow=");*/
+            background-image: url("https://media.istockphoto.com/id/1181972121/photo/minimal-workspace-with-copy-space-wooden-figure-and-ceramic-vase.jpg?s=612x612&w=0&k=20&c=0hZ7Ajspbt8THVUKsG4nu7WvR-iatsGFGjnz338jDQM=");
+            background-size: cover;
+            background-position: center;
+        }
+
+        .home-button {
+            background-color: transparent;
+            color: #fff;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .home-button:hover {
+            color: #ccc;
+        }
+
+        .menu-button {
+            background-color: #333333;
+            color: #fff;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background-color: #444444;
+            cursor: pointer;
+        }
+
+        .header {
+            color: #d2d3d5;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border: none;
+            font-family: Cooper Black, sans-serif;
+            position: fixed;
+            top: 3px;
+            right: 0;
+            left: 0;
+        }
+
+        .header span {
+            margin: auto;
+        }
+
+        .header .button-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: start;
+        }
+
+        .header .button-container button {
+            background-color: #d2d3d5;
+            color: white;
+            padding: 5px 10px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        .header .button-container button:hover {
+            background-color: transparent;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .modal-title {
+            color: #d2d3d5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-form label {
+            color: #444;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 7px;
+        }
+
+        .modal-form input[type="number"],
+        .modal-form input[type="text"] {
+            background-color: transparent;
+            margin-bottom: 10px;
+            width: 200px;
+            display: inline-block;
+            border: none;
+            color: #d2d3d5;
+            border-bottom: 1px solid #ccc;
+            padding: 5px;
+
+        }
+
+        .modal-form button[type="submit"] {
+            background-color: #555555;
+            color: #d2d3d5;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .modal-form button[type="submit"]:hover {
+            background-color: #999999;
+        }
+
+        .modal-message {
+            color: #d2d3d5;
+            font-family: Arial, sans-serif;
+            margin-top: 10px;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 20px;
+            max-width: 400px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+            margin: 80px auto;
+            display: flex;
+            flex-direction: column;
+            background-color: transparent;
+        }
+
+        .container button.menu-button {
+            background-color: #555555;
+            color: #fff;
+            padding: 10px 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        .container button.menu-button:hover {
+            background-color: #555555;
+            cursor: pointer;
+        }
+
+        .container input[type="number"],
+        .container input[type="password"],
+        .container input[type="range"],
+        .container input[type="text"],
+        select {
+            background-color: transparent;
+            margin-bottom: 10px;
+            width: 200px;
+            display: inline-block;
+        }
+
+        h3 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: whitesmoke;
+            font-family: monospace;
+        }
+
+    </style>
+</head>
+
+<body>
+<header>
+    <div style="position: fixed; top: 7px;right: 7px;">
+        <button style="background-color: transparent;"><a style="color: black;text-decoration: none;" href="/MainPage">HOME</a></button>
+        <button style="background-color: transparent;"><a style="color: black;text-decoration: none;" href="/StoreCommentsAndRatings">STORES INFO</a></button>
+    </div>
+    <h1 style="font-size: 4rem;">MY MENU</h1>
+</header>
+<div class="container">
+<!--    <span th:if="${owner}">-->
+        <button class="menu-button" onclick="openModalAddProduct()">ADD NEW PRODUCT</button>
+        <button class="menu-button" onclick="openModalRemoveProduct()">REMOVE PRODUCT</button>
+        <button class="menu-button" onclick="openModalUpdateProduct()">UPDATE PRODUCT</button>
+        <button class="menu-button"> PURCHASE HISTORY </button>
+        <button class="menu-button" onclick="openModalCloseStore()">CLOSE STORE</button>
+        <button class="menu-button" onclick="openModalEmpInfo()">EMPLOYEE INFORMATION</button>
+        <button class="menu-button" onclick="openModalAddManager()">ADD NEW MANAGER/OWNER</button>
+        <button class="menu-button" onclick="openModalChangeManagerPer()">CHANGE MANAGER PERMISSION</button>
+<!--    </span>-->
+
+</div>
+
+<div class="modal" id="modalAddProduct">
+    <div class=".modal .modal-content">
+        <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalAddProduct()"> X</form>
+        <form action="/add-product" method="post" class="modal-form">
+            <label style="color: #d2d3d5;" for="storeID-add">Store ID:</label>
+            <input type="text" id="storeID-add" name="store-id" required>
+
+            <label style="color: #d2d3d5;" for="product-name">Product Name:</label>
+            <input type="text" id="product-name" name="product-name" required>
+
+            <label style="color: #d2d3d5;" for="product-price">Product price:</label>
+            <input type="text" id="product-price" name="product-price" required>
+
+            <label style="color: #d2d3d5;" for="product-category">Product Category:</label>
+            <input type="text" id="product-category" name="product-category" required>
+
+            <label style="color: #d2d3d5;" for="product-quantity">Product Quantity:</label>
+            <input type="number" id="product-quantity" name="product-quantity" required>
+
+            <label style="color: #d2d3d5;" for="product-desc">Product Description:</label>
+            <input type="text" id="product-desc" name="product-desc" required>
+            <br>
+            <div style="text-align: center;">
+                <button type="submit" onclick="closeModalAddProduct()">Add product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalRemoveProduct">
+    <div class=".modal .modal-content">
+        <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalRemoveProduct()"> X</form>
+        <form action="/remove-product" method="post" class="modal-form">
+            <label style="color: #d2d3d5;" for="storeID-remove">Store ID:</label>
+            <input type="text" id="storeID-remove" name="store-id" required>
+
+            <label style="color: #d2d3d5;" for="productID-remove">Product ID:</label>
+            <input type="text" id="productID-remove" name="product-id" required>
+            <br>
+            <div style="text-align: center;">
+                <button type="submit" onclick="closeModalRemoveProduct()">Remove Product</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalUpdateProduct">
+    <div class=".modal .modal-content">
+        <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalUpdateProduct()"> X</form>
+        <form action="/update-product" method="post" class="modal-form">
+            <label style="color: #d2d3d5;" for="storeID-update">Store ID:</label>
+            <input type="text" id="storeID-update" name="store-id" required>
+
+            <label style="color: #d2d3d5;" for="productID-update">Product ID:</label>
+            <input type="text" id="productID-update" name="product-id" required>
+
+            <label style="color: #d2d3d5;" for="productName-update">Product Name:</label>
+            <input type="text" id="productName-update" name="product-name">
+
+            <label style="color: #d2d3d5;" for="price-update">Price:</label>
+            <input type="text" id="price-update" name="product-price">
+
+            <label style="color: #d2d3d5;" for="quantity-update">Quantity:</label>
+            <input type="number" id="quantity-update" name="quantity">
+
+            <label style="color: #d2d3d5;" for="category-update">Category:</label>
+            <input type="text" id="category-update" name="category">
+
+            <label style="color: #d2d3d5;" for="description">Description:</label>
+            <textarea style="background-color: transparent; width: 200px" id="description" name="description"></textarea>
+
+            <div style="text-align: center;">
+                <tr th:if="${isAuthorized}">
+                    <button type="submit" onclick="closeModalUpdateProduct()">Update Product</button>
+                </tr>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalAddManager">
+    <div class=".modal .modal-content">
+        <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalAddManager()"> X</form>
+        <form action="/add-manager" method="post" class="modal-form">
+            <label style="color: #d2d3d5;" for="storeID-add-manager">Store ID:</label>
+            <input type="text" id="storeID-add-manager" name="storeID-add-manager" required>
+
+            <label style="color: #d2d3d5;" for="manager-name-add">Manager Name:</label>
+            <input type="text" id="manager-name-add" name="manager-name-add" required>
+
+            <div style="text-align: center;">
+                <tr th:if="${isAdmin}">
+                    <button type="submit" onclick="closeModalAddManager()">Add Manager</button>
+                </tr>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalChangeManagerPer">
+    <div class=".modal .modal-content">
+        <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalChangeManagerPer()"> X</form>
+        <form action="/change-permission" method="post" class="modal-form">
+            <label style="color: #d2d3d5;" for="manager-name">Manager Name:</label>
+            <input type="text" id="manager-name" name="manager-name" required>
+
+            <label style="color: #d2d3d5;" for="store-id">Store ID:</label>
+            <input type="text" id="store-id" name="store-id" required>
+
+            <label style="color: #d2d3d5;" for="permission">Permission:</label>
+            <select style=";background-color: whitesmoke;width: 200px;" id="permission" name="permission" required>
+                <option value="readwrite"></option>
+                <option value="readwrite">ADD NEW PRODUCT</option>
+                <option value="readwrite">REMOVE PRODUCT</option>
+                <option value="readwrite">UPDATE PRODUCT</option>
+                <option value="readwrite">ADD NEW MANAGER/OWNER</option>
+                <option value="readwrite">CHANGE MANAGER PERMISSION</option>
+                <option value="readwrite">CLOSE STORE</option>
+                <option value="readwrite">EMPLOYEE INFORMATION</option>
+                <option value="readwrite">CanAppointStoreOwner</option>
+                <option value="readwrite">CanAppointStoreManager</option>
+                <option value="readwrite">CanSeeCommentsAndRating</option>
+                <option value="readwrite">CanSeePurchaseHistory</option>
+            </select>
+
+            <div style="text-align: center;">
+                <button type="submit" onclick="closeModalChangeManagerPer()">Change</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalCloseStore">
+    <div class=".modal .modal-content">
+        <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalCloseStore()"> X</form>
+        <form action="/close-store" method="post" class="modal-form">
+            <label style="color: #d2d3d5;" for="closeStore">Choose:</label>
+            <select style=";background-color: whitesmoke;width: 200px;" id="closeStore" name="closeStore" required>
+                <option value="readwrite"></option>
+                <option value="readwrite">CLOSE</option>
+                <option value="readwrite">PERMANENTLY CLOSE</option>
+            </select>
+
+            <label style="color: #d2d3d5;" for="storeID-remove">Store ID:</label>
+            <input type="text" id="storeID-close" name="store-id-close" required>
+
+            <div style="text-align: center;">
+                <button type="submit" onclick="closeModalCloseStore()">Close Store</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalEmpInfo">
+    <div class=".modal .modal-content">
+        <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalEmpInfo()"> X</form>
+        <form action="/employee-info" method="post" class="modal-form">
+            <h3>Not Implemented Yet</h3>
+        </form>
+    </div>
+</div>
+
+</div>
+</div>
+
+<script>
+    function openModalAddProduct() {
+        document.getElementById("modalAddProduct").style.display = "flex";
+    }
+
+    function openModalRemoveProduct() {
+        document.getElementById("modalRemoveProduct").style.display = "flex";
+    }
+
+    function openModalUpdateProduct() {
+        document.getElementById("modalUpdateProduct").style.display = "flex";
+    }
+
+    function openModalAddManager() {
+        document.getElementById("modalAddManager").style.display = "flex";
+    }
+
+    function openModalChangeManagerPer() {
+        document.getElementById("modalChangeManagerPer").style.display = "flex";
+    }
+
+    function openModalCloseStore(){
+        document.getElementById("modalCloseStore").style.display = "flex";
+    }
+
+    function openModalEmpInfo(){
+        document.getElementById("modalEmpInfo").style.display = "flex";
+    }
+
+    function closeModalAddProduct() {
+        var modal = document.getElementById("modalAddProduct");
+        modal.style.display = "none";
+    }
+
+    function closeModalRemoveProduct() {
+        var modal = document.getElementById("modalRemoveProduct");
+        modal.style.display = "none";
+    }
+
+    function closeModalUpdateProduct() {
+        var modal = document.getElementById("modalUpdateProduct");
+        modal.style.display = "none";
+    }
+
+    function closeModalAddManager() {
+        var modal = document.getElementById("modalAddManager");
+        modal.style.display = "none";
+    }
+
+    function closeModalChangeManagerPer() {
+        var modal = document.getElementById("modalChangeManagerPer");
+        modal.style.display = "none";
+    }
+
+    function closeModalCloseStore(){
+        var modal = document.getElementById("modalCloseStore");
+        modal.style.display = "none";
+    }
+
+    function closeModalEmpInfo(){
+        var modal = document.getElementById("modalEmpInfo");
+        modal.style.display = "none";
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+מאי 15, 2023 8:28:42 אחה״צ DomainLayer.Facade OpenNewStore
+SEVERE: Invalid visitor Id: 0

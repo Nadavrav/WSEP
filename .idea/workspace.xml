@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/WSEP.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/springboot-html.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Facade.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Logging/UniversalHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Response.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Comment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Constraint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/BooleanConditions/ContainsProductCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/BooleanConditions/DoesntContainProductCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/BooleanConditions/MaxBagPriceCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/BooleanConditions/MaxTotalProductAmountCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/BooleanConditions/MinBagPriceCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/BooleanConditions/MinTotalProductAmountCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/FilterConditions/CategoryCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/FilterConditions/MaxPriceCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/FilterConditions/MaxQuantityCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/FilterConditions/MinPriceCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/FilterConditions/MinQuantityCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/FilterConditions/NameCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BasicConditions/FilterConditions/NoCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BooleanLogicConditions/AndCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BooleanLogicConditions/LogicCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BooleanLogicConditions/OrCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BooleanLogicConditions/WrapperCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/BooleanLogicConditions/XorCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/ComplexConditions/CompositeCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/ComplexConditions/MultiAndCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/ComplexConditions/MultiOrCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Conditions/Condition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Discounts/AdditiveDiscount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Discounts/BasicDiscount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Discounts/Discount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Discounts/MaxSelectiveDiscount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Discounts/Discounts/MinSelectiveDiscount.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/History.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Products/CartProduct.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Products/Product.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Products/StoreProduct.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Products/StoreProductObserver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Purchases/BidPurchase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Purchases/ChanceBuyPurchase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Purchases/InstantPurchase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Purchases/PublicAuctionPurchase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Purchases/Purchase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Questions.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Rating.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Stores/Store.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/Admin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/Bag.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/Cart.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/Complaint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/Employment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/Permission.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/PurchaseHistory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/RegisteredUser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/Role.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/DomainLayer/Users/SiteVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ExternalServices/PaymentProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ExternalServices/Supplier.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/Service.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/ProductFilters/CategoryProductFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/ProductFilters/DescriptionProductFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/ProductFilters/KeywordProductFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MaxPriceProductFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MinPriceProductFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/ProductFilters/NameProductFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/ProductFilters/ProductFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/ProductFilters/RatingProductFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/StoreFilters/NameStoreFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/StoreFilters/RatingStoreFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/Fiters/StoreFilters/StoreFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/PurchaseRecord.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/ServiceBag.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/ServiceCart.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/ServiceProducts/ServiceCartProduct.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/ServiceProducts/ServiceProduct.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/ServiceProducts/ServiceStoreProduct.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/ServiceStore.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/ServiceLayer/ServiceObjects/ServiceUser.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="2Pq4b4TE6xBRvMGuR3Lc2ei1HF2" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/natal/Desktop/web-app/WSEP",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="SpringbootHtmlApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.okayjava.html.SpringbootHtmlApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="" />
+      <created>1684171346129</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1684171346129</updated>
+      <workItem from="1684171347132" duration="726000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
