@@ -7,6 +7,7 @@ import DomainLayer.Users.Bag;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,13 +22,13 @@ public class Store {
     private String Name;
     private Boolean Active;
     private History History;
-    private final ConcurrentHashMap<String, Rating> rateMapForStore;
+    private final HashMap<String, Rating> rateMapForStore;
     private final ConcurrentHashMap<Integer, StoreProduct> products;
     private Double Rate=0.0;
     private static final Logger logger=Logger.getLogger("Store logger");
     
     public Store(String name) {
-        rateMapForStore=new ConcurrentHashMap<>();
+        rateMapForStore=new HashMap<>();
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         Id = StoreID_GENERATOR.getAndIncrement();
@@ -232,4 +233,25 @@ public class Store {
         logger.info("comment added for user: " + userName + ", comment: " + comment);
     }
 
+    public LinkedList<Integer> getProductsID() {
+        LinkedList<Integer> productsId = new LinkedList<>();
+        for(StoreProduct product : products.values()){
+            if(product.getQuantity()>0){
+                productsId.add(product.getProductId());
+            }
+        }
+        return productsId;
+    }
+
+    public HashMap<String, Double> getRatingList() {
+        HashMap<String,Double> rates = new HashMap<>();
+        for (String userName : rateMapForStore.keySet()){
+            rates.put(userName,rateMapForStore.get(userName).getRating());
+        }
+        return rates;
+    }
+
+    public HashMap<String, String> getProductRatingList(int productId) {
+        return products.get(productId).getProductRatingList();
+    }
 }

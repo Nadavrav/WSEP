@@ -7,6 +7,7 @@ import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
 
+import DomainLayer.Stores.Rating;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
@@ -16,6 +17,7 @@ import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 public class Facade {
@@ -1263,5 +1265,44 @@ public class Facade {
         registeredUserList.remove(userName);
     }
 
+<<<<<<< Updated upstream
 
+=======
+    public LinkedList<String> getStoresName() throws Exception {
+        LinkedList<String> storesName = new LinkedList<>();
+        for(Store store : storesList.values()){
+            if(store.getActive()){
+                storesName.add(store.getName());
+            }
+        }
+        if(storesName.size()==0){
+            throw new Exception("there is no stores");
+        }
+        return storesName;
+    }
+
+    public LinkedList<Integer> getStoreProduct(int StoreId) throws Exception {
+        Store store = storesList.get(StoreId);
+        if(store== null || !store.getActive()){
+            throw new Exception("wrong id");
+        }
+       return  store.getProductsID();
+    }
+
+    public HashMap<String, Double> getStoreRatingList(int storeId) throws Exception {
+        Store store = storesList.get(storeId);
+        if(store== null || !store.getActive()){
+            throw new Exception("wrong id");
+        }
+        return store.getRatingList();
+    }
+
+    public HashMap<String, String> getProductRatingList(int storeId ,int productId) throws Exception {
+        Store store = storesList.get(storeId);
+        if(store== null || !store.getActive()){
+            throw new Exception("wrong id");
+        }
+        return store.getProductRatingList(productId);
+    }
+>>>>>>> Stashed changes
 }

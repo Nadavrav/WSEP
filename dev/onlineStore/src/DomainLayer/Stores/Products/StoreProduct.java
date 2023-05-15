@@ -10,6 +10,7 @@ import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.Rating;
 
 
+
 public class StoreProduct extends Product {
 
     private final Integer productId;
@@ -230,4 +231,15 @@ public class StoreProduct extends Product {
         setPrice(0.0);
         notifyObservers();
     }
+
+    public HashMap<String,String> getProductRatingList() {
+        HashMap<String,String> ratingList = new HashMap<>();
+
+        for (String userName:RateMap.keySet()) {
+            ratingList.put(userName,RateMap.get(userName).toString());
+        }
+        return ratingList;
+    }
+
+
 }

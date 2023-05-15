@@ -459,6 +459,37 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+    public Response<?> getStoresName()  {
+        try{
+           return new Response<>(facade.getStoresName());
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<?> getStoreProduct(int StoreId){
+        try{
+            return new Response<>(facade.getStoreProduct(StoreId));
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<?> getStoreRatingList(int storeId){
+        try{
+            return new Response<>(facade.getStoreRatingList(storeId));
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<?> getProductRatingList(int storeId ,int productId) {
+        try{
+            return new Response<>(facade.getProductRatingList(storeId,productId));
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
             
 
     public Response<List<ServiceUser>> getRegisteredUsersInfo(){
