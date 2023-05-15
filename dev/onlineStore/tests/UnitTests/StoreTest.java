@@ -71,10 +71,14 @@ class StoreTest {
 
     @Test
     void removeProduct() {
-        s.RemoveProduct(p1.getProductId());
-        s1.RemoveProduct(p1.getProductId());
-        s.RemoveProduct(p2.getProductId());
-        s1.RemoveProduct(p2.getProductId());
+        int pid1 = s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
+        s.RemoveProduct(pid1);
+        int pid1S1 = s1.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
+        s1.RemoveProduct(pid1S1);
+        int pid2 = s.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
+        s.RemoveProduct(pid2);
+        int pid2S1 = s1.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
+        s1.RemoveProduct(pid2S1);
         // check if  products removed
         assertFalse(s.getProducts().values().contains(p1));
         assertFalse(s1.getProducts().values().contains(p1));
