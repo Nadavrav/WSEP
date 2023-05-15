@@ -150,7 +150,7 @@ public class Facade {
 //------------UserPackege-----------------------
     public int EnterNewSiteVisitor() throws Exception {//1.1
         SiteVisitor visitor = new SiteVisitor();
-        onlineList.put(visitor.getVisitorId(), new SiteVisitor());
+        onlineList.put(visitor.getVisitorId(), visitor);
         logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
         return visitor.getVisitorId();
     }
