@@ -92,7 +92,8 @@ public class Store {
      public Response<?> RemoveProduct(Integer productID) {
         if (!products.containsKey(productID)) {
             logger.warning("Product not found in store. Product ID: " + productID);
-            return new Response<>("There is no product in our products with this ID", true);
+            throw new IllegalArgumentException("There is no product in our products with this ID");
+           // return new Response<>("There is no product in our products with this ID", true);
         }
         products.get(productID).notifyRemoval();
         products.remove(productID);

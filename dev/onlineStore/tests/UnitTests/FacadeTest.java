@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FacadeTest {
     Facade f = Facade.getInstance();
     private String adminUname= "admin";
-    private String adminPass = "admin123";
+    private String adminPass = "admin1234";
     @BeforeEach
     void setup()
     {
@@ -333,9 +333,9 @@ class FacadeTest {
             f.addProductToCart(pid,storeId,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
             String ExpectedstoreIdStr = "Store Id : "+storeId;
-            String ExpectedproductsInCartStr = "Product Id: "+pid+" ,Product Name: Milk ,Product Price: 5.0";
+            String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
             assertTrue(actual.contains(ExpectedstoreIdStr));
-            assertTrue(actual.contains(ExpectedstoreIdStr));
+            assertTrue(actual.contains(ExpectedproductsInCartStr));
         }
         catch (Exception e)
         {//Should happen

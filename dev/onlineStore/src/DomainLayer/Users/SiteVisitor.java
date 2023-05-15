@@ -49,7 +49,7 @@ public class SiteVisitor{
     }
 
  //-------------- FreeVisitorID---------------------
-    public static void ExitSiteVisitor(int id) throws Exception {//1.2
+    public void ExitSiteVisitor(int id) throws Exception {//1.2
         try {
             if (!checkVisitorId(id)) {
                 logger.warning("exception occurred");
@@ -57,10 +57,15 @@ public class SiteVisitor{
             }
             AtomicInteger atomicId = new AtomicInteger(id);
             FreeVisitorID.add(atomicId);
+            resetCart();
         } catch (Exception e) {
             logger.warning("Error occurred: " + e.getMessage());
             throw e;
         }
+    }
+    private void resetCart()
+    {
+        this.cart = new Cart();
     }
     
     public static boolean checkVisitorId(int id){
