@@ -73,6 +73,9 @@ public class PurchaseHistory {
         assertTrue(bridge.ExitMarket());
     }
 
+    /**
+     * 3.7
+     */
     @Test
     public void GetPurchaseHistory_Success_StoreOwner_EmptyHistory()
     {

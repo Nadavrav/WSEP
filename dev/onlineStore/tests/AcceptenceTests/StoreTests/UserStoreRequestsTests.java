@@ -43,7 +43,7 @@ public class UserStoreRequestsTests {
     public void SetUp(){
         bridge=Driver.getBridge();
         bridge.initialize();
-        bridge.EnterMarket();
+        bridge.EnterMarket(); //1.1
         RegisterUsers();
     }
     @AfterAll
@@ -68,13 +68,14 @@ public class UserStoreRequestsTests {
     @Test
     public void StoreFounderTest(){
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        store1=bridge.OpenNewStore("Bob's Milk Emporium");
+        store1=bridge.OpenNewStore("Bob's Milk Emporium"); //3.2
         assertNotEquals(-1,store1); //OK
         //assertEquals(-1,bridge.OpenNewStore("Bob's Milk Emporium")); //store exists
     }
     @Order(2)
     @Test
     public void AddProductTest(){
+
         Integer Milk=bridge.AddProduct(store1,"Milk","is milk",100,100); //Ok
         Integer Emptiness=bridge.AddProduct(store1,"Emptiness","Guaranteed void!",100,100); //Ok
         Integer Chicken=bridge.AddProduct(store1,"Chicken","100% beef",100,100); //Ok
@@ -137,7 +138,7 @@ public class UserStoreRequestsTests {
     }
     @Order(8)
     @Test
-    public void AppointEmployeesTest(){
+    public void AppointEmployeesTest(){ //4.4 & 4.6
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
         assertTrue(bridge.AppointOwner(StoreOwner.getUserName(),store1)); //Ok
         assertTrue(bridge.AppointManager(StoreManager.getUserName(),store1)); //Ok
@@ -170,7 +171,7 @@ public class UserStoreRequestsTests {
     //}
     @Order(10)
     @Test
-    public void CloseStoreTest(){
+    public void CloseStoreTest(){ //4.9
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
         assertNotEquals(-1,bridge.OpenNewStore("Jeff's Failed Business"));
         Integer gMilk=bridge.AddProduct(store4,"Goat Milk","Feel the goat!",100,100);
@@ -187,7 +188,7 @@ public class UserStoreRequestsTests {
     }
     @Order(11)
     @Test
-    public void EditPermissionsTest(){
+    public void EditPermissionsTest(){//4.7
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
         assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1}));//Ok
         assertFalse(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1})); //already has permissions
@@ -205,7 +206,7 @@ public class UserStoreRequestsTests {
     }
     @Order(12)
     @Test
-    public void StoreOwnerTest(){
+    public void StoreOwnerTest(){ //4.3
         bridge.Login(StoreOwner.getUserName(),StoreOwner.getPassword());
         //testing add product for the store owner
         Integer OMilk=bridge.AddProduct(store1,"OMilk","is milk",100,100);
@@ -242,7 +243,7 @@ public class UserStoreRequestsTests {
     }
     @Order(13)
     @Test
-    public void ManagerWithPermissionsTest(){
+    public void ManagerWithPermissionsTest(){// 4.5
         bridge.Login(StoreManager.getUserName(), StoreManager.getPassword());
         Integer MMilk=bridge.AddProduct(store1,"MMilk","is milk",100,100);
         Integer MEmptiness=bridge.AddProduct(store1,"MEmptiness","Guaranteed void!",100,100); //Ok
@@ -277,7 +278,7 @@ public class UserStoreRequestsTests {
     }
     @Order(15)
     @Test
-    public void ManagerWithoutPermissionsTest(){
+    public void ManagerWithoutPermissionsTest(){ //4.5
         bridge.Login(StoreManager2.getUserName(), StoreManager2.getPassword());
         //testing add product for the store manager
         assertEquals(-1,bridge.AddProduct(store1,"OMilk","is milk",100,100)); //no permissions
@@ -307,7 +308,7 @@ public class UserStoreRequestsTests {
     }
     @Order(17)
     @Test
-    public void CustomerTest(){
+    public void CustomerTest(){ //
         bridge.Login(Customer.getUserName(), Customer.getPassword());
         //testing add product for the store manager
         assertEquals("Error",bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
@@ -328,7 +329,7 @@ public class UserStoreRequestsTests {
     }
     @Order(18)
     @Test
-    public void NotLoggedInTest(){
+    public void NotLoggedInTest(){ //1.1
         assertEquals("Error",bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
         //testing remove product
         assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"), store1)); //no permissions
@@ -379,7 +380,7 @@ public class UserStoreRequestsTests {
     }
     @Order(20)
     @Test
-    public void FilterSearchTests(){
+    public void FilterSearchTests(){ //2.2
         FilterSearchPrep();
         ServiceStoreProduct ServiceHamburger=new ServiceStoreProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5);
         ServiceStoreProduct ServiceSausage=new ServiceStoreProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5);

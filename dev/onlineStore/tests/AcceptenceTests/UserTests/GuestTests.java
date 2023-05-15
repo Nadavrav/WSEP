@@ -69,6 +69,10 @@ public class GuestTests {
 
         bridge.ExitMarket();
     }
+
+    /**
+     * 1.3
+     */
     @Test
     public void RegisterSuccess()
     {
@@ -91,6 +95,10 @@ public class GuestTests {
 
         bridge.ExitMarket();
     }
+
+    /**
+     * 1.4
+     */
     @Test
     public void Login_Success()
     {
@@ -115,6 +123,10 @@ public class GuestTests {
 
         bridge.ExitMarket();
     }
+
+    /**
+     * 1.2
+     */
     @Test
     public void Logout_Success()
     {
