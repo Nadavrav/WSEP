@@ -875,7 +875,12 @@ public class Facade {
             logger.warning("user are not allowed to add products");
             throw  new Exception("you are not allowed to add products to this store");
         }
-        return store.AddNewProduct(productName,price,quantity,category,description);
+        if(store.getActive())
+            return store.AddNewProduct(productName,price,quantity,category,description);
+        else {
+            logger.warning("Store is closed, store id :"+storeId);
+            throw new Exception("Store is closed");
+        }
         //catch
         //release lock user
         //throw e
@@ -943,8 +948,14 @@ public class Facade {
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
-        store.IncreaseProductQuantity(productId,quantity);
-                logger.fine("Exiting method IncreaseProductQuantity()");
+        if(store.getActive()) {
+            store.IncreaseProductQuantity(productId, quantity);
+            logger.fine("Exiting method IncreaseProductQuantity()");
+        }
+        else {
+            logger.warning("Failed on method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", quantity: " + quantity);
+            throw new Exception("Store is closed");
+        }
 
         //catch
         //release lock product
@@ -998,7 +1009,7 @@ public class Facade {
             logger.fine("Exiting method UpdateProductDescription()");
         }
         else {
-            logger.fine("Failed at UpdateProductDescription because there was no store with the requested store Id");
+            logger.warning("Failed at UpdateProductDescription because there was no store with the requested store Id");
             throw new IllegalArgumentException("There is no store with this store id :"+storeId);
         }
 

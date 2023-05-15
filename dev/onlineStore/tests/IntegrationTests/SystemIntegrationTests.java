@@ -424,7 +424,309 @@ public class SystemIntegrationTests {
 
             List<String> actualPurchase = f.purchaseCart(visitorId,123,"Adress");
             List<String> expectedPurchase = new LinkedList<>();
+            expectedPurchase.add(ExpectedproductsInCartStr1);
             assertEquals(expectedPurchase,actualPurchase);
+
+            f.ExitSiteVisitor(visitorId);
+        } catch (Exception e) {//Should not happen
+            System.out.println(e.getMessage());// a print to find out from what function
+            fail();
+        }
+
+    }
+    @Test
+    void integrationTest11() {
+        //This tests enter register login openStore addItem logout login CloseStore ChangeAmountInStore addItem2 addItemToCart logout exit,
+        // all should succeed except hangeAmountInStore addItem addItemToCart
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+
+            f.Register(visitorId, Username1, password1);
+            assertTrue(f.getRegisteredUserList().get(Username1) != null);
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            int storeId = f.OpenNewStore(visitorId, Store1Name);
+            assertTrue(f.getStoresList().get(storeId) != null);
+
+            int pid1 = f.AddProduct(visitorId, storeId, pName, pPrice, pCat, pQuan, pDesc);
+            assertNotNull(pid1);
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            f.CloseStore(visitorId,storeId);
+            assertFalse(f.getStoresList().get(storeId).getActive());
+
+            assertThrows(Exception.class,()->f.IncreaseProductQuantity(visitorId,pid1,storeId,100));
+
+            assertThrows(Exception.class,()->f.AddProduct(visitorId, storeId, pName2, pPrice2, pCat2, pQuan2, pDesc2));
+
+            assertThrows(Exception.class,()->f.addProductToCart(pid1,storeId,visitorId));
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            f.ExitSiteVisitor(visitorId);
+        } catch (Exception e) {//Should not happen
+            System.out.println(e.getMessage());// a print to find out from what function
+            fail();
+        }
+
+    }
+    @Test
+    void integrationTest12() {
+        // This tests enter register login login logout loginFake logout login
+        // addStoreComment1 logout login closeStore logout addStoreRate exit,
+        // all should succeed loginFake logout after loginFake addStoreComment1 logout after addStoreRate
+        // closeStore addComment
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+
+            f.Register(visitorId, Username1, password1);
+            assertTrue(f.getRegisteredUserList().get(Username1) != null);
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            assertThrows(Exception.class, ()->f.login(visitorId,Username1,password1));
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            assertThrows(Exception.class, ()->f.login(visitorId,"fake",password1));
+
+            assertThrows(Exception.class, ()->f.logout(visitorId));
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            assertThrows(Exception.class, ()->f.addStoreRateAndComment(visitorId,-5,5,""));
+
+            assertThrows(Exception.class,()->f.logout(visitorId));
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            assertThrows(Exception.class,()->f.CloseStore(visitorId,-5));
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            assertThrows(Exception.class,()->f.addStoreRate(visitorId,-5,4));
+
+            f.ExitSiteVisitor(visitorId);
+        } catch (Exception e) {//Should not happen
+            System.out.println(e.getMessage());// a print to find out from what function
+            fail();
+        }
+
+    }
+    @Test
+    void integrationTest13() {
+        // This tests enter register login login logout loginFake logout login
+        // addProductComment1 logout login closeStore logout addProductComment2 exit,
+        // all should succeed loginFake logout after loginFake addProductComment1 logout after addProductComment2
+        // closeStore addComment
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+
+            f.Register(visitorId, Username1, password1);
+            assertTrue(f.getRegisteredUserList().get(Username1) != null);
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            assertThrows(Exception.class, ()->f.login(visitorId,Username1,password1));
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            assertThrows(Exception.class, ()->f.login(visitorId,"fake",password1));
+
+            assertThrows(Exception.class, ()->f.logout(visitorId));
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            assertThrows(Exception.class, ()->f.addProductRateAndComment(visitorId,-5,5,4,""));
+
+            assertThrows(Exception.class, ()->f.logout(visitorId));
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            assertThrows(Exception.class,()->f.CloseStore(visitorId,-5));
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            assertThrows(Exception.class,()->f.addProductRateAndComment(visitorId,1,-55,4,""));
+
+            f.ExitSiteVisitor(visitorId);
+        } catch (Exception e) {//Should not happen
+            System.out.println(e.getMessage());// a print to find out from what function
+            fail();
+        }
+
+    }
+    @Test
+    void integrationTest14() {
+        // This tests enter register removeProduct addProduct removeProduct login openStore removeProduct
+        // addProduct removeProduct closeStore addProduct removeProduct openNewStore addProduct removeProductFromStore2
+        // logout exit
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+
+            f.Register(visitorId, Username1, password1);
+            assertTrue(f.getRegisteredUserList().get(Username1) != null);
+
+            assertThrows(Exception.class, ()->f.RemoveProduct(visitorId,5,1));
+
+            assertThrows(Exception.class,()->f.AddProduct(visitorId,5,pName,pPrice,pCat,pQuan,pDesc));
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            int storeId = f.OpenNewStore(visitorId, Store1Name);
+            assertTrue(f.getStoresList().get(storeId) != null);
+
+            assertThrows(Exception.class, ()->f.RemoveProduct(visitorId,5,1));
+
+            int pid1 = f.AddProduct(visitorId, storeId, pName, pPrice, pCat, pQuan, pDesc);
+            assertNotNull(pid1);
+
+            f.RemoveProduct(visitorId,storeId,pid1);
+            assertFalse(f.getStoresList().get(storeId).getProducts().values().contains(pid1));
+
+            f.CloseStore(visitorId,storeId);
+            assertFalse(f.getStoresList().get(storeId).getActive());
+
+            assertThrows(Exception.class,()->f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc));
+
+            assertThrows(Exception.class, ()->f.RemoveProduct(visitorId,storeId,pid1));
+
+            int storeId2 = f.OpenNewStore(visitorId, "NewStore");
+            assertTrue(f.getStoresList().get(storeId2) != null);
+
+            int pid2 = f.AddProduct(visitorId, storeId2, pName, pPrice, pCat, pQuan, pDesc);
+            assertNotNull(pid2);
+
+            f.RemoveProduct(visitorId,storeId2,pid2);
+            assertFalse(f.getStoresList().get(storeId2).getProducts().values().contains(pid2));
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            f.ExitSiteVisitor(visitorId);
+        } catch (Exception e) {//Should not happen
+            System.out.println(e.getMessage());// a print to find out from what function
+            fail();
+        }
+
+    }
+    @Test
+    void integrationTest15() {
+        // This tests enter register login UpdateProductName UpdateProductPrice UpdateProductCate addProduct
+        // UpdateProductName UpdateProductPrice UpdateProductCate UpdateDesc removeProduct UpdateProductPrice UpdateProductCate openStore addProduct
+        // UpdateProductName UpdateProductPrice UpdateProductCate UpdateDesc removeProduct UpdateProductPrice UpdateProductCate addProduct2 CloseStore
+        // UpdateProductName UpdateProductPrice UpdateProductCate UpdateDesc removeProduct logout
+        // addProduct removeProductFromStore1
+        // logout exit
+        try {
+            int fakePID= -5;
+            int fakeStoreId = -5;
+            int visitorId = f.EnterNewSiteVisitor();
+
+            f.Register(visitorId, Username1, password1);
+            assertTrue(f.getRegisteredUserList().get(Username1) != null);
+
+            f.login(visitorId, Username1, password1);
+            assertTrue(f.getOnlineList().get(visitorId) != null);
+            assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            assertThrows(Exception.class,()->f.UpdateProductName(visitorId,fakePID,fakeStoreId,"Fail"));
+
+            assertThrows(Exception.class,()->f.UpdateProductPrice(visitorId,fakePID,fakeStoreId,154));
+
+            assertThrows(Exception.class,()->f.UpdateProductCategory(visitorId,fakePID,fakeStoreId,"Fail"));
+
+            assertThrows(Exception.class,()->f.AddProduct(visitorId, fakeStoreId, pName, pPrice, pCat, pQuan, pDesc));
+
+            assertThrows(Exception.class,()->f.UpdateProductName(visitorId,fakePID,fakeStoreId,"Fail"));
+
+            assertThrows(Exception.class,()->f.UpdateProductPrice(visitorId,fakePID,fakeStoreId,154));
+
+            assertThrows(Exception.class,()->f.UpdateProductCategory(visitorId,fakePID,fakeStoreId,"Fail"));
+
+            assertThrows(Exception.class,()->f.UpdateProductDescription(visitorId,fakePID,fakeStoreId,"Fail"));
+
+            assertThrows(Exception.class,()->f.RemoveProduct(visitorId,fakeStoreId,fakePID));
+
+            assertThrows(Exception.class,()->f.UpdateProductPrice(visitorId,fakePID,fakeStoreId,154));
+
+            assertThrows(Exception.class,()->f.UpdateProductCategory(visitorId,fakePID,fakeStoreId,"Fail"));
+
+            int storeId = f.OpenNewStore(visitorId, Store1Name);
+            assertTrue(f.getStoresList().get(storeId) != null);
+
+            int pid1 = f.AddProduct(visitorId, storeId, pName, pPrice, pCat, pQuan, pDesc);
+            assertNotNull(pid1);
+
+            f.UpdateProductName(visitorId,pid1,storeId,"Fail");
+            assertEquals("Fail",f.getStoresList().get(storeId).getProducts().get(pid1).getName());
+
+            f.UpdateProductPrice(visitorId,pid1,storeId,154);
+            assertEquals(154,f.getStoresList().get(storeId).getProducts().get(pid1).getPrice());
+
+            f.UpdateProductCategory(visitorId,pid1,storeId,"Fail2");
+            assertEquals("Fail2",f.getStoresList().get(storeId).getProducts().get(pid1).getCategory());
+
+            f.UpdateProductDescription(visitorId,pid1,storeId,"Fail3");
+            assertEquals("Fail3",f.getStoresList().get(storeId).getProducts().get(pid1).getDescription());
+
+            f.RemoveProduct(visitorId,storeId,pid1);
+            assertFalse(f.getStoresList().get(storeId).getProducts().values().contains(pid1));
+
+            assertThrows(Exception.class,()->f.UpdateProductPrice(visitorId,pid1,storeId,154));
+
+            assertThrows(Exception.class,()->f.UpdateProductCategory(visitorId,pid1,storeId,"Fail"));
+
+            int pid2 = f.AddProduct(visitorId, storeId, pName2, pPrice2, pCat2, pQuan2, pDesc2);
+            assertNotNull(pid2);
+
+            f.CloseStore(visitorId,storeId);
+            assertFalse(f.getStoresList().get(storeId).getActive());
+
+            f.logout(visitorId);
+            assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            assertThrows(Exception.class,()->f.UpdateProductName(visitorId,pid1,storeId,"Fail"));
+
+            assertThrows(Exception.class,()->f.UpdateProductPrice(visitorId,pid1,storeId,154));
+
+            assertThrows(Exception.class,()->f.UpdateProductCategory(visitorId,pid1,storeId,"Fail"));
+
+            assertThrows(Exception.class,()->f.UpdateProductDescription(visitorId,pid1,storeId,"Fail"));
 
             f.ExitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
