@@ -40,7 +40,6 @@ public class Facade {
             throw new Exception("Only admin can fetch user list");
         return registeredUserList;
     }
-    private Map<String, RegisteredUser> registeredUserList;
 
     //Getter for tests
     public Map<Integer, Store> getStoresList() {
