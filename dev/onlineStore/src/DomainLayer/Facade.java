@@ -1265,9 +1265,6 @@ public class Facade {
         registeredUserList.remove(userName);
     }
 
-<<<<<<< Updated upstream
-
-=======
     public LinkedList<String> getStoresName() throws Exception {
         LinkedList<String> storesName = new LinkedList<>();
         for(Store store : storesList.values()){
@@ -1304,5 +1301,5 @@ public class Facade {
         }
         return store.getProductRatingList(productId);
     }
->>>>>>> Stashed changes
+
 }
