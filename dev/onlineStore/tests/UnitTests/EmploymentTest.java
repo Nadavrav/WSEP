@@ -33,7 +33,7 @@ class EmploymentTest {
     @Test
     public void testCheckIfOwnerWithStoreFounderRole() {
         Employment employment = new Employment(Apointer,Apointee,store, Role.StoreFounder);
-        assertTrue(employment.checkIfOwner());
+        assertTrue(employment.checkIfFounder());
     }
 
     @Test
