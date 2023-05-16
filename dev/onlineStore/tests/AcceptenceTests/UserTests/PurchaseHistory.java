@@ -53,9 +53,9 @@ public class PurchaseHistory {
         //productIdMapper.put(productId_Milk, productId_Milk);
         //productIdMapper.put(productId_Cheese, productId_Cheese);
         //productIdMapper.put(productId_Hamburger, productId_Hamburger);
-        serviceProductMap.put("Milk",new ServiceStoreProduct("Milk",5.0,"test","Made by a cow",2.5));
-        serviceProductMap.put("Cheese",new ServiceStoreProduct("Cheese",7.0,"test","contains 3% bullet holes",2.5));
-        serviceProductMap.put("Hamburger",new ServiceStoreProduct("Hamburger",10.0,"test","generously donated by the cow community",2.5));
+        serviceProductMap.put("Milk",new ServiceStoreProduct("Milk",5.0,"test","Made by a cow",2.5,1));
+        serviceProductMap.put("Cheese",new ServiceStoreProduct("Cheese",7.0,"test","contains 3% bullet holes",2.5,1));
+        serviceProductMap.put("Hamburger",new ServiceStoreProduct("Hamburger",10.0,"test","generously donated by the cow community",2.5,1));
         assertTrue(bridge.AddPermission(StoreWorkerNameWithPerms,storeId,perms));
         assertTrue(bridge.Logout());
         assertTrue(bridge.ExitMarket());

@@ -4,7 +4,7 @@ import DomainLayer.Logging.UniversalHandler;
 
 import java.util.logging.Logger;
 
-public abstract class Product implements StoreProductObserver {
+public class Product implements StoreProductObserver {
     private static final Logger logger=Logger.getLogger("Product logger");
     protected String name;
     protected Double price;
@@ -13,7 +13,8 @@ public abstract class Product implements StoreProductObserver {
     protected String category;
     private boolean stillInCart;
     /**
-     * called as super when a new store product is created in the store, with all the product's parameters
+     * called as super when a new store product is created in the store, with all the product's parameters. by default has no setters, and only store product has them
+     * while cart product doesn't have them.
      * @param name product's name
      * @param price product's price
      * @param category product's category

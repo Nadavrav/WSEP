@@ -12,7 +12,6 @@ public class SiteVisitor{
     protected static LinkedList<AtomicInteger> FreeVisitorID= new LinkedList<>();
     private Cart cart;
     private int visitorId;
-    protected boolean loggedIn;
     private static final Logger logger=Logger.getLogger("SiteVisitor logger");
     
       public SiteVisitor() throws Exception {
@@ -25,7 +24,6 @@ public class SiteVisitor{
         }
         this.visitorId = getNewVisitorId();
         cart = new Cart();
-        loggedIn=false;
     }
 //    public SiteVisitor(int visitorId) throws Exception {//to do
 //        if (checkVisitorId(visitorId)) {
@@ -51,7 +49,7 @@ public class SiteVisitor{
     }
 
  //-------------- FreeVisitorID---------------------
-    public static void ExitSiteVisitor(int id) throws Exception {//1.2
+    public void ExitSiteVisitor(int id) throws Exception {//1.2
         try {
             if (!checkVisitorId(id)) {
                 logger.warning("exception occurred");
@@ -59,10 +57,15 @@ public class SiteVisitor{
             }
             AtomicInteger atomicId = new AtomicInteger(id);
             FreeVisitorID.add(atomicId);
+            resetCart();
         } catch (Exception e) {
             logger.warning("Error occurred: " + e.getMessage());
             throw e;
         }
+    }
+    private void resetCart()
+    {
+        this.cart = new Cart();
     }
     
     public static boolean checkVisitorId(int id){

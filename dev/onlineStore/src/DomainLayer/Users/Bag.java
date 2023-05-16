@@ -33,10 +33,16 @@ public class Bag {
     
     public void addProduct(StoreProduct product) {
         logger.info("Starting add product");
-        CartProduct cartProduct=new CartProduct(product);
         if(productList.get(product)!=null)
             throw new RuntimeException("Cart already contains "+product.getName());
         productList.put(product,new CartProduct(product));
+        logger.info("Add product Succeeded");
+    }
+    public void addProduct(CartProduct product) {
+        logger.info("Starting add product");
+        if(productList.get(product)!=null)
+            throw new RuntimeException("Cart already contains "+product.getName());
+        productList.put(product,product);
         logger.info("Add product Succeeded");
     }
     public void removeProduct(StoreProduct product) {
@@ -47,6 +53,15 @@ public class Bag {
         CartProduct cartProduct=new CartProduct(product);
         if(productList.get(product).equals(cartProduct))
                 productList.remove(cartProduct);
+        else throw new RuntimeException();
+    }
+    public void removeProduct(CartProduct product) {
+        if(product==null)
+            throw new NullPointerException("attempted to remove null product");
+        if(productList.get(product)==null)
+            throw new RuntimeException("product to remove not in cart");
+        if(productList.get(product).equals(product))
+            productList.remove(product);
         else throw new RuntimeException();
     }
     public void changeProductAmount(Product product,int newAmount) {

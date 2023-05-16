@@ -9,6 +9,7 @@ public class Rating {
             throw new IllegalArgumentException("Your Rate must be between 0-5 ");
         }
         this.rating = rating;
+        comment="";
     }
     public Rating (double rating, String comment){
         if(comment == null)
@@ -38,6 +39,11 @@ public class Rating {
 
     public String getComment() {
         return comment;
+    }
+
+    @Override
+    public String toString(){
+       return "Product Rate = "+rating + "/n" + comment;
     }
 
 }
