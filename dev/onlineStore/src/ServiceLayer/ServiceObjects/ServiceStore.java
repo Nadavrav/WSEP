@@ -18,10 +18,6 @@ public class ServiceStore {
         this.storeId= store.getId();
         this.storeName=store.getName();
         productList=new ArrayList<>();
-        Map<Integer,StoreProduct> prductMap=store.getProducts();
-        for(StoreProduct storeProduct: prductMap.values()){
-            productList.add(new ServiceStoreProduct(storeProduct));
-        }
     }
 
     public String getStoreName() {

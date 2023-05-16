@@ -13,7 +13,7 @@ public class DescriptionProductFilter implements ProductFilter {
     public boolean PassFilter(StoreProduct product) {
         if(description.equals(""))
             return true;
-        return product.getDescription().equals(description);
+        return product.getDescription().contains(description);
     }
 
 }

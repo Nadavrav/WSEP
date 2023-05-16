@@ -13,7 +13,7 @@ public class CategoryProductFilter implements ProductFilter {
     public boolean PassFilter(StoreProduct product) {
         if(category.equals(""))
             return true;
-        return product.getCategory().equals(category);
+        return product.getCategory().contains(category);
     }
 
 }
