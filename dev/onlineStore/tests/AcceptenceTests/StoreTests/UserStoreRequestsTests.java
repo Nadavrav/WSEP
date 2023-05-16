@@ -46,7 +46,7 @@ public class UserStoreRequestsTests {
     public void SetUp(){
         bridge=Driver.getBridge();
         bridge.initialize();
-        bridge.EnterMarket();
+        bridge.EnterMarket(); //1.1
         RegisterUsers();
     }
     @AfterAll
@@ -71,13 +71,14 @@ public class UserStoreRequestsTests {
     @Test
     public void StoreFounderTest(){
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        store1=bridge.OpenNewStore("Bob's Milk Emporium");
+        store1=bridge.OpenNewStore("Bob's Milk Emporium"); //3.2
         assertNotEquals(-1,store1); //OK
         //assertEquals(-1,bridge.OpenNewStore("Bob's Milk Emporium")); //store exists
     }
     @Order(2)
     @Test
     public void AddProductTest(){
+
         Integer Milk=bridge.AddProduct(store1,"Milk","is milk",100,100); //Ok
         Integer Emptiness=bridge.AddProduct(store1,"Emptiness","Guaranteed void!",100,100); //Ok
         Integer Chicken=bridge.AddProduct(store1,"Chicken","100% beef",100,100); //Ok
@@ -140,7 +141,7 @@ public class UserStoreRequestsTests {
     }
     @Order(8)
     @Test
-    public void AppointEmployeesTest(){
+    public void AppointEmployeesTest(){ //4.4 & 4.6
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
         assertTrue(bridge.AppointOwner(StoreOwner.getUserName(),store1)); //Ok
         assertTrue(bridge.AppointManager(StoreManager.getUserName(),store1)); //Ok
@@ -173,7 +174,7 @@ public class UserStoreRequestsTests {
     //}
     @Order(10)
     @Test
-    public void CloseStoreTest(){
+    public void CloseStoreTest(){ //4.9
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
         assertNotEquals(-1,bridge.OpenNewStore("Jeff's Failed Business"));
         Integer gMilk=bridge.AddProduct(store4,"Goat Milk","Feel the goat!",100,100);
@@ -190,7 +191,7 @@ public class UserStoreRequestsTests {
     }
     @Order(11)
     @Test
-    public void EditPermissionsTest(){
+    public void EditPermissionsTest(){//4.7
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
         assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1}));//Ok
         assertFalse(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1})); //already has permissions
@@ -208,7 +209,7 @@ public class UserStoreRequestsTests {
     }
     @Order(12)
     @Test
-    public void StoreOwnerTest(){
+    public void StoreOwnerTest(){ //4.3
         bridge.Login(StoreOwner.getUserName(),StoreOwner.getPassword());
         //testing add product for the store owner
         Integer OMilk=bridge.AddProduct(store1,"OMilk","is milk",100,100);
@@ -245,7 +246,7 @@ public class UserStoreRequestsTests {
     }
     @Order(13)
     @Test
-    public void ManagerWithPermissionsTest(){
+    public void ManagerWithPermissionsTest(){// 4.5
         bridge.Login(StoreManager.getUserName(), StoreManager.getPassword());
         Integer MMilk=bridge.AddProduct(store1,"MMilk","is milk",100,100);
         Integer MEmptiness=bridge.AddProduct(store1,"MEmptiness","Guaranteed void!",100,100); //Ok
@@ -280,7 +281,7 @@ public class UserStoreRequestsTests {
     }
     @Order(15)
     @Test
-    public void ManagerWithoutPermissionsTest(){
+    public void ManagerWithoutPermissionsTest(){ //4.5
         bridge.Login(StoreManager2.getUserName(), StoreManager2.getPassword());
         //testing add product for the store manager
         assertEquals(-1,bridge.AddProduct(store1,"OMilk","is milk",100,100)); //no permissions
@@ -310,7 +311,7 @@ public class UserStoreRequestsTests {
     }
     @Order(17)
     @Test
-    public void CustomerTest(){
+    public void CustomerTest(){ //
         bridge.Login(Customer.getUserName(), Customer.getPassword());
         //testing add product for the store manager
         assertEquals("Error",bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
@@ -331,7 +332,7 @@ public class UserStoreRequestsTests {
     }
     @Order(18)
     @Test
-    public void NotLoggedInTest(){
+    public void NotLoggedInTest(){ //1.1
         assertEquals("Error",bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
         //testing remove product
         assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"), store1)); //no permissions
@@ -372,10 +373,11 @@ public class UserStoreRequestsTests {
     }
     public void FilterSearchPrep(){
         bridge.Login(StoreFounder.getUserName(), StoreFounder.getPassword());
-        Integer Hamburger=bridge.AddProduct(store1,"Hamburger","contains beef and good taste. kosher",30,70);
-        Integer Sausage=bridge.AddProduct(store1,"Sausage","contains beef and lots of oil. kosher",15,120); //Ok
-        Integer Steak=bridge.AddProduct(store1,"Steak","99% beef, 1% olive oil. kosher",70,35); //Ok
-        Integer Cheeseburger=bridge.AddProduct(store1,"Cheeseburger","contains cheese and beef",40,70); //Ok
+        int store4=bridge.OpenNewStore("Store4");
+        Integer Hamburger=bridge.AddProduct(store4,"Hamburger","contains beef and good taste. kosher",30,70);
+        Integer Sausage=bridge.AddProduct(store4,"Sausage","contains beef and lots of oil. kosher",15,120); //Ok
+        Integer Steak=bridge.AddProduct(store4,"Steak","99% beef, 1% olive oil. kosher",70,35); //Ok
+        Integer Cheeseburger=bridge.AddProduct(store4,"Cheeseburger","contains cheese and beef",40,70); //Ok
         productIdMap.put("Hamburger",Hamburger);
         productIdMap.put("Sausage",Sausage);
         productIdMap.put("Steak",Steak);
@@ -383,14 +385,14 @@ public class UserStoreRequestsTests {
     }
     @Order(20)
     @Test
-    public void FilterSearchTests(){
+    public void FilterSearchTests(){ //2.2
         FilterSearchPrep();
         ServiceStoreProduct ServiceHamburger=new ServiceStoreProduct("Hamburger", 30.0,"test","contains beef and good taste. kosher",5,1);
         ServiceStoreProduct ServiceSausage=new ServiceStoreProduct("Sausage", 15.0,"test","contains beef and lots of oil. kosher",5,1);
         ServiceStoreProduct ServiceSteak=new ServiceStoreProduct("Steak", 70.0,"test","99% beef, 1% olive oil. kosher",5,1);
         ServiceStoreProduct ServiceCheeseburger=new ServiceStoreProduct("Cheeseburger", 40.0,"test","contains cheese and beef",5,1);
         ArrayList<StoreFilter> storeFilters=new ArrayList<>();
-        storeFilters.add(new NameStoreFilter("Bob's Milk Emporium"));
+        storeFilters.add(new NameStoreFilter("Store4"));
         NameProductFilter nameFilter=new NameProductFilter("burger");
         MaxPriceProductFilter maxPriceFilter=new MaxPriceProductFilter(35);
         ArrayList<ProductFilter> nameProductFilterList =new ArrayList<>();
@@ -401,15 +403,21 @@ public class UserStoreRequestsTests {
         List<ServiceStore> nameSearch=bridge.FilterSearch(nameProductFilterList,storeFilters);
         List<ServiceStore> nameAndPriceSearch=bridge.FilterSearch(maxPriceAndNameProductFilterList,storeFilters);
         //testing name filter
-        assertTrue(nameSearch.get(0).getProductList().contains(ServiceHamburger));
-        assertTrue(nameSearch.get(0).getProductList().contains(ServiceCheeseburger));
-        assertFalse(nameSearch.get(0).getProductList().contains(ServiceSausage));
-        assertFalse(nameSearch.get(0).getProductList().contains(ServiceSteak));
-        //testing name and price filters
-        assertTrue(nameAndPriceSearch.get(0).getProductList().contains(ServiceHamburger));
-        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceCheeseburger));
-        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceSausage));
-        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceSteak));
+        assertFalse(nameSearch.isEmpty());
+        for(ServiceStore store:nameSearch){
+            assertTrue(store.getProductList().contains(ServiceHamburger));
+            assertTrue(store.getProductList().contains(ServiceCheeseburger));
+            assertFalse(store.getProductList().contains(ServiceSausage));
+            assertFalse(store.getProductList().contains(ServiceSteak));
+        }
+        assertFalse(nameSearch.isEmpty());
+        for(ServiceStore store:nameAndPriceSearch) {
+            //testing name and price filters
+            assertTrue(store.getProductList().contains(ServiceHamburger));
+            assertFalse(store.getProductList().contains(ServiceCheeseburger));
+            assertFalse(store.getProductList().contains(ServiceSausage));
+            assertFalse(store.getProductList().contains(ServiceSteak));
+        }
     }
     @Order(21)
     @Test
