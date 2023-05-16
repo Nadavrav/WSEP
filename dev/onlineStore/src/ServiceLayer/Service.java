@@ -522,5 +522,18 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+    public Response<List<ServiceStore>> getStoresByUserName(String userName) throws Exception {
+        try {
+            ArrayList<ServiceStore> serviceStores = new ArrayList<>();
+            List <Store> stores = facade.getStoresByUserName(visitorId,userName);
+            for(Store s : stores) {
+                serviceStores.add(new ServiceStore(s));
+            }
+            return new Response<>(serviceStores);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
 
 }
