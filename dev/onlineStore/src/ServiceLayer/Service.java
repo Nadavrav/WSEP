@@ -13,6 +13,11 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
+
+import ServiceLayer.ServiceObjects.ServiceCart;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
 import ServiceLayer.ServiceObjects.ServiceStore;
@@ -399,6 +404,7 @@ public class Service {
    // }
 
     //2.1
+
     public Response<List<ServiceStore>> FilterProductSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
         try{
             Map<Store,List<StoreProduct>> productMap =Facade.getInstance().FilterProductSearch(storeFilters,productFilters);
@@ -413,13 +419,14 @@ public class Service {
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
+
     }
     public Response<?> GetInformation(int StoreId) {
 
         try{
             facade.GetInformation(StoreId);
-
-        }catch (Exception e){
+        }
+        catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
         return new Response<>("Success");

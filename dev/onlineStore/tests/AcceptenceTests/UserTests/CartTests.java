@@ -48,6 +48,10 @@ public class CartTests {
     {
         assertTrue(bridge.ExitMarket());
     }
+
+    /**
+     * 2.3
+     */
     @Test
     public void Save_Product_Success()
     {
@@ -78,6 +82,10 @@ public class CartTests {
         boolean r1 = bridge.addToCart(productId_MegaMilk, storeId);
         assertFalse(r1);
     }
+
+    /**
+     * 2.4
+     */
     @Test
     public void Remove_Product_Success()
     {
@@ -177,6 +185,10 @@ public class CartTests {
         boolean r = bridge.CartChangeItemQuantity(productId_GigaMilk,storeId,5);
         assertFalse(r);
     }
+
+    /**
+     * 2.5
+     */
     @Test
     public void Purchase_Cart_Success()
     {
