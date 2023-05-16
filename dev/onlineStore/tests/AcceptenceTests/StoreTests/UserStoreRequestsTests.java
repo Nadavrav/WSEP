@@ -372,10 +372,11 @@ public class UserStoreRequestsTests {
     }
     public void FilterSearchPrep(){
         bridge.Login(StoreFounder.getUserName(), StoreFounder.getPassword());
-        Integer Hamburger=bridge.AddProduct(store1,"Hamburger","contains beef and good taste. kosher",30,70);
-        Integer Sausage=bridge.AddProduct(store1,"Sausage","contains beef and lots of oil. kosher",15,120); //Ok
-        Integer Steak=bridge.AddProduct(store1,"Steak","99% beef, 1% olive oil. kosher",70,35); //Ok
-        Integer Cheeseburger=bridge.AddProduct(store1,"Cheeseburger","contains cheese and beef",40,70); //Ok
+        int store4=bridge.OpenNewStore("Store4");
+        Integer Hamburger=bridge.AddProduct(store4,"Hamburger","contains beef and good taste. kosher",30,70);
+        Integer Sausage=bridge.AddProduct(store4,"Sausage","contains beef and lots of oil. kosher",15,120); //Ok
+        Integer Steak=bridge.AddProduct(store4,"Steak","99% beef, 1% olive oil. kosher",70,35); //Ok
+        Integer Cheeseburger=bridge.AddProduct(store4,"Cheeseburger","contains cheese and beef",40,70); //Ok
         productIdMap.put("Hamburger",Hamburger);
         productIdMap.put("Sausage",Sausage);
         productIdMap.put("Steak",Steak);
@@ -390,7 +391,7 @@ public class UserStoreRequestsTests {
         ServiceStoreProduct ServiceSteak=new ServiceStoreProduct("Steak", 70.0,"test","99% beef, 1% olive oil. kosher",5,1);
         ServiceStoreProduct ServiceCheeseburger=new ServiceStoreProduct("Cheeseburger", 40.0,"test","contains cheese and beef",5,1);
         ArrayList<StoreFilter> storeFilters=new ArrayList<>();
-        storeFilters.add(new NameStoreFilter("Bob's Milk Emporium"));
+        storeFilters.add(new NameStoreFilter("Store4"));
         NameProductFilter nameFilter=new NameProductFilter("burger");
         MaxPriceProductFilter maxPriceFilter=new MaxPriceProductFilter(35);
         ArrayList<ProductFilter> nameProductFilterList =new ArrayList<>();
@@ -401,15 +402,21 @@ public class UserStoreRequestsTests {
         List<ServiceStore> nameSearch=bridge.FilterSearch(nameProductFilterList,storeFilters);
         List<ServiceStore> nameAndPriceSearch=bridge.FilterSearch(maxPriceAndNameProductFilterList,storeFilters);
         //testing name filter
-        assertTrue(nameSearch.get(0).getProductList().contains(ServiceHamburger));
-        assertTrue(nameSearch.get(0).getProductList().contains(ServiceCheeseburger));
-        assertFalse(nameSearch.get(0).getProductList().contains(ServiceSausage));
-        assertFalse(nameSearch.get(0).getProductList().contains(ServiceSteak));
-        //testing name and price filters
-        assertTrue(nameAndPriceSearch.get(0).getProductList().contains(ServiceHamburger));
-        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceCheeseburger));
-        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceSausage));
-        assertFalse(nameAndPriceSearch.get(0).getProductList().contains(ServiceSteak));
+        assertFalse(nameSearch.isEmpty());
+        for(ServiceStore store:nameSearch){
+            assertTrue(store.getProductList().contains(ServiceHamburger));
+            assertTrue(store.getProductList().contains(ServiceCheeseburger));
+            assertFalse(store.getProductList().contains(ServiceSausage));
+            assertFalse(store.getProductList().contains(ServiceSteak));
+        }
+        assertFalse(nameSearch.isEmpty());
+        for(ServiceStore store:nameAndPriceSearch) {
+            //testing name and price filters
+            assertTrue(store.getProductList().contains(ServiceHamburger));
+            assertFalse(store.getProductList().contains(ServiceCheeseburger));
+            assertFalse(store.getProductList().contains(ServiceSausage));
+            assertFalse(store.getProductList().contains(ServiceSteak));
+        }
     }
     @Order(21)
     @Test
