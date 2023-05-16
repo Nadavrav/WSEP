@@ -50,10 +50,14 @@
 </head>
 
 <body>
-<div style="position: fixed;top: 10px;left: 20px;">
-    <button style="background-color: transparent;"><a href="/MainPage">Home</a></button>
-</div>
-<div class="container">
+<!--<div style="position: fixed;top: 10px;left: 20px;">-->
+<!--    <button style="background-color: transparent;"><a href="/MainPage">Home</a></button>-->
+<!--</div>-->
+<button style="background-color: transparent;">
+    <a th:href="@{MainPage}" th:if="${logged}">Home</a>
+    <a th:href="@{MainPage}" th:unless="${logged}">Home</a>
+</button>
+<div class="container" >
     <div style="font-size: 20px; color: red;text-align: center;" th:if="${isError}">
         <sapn id="error" th:text="${message}"> </sapn>
     </div>
@@ -73,7 +77,7 @@
             </thead>
             <tbody>
                 <tr th:each="entry, status : ${productList}">
-                    <td th:text="${entry.key}"></td>
+                    <td th:text="${entry.getKey()}"></td>
                     <td th:text="${entry.value.getName()}"></td>
                     <td th:text="${entry.value.getPrice()}"></td>
                     <td th:text="${entry.value.getCategory()}"></td>

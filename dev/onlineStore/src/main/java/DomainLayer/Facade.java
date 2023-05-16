@@ -15,6 +15,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceStore;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1307,18 +1308,17 @@ public class Facade {
         registeredUserList.remove(userName);
     }
 
-
     public LinkedList<Store> getStoresName() throws Exception {
-        LinkedList<Store> stores = new LinkedList<>();
+        LinkedList<Store> storesName = new LinkedList<>();
         for(Store store : storesList.values()){
             if(store.getActive()){
-                stores.add(store);
+                storesName.add(store);
             }
         }
-        if(stores.size()==0){
+        if(storesName.size()==0){
             throw new Exception("there is no stores");
         }
-        return stores;
+        return storesName;
     }
 
     public LinkedList<Integer> getStoreProduct(int StoreId) throws Exception {
@@ -1345,4 +1345,21 @@ public class Facade {
         return store.getProductRatingList(productId);
     }
 
+    public List<Store> getStoresByUserName(int visitorId,String userName) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(! (visitor instanceof RegisteredUser)){
+            throw new Exception("invalid visitor Id");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+        if(!user.getUserName().equals(userName)){
+            throw new Exception("This is not your userName");
+        }
+        List<Integer> storesID = new LinkedList<>();
+        Map<Integer,Employment> employmentMap = employmentList.get(userName);
+        LinkedList<Store> stores = new LinkedList<>();
+        for(Integer i :employmentMap.keySet()){
+            stores.add(storesList.get(i));
+        }
+        return stores;
+    }
 }

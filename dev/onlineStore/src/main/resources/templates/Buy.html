@@ -58,10 +58,17 @@
 </head>
 
 <body>
-<div style="position: fixed;top: 10px;left: 20px;">
-    <button style="background-color: transparent;"><a style="text-decoration: none;color: black;" href="/MainPage">Home</a></button>
-    <button style="background-color: transparent;"><a style="text-decoration: none;color: black;" href="Bag">Cart</a></button>
-</div>
+<!--<div style="position: fixed;top: 10px;left: 20px;">-->
+<!--    <button style="background-color: transparent;"><a style="text-decoration: none;color: black;" href="/MainPage">Home</a></button>-->
+<!--</div>-->
+<button style="position: fixed;top: 10px;left: 20px;background-color: transparent;">
+    <a th:href="@{MainPage}" th:if="${logged}">Home</a>
+    <a th:href="@{MainPage}" th:unless="${logged}">Home</a>
+</button>
+<button style="position: fixed;top: 10px;left: 20px;background-color: transparent;">
+    <a href="Bag">Cart</a>
+</button>
+
 <div class="container">
     <h1 style="color: #333333;">Buy with Card</h1>
     <form id="paymentForm" >

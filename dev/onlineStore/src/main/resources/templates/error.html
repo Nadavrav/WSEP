@@ -50,7 +50,11 @@
 <div class="container">
     <span th:text="${message}"><h2></h2></span>
     <br>
-    <button><a style="text-decoration: none;color: white;" href="/MainPage">RETURN TO HOME PAGE</a></button>
+<!--    <button><a style="text-decoration: none;color: white;" href="/MainPage">RETURN TO HOME PAGE</a></button>-->
+    <button style="text-decoration: none;color: white;">
+        <a th:href="@{MainPage}" th:if="${logged}">RETURN TO HOME PAGE</a>
+        <a th:href="@{MainPage}" th:unless="${logged}">RETURN TO HOME PAGE</a>
+    </button>
 </div>
 </body>
 </html>

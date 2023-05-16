@@ -107,16 +107,23 @@
 </header>
 
 <main>
-    <div style="position: fixed;top: 10px;left: 20px;">
-        <button style="background-color: transparent;" onclick="window.location.href='/MainPage';">Home</button>
-    </div>
+<!--    <div >-->
+<!--        <button style="background-color: transparent;" onclick="window.location.href='MainPage';">Home</button>-->
+<!--    </div>-->
+    <button style="position: fixed;top: 10px;left: 20px;background-color: transparent;">
+        <a th:href="@{MainPage}" th:if="${logged}">Home</a>
+        <a th:href="@{MainPage}" th:unless="${logged}">Home</a>
+    </button>
     <section class="cart">
         <div class="product-list-container">
             <div class="product-list">
                 <div th:each="product : ${cartList}" class="product">
                     <h3 th:text="${product[0]}"></h3> <!-- Product name -->
                     <p th:text="'$' + ${product[1]} + ' x ' + ${product[2]}"></p> <!-- Price -->
-                    <button class="remove-button">Remove</button>
+                    <button th:action="@{/remove-product-from-cart}" method="post" class="remove-button">
+                        <input type="hidden" name="productId" th:value="${product[3]}" />
+                        Remove
+                    </button>
                 </div>
 <!--                <div class="product">-->
 <!--                    <h3>Product1</h3>-->

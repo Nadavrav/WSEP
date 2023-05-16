@@ -217,23 +217,40 @@
 <body>
 <header>
     <div style="position: fixed; top: 7px;right: 7px;">
-        <button style="background-color: transparent;"><a style="color: black;text-decoration: none;" href="/MainPage">HOME</a></button>
+        <button style="background-color: transparent;">>
+<!--            <a th:href="@{MainPage}">HOME</a>-->
+            <a th:href="@{MainPage}" th:if="${logged}">HOME</a>
+            <a th:href="@{MainPage}" th:unless="${logged}">HOME</a>
+        </button>
         <button style="background-color: transparent;"><a style="color: black;text-decoration: none;" href="/StoreCommentsAndRatings">STORES INFO</a></button>
     </div>
+
     <h1 style="font-size: 4rem;">MY MENU</h1>
 </header>
 <div class="container">
-<!--    <span th:if="${owner}">-->
-        <button class="menu-button" onclick="openModalAddProduct()">ADD NEW PRODUCT</button>
-        <button class="menu-button" onclick="openModalRemoveProduct()">REMOVE PRODUCT</button>
-        <button class="menu-button" onclick="openModalUpdateProduct()">UPDATE PRODUCT</button>
-        <button class="menu-button"> PURCHASE HISTORY </button>
-        <button class="menu-button" onclick="openModalCloseStore()">CLOSE STORE</button>
-        <button class="menu-button" onclick="openModalEmpInfo()">EMPLOYEE INFORMATION</button>
-        <button class="menu-button" onclick="openModalAddManager()">ADD NEW MANAGER/OWNER</button>
-        <button class="menu-button" onclick="openModalChangeManagerPer()">CHANGE MANAGER PERMISSION</button>
+<!--    <span>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains((T(DomainLayer.Users.Permission).CanAddProduct))} || ${owner}" onclick="openModalAddProduct()">Add Product</button>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains(T(DomainLayer.Users.Permission).CanRemoveProduct)} || ${owner}" onclick="openModalRemoveProduct()">Remove Product</button>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains(T(DomainLayer.Users.Permission).CanUpdateProduct)} || ${owner}" onclick="openModalUpdateProduct()">Update Product</button>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains(T(DomainLayer.Users.Permission).CanSeePurchaseHistory)} || ${owner}">Purchase History</button>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains(T(DomainLayer.Users.Permission).CanCloseStore)} || ${owner}" onclick="openModalCloseStore()">Close Store</button>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains(T(DomainLayer.Users.Permission).CanSeeEmployeeInformation)} || ${owner}" onclick="openModalEmpInfo()">Employee Information</button>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains(T(DomainLayer.Users.Permission).CanAppointStoreOwner)} || ${owner}" onclick="openModalAddManager()">Appoint Store Owner</button>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains(T(DomainLayer.Users.Permission).CanAppointStoreManager)} || ${owner}" onclick="openModalAddManager()">Appoint Store Manager</button>-->
+<!--    <button class="menu-button" th:if="${gotPermission.get(${name}).contains(T(DomainLayer.Users.Permission).CanChangePermissionsForStoreManager)} || ${owner}" onclick="openModalChangeManagerPer()">Change Permissions For Manager</button>-->
 <!--    </span>-->
 
+    <span>
+        <button class="menu-button" onclick="openModalAddProduct()">Add Product</button>
+        <button class="menu-button" onclick="openModalRemoveProduct()">Remove Product</button>
+        <button class="menu-button" onclick="openModalUpdateProduct()">Update Product</button>
+        <button class="menu-button" onclick="openModalPurchaseHistory()">Purchase History</button>
+        <button class="menu-button" onclick="openModalCloseStore()">Close Store</button>
+        <button class="menu-button" onclick="openModalEmpInfo()">Employee Information</button>
+        <button class="menu-button" onclick="openModalAddManager()">Appoint Store Owner</button>
+        <button class="menu-button" onclick="openModalAddManager()">Appoint Store Manager</button>
+        <button class="menu-button" onclick="openModalChangeManagerPer()">Change Permissions For Manager</button>
+    </span>
 </div>
 
 <div class="modal" id="modalAddProduct">
@@ -241,7 +258,7 @@
         <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalAddProduct()"> X</form>
         <form action="/add-product" method="post" class="modal-form">
             <label style="color: #d2d3d5;" for="storeID-add">Store ID:</label>
-            <input type="text" id="storeID-add" name="store-id" required>
+            <input type="number" id="storeID-add" name="storeID-add" required>
 
             <label style="color: #d2d3d5;" for="product-name">Product Name:</label>
             <input type="text" id="product-name" name="product-name" required>
@@ -270,10 +287,10 @@
         <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalRemoveProduct()"> X</form>
         <form action="/remove-product" method="post" class="modal-form">
             <label style="color: #d2d3d5;" for="storeID-remove">Store ID:</label>
-            <input type="text" id="storeID-remove" name="store-id" required>
+            <input type="text" id="storeID-remove" name="storeID-remove" required>
 
             <label style="color: #d2d3d5;" for="productID-remove">Product ID:</label>
-            <input type="text" id="productID-remove" name="product-id" required>
+            <input type="text" id="productID-remove" name="productID-remove" required>
             <br>
             <div style="text-align: center;">
                 <button type="submit" onclick="closeModalRemoveProduct()">Remove Product</button>
@@ -287,30 +304,28 @@
         <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalUpdateProduct()"> X</form>
         <form action="/update-product" method="post" class="modal-form">
             <label style="color: #d2d3d5;" for="storeID-update">Store ID:</label>
-            <input type="text" id="storeID-update" name="store-id" required>
+            <input type="text" id="storeID-update" name="storeID-update" required>
 
             <label style="color: #d2d3d5;" for="productID-update">Product ID:</label>
-            <input type="text" id="productID-update" name="product-id" required>
+            <input type="text" id="productID-update" name="productID-update" required>
 
             <label style="color: #d2d3d5;" for="productName-update">Product Name:</label>
-            <input type="text" id="productName-update" name="product-name">
+            <input type="text" id="productName-update" name="productName-update">
 
             <label style="color: #d2d3d5;" for="price-update">Price:</label>
-            <input type="text" id="price-update" name="product-price">
+            <input type="text" id="price-update" name="price-update">
 
             <label style="color: #d2d3d5;" for="quantity-update">Quantity:</label>
-            <input type="number" id="quantity-update" name="quantity">
+            <input type="number" id="quantity-update" name="quantity-update">
 
             <label style="color: #d2d3d5;" for="category-update">Category:</label>
-            <input type="text" id="category-update" name="category">
+            <input type="text" id="category-update" name="category-update">
 
             <label style="color: #d2d3d5;" for="description">Description:</label>
             <textarea style="background-color: transparent; width: 200px" id="description" name="description"></textarea>
 
             <div style="text-align: center;">
-                <tr th:if="${isAuthorized}">
-                    <button type="submit" onclick="closeModalUpdateProduct()">Update Product</button>
-                </tr>
+                <button type="submit" onclick="closeModalUpdateProduct()">Update Product</button>
             </div>
         </form>
     </div>
@@ -327,9 +342,7 @@
             <input type="text" id="manager-name-add" name="manager-name-add" required>
 
             <div style="text-align: center;">
-                <tr th:if="${isAdmin}">
-                    <button type="submit" onclick="closeModalAddManager()">Add Manager</button>
-                </tr>
+                <button type="submit" onclick="closeModalAddManager()">Add Manager</button>
             </div>
         </form>
     </div>
@@ -379,11 +392,25 @@
                 <option value="readwrite">PERMANENTLY CLOSE</option>
             </select>
 
-            <label style="color: #d2d3d5;" for="storeID-remove">Store ID:</label>
-            <input type="text" id="storeID-close" name="store-id-close" required>
+            <label style="color: #d2d3d5;" for="storeID-close">Store ID:</label>
+            <input type="text" id="storeID-close" name="storeID-close" required>
 
             <div style="text-align: center;">
                 <button type="submit" onclick="closeModalCloseStore()">Close Store</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="modalPurchaseHistory">
+    <div class=".modal .modal-content">
+        <form style="color: #d2d3d5;margin-left: auto;" onclick="closeModalPurchaseHistory()"> X</form>
+        <form action="/purchase-history" method="post" class="modal-form">
+            <label style="color: #d2d3d5;" for="storeID-purchase">Store ID:</label>
+            <input type="text" id="storeID-purchase" name="storeID-purchase" required>
+
+            <div style="text-align: center;">
+                <button type="submit">Show Purchase History</button>
             </div>
         </form>
     </div>
@@ -404,6 +431,10 @@
 <script>
     function openModalAddProduct() {
         document.getElementById("modalAddProduct").style.display = "flex";
+    }
+
+    function openModalPurchaseHistory() {
+        document.getElementById("modalPurchaseHistory").style.display = "flex";
     }
 
     function openModalRemoveProduct() {
@@ -462,6 +493,11 @@
 
     function closeModalEmpInfo(){
         var modal = document.getElementById("modalEmpInfo");
+        modal.style.display = "none";
+    }
+
+    function closeModalPurchaseHistory() {
+        var modal = document.getElementById("modalPurchaseHistory");
         modal.style.display = "none";
     }
 </script>

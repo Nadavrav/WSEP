@@ -243,6 +243,9 @@
 	<span th:if="${logged}">
 		<button class="menu-button"><a style="text-decoration: none;color: white;" href="/logout">LOGOUT</a> </button>
 		<button class="menu-button" onclick="openModalProfile()">PROFILE</button>
+<!--		<div class="menu-button" th:if="${role == T(DomainLayer.Users.Role).StoreFounder}">-->
+<!--			<button onclick="location.href='/OwnerManagerMenu';"> MY MENU</button>-->
+<!--		</div>-->
 		<button class="menu-button" onclick="location.href='/OwnerManagerMenu';">MY MENU</button>
 		<button class="menu-button" onclick="openModalOpenStore()">OPEN STORE</button>
 		<button class="menu-button" onclick="location.href='/StoreCommentsAndRatings';">STORES</button>

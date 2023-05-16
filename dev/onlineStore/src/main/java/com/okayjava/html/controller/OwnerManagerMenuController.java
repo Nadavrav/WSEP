@@ -7,9 +7,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ServiceLayer.*;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,14 +22,15 @@ import static DomainLayer.Users.Permission.*;
 @Controller
 public class OwnerManagerMenuController {
     private Service server = new Service();
-
+    private HashMap<String, List<Permission>> gotPermission = new HashMap<>();
+    LinkedList<Permission> linkPermission = new LinkedList<>();
     @GetMapping("/OwnerManagerMenu")
     public String OwnerManagerMenu() {
         return "OwnerManagerMenu";
     }
 
-    @PostMapping("/add-product")
-    public String addProduct(@RequestParam("storeID_add") int storeID,
+    @RequestMapping(value = "/add-product", method = RequestMethod.POST)
+    public String addProduct(@RequestParam("storeID-add") int storeID,
                              @RequestParam("product-name") String productName,
                              @RequestParam("product-price") double productPrice,
                              @RequestParam("product-category") String category,
@@ -33,7 +38,7 @@ public class OwnerManagerMenuController {
                              @RequestParam("product-desc") String desc,
                              Model model) {
 
-        if (model.getAttribute("isAuthorized").equals(true)) {
+//        if (model.getAttribute("owner").equals(true)) {
             //functionality to add a product
             Response response = server.AddProduct(storeID, productName, productPrice, category, quantity, desc);
             if(response.isError()){
@@ -41,21 +46,22 @@ public class OwnerManagerMenuController {
                 model.addAttribute("message", response.getMessage());
                 return "error";
             }
-            return "OwnerManagerMenu";
-        } else {
-            model.addAttribute("message", "You're Not Authorized!");
-            return "error";
-        }
+
+        else {
+                model.addAttribute("message", "You're Not Authorized!");
+                return "OwnerManagerMenu";
+//                return "error";
+            }
     }
 
-    @PostMapping("/remove-product")
+    @RequestMapping(value = "/remove-product", method = RequestMethod.POST)
     public String removeProduct(@RequestParam("storeID_remove") int storeID,
                                 @RequestParam("product-id") int productID,
                                 Model model) {
 
-        if (model.getAttribute("isAuthorized").equals(true)) {
+        if (model.getAttribute("owner").equals(true)) {
             //functionality to remove a product
-            Response response = server.removeProductFromCart(productID, storeID);
+            Response response = server.RemoveProduct(productID, storeID);
             if(response.isError()){
                 model.addAttribute("isError", true);
                 model.addAttribute("message", response.getMessage());
@@ -67,8 +73,7 @@ public class OwnerManagerMenuController {
             return "error";
         }
     }
-
-    @PostMapping("/update-product")
+    @RequestMapping(value = "/update-product", method = RequestMethod.POST)
     public String updateProduct(@RequestParam("storeID_update") int storeID,
                                 @RequestParam("productID_update") int productID,
                                 @RequestParam("productname") String productName,
@@ -78,7 +83,7 @@ public class OwnerManagerMenuController {
                                 @RequestParam("description") String description,
                                 Model model) {
 
-        if (model.getAttribute("idAdmin").equals(true)) {
+        if (model.getAttribute("owner").equals(true)) {
             //functionality to update a product
             if(productName != null){
                 Response response = server.UpdateProductName(productID, storeID, productName);
@@ -127,13 +132,12 @@ public class OwnerManagerMenuController {
         }
     }
 
-    @PostMapping("/add-manager")
+    @RequestMapping(value = "/add-manager", method = RequestMethod.POST)
     public String addManager(@RequestParam("storeID_manager") int storeID,
                              @RequestParam("managerName_add") String managerName,
                              Model model) {
 
-        if (model.getAttribute("isAuthorized").equals(true)) {
-            //functionality to remove a product
+        if (model.getAttribute("owner").equals(true)) {
             Response response = server.appointNewStoreManager(managerName, storeID);
             if(response.isError()){
                 model.addAttribute("isError", true);
@@ -147,33 +151,24 @@ public class OwnerManagerMenuController {
         }
     }
 
-    @PostMapping("/change-permission")
+    @RequestMapping(value = "/change-permission", method = RequestMethod.POST)
     public String changeManagerPermission(@RequestParam("manager-name") String managerName,
                              @RequestParam("store-id") int storeID,
                              @RequestParam("permission") Permission permission,
                                           Model model) {
-        LinkedList<Permission> linkPermission = new LinkedList<>();
-        linkPermission.add(permission);
-        if (model.getAttribute("isAuthorized").equals(true)) {
-            if ((permission== CanAppointStoreOwner)){
-                model.getAttribute("isAuthorizedAppointStoreOwner").equals(true);
-            }
-            if ((permission== CanAppointStoreManager)){
-                model.getAttribute("isAuthorizedCanAppointStoreManager").equals(true);
-            }
-            if ((permission== CanSeeCommentsAndRating)){
-                model.getAttribute("isAuthorizedCanSeeCommentsAndRating").equals(true);
-            }
-            if ((permission==CanSeePurchaseHistory)){
-                model.getAttribute("isAuthorizedCanSeePurchaseHistory").equals(true);
-            }
-            //functionality to remove a product
+
+        if (model.getAttribute("owner").equals(true)) {
+            linkPermission.add(permission);
             Response response = server.changeStoreManagerPermission(managerName, storeID, linkPermission);
             if(response.isError()){
                 model.addAttribute("isError", true);
                 model.addAttribute("message", response.getMessage());
                 return "error";
             }
+
+            gotPermission.put(managerName, linkPermission);
+            model.addAttribute("gotPermission", gotPermission);
+            model.addAttribute("name", managerName);
             return "OwnerManagerMenu";
         } else {
             model.addAttribute("message", "You're Not Authorized!");
@@ -181,16 +176,36 @@ public class OwnerManagerMenuController {
         }
     }
 
-    @PostMapping("close-store")
+    @RequestMapping(value = "/close-store", method = RequestMethod.POST)
     public String closeStore(@RequestParam("storeID-close") int storeID, Model model){
-        Response response = server.CloseStore(storeID);
-        if (response.isError()){
-            model.addAttribute("isError", true);
-            model.addAttribute("message", response.getMessage());
+        if (model.getAttribute("owner").equals(true)){
+            Response response = server.CloseStore(storeID);
+            if (response.isError()){
+                model.addAttribute("isError", true);
+                model.addAttribute("message", response.getMessage());
+                return "error";
+            }
+            return "OwnerManagerMenu";
+        }else {
+            model.addAttribute("message", "You're Not Authorized!");
             return "error";
         }
-        model.addAttribute("message", "");
-        return "OwnerManagerMenu";
+    }
+
+    @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
+    public String showPurchaseHistory(@RequestParam("storeID-purchase") int storeID, Model model){
+        if (model.getAttribute("owner").equals(true)){
+            Response response = server.GetStoreHistoryPurchase(storeID);
+            if (response.isError()){
+                model.addAttribute("isError", true);
+                model.addAttribute("message", response.getMessage());
+                return "error";
+            }
+            return "OwnerManagerMenu";
+        }else {
+            model.addAttribute("message", "You're Not Authorized!");
+            return "error";
+        }
     }
 
     @PostMapping("/employee-info")
