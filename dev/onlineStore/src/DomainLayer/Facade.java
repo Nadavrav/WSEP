@@ -15,6 +15,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceStore;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -1344,4 +1345,21 @@ public class Facade {
         return store.getProductRatingList(productId);
     }
 
+    public List<Store> getStoresByUserName(int visitorId,String userName) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(! (visitor instanceof RegisteredUser)){
+            throw new Exception("invalid visitor Id");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+        if(!user.getUserName().equals(userName)){
+            throw new Exception("This is not your userName");
+        }
+        List<Integer> storesID = new LinkedList<>();
+        Map<Integer,Employment> employmentMap = employmentList.get(userName);
+        LinkedList<Store> stores = new LinkedList<>();
+        for(Integer i :employmentMap.keySet()){
+            stores.add(storesList.get(i));
+        }
+        return stores;
+    }
 }
