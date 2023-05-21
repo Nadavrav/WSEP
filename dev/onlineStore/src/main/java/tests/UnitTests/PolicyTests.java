@@ -17,10 +17,8 @@ import DomainLayer.Users.Bag;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DiscountTest {
 
+public class PolicyTests {
     private Bag fullBag;
     private final StoreProduct bread=new StoreProduct(0,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
     private final StoreProduct milk=new StoreProduct(1,"Milk",5,"Dairy",1,"Freshly milked");
@@ -123,7 +121,7 @@ public class DiscountTest {
     }
     //TODO: BORING CHORE-ADD MORE BASIC TESTS
 
-//There is a 50% meat discount  only if the bag contains at least 5 breads and also at least 6 dairy products
+    //There is a 50% meat discount  only if the bag contains at least 5 breads and also at least 6 dairy products
     @Test
     public void ComplexAndDiscount(){
         WrapperCondition breadCondition=new WrapperCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
@@ -237,16 +235,16 @@ public class DiscountTest {
         discount= maxSelectiveDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(132.5,discount);
     }
-   //There is a 5% discount on dairy products, and in addition, there is a 20% discount on every store, so there is a total of 25% discount on dairy products
-   @Test
-   public void AdditiveDiscountsTest(){
-       CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
-       BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",20);
-       BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",50,dairyCategoryCondition);
-       AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products");
-       additiveDiscount.addDiscount(storeDiscount);
-       additiveDiscount.addDiscount(dairyDiscount);
-       double discount= additiveDiscount.calcDiscountAmount(fullBag);
-       Assertions.assertEquals(42,discount); //dairy = 20, rest of store=140, 70% on dairy saving 14 and 20% on rest saving 28, total saved 42
-   }
+    //There is a 5% discount on dairy products, and in addition, there is a 20% discount on every store, so there is a total of 25% discount on dairy products
+    @Test
+    public void AdditiveDiscountsTest(){
+        CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
+        BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",20);
+        BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",50,dairyCategoryCondition);
+        AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products");
+        additiveDiscount.addDiscount(storeDiscount);
+        additiveDiscount.addDiscount(dairyDiscount);
+        double discount= additiveDiscount.calcDiscountAmount(fullBag);
+        Assertions.assertEquals(42,discount); //dairy = 20, rest of store=140, 70% on dairy saving 14 and 20% on rest saving 28, total saved 42
+    }
 }

@@ -2,6 +2,7 @@ package DomainLayer;
 
 
 
+import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
@@ -250,7 +251,6 @@ public class Facade {
          user.login(password,visitorId);
 
         onlineList.replace(visitorId, user);
-
     }
 
     public synchronized int logout(int visitorId) throws Exception {//3.1
@@ -294,7 +294,7 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
-            user.addProductToCart(storeId, product);
+            user.addProductToCart(storeId, product,store::passesPolicies);
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
         catch (Exception e){
@@ -723,6 +723,8 @@ public class Facade {
             //Calculate amount
             double amount = b.calculateTotalAmount();
             Store s = storesList.get(b.getStoreID());
+            if(!b.passesPolicy())
+                throw new RuntimeException("Bag doesn't pass the store policy");
             boolean foundProductWithLowQuantity = false;
             for(CartProduct p : b.getProducts())
             {
