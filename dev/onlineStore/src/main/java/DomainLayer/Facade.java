@@ -730,7 +730,7 @@ public class Facade {
             else {
                 boolean foundProductWithLowQuantity = false;
                 for (CartProduct p : b.getProducts()) {
-                    if (s.getProducts().get(p).getQuantity() < p.getAmount()) {
+                    if (s.getProduct(p).getQuantity()<p.getAmount()) {
                         foundProductWithLowQuantity = true;
                     }
                 }

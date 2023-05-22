@@ -2,6 +2,7 @@ package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 import DomainLayer.Stores.Policies.Policy;
+import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Users.Bag;
@@ -86,7 +87,14 @@ public class Store {
         return this.History.getShoppingBags();
     }
 
-
+    public StoreProduct getProduct(CartProduct product){
+        for(StoreProduct storeProduct:getProducts().values()){
+            if(storeProduct.getName().equals(product.getName()) || storeProduct.getDescription().equals(product.getDescription())){
+                return storeProduct;
+            }
+        }
+        return null;
+    }
     public Integer AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
         StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity,desc);
         products.put(storeProduct.getProductId(), storeProduct);
