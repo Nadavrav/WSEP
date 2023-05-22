@@ -1,15 +1,13 @@
 package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
+import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Users.Bag;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,10 +22,16 @@ public class Store {
     private History History;
     private final HashMap<String, Rating> rateMapForStore;
     private final ConcurrentHashMap<Integer, StoreProduct> products;
+    /**
+     * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
+     */
+    private final HashSet<Policy> storePolicies;
+
     private Double Rate=0.0;
     private static final Logger logger=Logger.getLogger("Store logger");
     
     public Store(String name) {
+        storePolicies=new HashSet<>();
         rateMapForStore=new HashMap<>();
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
@@ -37,7 +41,6 @@ public class Store {
         products = new ConcurrentHashMap<>();
 
         this.Active=true;
-
     }
 
     private Integer getNewProductId() {
@@ -71,7 +74,9 @@ public class Store {
         }
         return s.toString();
     }
-
+    public boolean addPolicy(Policy policy){
+        return storePolicies.add(policy);
+    }
     public void CloseStore() {
         Active = false;
     }
@@ -84,6 +89,17 @@ public class Store {
 
     public Integer AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
         StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity,desc);
+        products.put(storeProduct.getProductId(), storeProduct);
+        logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
+        return storeProduct.getProductId();
+    }
+
+    /**
+     * for tests
+     * @param storeProduct --
+     * @return --
+     */
+    public Integer AddNewProduct(StoreProduct storeProduct){
         products.put(storeProduct.getProductId(), storeProduct);
         logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
         return storeProduct.getProductId();
@@ -199,6 +215,11 @@ public class Store {
     public void UpdateProductDescription(Integer productId, String description) {
         products.get(productId).setDescription(description);
     }
+    /**
+     *
+     * @param productFilters filters who the returned products have to pass
+     * @return product list of all products who passed the filter in the store
+     */
     public List<StoreProduct> filterProducts(List<ProductFilter> productFilters){
         ArrayList<StoreProduct> filteredProducts=new ArrayList<>();
         for (StoreProduct product: products.values()) { //for each product in store
@@ -213,6 +234,19 @@ public class Store {
                 filteredProducts.add(product);
         }
         return filteredProducts;
+    }
+
+    /**
+     * determines if a bag passes all store policies.
+     * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
+     * @param bag the bag we check
+     * @return true if it passes, false otherwise.
+     */
+    public boolean passesPolicies(Bag bag){
+        for(Policy policy:storePolicies)
+            if(!policy.passesPolicy(bag))
+                return false;
+        return true;
     }
    public void addRating(String userName ,double rate) {
         if(!rateMapForStore.containsKey(userName)){
