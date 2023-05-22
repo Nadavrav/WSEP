@@ -3,6 +3,7 @@ package DomainLayer;
 
 
 import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
+import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
@@ -718,61 +719,51 @@ public class Facade {
         LinkedList<String> failedPurchases = new LinkedList<>();
 
 
-        for(Bag b : visitor.getCart().getBags().values()){
+        for(Bag b : visitor.getCart().getBags().values()) {
 
             //Calculate amount
             double amount = b.calculateTotalAmount();
             Store s = storesList.get(b.getStoreID());
-            if(!b.passesPolicy())
+            if (!b.passesPolicy()) {
                 throw new RuntimeException("Bag doesn't pass the store policy");
-            boolean foundProductWithLowQuantity = false;
-            for(CartProduct p : b.getProducts())
-            {
-                if(s.getProducts().get(p).getQuantity() < p.getAmount()) {
-                    foundProductWithLowQuantity = true;
+            }
+            else {
+                boolean foundProductWithLowQuantity = false;
+                for (CartProduct p : b.getProducts()) {
+                    if (s.getProducts().get(p).getQuantity() < p.getAmount()) {
+                        foundProductWithLowQuantity = true;
+                    }
                 }
-            }
-            if(foundProductWithLowQuantity) {
-                failedPurchases.add(b.getStoreID().toString());
-            }
-            else
-            {
-                //Check if possible to create a supply
-                if(!supplier.isValidAddress(address)){
-                    logger.fine("we can avoid this supply");
+                if (foundProductWithLowQuantity) {
                     failedPurchases.add(b.getStoreID().toString());
-                }
-                else{
-                    //Create a transaction for the store
-                    if(!paymentProvider.applyTransaction(amount,visitorCard)){
+                } else {
+                    //Check if possible to create a supply
+                    if (!supplier.isValidAddress(address)) {
+                        logger.fine("we can avoid this supply");
                         failedPurchases.add(b.getStoreID().toString());
-                    }
-                    else
-                    {
-                        LinkedList<String> productsId = new LinkedList<>();
-                        productsId.add(b.bagToString());
-                        //Create a request to supply bag's product to customer
-                        if(!supplier.supplyProducts(productsId)){
+                    } else {
+                        //Create a transaction for the store
+                        if (!paymentProvider.applyTransaction(amount, visitorCard)) {
                             failedPurchases.add(b.getStoreID().toString());
-                        }
-                        else{
-                            InstantPurchase p = new InstantPurchase(visitor,productsId,amount);
-                            if(visitor instanceof RegisteredUser){
-                                ((RegisteredUser)visitor).addPurchaseToHistory(p);
+                        } else {
+                            LinkedList<String> productsId = new LinkedList<>();
+                            productsId.add(b.bagToString());
+                            //Create a request to supply bag's product to customer
+                            if (!supplier.supplyProducts(productsId)) {
+                                failedPurchases.add(b.getStoreID().toString());
+                            } else {
+                                InstantPurchase p = new InstantPurchase(visitor, productsId, amount);
+                                if (visitor instanceof RegisteredUser) {
+                                    ((RegisteredUser) visitor).addPurchaseToHistory(p);
 
+                                }
+                                storesList.get(b.getStoreID()).addToStoreHistory(b);
                             }
-                            storesList.get(b.getStoreID()).addToStoreHistory(b);
                         }
                     }
-
                 }
-
             }
-
-
-
-
-       }
+        }
         return failedPurchases;
 
     }
@@ -995,6 +986,52 @@ public class Facade {
         //throw e
     }
 
+    /**
+     * test function
+     * @param visitorId -
+     * @param storeId -
+     * @return -
+     * @throws Exception -
+     */
+    public Integer AddProduct(int visitorId,int storeId,StoreProduct storeProduct) throws Exception {
+        SiteVisitor User = onlineList.get(visitorId);
+        //lock user
+        //try
+        if(! (User instanceof RegisteredUser)){
+            logger.severe("Invalid visitor Id: " + visitorId);
+            throw  new Exception("invalid visitor Id");
+        }
+        Store store = storesList.get(storeId);
+        if(store==null){
+            logger.warning(" store is null");
+            throw  new Exception("there is no store with this id ");
+        }
+        Employment employment = null;
+        try{
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
+        }catch (Exception e){
+            logger.warning("user with no store");
+            throw  new Exception("this user dont have any store");
+        }
+        if (employment == null){
+            logger.warning("employment is null");
+            throw  new Exception("there is no employee with this id ");
+        }
+        if (!employment.checkIfFounder() && !employment.checkIfOwner() && !employment.checkIfManager()) {
+            logger.warning("user are not allowed to add products");
+            throw  new Exception("you are not allowed to add products to this store");
+        }
+        if(store.getActive())
+            return store.AddNewProduct(storeProduct);
+        else {
+            logger.warning("Store is closed, store id :"+storeId);
+            throw new Exception("Store is closed");
+        }
+        //catch
+        //release lock user
+        //throw e
+    }
+
     public void RemoveProduct(int visitorId,int storeId, int ProductId)  throws Exception {
         logger.fine("Entering method RemoveProduct() with visitorId: " + visitorId + ", ProductId: " + ProductId);
         SiteVisitor User = onlineList.get(visitorId);
@@ -1033,7 +1070,44 @@ public class Facade {
         //throw e
     }
 
-
+    public void AddStorePolicy(int visitorId, int storeId, Policy policy) throws Exception {
+        SiteVisitor User = onlineList.get(visitorId);
+        //lock user
+        //try
+        if(! (User instanceof RegisteredUser)){
+            logger.severe("Invalid visitor Id: " + visitorId);
+            throw  new Exception("invalid visitor Id");
+        }
+        Store store = storesList.get(storeId);
+        if(store==null){
+            logger.warning(" store is null");
+            throw  new Exception("there is no store with this id ");
+        }
+        Employment employment = null;
+        try{
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
+        }catch (Exception e){
+            logger.warning("user with no store");
+            throw  new Exception("this user dont have any store");
+        }
+        if (employment == null){
+            logger.warning("employment is null");
+            throw  new Exception("there is no employee with this id ");
+        }
+        if (!employment.checkIfFounder() && !employment.checkIfOwner() && !employment.checkIfManager()) {
+            logger.warning("user are not allowed to add products");
+            throw  new Exception("you are not allowed to add products to this store");
+        }
+        if(store.getActive())
+            store.addPolicy(policy);
+        else {
+            logger.warning("Store is closed, store id :"+storeId);
+            throw new Exception("Store is closed");
+        }
+        //catch
+        //release lock user
+        //throw e
+    }
     public void UpdateProductQuantity(int visitorId,int storeId, int productID,int quantity) throws Exception{
         //lock product (get product object)
         //try

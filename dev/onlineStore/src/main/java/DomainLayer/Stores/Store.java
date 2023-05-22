@@ -74,7 +74,9 @@ public class Store {
         }
         return s.toString();
     }
-
+    public boolean addPolicy(Policy policy){
+        return storePolicies.add(policy);
+    }
     public void CloseStore() {
         Active = false;
     }
@@ -87,6 +89,17 @@ public class Store {
 
     public Integer AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
         StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity,desc);
+        products.put(storeProduct.getProductId(), storeProduct);
+        logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
+        return storeProduct.getProductId();
+    }
+
+    /**
+     * for tests
+     * @param storeProduct --
+     * @return --
+     */
+    public Integer AddNewProduct(StoreProduct storeProduct){
         products.put(storeProduct.getProductId(), storeProduct);
         logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
         return storeProduct.getProductId();

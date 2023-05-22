@@ -43,6 +43,15 @@ public class BetweenDatesCondition implements Condition {
             throw new IllegalArgumentException("Invalid date arguments");
         }
     }
+    public BetweenDatesCondition(int untilDay) {
+        try{
+            fromDate=LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonthValue(), LocalDate.now().getDayOfMonth());
+            untilDate=LocalDate.of(LocalDate.now().getYear(),LocalDate.now().getMonthValue(),untilDay);
+        }
+        catch (DateTimeException e){
+            throw new IllegalArgumentException("Invalid date arguments");
+        }
+    }
 
     public LocalDate getFromDate() {
         return fromDate;
