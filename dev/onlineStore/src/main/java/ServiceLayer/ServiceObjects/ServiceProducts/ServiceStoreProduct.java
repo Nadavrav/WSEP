@@ -13,6 +13,12 @@ public class ServiceStoreProduct extends ServiceProduct{
         this.rating=rating;
         this.quantity=quantity;
     }
+    public ServiceStoreProduct(String name, Double price, String category, String description,double rating,int quantity) {
+        super(name, price, category, description);
+        this.productId=0;
+        this.rating=rating;
+        this.quantity=quantity;
+    }
 
     public ServiceStoreProduct(StoreProduct product) {
         super(product);
