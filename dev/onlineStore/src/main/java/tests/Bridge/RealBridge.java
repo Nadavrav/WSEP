@@ -1,12 +1,13 @@
-package tests.Bridge;
+package Bridge;
 
-import tests.AcceptenceTests.ProxyClasses.CreditCardProxy;
+import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import org.opentest4j.TestSkippedException;
 
@@ -68,7 +69,7 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean RemoveOwner(String username, int storeId) {
-       // return !service.appointNewStoreOwner(username, storeId).isError(); //NOT FOR THIS VER
+        // return !service.appointNewStoreOwner(username, storeId).isError(); //NOT FOR THIS VER
         return false;
     }
 
@@ -79,7 +80,7 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean RemoveManager(String username, int storeId) {
-       // return false; NOT FOR THIS VER
+        // return false; NOT FOR THIS VER
         return false;
     }
 
@@ -134,14 +135,14 @@ public class RealBridge implements Bridge {
         return !service.changeStoreManagerPermission(username,storeId,permissions).isError();
     }
 
-   // @Override
-   // public List<String> ProductSearch(String query) {
+    // @Override
+    // public List<String> ProductSearch(String query) {
 //
-   //     Response<List<String>> r=service.SearchProductBykey(query);
-   //     if(r.isError())
-   //         throw new TestAbortedException("TEST SHOULD NOT FAIL");
-   //     return r.getValue();
-   // }
+    //     Response<List<String>> r=service.SearchProductBykey(query);
+    //     if(r.isError())
+    //         throw new TestAbortedException("TEST SHOULD NOT FAIL");
+    //     return r.getValue();
+    // }
 
     @Override
     public boolean RateProduct(int productId, int storeId, int rating) {
@@ -181,10 +182,8 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public boolean PurchaseCart(CreditCardProxy credit) {
-        //TODO WAITING FOR SERVICE IMPLEMENTATION
-        //return service.PurchaseCart(credit);
-        return false; //TODO: NIKITA
+    public Response<List<String>> PurchaseCart(int creditCard, String address) {
+        return service.PurchaseCart(creditCard,address);
     }
 
     @Override

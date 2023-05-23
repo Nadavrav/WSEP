@@ -1,10 +1,11 @@
-package tests.Bridge;
+package Bridge;
 
-import tests.AcceptenceTests.ProxyClasses.CreditCardProxy;
+import AcceptenceTests.ProxyClasses.CreditCardProxy;
 import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
 import java.util.List;
@@ -159,7 +160,7 @@ public interface Bridge {
      * @param query search query
      * @return return corresponding response (fails if no store and products were found)
      */
-  //  List<String> ProductSearch(String query);
+    //  List<String> ProductSearch(String query);
     /**
      * @param storeName name of the store the product is in
      * @param productId the product's name to rate
@@ -214,10 +215,11 @@ public interface Bridge {
 
     /**
      * A function to purchase the contents of the cart
-     * @param credit - the credit card
-     * @return true is done successfully, false otherwise
+     * @param creditCard - the credit card
+     * @param address - address of the purchaser
+     * @return a response that contains a list of the items it failed to purchase
      */
-    boolean PurchaseCart(CreditCardProxy credit);
+    Response PurchaseCart(int creditCard,String address);
 
     /**
      * A function to get a requested item quantity

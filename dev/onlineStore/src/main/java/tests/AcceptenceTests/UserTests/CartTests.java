@@ -18,8 +18,7 @@ public class CartTests {
     private Integer productId_UltraMilk = -1;//Product that exits
     private Integer productId_GigaMilk = -1;//Product that exits
     private final Integer badProductId = -1;//Product that doesn't exist
-    private CreditCardProxy RealcreditProxy = new CreditCardProxy(); // A credit card Proxy class
-    private CreditCardProxy FakecreditProxy = new CreditCardProxy(); // A credit card Proxy class
+    private Integer RealcreditProxy ="123"; // A credit card
     @BeforeAll
     public void Setup()
     {
@@ -36,8 +35,6 @@ public class CartTests {
         Assertions.assertNotEquals(-1,productId_MegaMilk);
         assertTrue(bridge.Logout());
         assertTrue(bridge.ExitMarket());
-        this.RealcreditProxy.setReal();
-        this.FakecreditProxy.setFake();
     }
     @BeforeEach
     public void OpenSys()
@@ -135,7 +132,7 @@ public class CartTests {
     public void OpenCart_Success_CartWithOneItem()
     {
         assertTrue(bridge.addToCart(productId_MegaMilk, storeId));
-        String ProductList = "Store Id : 0\n0-1\n\n";
+        String ProductList = "Store Id : 0\n0\n\n";
         assertFalse(bridge.OpenCart().isError());
         assertEquals(ProductList,bridge.OpenCart().getValue());
     }
