@@ -45,6 +45,17 @@ public class Service {
         return new Response<>(visitorId);
     }
 
+    public Response<Boolean> isAdmin(){
+        Boolean isAdmin;
+        try{
+            isAdmin=facade.isAdmin(visitorId);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>(isAdmin);
+    }
+
     public Response<?> ExitSiteVisitor() {//1.2
         try{
             facade.ExitSiteVisitor(visitorId);

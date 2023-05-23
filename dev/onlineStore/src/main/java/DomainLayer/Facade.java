@@ -188,6 +188,11 @@ public class Facade {
         }
 
     }
+
+    public boolean isAdmin(int visitorID){
+        return onlineList.get(visitorID) instanceof Admin;
+    }
+
     private void registerInitialAdmin() {
         logger.info("Starting initial admin registration");
         if(registeredUserList.containsKey("admin")) {
