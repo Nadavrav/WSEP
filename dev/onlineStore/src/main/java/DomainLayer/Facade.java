@@ -752,12 +752,16 @@ public class Facade {
                             if (!supplier.supplyProducts(productsId)) {
                                 failedPurchases.add(b.getStoreID().toString());
                             } else {
+                                for (CartProduct p : b.getProducts()) {
+                                    s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
+                                }
                                 InstantPurchase p = new InstantPurchase(visitor, productsId, amount);
                                 if (visitor instanceof RegisteredUser) {
                                     ((RegisteredUser) visitor).addPurchaseToHistory(p);
 
                                 }
                                 storesList.get(b.getStoreID()).addToStoreHistory(b);
+                                visitor.removeBag(b.getStoreID());
                             }
                         }
                     }

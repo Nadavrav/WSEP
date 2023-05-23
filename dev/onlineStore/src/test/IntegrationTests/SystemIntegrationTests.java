@@ -425,7 +425,7 @@ public class SystemIntegrationTests {
 
             List<String> actualPurchase = f.purchaseCart(visitorId,123,"Adress");
             List<String> expectedPurchase = new LinkedList<>();
-            expectedPurchase.add(ExpectedproductsInCartStr1);
+            expectedPurchase.add(String.valueOf(pid1));
             Assertions.assertEquals(expectedPurchase,actualPurchase);
 
             f.ExitSiteVisitor(visitorId);
@@ -779,7 +779,7 @@ public class SystemIntegrationTests {
 
             List<String> actualPurchase1 = f.purchaseCart(visitorId,123,"Adress");
             List<String> expectedPurchase1 = new LinkedList<>();
-            expectedPurchase.add(ExpectedproductsInCartStr1);
+            expectedPurchase1.add(String.valueOf(storeId));
             Assertions.assertEquals(expectedPurchase1,actualPurchase1);
 
             f.ExitSiteVisitor(visitorId);

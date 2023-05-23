@@ -207,6 +207,9 @@ public class Store {
     public void IncreaseProductQuantity(Integer productId, int quantity) {
         products.get(productId).IncreaseQuantity(quantity);
     }
+    public void ReduceProductQuantity(Integer productId, int quantity) {
+        products.get(productId).ReduceQuantity(quantity);
+    }
 
     public void UpdateProductName(Integer productId, String name) {
         products.get(productId).setName(name);

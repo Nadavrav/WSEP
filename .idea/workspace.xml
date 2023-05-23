@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="moved test files">
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="added tests to check purchase">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Products/StoreProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Products/StoreProduct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Cart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/SiteVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/SiteVisitor.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/ConcurrencyTests/ConcurrencyCartTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/ConcurrencyTests/ConcurrencyCartTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/IntegrationTests/SystemIntegrationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/IntegrationTests/SystemIntegrationTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Products/StoreProduct.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Products/StoreProduct.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Store.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Users/Cart.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Users/Cart.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Users/SiteVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Users/SiteVisitor.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,36 +105,7 @@
       <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.SystemIntegrationTests.integrationTest16">
-    <configuration name="AcceptenceTests.UserTests.ConcurrencyTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="AcceptenceTests.UserTests.ConcurrencyTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ConcurrencyCartTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="AcceptenceTests.UserTests.ConcurrencyTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests.ConcurrencyCartTests" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.ConcurrencyCartTests.ConcurrencyPurchaseTests">
     <configuration name="ConcurrencyCartTests.ConcurrencyPurchaseTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
@@ -157,6 +138,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="SystemIntegrationTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="IntegrationTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="IntegrationTests" />
+      <option name="MAIN_CLASS_NAME" value="IntegrationTests.SystemIntegrationTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SystemIntegrationTests.integrationTest16" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
@@ -169,6 +165,20 @@
       <option name="MAIN_CLASS_NAME" value="IntegrationTests.SystemIntegrationTests" />
       <option name="METHOD_NAME" value="integrationTest16" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UnitTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="UnitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="UnitTests" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -194,20 +204,20 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.AcceptenceTests.UserTests.ConcurrencyTests in springboot-html" />
-      <item itemvalue="JUnit.ConcurrencyCartTests" />
       <item itemvalue="JUnit.ConcurrencyCartTests.ConcurrencyPurchaseTests" />
       <item itemvalue="JUnit.FacadeTest.purchaseCart_notEnoughQuan_Fail" />
+      <item itemvalue="JUnit.SystemIntegrationTests" />
       <item itemvalue="JUnit.SystemIntegrationTests.integrationTest16" />
+      <item itemvalue="JUnit.UnitTests in springboot-html" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.ConcurrencyCartTests.ConcurrencyPurchaseTests" />
+        <item itemvalue="JUnit.UnitTests in springboot-html" />
+        <item itemvalue="JUnit.SystemIntegrationTests" />
         <item itemvalue="JUnit.SystemIntegrationTests.integrationTest16" />
         <item itemvalue="JUnit.FacadeTest.purchaseCart_notEnoughQuan_Fail" />
-        <item itemvalue="JUnit.ConcurrencyCartTests" />
-        <item itemvalue="JUnit.ConcurrencyCartTests.ConcurrencyPurchaseTests" />
-        <item itemvalue="JUnit.AcceptenceTests.UserTests.ConcurrencyTests in springboot-html" />
       </list>
     </recent_temporary>
   </component>
@@ -220,7 +230,7 @@
       <option name="presentableId" value="Default" />
       <updated>1684171346129</updated>
       <workItem from="1684171347132" duration="56052000" />
-      <workItem from="1684849704258" duration="4744000" />
+      <workItem from="1684849704258" duration="6795000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -250,7 +260,14 @@
       <option name="project" value="LOCAL‎" />
       <updated>1684852331546</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL‎-00005" summary="added tests to check purchase">
+      <created>1684854488280</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL‎-00005" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1684854488280</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -283,6 +300,7 @@
     <MESSAGE value="Natalie&amp;Majd web-app" />
     <MESSAGE value="fixed errors from project structure changes after gui impl" />
     <MESSAGE value="moved test files" />
-    <option name="LAST_COMMIT_MESSAGE" value="moved test files" />
+    <MESSAGE value="added tests to check purchase" />
+    <option name="LAST_COMMIT_MESSAGE" value="added tests to check purchase" />
   </component>
 </project>

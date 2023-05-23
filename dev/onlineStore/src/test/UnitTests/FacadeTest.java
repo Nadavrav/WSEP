@@ -1218,7 +1218,7 @@ class FacadeTest {
             f.changeCartProductQuantity(pid1,storeId,100,visitorId);
             List<String> actual = f.purchaseCart(visitorId,123,"Adress");
             List<String> expected = new LinkedList<>();
-            expected.add(String.valueOf(pid1));
+            expected.add(String.valueOf(storeId));
             Assertions.assertEquals(expected,actual);
         }
         catch (Exception e)

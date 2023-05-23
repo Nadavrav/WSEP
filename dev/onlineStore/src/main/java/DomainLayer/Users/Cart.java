@@ -69,6 +69,16 @@ public class Cart {
             return bagList.isEmpty();
         }
 
+        public void removeBag(int storeId) throws Exception {
+            try {
+                bagList.remove(storeId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("something bad at removeBag");
+            }
+        }
+
         public String cartToString () {
             String s = "";
             for (int i : bagList.keySet()) {

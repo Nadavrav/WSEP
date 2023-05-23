@@ -99,6 +99,10 @@ public class SiteVisitor{
         cart.changeCartProductQuantity(storeId,product,newAmount);
     }
 
+    public void removeBag(int storeId) throws Exception {
+        cart.removeBag(storeId);
+    }
+
     public String cartToString() {
         return cart.cartToString();
     }
