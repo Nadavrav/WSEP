@@ -736,4 +736,57 @@ public class SystemIntegrationTests {
         }
 
     }
+    @Test
+    void integrationTest16() {
+        //This tests enter register login openStore addItem logout addItemToCart purchaseCart addSameItemToCart(his quan should be 0 now) purchaseCart(should have a fail msg containing the item) exit
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+
+            f.Register(visitorId, Username1, password1);
+            Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
+
+            f.login(visitorId, Username1, password1);
+            Assertions.assertTrue(f.getOnlineList().get(visitorId) != null);
+            Assertions.assertTrue(f.getOnlineList().get(visitorId) instanceof RegisteredUser);
+
+            int storeId = f.OpenNewStore(visitorId, Store1Name);
+            Assertions.assertTrue(f.getStoresList().get(storeId) != null);
+
+            int pid1 = f.AddProduct(visitorId, storeId, pName, pPrice, pCat, 1, pDesc);
+            Assertions.assertNotNull(pid1);
+
+            f.logout(visitorId);
+            Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
+
+            f.addProductToCart(pid1,storeId,visitorId);
+            String actual = f.getProductsInMyCart(visitorId);
+            String ExpectedstoreIdStr = "Store Id : "+storeId;
+            String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
+            Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
+            Assertions.assertTrue(actual.contains(ExpectedproductsInCartStr));
+
+
+            List<String> actualPurchase = f.purchaseCart(visitorId,123,"Adress");
+            List<String> expectedPurchase = new LinkedList<>();
+            Assertions.assertEquals(expectedPurchase,actualPurchase);
+
+            f.addProductToCart(pid1,storeId,visitorId);
+            String actual1 = f.getProductsInMyCart(visitorId);
+            String ExpectedstoreIdStr1 = "Store Id : "+storeId;
+            String ExpectedproductsInCartStr1 = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
+            Assertions.assertTrue(actual1.contains(ExpectedstoreIdStr1));
+            Assertions.assertTrue(actual1.contains(ExpectedproductsInCartStr1));
+
+            List<String> actualPurchase1 = f.purchaseCart(visitorId,123,"Adress");
+            List<String> expectedPurchase1 = new LinkedList<>();
+            expectedPurchase.add(ExpectedproductsInCartStr1);
+            Assertions.assertEquals(expectedPurchase1,actualPurchase1);
+
+            f.ExitSiteVisitor(visitorId);
+        } catch (Exception e) {//Should not happen
+            System.out.println(e.getMessage());// a print to find out from what function
+            Assertions.fail();
+        }
+
+    }
 }
