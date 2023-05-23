@@ -11,7 +11,7 @@ public class MinPriceProductFilter implements ProductFilter {
 
     @Override
     public boolean PassFilter(StoreProduct product) {
-        if(min<=0){
+        if(min<0){
             return true;
         }
         return product.getPrice() >=min;

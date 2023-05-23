@@ -12,7 +12,7 @@ public class RatingStoreFilter implements StoreFilter{
     @Override
     public boolean PassFilter(Store store) {
         if(rating<0 | rating>5)
-            return false;
+            return true;
         return store.getRate() >= rating;
     }
 }
