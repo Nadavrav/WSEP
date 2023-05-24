@@ -290,7 +290,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.addProductToCart(pid1,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
@@ -326,7 +326,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.addProductToCart(pid1,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
@@ -369,7 +369,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.addProductToCart(pid1,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
@@ -409,7 +409,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.addProductToCart(pid1,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
             String actual = f.getProductsInMyCart(visitorId);
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
@@ -469,7 +469,7 @@ public class SystemIntegrationTests {
 
             Assertions.assertThrows(Exception.class,()->f.AddProduct(visitorId, storeId, pName2, pPrice2, pCat2, pQuan2, pDesc2));
 
-            Assertions.assertThrows(Exception.class,()->f.addProductToCart(pid1,storeId,visitorId));
+            Assertions.assertThrows(Exception.class,()->f.addProductToCart(pid1,storeId,1,visitorId));
 
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));

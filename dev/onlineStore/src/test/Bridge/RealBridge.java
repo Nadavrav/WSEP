@@ -160,7 +160,7 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean addToCart(int productId, int storeId) {
-        return !service.addProductToCart(productId,storeId ).isError();
+        return !service.addProductToCart(productId,storeId,1 ).isError();
     }
 
     @Override

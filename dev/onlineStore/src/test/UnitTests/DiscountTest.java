@@ -34,11 +34,11 @@ public class DiscountTest {
     @BeforeEach
     public void setUp(){
         fullBag=new Bag(1);
-        fullBag.addProduct(bread);
-        fullBag.addProduct(milk);
-        fullBag.addProduct(yogurt);
-        fullBag.addProduct(chicken);
-        fullBag.addProduct(steak);
+        fullBag.addProduct(bread,1);
+        fullBag.addProduct(milk,1);
+        fullBag.addProduct(yogurt,1);
+        fullBag.addProduct(chicken,1);
+        fullBag.addProduct(steak,1);
     }
     @Test
     public void NoConditionDiscountTest(){
