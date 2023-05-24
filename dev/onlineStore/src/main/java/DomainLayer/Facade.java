@@ -242,7 +242,7 @@ public class Facade {
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
-
+        //
         RegisteredUser user = registeredUserList.get(userName);
         boolean b = registeredUserList.get("admin")!=null;
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
