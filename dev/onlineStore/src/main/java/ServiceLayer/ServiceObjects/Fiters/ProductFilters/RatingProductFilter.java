@@ -13,7 +13,7 @@ public class RatingProductFilter implements ProductFilter {
     public boolean PassFilter(StoreProduct product) {
         if(rating>5 || rating<0)
            return true;
-        return product.getAverageRating() > rating;
+        return product.getAverageRating() >= rating;
     }
 
 }
