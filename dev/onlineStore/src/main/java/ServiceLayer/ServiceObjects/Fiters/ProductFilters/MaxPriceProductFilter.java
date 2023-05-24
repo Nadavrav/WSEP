@@ -11,7 +11,7 @@ public class MaxPriceProductFilter implements ProductFilter {
 
     @Override
     public boolean PassFilter(StoreProduct product) {
-        if(max<0){
+        if(max<=0){
             return true;
         }
         return product.getPrice() <= max;
