@@ -17,6 +17,10 @@ public class CartProduct extends Product{
         super(storeProduct);
         amount=1;
     }
+    public CartProduct(StoreProduct storeProduct,int amount){
+        super(storeProduct);
+        this.amount=amount;
+    }
     public int getAmount() {
         return amount;
     }

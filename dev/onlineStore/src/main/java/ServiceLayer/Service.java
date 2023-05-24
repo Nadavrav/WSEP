@@ -115,11 +115,11 @@ public class Service {
         return new Response<>(visitorId);
     }
 
-    public Response<?> addProductToCart(int productId, int storeId) {//2.3
+    public Response<?> addProductToCart(int productId, int storeId,int amount) {//2.3
 
 
         try{
-            facade.addProductToCart(productId,storeId,visitorId);
+            facade.addProductToCart(productId,storeId,amount,visitorId);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
