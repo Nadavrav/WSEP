@@ -278,7 +278,7 @@ public class Facade {
         return visitorId;
     }
 
-     public void addProductToCart(int productId,int storeId, int visitorId) throws Exception {//2.3
+     public void addProductToCart(int productId, int storeId, int amount, int visitorId) throws Exception {//2.3
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("trying to add product from null user");
@@ -300,7 +300,7 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
-            user.addProductToCart(storeId, product,store::passesPolicies);
+            user.addProductToCart(storeId, product,amount,store::passesPolicies);
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
         catch (Exception e){
