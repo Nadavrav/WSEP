@@ -154,7 +154,7 @@ public class StoreProduct extends Product {
     public void ReduceQuantity(int quantity) {
         if(quantity<0)
             throw new IllegalArgumentException("quantity reduction cant be negative");
-        setQuantity(quantity-this.Quantity);
+        setQuantity(this.Quantity-quantity);
     }
 
 
