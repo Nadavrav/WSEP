@@ -222,10 +222,11 @@ public interface Bridge {
 
     /**
      * A function to get a requested item quantity
+     * @param storeId - the id of the store that the product belongs to
      * @param productId - the id of the item
      * @return the quantity of the item if successful, -1 otherwise
      */
-    int GetItemQuantity(int productId);
+    int GetItemQuantity(int storeId, int productId);
 
     /**
      * A function to get the info on an employee

@@ -102,9 +102,8 @@ public class CartTests {
         assertTrue(bridge.addToCart(productId_MegaMilk, storeId));
         assertTrue(bridge.addToCart(productId_GigaMilk, storeId));
         assertTrue(bridge.addToCart(productId_UltraMilk, storeId));
-
         boolean r = bridge.removeFromCart(productId_MegaMilk, storeId);
-        Assertions.assertTrue(r);
+        assertTrue(r);
         boolean r1 = bridge.removeFromCart(productId_UltraMilk, storeId);
         Assertions.assertTrue(r1);
         boolean r2 = bridge.removeFromCart(productId_GigaMilk, storeId);
@@ -137,9 +136,11 @@ public class CartTests {
     public void OpenCart_Success_CartWithOneItem()
     {
         assertTrue(bridge.addToCart(productId_MegaMilk, storeId));
-        String ProductList = "Store Id : 0\n0\n\n";
+        String expectedStore = "Store Id : "+storeId;
         assertFalse(bridge.OpenCart().isError());
-        assertEquals(ProductList,bridge.OpenCart().getValue());
+        String expectedProducts = "Name: Mega milk Description: Guaranteed to make bones stronger! Category: test price per unit: 5.0 Amount: 1 total price: 5.0";
+        assertTrue(bridge.OpenCart().getValue().contains(expectedStore));
+        assertTrue(bridge.OpenCart().getValue().contains(expectedProducts));
     }
     @Test
     public void OpenCart_Success_CartWithMultipleItems()
@@ -148,9 +149,18 @@ public class CartTests {
         assertTrue(bridge.addToCart(productId_GigaMilk, storeId));
         assertTrue(bridge.addToCart(productId_UltraMilk, storeId));
 
-        String ProductList = "Store Id : 0\n0-1\n0-2\n0-3\n\n";
+        String ProductList = "Store Id : "+storeId;
+        String product1Str = "Name: Mega milk Description: Guaranteed to make bones stronger! Category: test price per unit: 5.0 Amount: 1 total price: 5.0\n";
+        String product2Str = "Name: Ultra milk Description: Bones made of metal now! Category: test price per unit: 7.0 Amount: 1 total price: 7.0\n";
+        String product3Str = "Name: Giga milk Description: bones made of diamond now! Category: test price per unit: 10.0 Amount: 1 total price: 10.0\n";
+
         assertFalse(bridge.OpenCart().isError());
-        assertEquals(ProductList,bridge.OpenCart().getValue());
+        String actual = bridge.OpenCart().getValue();
+        assertTrue(actual.contains(ProductList));
+        assertTrue(actual.contains(product1Str));
+        assertTrue(actual.contains(product2Str));
+        assertTrue(actual.contains(product3Str));
+
     }
     @Test
     public void Cart_ChangeItemQuantity_Success()
@@ -197,10 +207,10 @@ public class CartTests {
     {
         assertTrue(bridge.addToCart(productId_MegaMilk, storeId));
 
-        int BeforePurchaseQuantity = bridge.GetItemQuantity(productId_MegaMilk);
+        int BeforePurchaseQuantity = bridge.GetItemQuantity(storeId,productId_MegaMilk);
         Response<List<String>> r= bridge.PurchaseCart(RealcreditProxy,address);
-        Assertions.assertTrue(r.isError());
-        int AfterPurchaseQuantity = bridge.GetItemQuantity(productId_MegaMilk);
+        assertFalse(r.isError());
+        int AfterPurchaseQuantity = bridge.GetItemQuantity(storeId,productId_MegaMilk);
         Assertions.assertEquals(BeforePurchaseQuantity-1,AfterPurchaseQuantity);
     }
     @Test
@@ -208,7 +218,7 @@ public class CartTests {
     {
         assertTrue(bridge.addToCart(productId_MegaMilk, storeId));
 
-        int BeforePurchaseQuantity = bridge.GetItemQuantity(productId_MegaMilk);
+        int BeforePurchaseQuantity = bridge.GetItemQuantity(storeId,productId_MegaMilk);
         assertTrue(bridge.CartChangeItemQuantity(productId_MegaMilk,storeId,BeforePurchaseQuantity+1));
         Response<List<String>> r= bridge.PurchaseCart(RealcreditProxy,address);
         Assertions.assertFalse(r.isError());
@@ -218,7 +228,7 @@ public class CartTests {
     {
         assertTrue(bridge.addToCart(productId_MegaMilk, storeId));
 
-        int BeforePurchaseQuantity = bridge.GetItemQuantity(productId_MegaMilk);
+        int BeforePurchaseQuantity = bridge.GetItemQuantity(storeId,productId_MegaMilk);
         assertTrue(bridge.CartChangeItemQuantity(productId_MegaMilk,storeId,BeforePurchaseQuantity+1));
         Response<List<String>> r= bridge.PurchaseCart(RealcreditProxy,address);
         Assertions.assertFalse(r.isError());

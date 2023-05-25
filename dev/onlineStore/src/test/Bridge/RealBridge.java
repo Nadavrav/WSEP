@@ -165,19 +165,17 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean removeFromCart(int productId, int storeId) {
-        return !service.RemoveProduct(productId,storeId ).isError();
+        return !service.removeProductFromCart(productId,storeId).isError();
     }
 
     @Override
     public Response<String> OpenCart() {
-        return service.getProductsInMyCart(); //TODO: NIKITA
+        return service.getProductsInMyCart();
     }
 
     @Override
     public boolean CartChangeItemQuantity(int productId,int storeId, int newQuantity) {
-        return false;
-        //TODO WAITING FOR SERVICE IMPLEMENTATION
-        //return CartChangeItemQuantity(String productId, int newQuantity);
+        return !service.changeCartProductQuantity(productId,storeId,newQuantity).isError();
     }
 
     @Override
@@ -186,8 +184,11 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public int GetItemQuantity(int productId) {
-        return 5;
+    public int GetItemQuantity(int storeId, int productId) {
+        Response r = service.getStoreProductQuantity(storeId,productId);
+        if(r.isError())
+            return -100;
+        return (int)r.getValue();
         //return service.getItemQuantity(productId);
         //TODO WAITING FOR SERVICE IMPLEMENTATION
     }
