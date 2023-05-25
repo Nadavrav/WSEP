@@ -316,8 +316,8 @@ public class Facade {
 
             Store store = storesList.get(storeId);
             if (store == null) {
-                logger.warning("Invalid product ID");
-                throw new Exception("Invalid product ID");
+                logger.warning("Invalid store ID");
+                throw new Exception("Invalid store ID");
             }
             if (!store.getActive()) {
                 logger.warning("This is a closed Store");
