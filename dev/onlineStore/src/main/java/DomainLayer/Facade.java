@@ -1442,4 +1442,23 @@ public class Facade {
         }
         return stores;
     }
+
+    /**
+     * A function to get the quantity of a product
+     * @param storeId - the store that the product belongs to
+     * @param productId - the id of the product
+     * @return an integer that is the quantity of the product that the store has right now
+     */
+    public Integer getStoreProductQuantity(int storeId, int productId)
+    {
+        logger.info("Starting getStoreProductQuantity");
+        if(!storesList.containsKey(storeId))
+            throw new IllegalArgumentException("There is no store with this id");
+        Store s =  storesList.get(storeId);
+        if(s.getProductByID(productId) == null)
+            throw new NullPointerException("There is no such product with this id:"+productId+" in the store with the id:"+storeId);
+        Integer quantity = s.getProductByID(productId).getQuantity();
+        return quantity;
+    }
+
 }
