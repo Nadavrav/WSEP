@@ -76,10 +76,7 @@ public class Bag {
             throw new NullPointerException("attempted to remove null product");
         if(productList.get(product)==null)
             throw new RuntimeException("product to remove not in cart");
-        CartProduct cartProduct=new CartProduct(product);
-        if(productList.get(product).equals(cartProduct))
-                productList.remove(cartProduct);
-        else throw new RuntimeException();
+        productList.remove(product);
     }
     public void removeProduct(CartProduct product) {
         if(product==null)
