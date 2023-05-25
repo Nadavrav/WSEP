@@ -91,6 +91,8 @@ public class Bag {
         else throw new RuntimeException();
     }
     public void changeProductAmount(Product product,int newAmount) {
+        if(newAmount <= 0)
+            throw new IllegalArgumentException("Cant set amount to 0 or negative");
        CartProduct cartProduct=productList.get(product);
        cartProduct.setAmount(newAmount);
     }
