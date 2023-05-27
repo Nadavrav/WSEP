@@ -202,7 +202,10 @@ public class Store {
         return products;
     }
     public void UpdateProductQuantity(Integer productId, int quantity) {
-        products.get(productId).UpdateQuantity(quantity);
+        if(products.get(productId) != null)
+            products.get(productId).UpdateQuantity(quantity);
+        else
+            throw new IllegalArgumentException("Invalid PID");
     }
     public void IncreaseProductQuantity(Integer productId, int quantity) {
         products.get(productId).IncreaseQuantity(quantity);
@@ -212,19 +215,31 @@ public class Store {
     }
 
     public void UpdateProductName(Integer productId, String name) {
-        products.get(productId).setName(name);
+        if(products.get(productId) != null)
+            products.get(productId).setName(name);
+        else
+            throw new IllegalArgumentException("Invalid PID");
     }
 
     public void UpdateProductPrice(Integer productId, double price) {
-        products.get(productId).setPrice(price);
+        if(products.get(productId) != null)
+            products.get(productId).setPrice(price);
+        else
+            throw new IllegalArgumentException("Invalid PID");
     }
 
     public void UpdateProductCategory(Integer productId, String category) {
-        products.get(productId).setCategory(category);
+        if(products.get(productId) != null)
+            products.get(productId).setCategory(category);
+        else
+            throw new IllegalArgumentException("Invalid PID");
     }
 
     public void UpdateProductDescription(Integer productId, String description) {
-        products.get(productId).setDescription(description);
+        if(products.get(productId) != null)
+            products.get(productId).setDescription(description);
+        else
+            throw new IllegalArgumentException("Invalid PID");
     }
     /**
      *

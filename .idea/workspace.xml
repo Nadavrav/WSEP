@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f3f320f6-0249-428b-a89d-adc7db084ec3" name="Changes" comment="fixed acceptence cart tests">
+    <list default="true" id="f3f320f6-0249-428b-a89d-adc7db084ec3" name="Changes" comment="fixed PurchaseHistory ACCTests and functions related to them">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/PurchaseHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/PurchaseHistory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/Bridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/Bridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/StoreTests/UserStoreRequestsTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/StoreTests/UserStoreRequestsTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/RealBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/RealBridge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,18 +98,7 @@
       <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.PurchaseHistory">
-    <configuration name="GuestTests and 1 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <option name="TEST_OBJECT" value="pattern" />
-      <patterns>
-        <pattern testClass="AcceptenceTests.UserTests.GuestTests" />
-        <pattern testClass="AcceptenceTests.UserTests.CartTests" />
-      </patterns>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.UserStoreRequestsTests">
     <configuration name="PurchaseHistory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
@@ -120,22 +110,6 @@
       <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
       <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
       <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PurchaseHistory.GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="AcceptenceTests.UserTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
-      <option name="METHOD_NAME" value="GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser" />
-      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -156,17 +130,48 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PurchaseHistory.GetPurchaseHistory_Success_StoreOwner_EmptyHistory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UserStoreRequestsTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="AcceptenceTests.UserTests.*" />
+          <option name="PATTERN" value="AcceptenceTests.StoreTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
-      <option name="METHOD_NAME" value="GetPurchaseHistory_Success_StoreOwner_EmptyHistory" />
+      <option name="PACKAGE_NAME" value="AcceptenceTests.StoreTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.StoreTests.UserStoreRequestsTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserStoreRequestsTests.EditDescriptionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="AcceptenceTests.StoreTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="AcceptenceTests.StoreTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.StoreTests.UserStoreRequestsTests" />
+      <option name="METHOD_NAME" value="EditDescriptionTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserStoreRequestsTests.ProductRatingTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="AcceptenceTests.StoreTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="AcceptenceTests.StoreTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.StoreTests.UserStoreRequestsTests" />
+      <option name="METHOD_NAME" value="ProductRatingTests" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -180,20 +185,20 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.GuestTests and 1 more" />
-      <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser" />
       <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Success_Admin_NotEmptyHistory" />
-      <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Success_StoreOwner_EmptyHistory" />
+      <item itemvalue="JUnit.UserStoreRequestsTests" />
+      <item itemvalue="JUnit.UserStoreRequestsTests.EditDescriptionTest" />
+      <item itemvalue="JUnit.UserStoreRequestsTests.ProductRatingTests" />
       <item itemvalue="JUnit.PurchaseHistory" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.UserStoreRequestsTests" />
+        <item itemvalue="JUnit.UserStoreRequestsTests.ProductRatingTests" />
+        <item itemvalue="JUnit.UserStoreRequestsTests.EditDescriptionTest" />
         <item itemvalue="JUnit.PurchaseHistory" />
         <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Success_Admin_NotEmptyHistory" />
-        <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Success_StoreOwner_EmptyHistory" />
-        <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser" />
-        <item itemvalue="JUnit.GuestTests and 1 more" />
       </list>
     </recent_temporary>
   </component>
@@ -207,7 +212,7 @@
       <updated>1684171346129</updated>
       <workItem from="1684171347132" duration="56052000" />
       <workItem from="1684849704258" duration="6795000" />
-      <workItem from="1685215869214" duration="2484000" />
+      <workItem from="1685215869214" duration="4812000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -286,7 +291,14 @@
       <option name="project" value="LOCAL‎" />
       <updated>1685013611828</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL‎-00012" summary="fixed PurchaseHistory ACCTests and functions related to them">
+      <created>1685218625325</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL‎-00012" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1685218625325</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -326,6 +338,7 @@
     <MESSAGE value="fixed bug in bag" />
     <MESSAGE value="fixed bug in bag, in remove product function" />
     <MESSAGE value="fixed acceptence cart tests" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed acceptence cart tests" />
+    <MESSAGE value="fixed PurchaseHistory ACCTests and functions related to them" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed PurchaseHistory ACCTests and functions related to them" />
   </component>
 </project>
