@@ -149,13 +149,20 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public List<String> UserPurchaseHistory(int storeId) {
-        return null; //TODO: NIKITA
+    public String UserPurchaseHistory(String username) {
+        Response r = service.GetUserHistoryPurchase(username);
+        if (r.isError())
+            return null;
+        return (String)r.getValue();
     }
 
     @Override
-    public List<String> StorePurchaseHistory() {
-        return null; //TODO: NIKITA
+    public List<String> StorePurchaseHistory(int storeId) {
+        Response r = service.GetStoreHistoryPurchase(storeId);
+        if (r.isError()) {
+            return null;
+        }
+        return (List<String>)r.getValue();
     }
 
     @Override
@@ -200,11 +207,6 @@ public class RealBridge implements Bridge {
         return null;//TODO WAITING FOR SERVICE IMPLEMENTATION OF THIS METHOD
     }
 
-    @Override
-    public Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId) {
-        //return service.GetStoreHistoryPurchase(storeId);
-        return null; //TODO Waiting for
-    }
     @Override
     public List<ServiceStore> FilterSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters){
         Response<List<ServiceStore>> r= service.FilterProductSearch(productFilters,storeFilters);

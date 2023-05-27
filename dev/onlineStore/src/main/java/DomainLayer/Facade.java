@@ -1309,9 +1309,18 @@ public class Facade {
    public List<String> GetStoreHistoryPurchase(int StoreId, int visitorId) throws Exception {
         logger.info("Entering method GetStoreHistoryPurchase() with StoreId: " + StoreId + " and visitorId: " + visitorId);
         SiteVisitor User = onlineList.get(visitorId);
+       Employment employment = null;
         if(! (User instanceof Admin)){
-            logger.log(Level.SEVERE, "An error occurred while getting store purchase history for visitorId: " + visitorId);
-            throw new Exception("invalid visitor Id");
+            try{
+                employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
+            }catch (Exception e){
+                logger.warning("there is no store to this user");
+                throw  new Exception("this user dont have any store");
+            }
+            if(!employment.checkIfFounder()) {
+                logger.log(Level.SEVERE, "An error occurred while getting store purchase history for visitorId: " + visitorId);
+                throw new Exception("this user cant view the store purchase history");
+            }
         }
         Store store = storesList.get(StoreId);
         if (store == null) {

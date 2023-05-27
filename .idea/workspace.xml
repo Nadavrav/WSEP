@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f3f320f6-0249-428b-a89d-adc7db084ec3" name="Changes" comment="fixed bug in bag">
+    <list default="true" id="f3f320f6-0249-428b-a89d-adc7db084ec3" name="Changes" comment="fixed acceptence cart tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Bag.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Bag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/CartTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/CartTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/PurchaseHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/PurchaseHistory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/Bridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/Bridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/RealBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/RealBridge.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Products/StoreProduct.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Products/StoreProduct.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Users/Bag.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Users/Bag.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/Service.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,32 +63,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/natal/Desktop/web-app/WSEP&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.20344828&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/natal/Desktop/web-app/WSEP",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.20344828",
+    "settings.editor.selected.configurable": "editor.preferences.import",
+    "spring.configuration.checksum": "8f9201e8a0da0c17e63d95a9ea4f02a8",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\denis\IdeaProjects\WSEP\dev\onlineStore" />
@@ -100,8 +97,19 @@
       <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.CartTests">
-    <configuration name="CartTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.PurchaseHistory">
+    <configuration name="GuestTests and 1 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <option name="TEST_OBJECT" value="pattern" />
+      <patterns>
+        <pattern testClass="AcceptenceTests.UserTests.GuestTests" />
+        <pattern testClass="AcceptenceTests.UserTests.CartTests" />
+      </patterns>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PurchaseHistory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
@@ -110,13 +118,13 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.CartTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CartTests.OpenCart_Success_CartWithMultipleItems" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PurchaseHistory.GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
@@ -125,41 +133,41 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.CartTests" />
-      <option name="METHOD_NAME" value="OpenCart_Success_CartWithMultipleItems" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
+      <option name="METHOD_NAME" value="GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ConcurrencyCartTests.ConcurrencyPurchaseTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PurchaseHistory.GetPurchaseHistory_Success_Admin_NotEmptyHistory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="AcceptenceTests.UserTests.ConcurrencyTests.*" />
+          <option name="PATTERN" value="AcceptenceTests.UserTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests.ConcurrencyCartTests" />
-      <option name="METHOD_NAME" value="ConcurrencyPurchaseTests" />
+      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
+      <option name="METHOD_NAME" value="GetPurchaseHistory_Success_Admin_NotEmptyHistory" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="IntegrationTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PurchaseHistory.GetPurchaseHistory_Success_StoreOwner_EmptyHistory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/dev/onlineStore/src/test/IntegrationTests" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UnitTests in springboot-html (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="AcceptenceTests.UserTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
+      <option name="METHOD_NAME" value="GetPurchaseHistory_Success_StoreOwner_EmptyHistory" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -172,33 +180,34 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.CartTests" />
-      <item itemvalue="JUnit.CartTests.OpenCart_Success_CartWithMultipleItems" />
-      <item itemvalue="JUnit.IntegrationTests in springboot-html" />
-      <item itemvalue="JUnit.UnitTests in springboot-html (1)" />
-      <item itemvalue="JUnit.ConcurrencyCartTests.ConcurrencyPurchaseTests" />
+      <item itemvalue="JUnit.GuestTests and 1 more" />
+      <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser" />
+      <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Success_Admin_NotEmptyHistory" />
+      <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Success_StoreOwner_EmptyHistory" />
+      <item itemvalue="JUnit.PurchaseHistory" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.CartTests" />
-        <item itemvalue="JUnit.UnitTests in springboot-html (1)" />
-        <item itemvalue="JUnit.IntegrationTests in springboot-html" />
-        <item itemvalue="JUnit.CartTests.OpenCart_Success_CartWithMultipleItems" />
-        <item itemvalue="JUnit.ConcurrencyCartTests.ConcurrencyPurchaseTests" />
+        <item itemvalue="JUnit.PurchaseHistory" />
+        <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Success_Admin_NotEmptyHistory" />
+        <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Success_StoreOwner_EmptyHistory" />
+        <item itemvalue="JUnit.PurchaseHistory.GetPurchaseHistory_Fail_NotStoreOwner_LoggedInUser" />
+        <item itemvalue="JUnit.GuestTests and 1 more" />
       </list>
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="" />
+      <changelist id="f3f320f6-0249-428b-a89d-adc7db084ec3" name="Changes" comment="fixed acceptence cart tests" />
       <created>1684171346129</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1684171346129</updated>
       <workItem from="1684171347132" duration="56052000" />
       <workItem from="1684849704258" duration="6795000" />
+      <workItem from="1685215869214" duration="2484000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -263,7 +272,21 @@
       <option name="project" value="LOCAL‎" />
       <updated>1685013381679</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL‎-00010" summary="fixed bug in bag, in remove product function">
+      <created>1685013585797</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL‎-00010" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1685013585797</updated>
+    </task>
+    <task id="LOCAL‎-00011" summary="fixed acceptence cart tests">
+      <created>1685013611828</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL‎-00011" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1685013611828</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -301,6 +324,8 @@
     <MESSAGE value="fixed a bug in reduceQuantity" />
     <MESSAGE value="fixed a bug in facade" />
     <MESSAGE value="fixed bug in bag" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed bug in bag" />
+    <MESSAGE value="fixed bug in bag, in remove product function" />
+    <MESSAGE value="fixed acceptence cart tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed acceptence cart tests" />
   </component>
 </project>

@@ -57,7 +57,6 @@ public interface Bridge {
     Integer OpenNewStore(String storeName);
 
     /**
-     * @param productId   The name of the product to be added
      * @param description The description of the product to be added
      * @return true if done successfully, false otherwise
      */
@@ -67,7 +66,6 @@ public interface Bridge {
     /**
      *
      * @param username username of user to appoint
-     * @param storeName store in which to appoint the user
      * @return true if done successfully, false otherwise
      */
     boolean AppointOwner(String username,int storeId);
@@ -75,14 +73,12 @@ public interface Bridge {
     /**
      *
      * @param username username of the user to remove
-     * @param storeName store in which the user works in
      * @return true if done successfully, false otherwise
      */
     boolean RemoveOwner(String username,int storeId);
     /**
      *
      * @param username username of user to appoint
-     * @param storeName store in which to appoint the user
      * @return true if done successfully, false otherwise
      */
     boolean AppointManager(String username,int storeId);
@@ -90,7 +86,6 @@ public interface Bridge {
     /**
      *
      * @param username username of the user to remove
-     * @param storeName store in which the user works in
      * @return true if done successfully, false otherwise
      */
     boolean RemoveManager(String username,int storeId);
@@ -103,7 +98,6 @@ public interface Bridge {
     boolean RemoveProduct(int productId, int storeId);
 
     /**
-     * @param OldName   name of the product whose name change is pending
      * @param productId
      * @param storeId
      * @param newName   new name for the product
@@ -120,8 +114,6 @@ public interface Bridge {
     boolean EditDescription(int productId, int storeId, String newDesc);
 
     /**
-     * @param storeName   store where product is
-     * @param prodictName product to edit
      * @param productId
      * @param storeId
      * @param newPrice    new price
@@ -130,7 +122,7 @@ public interface Bridge {
     boolean EditPrice(int productId, int storeId, int newPrice);
     /**
      *
-     * @param storeName store to close
+     * @param storeId store to close
      * @return true if done successfully, false otherwise
      */
     boolean CloseStore(int storeId);
@@ -138,7 +130,7 @@ public interface Bridge {
     /**
      *
      * @param username user to add permission to
-     * @param storeName store where the user is manager at
+     * @param storeId store where the user is manager at
      * @param index an array containing at most 11 indexed who range from 1 to 11, each representing a permission to be added. index values:
      *      *              1: Can Manage Stock,2: Can Change Policy And Discounts,3: Can Set Constraints,4: Can Appoint Store Owner,5: Can Remove Store Owner,
      *      *              6: Can Appoint Store Manager,7: Can Change Permissions For Store Manager,8: Can Remove Store Manager,9: Can See Staff And Permissions,
@@ -161,7 +153,6 @@ public interface Bridge {
      */
     //  List<String> ProductSearch(String query);
     /**
-     * @param storeName name of the store the product is in
      * @param productId the product's name to rate
      * @param storeId
      * @param rating    the rating to give to the product
@@ -170,16 +161,16 @@ public interface Bridge {
     boolean RateProduct(int productId, int storeId, int rating);
     /**
      *
-     * @param storeName store whose purchase history we expect to return
+     * @param userName the username whos purchase history we want
      * @return return corresponding response (fails if no store of such name exists, or if no purchases were made from store)
      */
-    List<String> UserPurchaseHistory(int storeId);
+    String UserPurchaseHistory(String userName);
 
     /**
-     *
+     * @param storeId the id of the store which we want the history of
      * @return Response either containing the purchase history of the user, or an error message
      */
-    List<String> StorePurchaseHistory();
+    List<String> StorePurchaseHistory(int storeId);
 
     /**
      * A function to add a product to cart
@@ -231,18 +222,9 @@ public interface Bridge {
     /**
      * A function to get the info on an employee
      * @param EmployeeUserName - the employee username
-     * @param StoreName - the store the employee is from
      * @return a response with a string array of the employee data(UserName,Etc) as its value
      */
     Response<String[]> GetEmployeeInfo(String EmployeeUserName,int storeId);
-
-    /**
-     * A function to get the purchase history of the store(can only do this if you are the store owner or the admin or have perms)
-     *
-     * @param StoreName - the store name
-     * @return a response with a string array of the purchase history as its value
-     */
-    Response<List<PurchaseRecord>> GetPurchaseHistory(int storeId);
     List<ServiceStore> FilterSearch(List<ProductFilter> productFilters, List<StoreFilter> storeFilters);
     boolean RateAndCommentOnProduct(int productId, int storeId, String comment, int rating);
     boolean RateStore(int storeId,int rating);
