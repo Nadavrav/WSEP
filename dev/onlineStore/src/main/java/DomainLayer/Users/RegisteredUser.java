@@ -2,6 +2,7 @@ package DomainLayer.Users;
 
 import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Logging.UniversalHandler;
+import DomainLayer.WebSocket.MessageObserver;
 
 
 import java.security.MessageDigest;
@@ -10,8 +11,8 @@ import java.util.Arrays;
 import java.util.logging.*;
 
 
-public class RegisteredUser extends SiteVisitor{
-    private static final Logger logger=Logger.getLogger("RegisteredUser logger");
+public class RegisteredUser extends SiteVisitor implements MessageObserver {
+    private static final Logger logger = Logger.getLogger("RegisteredUser logger");
     String userName;
 
     byte[] password;
@@ -22,57 +23,59 @@ public class RegisteredUser extends SiteVisitor{
 
 
     @Override
-    public String toString(){
-        String output ="UserName : "+userName+" Is logged in :"+loggedIn;
+    public String toString() {
+        String output = "UserName : " + userName + " Is logged in :" + loggedIn;
         return output;
     }
+
     public RegisteredUser(String userName, String password) throws NoSuchAlgorithmException {
         super(0);
-        try{
+        try {
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
-        }
-        catch (Exception ignored){
+        } catch (Exception ignored) {
         }
         checkUserName(userName);
         checkPassword(password);
-        this.userName=userName;
-        this.password=hashString(password);
+        this.userName = userName;
+        this.password = hashString(password);
         this.purchaseHistory = new PurchaseHistory();
-        loggedIn=false;
-        
+        loggedIn = false;
+
     }
-    private byte[] hashString(String str) throws NoSuchAlgorithmException{
+
+    private byte[] hashString(String str) throws NoSuchAlgorithmException {
         byte[] unHashedBytes = str.getBytes();
 
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         return md.digest(unHashedBytes);
     }
-     public RegisteredUser(SiteVisitor visitor,String userName, String password) throws NoSuchAlgorithmException {
+
+    public RegisteredUser(SiteVisitor visitor, String userName, String password) throws NoSuchAlgorithmException {
         super(visitor.getVisitorId());
-            UniversalHandler.GetInstance().HandleError(logger);
-            UniversalHandler.GetInstance().HandleInfo(logger);
-            checkUserName(userName);
-            checkPassword(password);
-            this.userName=userName;
-            this.password=hashString(password);
-            this.purchaseHistory = new PurchaseHistory();
-            if(super.getCart().getBags().isEmpty() && !visitor.getCart().getBags().isEmpty()){
-                super.ReplaceCart(visitor.getCart());
-            }
-       
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+        checkUserName(userName);
+        checkPassword(password);
+        this.userName = userName;
+        this.password = hashString(password);
+        this.purchaseHistory = new PurchaseHistory();
+        if (super.getCart().getBags().isEmpty() && !visitor.getCart().getBags().isEmpty()) {
+            super.ReplaceCart(visitor.getCart());
+        }
+
     }
 
     private void checkPassword(String password) {
-        if(password==null) {
+        if (password == null) {
             logger.severe("null password");
             throw new NullPointerException("Username cannot be null");
         }
-        if(password.length()<8){
+        if (password.length() < 8) {
             logger.warning("invalid password");
             throw new IllegalArgumentException("the password is too short");
         }
-        if(password.length()>30){
+        if (password.length() > 30) {
             logger.warning("invalid password");
             throw new IllegalArgumentException("the password is too long");
         }
@@ -84,10 +87,10 @@ public class RegisteredUser extends SiteVisitor{
             logger.severe("null username");
             throw new NullPointerException("Username cannot be null");
         }
-       //if (userName.length() < 8) { //DONT UNCOMMENT THIS WE DON'T NEED THIS PART
-       //    logger.warning("invalid username");
-       //    throw new IllegalArgumentException("the userName is too short");
-       //}
+        //if (userName.length() < 8) { //DONT UNCOMMENT THIS WE DON'T NEED THIS PART
+        //    logger.warning("invalid username");
+        //    throw new IllegalArgumentException("the userName is too short");
+        //}
         if (userName.length() > 30) {
             logger.warning("invalid username");
             throw new IllegalArgumentException("the useName is too long");
@@ -97,7 +100,7 @@ public class RegisteredUser extends SiteVisitor{
     //public String getPassword() {
     //    return password;
     //}
-    public String getUserName(){
+    public String getUserName() {
         return userName;
     }
 
@@ -122,19 +125,27 @@ public class RegisteredUser extends SiteVisitor{
         // Log successful login
         logger.info("Successfully logged in visitor with ID: " + visitorId);
     }
-    public void logout(){//3.1
+
+    public void logout() {//3.1
         super.setVisitorId(0);//Might not need this
         this.loggedIn = false;
     }
 
-    public PurchaseHistory getPurchaseHistory(){
+    public PurchaseHistory getPurchaseHistory() {
         return purchaseHistory;
     }
 
     public void addPurchaseToHistory(Purchase purchase) {
         purchaseHistory.addPurchaseToHistory(purchase);
     }
+
     public boolean isLoggedIn() {
         return loggedIn;
+    }
+
+    @Override
+    public void updateMessage(String message) { //check
+        // Implement your custom logic to handle the received message
+        System.out.println("Received message: " + message);
     }
 }
