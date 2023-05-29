@@ -50,7 +50,7 @@ public class RealBridge implements Bridge {
         Response<Integer> r=service.OpenStore(storeName);
         if(!r.isError())
             return r.getValue();
-        else return -1;
+        return -1;
     }
 
     @Override
@@ -63,7 +63,8 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean AppointOwner(String username, int storeId) {
-        return !service.appointNewStoreOwner(username, storeId).isError();
+        Response r =service.appointNewStoreOwner(username, storeId);
+        return !r.isError();
     }
 
     @Override
@@ -85,7 +86,8 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean RemoveProduct(int productId, int storeId) {
-        return !service.RemoveProduct(productId,storeId ).isError();
+        Response r = service.RemoveProduct(productId,storeId );
+        return !r.isError();
     }
 
     @Override
@@ -100,7 +102,8 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean EditPrice(int productId, int storeId, int newPrice) {
-        return !service.UpdateProductPrice(productId,storeId, newPrice).isError();
+        Response r = service.UpdateProductPrice(productId,storeId, newPrice);
+        return !r.isError();
     }
 
     @Override
@@ -118,7 +121,8 @@ public class RealBridge implements Bridge {
             permissions.add(Permission.values()[permission]);
             added[permission]=true;
         }
-        return !service.changeStoreManagerPermission(username,storeId,permissions).isError();
+        Response r = service.changeStoreManagerPermission(username,storeId,permissions);
+        return !r.isError();
     }
 
     @Override

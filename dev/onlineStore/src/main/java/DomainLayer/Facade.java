@@ -861,7 +861,7 @@ public class Facade {
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
             logger.severe("Invalid visitor Id: " + visitorId);
-            throw  new Exception("invalid visitor Id");
+            throw  new Exception("Visitore not registered");
         }
         //open new store ()
         Store store = new Store(storeName);
@@ -1060,6 +1060,8 @@ public class Facade {
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
             }
+            if(!store.getActive())
+                throw  new Exception("store is closed");
             store.RemoveProduct(ProductId);
             //return new Response<>("the Product is successfully added", false);
             return;
@@ -1119,6 +1121,10 @@ public class Facade {
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productID);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductQuantity(productID,quantity);
                 logger.fine("Exiting method UpdateProductQuantity()");
 
@@ -1155,6 +1161,10 @@ public class Facade {
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductName(productId,Name);
         logger.fine("Exiting method UpdateProductName()");
 
@@ -1167,6 +1177,10 @@ public class Facade {
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductPrice(productId,price);
                 logger.fine("Exiting method UpdateProductPrice()");
 
@@ -1181,6 +1195,10 @@ public class Facade {
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductCategory(productId,category);
                 logger.fine("Exiting method UpdateProductCategory()");
 
@@ -1192,6 +1210,8 @@ public class Facade {
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store != null) {
+            if(!store.getActive())
+                throw  new Exception("store is closed");
             store.UpdateProductDescription(productId, description);
             logger.fine("Exiting method UpdateProductDescription()");
         }

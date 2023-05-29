@@ -4,14 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f3f320f6-0249-428b-a89d-adc7db084ec3" name="Changes" comment="fixed PurchaseHistory ACCTests and functions related to them">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+    <list default="true" id="f3f320f6-0249-428b-a89d-adc7db084ec3" name="Changes" comment="fixed bugs in tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/springboot-html.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/IntegrationTests/SystemIntegrationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/IntegrationTests/SystemIntegrationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Products/StoreProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Products/StoreProduct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/StoreTests/UserStoreRequestsTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/StoreTests/UserStoreRequestsTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/RealBridge.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/Bridge/RealBridge.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Store.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Store.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Products/StoreProduct.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Products/StoreProduct.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,39 +99,17 @@
       <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.IntegrationTests.* and 1 more">
-    <configuration name="IntegrationTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.AcceptenceTests in springboot-html">
+    <configuration name="AcceptenceTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="IntegrationTests.*" />
+          <option name="PATTERN" value="AcceptenceTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="IntegrationTests" />
+      <option name="PACKAGE_NAME" value="AcceptenceTests" />
       <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="IntegrationTests.* and 1 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <option name="TEST_OBJECT" value="pattern" />
-      <patterns>
-        <pattern testClass="IntegrationTests.*" />
-        <pattern testClass="UnitTests.*" />
-      </patterns>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UnitTests.* and 1 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <option name="TEST_OBJECT" value="pattern" />
-      <patterns>
-        <pattern testClass="UnitTests.*" />
-        <pattern testClass="IntegrationTests.*" />
-      </patterns>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -151,7 +129,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserStoreRequestsTests.ProductRatingTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UserStoreRequestsTests.CloseStoreTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
@@ -161,7 +139,39 @@
       </extension>
       <option name="PACKAGE_NAME" value="AcceptenceTests.StoreTests" />
       <option name="MAIN_CLASS_NAME" value="AcceptenceTests.StoreTests.UserStoreRequestsTests" />
-      <option name="METHOD_NAME" value="ProductRatingTests" />
+      <option name="METHOD_NAME" value="CloseStoreTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserStoreRequestsTests.EditPermissionsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="AcceptenceTests.StoreTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="AcceptenceTests.StoreTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.StoreTests.UserStoreRequestsTests" />
+      <option name="METHOD_NAME" value="EditPermissionsTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserStoreRequestsTests.EditPriceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="AcceptenceTests.StoreTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="AcceptenceTests.StoreTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.StoreTests.UserStoreRequestsTests" />
+      <option name="METHOD_NAME" value="EditPriceTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -175,20 +185,20 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.IntegrationTests in springboot-html" />
-      <item itemvalue="JUnit.IntegrationTests.* and 1 more" />
-      <item itemvalue="JUnit.UnitTests.* and 1 more" />
+      <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
+      <item itemvalue="JUnit.UserStoreRequestsTests.CloseStoreTest" />
+      <item itemvalue="JUnit.UserStoreRequestsTests.EditPermissionsTest" />
+      <item itemvalue="JUnit.UserStoreRequestsTests.EditPriceTest" />
       <item itemvalue="JUnit.UserStoreRequestsTests" />
-      <item itemvalue="JUnit.UserStoreRequestsTests.ProductRatingTests" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.IntegrationTests.* and 1 more" />
-        <item itemvalue="JUnit.IntegrationTests in springboot-html" />
-        <item itemvalue="JUnit.UnitTests.* and 1 more" />
+        <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
         <item itemvalue="JUnit.UserStoreRequestsTests" />
-        <item itemvalue="JUnit.UserStoreRequestsTests.ProductRatingTests" />
+        <item itemvalue="JUnit.UserStoreRequestsTests.CloseStoreTest" />
+        <item itemvalue="JUnit.UserStoreRequestsTests.EditPriceTest" />
+        <item itemvalue="JUnit.UserStoreRequestsTests.EditPermissionsTest" />
       </list>
     </recent_temporary>
   </component>
@@ -288,7 +298,14 @@
       <option name="project" value="LOCAL‎" />
       <updated>1685218625325</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="fixed bugs in tests">
+      <created>1685389384604</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1685389384604</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -329,6 +346,7 @@
     <MESSAGE value="fixed bug in bag, in remove product function" />
     <MESSAGE value="fixed acceptence cart tests" />
     <MESSAGE value="fixed PurchaseHistory ACCTests and functions related to them" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed PurchaseHistory ACCTests and functions related to them" />
+    <MESSAGE value="fixed bugs in tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed bugs in tests" />
   </component>
 </project>
