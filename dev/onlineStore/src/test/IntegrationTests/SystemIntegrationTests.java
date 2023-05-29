@@ -425,7 +425,7 @@ public class SystemIntegrationTests {
 
             List<String> actualPurchase = f.purchaseCart(visitorId,123,"Adress");
             List<String> expectedPurchase = new LinkedList<>();
-            expectedPurchase.add(String.valueOf(pid1));
+            expectedPurchase.add(String.valueOf(storeId));
             Assertions.assertEquals(expectedPurchase,actualPurchase);
 
             f.ExitSiteVisitor(visitorId);
