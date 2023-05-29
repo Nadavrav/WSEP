@@ -1,7 +1,8 @@
 package DomainLayer.Users;
 
 import DomainLayer.Logging.UniversalHandler;
-import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
+import DomainLayer.Stores.CallBacks.StoreCallbacks;
+import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
@@ -22,14 +23,14 @@ public class Bag {
      */
     //Map<String,Integer> productsAmount;
     private static final Logger logger=Logger.getLogger("Bag logger");
-    private final CheckStorePolicyCallback checkPolicy;
+    private final StoreCallbacks callback;
     int storeId;
 
-    public Bag (int storeId,CheckStorePolicyCallback checkPolicy){
+    public Bag (int storeId, StoreCallbacks callback){
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
         this.storeId=storeId;
-        this.checkPolicy=checkPolicy;
+        this.callback = callback;
         productList = new HashMap<>();
        // productsAmount = new HashMap<>();
     }
@@ -38,24 +39,44 @@ public class Bag {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         this.storeId=storeId;
-        this.checkPolicy= (Bag bag) -> false;
+        this.callback = new StoreCallbacks() {
+            @Override
+            public boolean checkStorePolicies(Bag bag) {
+                logger.severe("Error: check policy callback used in a product initialized without store callback");
+                throw new RuntimeException("system error: report error to developers. error logged");
+            }
+            @Override
+            public double getDiscountAmount(Bag bag) {
+                logger.severe("Error: get discount amount callback used in a product initialized without store callback");
+                throw new RuntimeException("system error: report error to developers. error logged");
+            }
+            @Override
+            public HashMap<Discount, HashSet<CartProduct>> calcDiscounts(Bag bag) {
+                logger.severe("Error: get valid products for discount callback used in a product initialized without store callback");
+                throw new RuntimeException("system error: report error to developers. error logged");
+            }
+        };
         productList = new HashMap<>();
-        // productsAmount = new HashMap<>();
     }
     public Bag (Bag bag){
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         this.storeId=bag.storeId;
-        this.checkPolicy=bag.getCheckPolicy();
+        this.callback =bag.getCallback();
         productList = new HashMap<>();
-        // productsAmount = new HashMap<>();
     }
 
-    public CheckStorePolicyCallback getCheckPolicy() {
-        return checkPolicy;
+    public StoreCallbacks getCallback() {
+        return callback;
     }
     public boolean passesPolicy(){
-        return checkPolicy.checkBag(this);
+        return callback.checkStorePolicies(this);
+    }
+    public HashMap<Discount,HashSet<CartProduct>> getProductsInADiscount(){
+        return callback.calcDiscounts(this);
+    }
+    public double calcDiscountSavings(){
+        return callback.getDiscountAmount(this);
     }
     public void addProduct(StoreProduct product,int amount) {
         logger.info("Starting add product");
