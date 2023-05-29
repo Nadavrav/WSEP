@@ -5,29 +5,32 @@
     <title>Error Page</title>
     <style>
         body {
-            background-image: url("https://media.istockphoto.com/id/671864424/vector/product-showscase-spotlight-background-crisp-and-clear-infinite-white-floor.jpg?s=612x612&w=0&k=20&c=CoMrQlmLUqRpAn5iL11ZcxwVwHPKMFRz0MtWq6xCsJo=");
+            /*background-image: url("https://media.istockphoto.com/id/866534660/photo/real-estate-concept.jpg?s=612x612&w=0&k=20&c=yMPaBhyw4YtDH-lDwBG18_gGKbVgX9U3KFQqEUS56rE=");*/
+            /*background-image: url("https://media.istockphoto.com/id/1468249931/photo/hand-hold-a-red-exclamation-point-in-the-magnifying-glass-sign-of-alert.jpg?s=612x612&w=0&k=20&c=-N-HyoWreMwvi68EwRQE2HijAVOL83-YAusIfaMATvo=");*/
+            background-image: url("https://media.istockphoto.com/id/1471478870/photo/system-warning-caution-sign-for-notification-error-and-maintenance-concept-cyber-attack-on.jpg?s=612x612&w=0&k=20&c=xQGth0wJD36ZT61Q_2Y2MVbZodXeU5Vc35yHd1_Rh2o=");
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 95vh;
         }
 
         .container {
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.8);
+            text-align: left;
+            /*background-color: rgba(255, 255, 255, 0.8);*/
             padding: 20px;
-            border-radius: 10px;
-            max-width: max-content;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            /*border-radius: 10px;*/
+            font-size: 30px;
+            box-shadow: 0 2px 6px rgba(255, 255, 255, 0.3);
         }
 
         .container h2 {
-            color: #444;
-            font-size: 24px;
-            font-weight: bold;
+            color: #999999;
+            font-size: 30px;
+            /*font-weight: bold;*/
+            border: none;
             margin-bottom: 20px;
         }
 
@@ -35,26 +38,32 @@
             margin-top: 20px;
         }
 
-        .container button {
-            background-color: red;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+        /*.container button {*/
+        /*    background-color: red;*/
+        /*    color: white;*/
+        /*    padding: 10px 20px;*/
+        /*    border: none;*/
+        /*    border-radius: 5px;*/
+        /*    cursor: pointer;*/
+        /*    font-size: 16px;*/
+        /*}*/
     </style>
 </head>
 <body>
-<div class="container">
-    <span th:text="${message}"><h2></h2></span>
+<div class="container" style="color: white;background-color: transparent;position: fixed;right: 160px;bottom:100px ;max-width: 250px;max-height: 220px;">
+    <span th:text="${errorMessage}">error-message</span>
     <br>
 <!--    <button><a style="text-decoration: none;color: white;" href="/MainPage">RETURN TO HOME PAGE</a></button>-->
-    <button style="text-decoration: none;color: white;">
-        <a th:href="@{MainPage}" th:if="${logged}">RETURN TO HOME PAGE</a>
-        <a th:href="@{MainPage}" th:unless="${logged}">RETURN TO HOME PAGE</a>
-    </button>
 </div>
+
+<button style="background-color: transparent; color: #d2d3d5; border: none;position: fixed; top: 3px; right: 1%;">
+    <svg onclick="window.location.href='MainPage';" width="100" height="70" fill="currentColor" class="bi bi-house" viewBox="0 0 30 8">
+        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+    </svg>
+</button>
+
+<!--<button>-->
+<!--    <a style="background-color: transparent;position: fixed;top:60px ;width: 250px;height: 290px;" th:href="@{MainPage}"></a>-->
+<!--</button>-->
 </body>
 </html>
