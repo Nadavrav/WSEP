@@ -1,5 +1,7 @@
 package DomainLayer.Stores.Products;
 
+import DomainLayer.Users.Cart;
+
 public class CartProduct extends Product{
     int amount;
     //public CartProduct(String name, double price, String category, String desc) {
@@ -14,6 +16,10 @@ public class CartProduct extends Product{
     public CartProduct(StoreProduct storeProduct){
         super(storeProduct);
         amount=1;
+    }
+    public CartProduct(StoreProduct storeProduct,int amount){
+        super(storeProduct);
+        this.amount=amount;
     }
     public int getAmount() {
         return amount;
@@ -35,5 +41,12 @@ public class CartProduct extends Product{
     public String toString(){
         return "Name: "+getName()+" Description: "+getDescription()+" Category: "+getCategory()+" price per unit: "+getPrice()+" Amount: "+getAmount()+
                 " total price: "+getPrice()*getAmount();
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof CartProduct cartProduct ){
+            return super.equals(cartProduct) && amount==cartProduct.getAmount();
+        }
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package DomainLayer.Users;
 
+import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Logging.UniversalHandler;
 
@@ -75,11 +76,15 @@ public class SiteVisitor{
         }
         return true;
     }
-
-    public void addProductToCart(int storeId, StoreProduct product) {//2.3
+    public void addProductToCart(int storeId, StoreProduct product,int amount) {//2.3
         logger.info("Adding product with ID " + product.getProductId() + " to cart for store with ID " + storeId);
 
-        cart.addProductToCart(storeId,product);
+        cart.addProductToCart(storeId,product,amount);
+    }
+    public void addProductToCart(int storeId, StoreProduct product,int amount, CheckStorePolicyCallback callback) {//2.3
+        logger.info("Adding product with ID " + product.getProductId() + " to cart for store with ID " + storeId);
+
+        cart.addProductToCart(storeId,product,amount,callback);
     }
 
     public void removeProductFromCart(int storeId, StoreProduct product) {//2.3

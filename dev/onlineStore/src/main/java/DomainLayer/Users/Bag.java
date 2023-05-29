@@ -1,6 +1,7 @@
 package DomainLayer.Users;
 
 import DomainLayer.Logging.UniversalHandler;
+import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
@@ -21,21 +22,46 @@ public class Bag {
      */
     //Map<String,Integer> productsAmount;
     private static final Logger logger=Logger.getLogger("Bag logger");
+    private final CheckStorePolicyCallback checkPolicy;
     int storeId;
 
-    public Bag (int storeId){
+    public Bag (int storeId,CheckStorePolicyCallback checkPolicy){
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
         this.storeId=storeId;
+        this.checkPolicy=checkPolicy;
         productList = new HashMap<>();
        // productsAmount = new HashMap<>();
     }
-    
-    public void addProduct(StoreProduct product) {
+
+    public Bag (int storeId){
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+        this.storeId=storeId;
+        this.checkPolicy= (Bag bag) -> false;
+        productList = new HashMap<>();
+        // productsAmount = new HashMap<>();
+    }
+    public Bag (Bag bag){
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+        this.storeId=bag.storeId;
+        this.checkPolicy=bag.getCheckPolicy();
+        productList = new HashMap<>();
+        // productsAmount = new HashMap<>();
+    }
+
+    public CheckStorePolicyCallback getCheckPolicy() {
+        return checkPolicy;
+    }
+    public boolean passesPolicy(){
+        return checkPolicy.checkBag(this);
+    }
+    public void addProduct(StoreProduct product,int amount) {
         logger.info("Starting add product");
         if(productList.get(product)!=null)
             throw new RuntimeException("Cart already contains "+product.getName());
-        productList.put(product,new CartProduct(product));
+        productList.put(product,new CartProduct(product,amount));
         logger.info("Add product Succeeded");
     }
     public void addProduct(CartProduct product) {

@@ -12,8 +12,8 @@ public class RatingProductFilter implements ProductFilter {
     @Override
     public boolean PassFilter(StoreProduct product) {
         if(rating>5 || rating<0)
-           return false;
-        return product.getAverageRating() > rating;
+           return true;
+        return product.getAverageRating() >= rating;
     }
 
 }
