@@ -4,46 +4,52 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="Natalie&amp;Majd web-app">
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/logs/23-05-15 20-25-14 Error Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/logs/23-05-15 20-25-14 Info Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/logs/23-05-15 20-29-11 Error Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/logs/23-05-15 20-29-11 Info Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/BagController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/BagController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/OwnerManagerMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/OwnerManagerMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/SearchResultsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/SearchResultsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Bag.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Bag.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Buy.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Buy.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/MainPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/MainPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/OwnerManagerMenu.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/OwnerManagerMenu.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/SearchResults.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/SearchResults.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/StoreCommentsAndRatings.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/StoreCommentsAndRatings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/error.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/error.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Facade.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/Service.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/Service.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/com/okayjava/html/controller/BagController.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/com/okayjava/html/controller/BagController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/com/okayjava/html/controller/MainPageController.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/com/okayjava/html/controller/MainPageController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/com/okayjava/html/controller/OwnerManagerMenuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/com/okayjava/html/controller/OwnerManagerMenuController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/com/okayjava/html/controller/SearchResultsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/com/okayjava/html/controller/SearchResultsController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Bag.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Bag.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Buy.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Buy.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/MainPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/MainPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/OwnerManagerMenu.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/OwnerManagerMenu.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/SearchResults.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/SearchResults.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/StoreCommentsAndRatings.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/StoreCommentsAndRatings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/error.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/error.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MaxPriceProductFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MaxPriceProductFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MinPriceProductFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MinPriceProductFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/Fiters/ProductFilters/RatingProductFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/Fiters/ProductFilters/RatingProductFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MaxPriceProductFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MaxPriceProductFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MinPriceProductFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/ServiceObjects/Fiters/ProductFilters/MinPriceProductFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/ServiceObjects/Fiters/ProductFilters/RatingProductFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/ServiceLayer/ServiceObjects/Fiters/ProductFilters/RatingProductFilter.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="AcceptenceTestsfixes" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="effbad7c-e3cc-44d1-9ab3-56baaa25647c" />
+        <option name="url" value="https://github.com/Nadavrav/WSEP.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -53,16 +59,24 @@
     </option>
   </component>
   <component name="ProjectId" id="2Pq4b4TE6xBRvMGuR3Lc2ei1HF2" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
     "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
@@ -71,33 +85,98 @@
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Facets",
-    "project.structure.proportion": "0.0",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.20344828",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "settings.editor.selected.configurable": "editor.preferences.import",
+    "spring.configuration.checksum": "8f9201e8a0da0c17e63d95a9ea4f02a8",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\denis\IdeaProjects\WSEP\dev\onlineStore" />
+      <recent name="C:\Users\denis\IdeaProjects\WSEP\dev\onlineStore\src" />
       <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.SpringbootHtmlApplication">
-    <configuration name="Bag.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/WSEP/dev/onlineStore/src/main/resources/templates/Bag.html" useBuiltInWebServerPort="true">
-      <method v="2" />
+    <configuration name="PolicyTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="Buy.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/WSEP/dev/onlineStore/src/main/resources/templates/Buy.html" useBuiltInWebServerPort="true">
-      <method v="2" />
+    <configuration name="PolicyTests.DatePolicyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
+      <option name="METHOD_NAME" value="DatePolicyTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="OwnerManagerMenu.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/WSEP/dev/onlineStore/src/main/resources/templates/OwnerManagerMenu.html" useBuiltInWebServerPort="true">
-      <method v="2" />
+    <configuration name="PolicyTests.NoConditionPolicyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
+      <option name="METHOD_NAME" value="NoConditionPolicyTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="StoreCommentsAndRatings.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/WSEP/dev/onlineStore/src/main/resources/templates/StoreCommentsAndRatings.html" useBuiltInWebServerPort="true">
-      <method v="2" />
+    <configuration name="PolicyTests.basicNameDiscountTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
+      <option name="METHOD_NAME" value="basicNameDiscountTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
-    <configuration name="error.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63343/WSEP/dev/onlineStore/src/main/resources/templates/error.html" useBuiltInWebServerPort="true">
-      <method v="2" />
+    <configuration name="UnitTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="UnitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="UnitTests" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="SpringbootHtmlApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="springboot-html" />
@@ -106,13 +185,21 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="JUnit.UnitTests in springboot-html" />
+      <item itemvalue="JUnit.PolicyTests.NoConditionPolicyTest" />
+      <item itemvalue="JUnit.PolicyTests" />
+      <item itemvalue="JUnit.PolicyTests.DatePolicyTest" />
+      <item itemvalue="JUnit.PolicyTests.basicNameDiscountTest" />
+      <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JavaScript Debug.StoreCommentsAndRatings.html" />
-        <item itemvalue="JavaScript Debug.Bag.html" />
-        <item itemvalue="JavaScript Debug.Buy.html" />
-        <item itemvalue="JavaScript Debug.OwnerManagerMenu.html" />
-        <item itemvalue="JavaScript Debug.error.html" />
+        <item itemvalue="JUnit.UnitTests in springboot-html" />
+        <item itemvalue="JUnit.PolicyTests" />
+        <item itemvalue="JUnit.PolicyTests.NoConditionPolicyTest" />
+        <item itemvalue="JUnit.PolicyTests.DatePolicyTest" />
+        <item itemvalue="JUnit.PolicyTests.basicNameDiscountTest" />
       </list>
     </recent_temporary>
   </component>
@@ -125,6 +212,8 @@
       <option name="presentableId" value="Default" />
       <updated>1684171346129</updated>
       <workItem from="1684171347132" duration="56052000" />
+      <workItem from="1684849704258" duration="2164000" />
+      <workItem from="1684914630994" duration="389000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -140,14 +229,61 @@
       <option name="project" value="LOCAL‎" />
       <updated>1684172157800</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fixed errors from project structure changes after gui impl">
+      <created>1684689686161</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1684689686161</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Natalie&amp;Majd web-app" />
-    <option name="LAST_COMMIT_MESSAGE" value="Natalie&amp;Majd web-app" />
+    <MESSAGE value="fixed errors from project structure changes after gui impl" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed errors from project structure changes after gui impl" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java</url>
+          <line>1368</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java</url>
+          <line>234</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

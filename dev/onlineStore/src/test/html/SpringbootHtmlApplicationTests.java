@@ -1,4 +1,4 @@
-package com.okayjava.html;
+package html;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
