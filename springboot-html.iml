@@ -5,4 +5,9 @@
       <configuration />
     </facet>
   </component>
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/dev/onlineStore">
+      <sourceFolder url="file://$MODULE_DIR$/dev/onlineStore/src/test" isTestSource="true" />
+    </content>
+  </component>
 </module>

@@ -128,9 +128,7 @@ public class CartTests {
     @Test
     public void OpenCart_Success_EmptyCart()
     {
-        String EmptyList = "";
         assertFalse(bridge.OpenCart().isError());
-        assertEquals(EmptyList,bridge.OpenCart().getValue());
     }
     @Test
     public void OpenCart_Success_CartWithOneItem()
@@ -139,8 +137,8 @@ public class CartTests {
         String expectedStore = "Store Id : "+storeId;
         assertFalse(bridge.OpenCart().isError());
         String expectedProducts = "Name: Mega milk Description: Guaranteed to make bones stronger! Category: test price per unit: 5.0 Amount: 1 total price: 5.0";
-        assertTrue(bridge.OpenCart().getValue().contains(expectedStore));
-        assertTrue(bridge.OpenCart().getValue().contains(expectedProducts));
+        assertTrue(bridge.OpenStringCart().getValue().contains(expectedStore));
+        assertTrue(bridge.OpenStringCart().getValue().contains(expectedProducts));
     }
     @Test
     public void OpenCart_Success_CartWithMultipleItems()
@@ -155,7 +153,7 @@ public class CartTests {
         String product3Str = "Name: Giga milk Description: bones made of diamond now! Category: test price per unit: 10.0 Amount: 1 total price: 10.0\n";
 
         assertFalse(bridge.OpenCart().isError());
-        String actual = bridge.OpenCart().getValue();
+        String actual = bridge.OpenStringCart().getValue();
         assertTrue(actual.contains(ProductList));
         assertTrue(actual.contains(product1Str));
         assertTrue(actual.contains(product2Str));

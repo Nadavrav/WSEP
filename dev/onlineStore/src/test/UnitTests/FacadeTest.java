@@ -1,7 +1,6 @@
 package UnitTests;
 
 import DomainLayer.Facade;
-import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.Permission;
@@ -331,8 +330,8 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid,storeId,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            f.addProductToCart(pid,storeId,1,visitorId);
+            String actual = f.getStringProductsInMyCart(visitorId);
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
@@ -365,9 +364,9 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             int pid2=f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
-            f.addProductToCart(pid1,storeId,visitorId);
-            f.addProductToCart(pid2,storeId,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
+            f.addProductToCart(pid2,storeId,1,visitorId);
+            String actual = f.getStringProductsInMyCart(visitorId);
             String expectedStoreIdStr = "Store Id : "+storeId+"\n";
             String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice+"\n";
             String expectedProduct2Str = "Name: "+pName2+" Description: "+pDesc2+" Category: "+pCat2+" price per unit: "+pPrice2+" Amount: 1 total price: "+pPrice2+"\n";
@@ -397,9 +396,9 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid1,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
             f.changeCartProductQuantity(pid1, storeId, newAmount,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getStringProductsInMyCart(visitorId);
             String expectedStoreIdStr = "Store Id : "+storeId+"\n";
             String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount+" total price: "+newAmount*pPrice+"\n";
             Assertions.assertTrue(actual.contains(expectedStoreIdStr));
@@ -434,11 +433,11 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             int pid2=f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
-            f.addProductToCart(pid1,storeId,visitorId);
-            f.addProductToCart(pid2,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
+            f.addProductToCart(pid2,storeId,1,visitorId);
             f.changeCartProductQuantity(pid1, storeId, newAmount1,visitorId);
             f.changeCartProductQuantity(pid2, storeId, newAmount2,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getStringProductsInMyCart(visitorId);
             String expectedStoreIdStr = "Store Id : "+storeId+"\n";
             String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount1+" total price: "+newAmount1*pPrice+"\n";
             String expectedProduct2Str = "Name: "+pName2+" Description: "+pDesc2+" Category: "+pCat2+" price per unit: "+pPrice2+" Amount: "+newAmount2+" total price: "+newAmount2*pPrice2+"\n";
@@ -480,11 +479,11 @@ class FacadeTest {
             f.login(visitorId,Username2,password1);
             int storeId2 = f.OpenNewStore(visitorId,"DiffrentStore");
             int pid2=f.AddProduct(visitorId,storeId2,pName2,pPrice2,pCat2,pQuan2,pDesc2);
-            f.addProductToCart(pid1,storeId1,visitorId);
-            f.addProductToCart(pid2,storeId2,visitorId);
+            f.addProductToCart(pid1,storeId1,1,visitorId);
+            f.addProductToCart(pid2,storeId2,1,visitorId);
             f.changeCartProductQuantity(pid1, storeId1, newAmount1,visitorId);
             f.changeCartProductQuantity(pid2, storeId2, newAmount2,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getStringProductsInMyCart(visitorId);
             String expectedStoreId1Str = "Store Id : "+storeId1+"\n";
             String expectedStoreId2Str = "Store Id : "+storeId2+"\n";
             String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount1+" total price: "+newAmount1*pPrice+"\n";
@@ -521,7 +520,7 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
-            Assertions.assertThrows(Exception.class,()->f.addProductToCart(0,1000,visitorId));
+            Assertions.assertThrows(Exception.class,()->f.addProductToCart(0,1000,1,visitorId));
         }
         catch (Exception e)
         {//Should happen
@@ -550,7 +549,7 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
-            Assertions.assertThrows(Exception.class,()->f.addProductToCart(0,0,1000));
+            Assertions.assertThrows(Exception.class,()->f.addProductToCart(0,0,1,1000));
         }
         catch (Exception e)
         {//Should happen
@@ -1131,7 +1130,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid,storeId,visitorId);
+            f.addProductToCart(pid,storeId,1,visitorId);
             List<String> actual = f.purchaseCart(visitorId,123,"Adress");
             List<String> expected = new LinkedList<>();
             Assertions.assertEquals(expected,actual);
@@ -1157,7 +1156,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid,storeId,visitorId);
+            f.addProductToCart(pid,storeId,1,visitorId);
             Assertions.assertThrows(Exception.class,()->f.purchaseCart(1000,123,"Adress"));
         }
         catch (Exception e)
@@ -1187,8 +1186,8 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             int pid2 = f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
-            f.addProductToCart(pid1,storeId,visitorId);
-            f.addProductToCart(pid2,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
+            f.addProductToCart(pid2,storeId,1,visitorId);
             List<String> actual = f.purchaseCart(visitorId,123,"Adress");
             List<String> expected = new LinkedList<>();
             Assertions.assertEquals(expected,actual);
@@ -1214,7 +1213,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid1,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
             f.changeCartProductQuantity(pid1,storeId,100,visitorId);
             List<String> actual = f.purchaseCart(visitorId,123,"Adress");
             List<String> expected = new LinkedList<>();
@@ -2384,12 +2383,12 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
 
-            f.addProductToCart(pid1,storeId,visitorId);
+            f.addProductToCart(pid1,storeId,1,visitorId);
             f.purchaseCart(visitorId,123,"Adress");
             List<String> actual = f.GetStoreHistoryPurchase(storeId,visitorId);
             List<String> expected = new LinkedList<>();
             Bag b = new Bag(storeId);
-            b.addProduct(new StoreProduct(pid1,pName,pPrice,pCat,1,pDesc));
+            b.addProduct(new StoreProduct(pid1,pName,pPrice,pCat,1,pDesc),1);
             expected.add(b.bagToString());
             String es = expected.get(0);
             String as = actual.get(0);
@@ -2416,7 +2415,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid  =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid,storeId,visitorId);
+            f.addProductToCart(pid,storeId,1,visitorId);
             f.purchaseCart(visitorId,123,"Adress");
             f.logout(visitorId);
             Assertions.assertThrows(Exception.class,()->f.GetStoreHistoryPurchase(storeId,visitorId));
@@ -2441,7 +2440,7 @@ class FacadeTest {
             f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid,storeId,visitorId);
+            f.addProductToCart(pid,storeId,1,visitorId);
             f.purchaseCart(visitorId,123,"Adress");
             Assertions.assertThrows(Exception.class,()->f.GetStoreHistoryPurchase(1000,visitorId));
         }
@@ -2467,7 +2466,7 @@ class FacadeTest {
 
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid,storeId,visitorId);
+            f.addProductToCart(pid,storeId,1,visitorId);
             Date today = new Date();
             f.purchaseCart(visitorId,123,"Adress");
             f.logout(visitorId);
@@ -2501,7 +2500,7 @@ class FacadeTest {
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid,storeId,visitorId);
+            f.addProductToCart(pid,storeId,1,visitorId);
             f.purchaseCart(visitorId,123,"Adress");
             Assertions.assertThrows(Exception.class,()->f.GetUserHistoryPurchase(Username,visitorId));
         }
@@ -2525,7 +2524,7 @@ class FacadeTest {
             f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
-            f.addProductToCart(pid,storeId,visitorId);
+            f.addProductToCart(pid,storeId,1,visitorId);
             f.purchaseCart(visitorId,123,"Adress");
             Assertions.assertThrows(Exception.class,()->f.GetUserHistoryPurchase("NotRealUser",visitorId));
         }

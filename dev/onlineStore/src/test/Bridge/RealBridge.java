@@ -6,6 +6,7 @@ import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
+import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import org.opentest4j.TestSkippedException;
@@ -171,7 +172,7 @@ public class RealBridge implements Bridge {
 
     @Override
     public boolean addToCart(int productId, int storeId) {
-        return !service.addProductToCart(productId,storeId ).isError();
+        return !service.addProductToCart(productId,storeId,1 ).isError();
     }
 
     @Override
@@ -180,8 +181,15 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Response<String> OpenCart() {
+    public Response<ServiceCart> OpenCart() {
         return service.getProductsInMyCart();
+    }
+    @Override
+    public Response<String> OpenStringCart() {
+        Response<ServiceCart> r=service.getProductsInMyCart();
+        if(!r.isError())
+            return new Response<>(r.getValue().toString());
+        return new Response<>(r.getMessage(),true);
     }
 
     @Override

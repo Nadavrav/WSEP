@@ -4,6 +4,7 @@ import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.PurchaseRecord;
+import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
@@ -193,8 +194,8 @@ public interface Bridge {
      * Function to open a user's cart
      * @return A string list of id's of the items in the user's cart
      */
-    Response<String> OpenCart();
-
+    Response<ServiceCart> OpenCart();
+    Response<String> OpenStringCart();
     /**
      * A function to change the quantity of an item in a user's cart
      * @param productId - the id of the item whose quantity we want to change

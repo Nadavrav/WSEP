@@ -2,14 +2,12 @@ package DomainLayer;
 
 
 
-import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
 
-import DomainLayer.Stores.Rating;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
@@ -17,10 +15,8 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
-import ServiceLayer.ServiceObjects.ServiceStore;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 public class Facade {
@@ -188,6 +184,11 @@ public class Facade {
         }
 
     }
+
+    public boolean isAdmin(int visitorID){
+        return onlineList.get(visitorID) instanceof Admin;
+    }
+
     private void registerInitialAdmin() {
         logger.info("Starting initial admin registration");
         if(registeredUserList.containsKey("admin")) {
@@ -237,7 +238,7 @@ public class Facade {
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
-
+        //
         RegisteredUser user = registeredUserList.get(userName);
         boolean b = registeredUserList.get("admin")!=null;
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
@@ -273,7 +274,7 @@ public class Facade {
         return visitorId;
     }
 
-     public void addProductToCart(int productId,int storeId, int visitorId) throws Exception {//2.3
+     public void addProductToCart(int productId, int storeId, int amount, int visitorId) throws Exception {//2.3
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("trying to add product from null user");
@@ -295,7 +296,7 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
-            user.addProductToCart(storeId, product,store::passesPolicies);
+            user.addProductToCart(storeId, product,amount,store::passesPolicies);
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
         catch (Exception e){
@@ -372,7 +373,18 @@ public class Facade {
     }
 
 
-    public String getProductsInMyCart(int visitorId) throws Exception {//2.4
+    public Cart getProductsInMyCart(int visitorId) throws Exception {//2.4
+        SiteVisitor user = onlineList.get(visitorId);
+        if (user == null) {
+            logger.warning("trying to add from a null user");
+            throw  new Exception("Invalid Visitor ID");
+        }
+
+        return user.getCart();
+        //return user.GetCart
+
+    }
+    public String getStringProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("trying to add from a null user");

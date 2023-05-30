@@ -53,11 +53,11 @@ public class PolicyTests {
             facade.AddProduct(visitorId,storeId,yogurt);
             facade.AddProduct(visitorId,storeId,chicken);
             facade.AddProduct(visitorId,storeId,steak);
-            facade.addProductToCart(bread.getProductId(), storeId,visitorId);
-            facade.addProductToCart(milk.getProductId(), storeId,visitorId);
-            facade.addProductToCart(yogurt.getProductId(), storeId,visitorId);
-            facade.addProductToCart(chicken.getProductId(), storeId,visitorId);
-            facade.addProductToCart(steak.getProductId(), storeId,visitorId);
+            facade.addProductToCart(bread.getProductId(), storeId,1,visitorId);
+            facade.addProductToCart(milk.getProductId(), storeId,1,visitorId);
+            facade.addProductToCart(yogurt.getProductId(), storeId,1,visitorId);
+            facade.addProductToCart(chicken.getProductId(), storeId,1,visitorId);
+            facade.addProductToCart(steak.getProductId(), storeId,1,visitorId);
         }
         catch (Exception ignored){
             fail();

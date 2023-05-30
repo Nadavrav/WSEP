@@ -15,10 +15,6 @@ import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
 import ServiceLayer.ServiceObjects.ServiceCart;
-import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
-import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
-
-import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
 import ServiceLayer.ServiceObjects.ServiceStore;
 
@@ -43,6 +39,17 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
         return new Response<>(visitorId);
+    }
+
+    public Response<Boolean> isAdmin(){
+        Boolean isAdmin;
+        try{
+            isAdmin=facade.isAdmin(visitorId);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>(isAdmin);
     }
 
     public Response<?> ExitSiteVisitor() {//1.2
@@ -104,11 +111,11 @@ public class Service {
         return new Response<>(visitorId);
     }
 
-    public Response<?> addProductToCart(int productId, int storeId) {//2.3
+    public Response<?> addProductToCart(int productId, int storeId,int amount) {//2.3
 
 
         try{
-            facade.addProductToCart(productId,storeId,visitorId);
+            facade.addProductToCart(productId,storeId,amount,visitorId);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -140,15 +147,13 @@ public class Service {
     }
 
 
-    public Response<String> getProductsInMyCart() {//2.4
-        String products;
+    public Response<ServiceCart> getProductsInMyCart() {//2.4
         try {
-            products = facade.getProductsInMyCart(visitorId);
+            return new Response<>(new ServiceCart(facade.getProductsInMyCart(visitorId)));
 
         } catch (Exception e) {
             return new Response<>(e.getMessage(), true);
         }
-        return new Response<>(products);
     }
     /*public Response<?> getProductsInMyCart1()
     {
@@ -466,7 +471,7 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<?> getStoresName()  {
+    public Response<?> getStoresName(){
         try{
            return new Response<>(facade.getStoresName());
         }catch (Exception e){

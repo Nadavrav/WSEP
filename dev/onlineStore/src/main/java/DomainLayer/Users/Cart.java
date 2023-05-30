@@ -21,7 +21,7 @@ public class Cart {
   }
 
         //check if there is bag to store
-        public void addProductToCart (int storeId, StoreProduct product, CheckStorePolicyCallback callback){
+        public void addProductToCart (int storeId, StoreProduct product,int amount, CheckStorePolicyCallback callback){
             Bag bag = bagList.get(storeId);
             if (bag == null) {
                 // If bag doesn't exist, create a new bag and add it to the bag list
@@ -29,10 +29,10 @@ public class Cart {
                 bagList.put(storeId, bag);
                 logger.info("New bag created for store with ID: " + storeId);
             }
-            bag.addProduct(product);
+            bag.addProduct(product,amount);
             logger.info("Product added to cart for store with ID: " + storeId);
         }
-        public void addProductToCart (int storeId, StoreProduct product){
+        public void addProductToCart (int storeId, StoreProduct product,int amount){
             Bag bag = bagList.get(storeId);
             if (bag == null) {
                 // If bag doesn't exist, create a new bag and add it to the bag list
@@ -40,7 +40,7 @@ public class Cart {
                 bagList.put(storeId, bag);
                 logger.info("New bag created for store with ID: " + storeId);
             }
-            bag.addProduct(product);
+            bag.addProduct(product,amount);
             logger.info("Product added to cart for store with ID: " + storeId);
     }
         public void removeProductFromCart ( int storeId, StoreProduct product){

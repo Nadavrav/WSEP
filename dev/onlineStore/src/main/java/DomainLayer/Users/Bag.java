@@ -57,11 +57,11 @@ public class Bag {
     public boolean passesPolicy(){
         return checkPolicy.checkBag(this);
     }
-    public void addProduct(StoreProduct product) {
+    public void addProduct(StoreProduct product,int amount) {
         logger.info("Starting add product");
         if(productList.get(product)!=null)
             throw new RuntimeException("Cart already contains "+product.getName());
-        productList.put(product,new CartProduct(product));
+        productList.put(product,new CartProduct(product,amount));
         logger.info("Add product Succeeded");
     }
     public void addProduct(CartProduct product) {
