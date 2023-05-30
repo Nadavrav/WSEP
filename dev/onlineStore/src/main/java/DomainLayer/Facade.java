@@ -377,14 +377,14 @@ public class Facade {
     }
 
 
-    public String getProductsInMyCart(int visitorId) throws Exception {//2.4
+    public Cart getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("trying to add from a null user");
             throw  new Exception("Invalid Visitor ID");
         }
 
-        return user.cartToString();
+        return user.getCart();
         //return user.GetCart
 
     }
