@@ -20,4 +20,5 @@ public interface Condition {
      * @return true or false
      */
     boolean equals(Condition condition);
+
 }

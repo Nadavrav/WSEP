@@ -1,6 +1,8 @@
 package ServiceLayer.ServiceObjects.ServiceDiscounts;
 
 import DomainLayer.Stores.Products.CartProduct;
+import DomainLayer.Users.Cart;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
 
 import java.util.HashSet;
 
@@ -9,12 +11,15 @@ public class ServiceAppliedDiscount {
     private final double discountPercent;
     private final String discountDescription;
 
-    private final HashSet<CartProduct> productsInDiscount;
+    private final HashSet<ServiceCartProduct> productsInDiscount;
 
     public ServiceAppliedDiscount(String discountDescription, double discountPercent, HashSet<CartProduct> productsInDiscount) {
         this.discountDescription=discountDescription;
         this.discountPercent = discountPercent;
-        this.productsInDiscount = productsInDiscount;
+        this.productsInDiscount=new HashSet<>();
+        for(CartProduct cartProduct:productsInDiscount){
+            this.productsInDiscount.add(new ServiceCartProduct(cartProduct));
+        }
         double accumulatedTotalAmount = 0;
         for(CartProduct product:productsInDiscount){
             accumulatedTotalAmount += product.getAmount() * (product.getPrice() * (discountPercent / 100));
@@ -34,10 +39,10 @@ public class ServiceAppliedDiscount {
         return totalSaved;
     }
 
-    public HashSet<CartProduct> getProductsInDiscount() {
+    public HashSet<ServiceCartProduct> getProductsInDiscount() {
         return productsInDiscount;
     }
-    public double calculateProductSavings(CartProduct cartProduct){
+    public double calculateProductSavings(ServiceCartProduct cartProduct){
         return (cartProduct.getAmount()*cartProduct.getPrice())*(discountPercent/100);
     }
 }

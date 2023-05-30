@@ -25,4 +25,9 @@ public abstract class CompositeCondition implements Condition {
             return ((CompositeCondition)condition).getConditions().equals(conditions);
         return false;
     }
+    @Override
+    public String toString(){
+      //  return "conditi"+condition
+        return "STUB";
+    }
 }
