@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://plus.unsplash.com/premium_photo-1670462145715-c32d0c91e81b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTl8fGJhY2tncm91bmQlMjBpbWFnZSUyMHdpdGglMjBzdG9yZXN8ZW58MHx8MHx8&auto=format&fit=crop&w=600&q=60");
+            background-size: cover;
+            background-position: center;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 78vh;
+        }
+
+        .cart {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+        }
+
+        .product-list-container {
+            max-height: 350px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.07);
+            padding: 10px;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            flex-basis: 10%;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .total-amount {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .buy-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .buy-button button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        .buy-button button:hover {
+            background-color: #555;
+            cursor: pointer;
+        }
+
+        .remove-button {
+            background-color: #555;
+            color: #fff;
+            padding: 7px 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 10px;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        .remove-button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>My Shopping Cart</h1>
+</header>
+
+<main>
+<!--    <div >-->
+<!--        <button style="background-color: transparent;" onclick="window.location.href='MainPage';">Home</button>-->
+<!--    </div>-->
+    <button style="position: fixed;top: 10px;left: 20px;background-color: transparent;">
+        <a th:href="@{MainPage}" th:if="${logged}">Home</a>
+        <a th:href="@{MainPage}" th:unless="${logged}">Home</a>
+    </button>
+    <section class="cart">
+        <div class="product-list-container">
+            <div class="product-list">
+                <div th:each="product : ${cartList}" class="product">
+                    <h3 th:text="${product[0]}"></h3> <!-- Product name -->
+                    <p th:text="'$' + ${product[1]} + ' x ' + ${product[2]}"></p> <!-- Price -->
+                    <button th:action="@{/remove-product-from-cart}" method="post" class="remove-button">
+                        <input type="hidden" name="productId" th:value="${product[3]}" />
+                        Remove
+                    </button>
+                </div>
+<!--                <div class="product">-->
+<!--                    <h3>Product1</h3>-->
+<!--                    <p>$30 X 6</p>-->
+<!--                    <button class="remove-button">Remove</button>-->
+<!--                </div>-->
+<!--                <div class="product">-->
+<!--                    <h3>Product1</h3>-->
+<!--                    <p>$30 X 6</p>-->
+<!--                    <button class="remove-button">Remove</button>-->
+<!--                </div>-->
+<!--                <div class="product">-->
+<!--                    <h3>Product1</h3>-->
+<!--                    <p>$30 X 6</p>-->
+<!--                    <button class="remove-button">Remove</button>-->
+<!--                </div>-->
+<!--                <div class="product">-->
+<!--                    <h3>Product1</h3>-->
+<!--                    <p>$30 X 6</p>-->
+<!--                    <button class="remove-button">Remove</button>-->
+<!--                </div>-->
+
+            </div>
+        </div>
+
+        <div class="total-amount">
+            <h3>Total Amount:</h3>
+            <p th:text="'$' + ${totalAmount}"></p>
+        </div>
+        <div class="buy-button">
+            <button onclick="window.location.href='/Buy';">BUY</button>
+        </div>
+    </section>
+</main>
