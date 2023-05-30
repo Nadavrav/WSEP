@@ -1,15 +1,14 @@
 package DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions;
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
 
-public class LocalHourRangeCondition implements Condition {
+public class LocalHourRangeCondition implements BooleanCondition {
 
     private final int lowerBoundaryHour;
     private final int lowerBoundaryMin;

@@ -1,12 +1,13 @@
 package DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions;
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
 
 import java.util.HashSet;
 
-public class MaxBagPriceCondition implements Condition {
+public class MaxBagPriceCondition implements BooleanCondition {
     private final double price;
 
     public MaxBagPriceCondition(double price) {
