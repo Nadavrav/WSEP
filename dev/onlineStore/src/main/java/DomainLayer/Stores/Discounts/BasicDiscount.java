@@ -3,6 +3,9 @@ package DomainLayer.Stores.Discounts;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+
+import java.util.HashSet;
 
 public class BasicDiscount extends Discount {
 
@@ -19,7 +22,6 @@ public class BasicDiscount extends Discount {
         super(description,condition);
         this.discount=discount;
     }
-
 
     @Override
     public double calcDiscountAmount(Bag bag){

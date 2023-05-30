@@ -4,88 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/BooleanAfterFilterCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/FilterOnlyIfCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ConditionTypes/BooleanCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ConditionTypes/FilterCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/dev/logs/23-05-16 15-21-22 Error Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/dev/logs/23-05-16 15-22-05 Error Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/dev/logs/23-05-16 15-22-05 Info Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/dev/logs/23-05-16 15-23-44 Error Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/dev/logs/23-05-16 15-23-44 Info Log.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/BetweenDatesCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/BetweenDatesCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsCategoryCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsCategoryCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsProductCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsProductCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DateCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DateCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DoesntContainProductCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DoesntContainProductCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/LocalHourRangeCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/LocalHourRangeCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxBagPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxBagPriceCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxTotalProductAmountCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxTotalProductAmountCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinBagPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinBagPriceCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinTotalProductAmountCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinTotalProductAmountCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/CategoryCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/CategoryCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxPriceCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxQuantityCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxQuantityCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinPriceCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinQuantityCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinQuantityCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NameCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NameCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NoCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NoCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BooleanLogicConditions/AndCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/AndCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BooleanLogicConditions/LogicCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/LogicCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BooleanLogicConditions/OrCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/OrCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BooleanLogicConditions/WrapperCondition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BooleanLogicConditions/XorCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/XorCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiFilterCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiAndCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiAndCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiOrCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiOrCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/Condition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ConditionTypes/Condition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/AdditiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/AdditiveDiscount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/BasicDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/BasicDiscount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MaxSelectiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MaxSelectiveDiscount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MinSelectiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MinSelectiveDiscount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Policies/Policy.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Policies/Policy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/DiscountTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/DiscountTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/PolicyTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/PolicyTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/BetweenDatesCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/BetweenDatesCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsCategoryCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsCategoryCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsProductCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsProductCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DateCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DateCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DoesntContainProductCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DoesntContainProductCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/LocalHourRangeCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/LocalHourRangeCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxBagPriceCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxBagPriceCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxTotalProductAmountCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxTotalProductAmountCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinBagPriceCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinBagPriceCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinTotalProductAmountCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinTotalProductAmountCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/CategoryCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/CategoryCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxPriceCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxPriceCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxQuantityCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxQuantityCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinPriceCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinPriceCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinQuantityCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinQuantityCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NameCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NameCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NoCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NoCondition.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BooleanLogicConditions/AndCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BooleanLogicConditions/LogicCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BooleanLogicConditions/OrCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BooleanLogicConditions/WrapperCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/BooleanLogicConditions/XorCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/ComplexConditions/CompositeCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/ComplexConditions/MultiAndCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/ComplexConditions/MultiOrCondition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Conditions/Condition.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/AdditiveDiscount.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/AdditiveDiscount.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/BasicDiscount.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/BasicDiscount.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/Discount.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/Discount.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/MaxSelectiveDiscount.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/MaxSelectiveDiscount.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/MinSelectiveDiscount.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Discounts/MinSelectiveDiscount.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Policies/Policy.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/DomainLayer/Stores/Policies/Policy.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/test-classes/UnitTests/DiscountTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/test-classes/UnitTests/DiscountTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/test-classes/UnitTests/PolicyTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/test-classes/UnitTests/PolicyTests.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/test-classes/com/okayjava/html/SpringbootHtmlApplicationTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/springboot-html.iml" beforeDir="false" afterPath="$PROJECT_DIR$/springboot-html.iml" afterDir="false" />
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="extended policy callback framework to support calculations of discounts inside a bag">
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/Condition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/Condition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceAppliedDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceAppliedDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceProducts/ServiceCartProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceProducts/ServiceCartProduct.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +27,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="implement-policies" />
+        <entry key="$PROJECT_DIR$" value="fix-filter-bug" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -153,6 +77,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/natal/Desktop/web-app/WSEP&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -173,57 +98,66 @@
       <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.PolicyTests (1)">
-    <configuration name="DiscountTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Spring Boot.SpringbootHtmlApplication">
+    <configuration name="PolicyTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="UnitTests.*" />
+          <option name="PATTERN" value="tests.UnitTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="UnitTests.DiscountTest" />
+      <option name="PACKAGE_NAME" value="tests.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PolicyTests (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PolicyTests.DatePolicyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="UnitTests.*" />
+          <option name="PATTERN" value="tests.UnitTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="UnitTests.PolicyTests" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PolicyTests.MinProductAmountTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="UnitTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="UnitTests.PolicyTests" />
-      <option name="METHOD_NAME" value="MinProductAmountTest" />
+      <option name="PACKAGE_NAME" value="tests.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
+      <option name="METHOD_NAME" value="DatePolicyTest" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UnitTests in springboot-html (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PolicyTests.NoConditionPolicyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
-      <option name="TEST_OBJECT" value="directory" />
-      <dir value="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
+      <option name="METHOD_NAME" value="NoConditionPolicyTest" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PolicyTests.basicNameDiscountTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="tests.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
+      <option name="METHOD_NAME" value="basicNameDiscountTest" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -263,20 +197,20 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.DiscountTest" />
-      <item itemvalue="JUnit.PolicyTests (1)" />
-      <item itemvalue="JUnit.PolicyTests.MinProductAmountTest" />
-      <item itemvalue="JUnit.UnitTests in springboot-html (1)" />
       <item itemvalue="JUnit.UnitTests in springboot-html" />
+      <item itemvalue="JUnit.PolicyTests.NoConditionPolicyTest" />
+      <item itemvalue="JUnit.PolicyTests" />
+      <item itemvalue="JUnit.PolicyTests.DatePolicyTest" />
+      <item itemvalue="JUnit.PolicyTests.basicNameDiscountTest" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.PolicyTests (1)" />
-        <item itemvalue="JUnit.PolicyTests.MinProductAmountTest" />
-        <item itemvalue="JUnit.DiscountTest" />
-        <item itemvalue="JUnit.UnitTests in springboot-html (1)" />
         <item itemvalue="JUnit.UnitTests in springboot-html" />
+        <item itemvalue="JUnit.PolicyTests" />
+        <item itemvalue="JUnit.PolicyTests.NoConditionPolicyTest" />
+        <item itemvalue="JUnit.PolicyTests.DatePolicyTest" />
+        <item itemvalue="JUnit.PolicyTests.basicNameDiscountTest" />
       </list>
     </recent_temporary>
   </component>
@@ -291,6 +225,7 @@
       <workItem from="1684171347132" duration="56052000" />
       <workItem from="1684849704258" duration="2164000" />
       <workItem from="1684914630994" duration="389000" />
+      <workItem from="1685375107160" duration="9100000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -313,7 +248,28 @@
       <option name="project" value="LOCAL" />
       <updated>1684689686161</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="small bug in &lt; instead of &lt;= in price filter">
+      <created>1684960575186</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1684960575186</updated>
+    </task>
+    <task id="LOCAL-00005" summary="implemented Service object for receiving info after performing discount calculations on a bag">
+      <created>1685392933245</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1685392933245</updated>
+    </task>
+    <task id="LOCAL-00006" summary="extended policy callback framework to support calculations of discounts inside a bag">
+      <created>1685393117458</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1685393117458</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -345,28 +301,9 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Natalie&amp;Majd web-app" />
     <MESSAGE value="fixed errors from project structure changes after gui impl" />
-    <MESSAGE value="fixed bug ServiceStore constructor that always includes all store products" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed bug ServiceStore constructor that always includes all store products" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java</url>
-          <line>1368</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java</url>
-          <line>234</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/PolicyTests.java</url>
-          <line>84</line>
-          <option name="timeStamp" value="18" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="small bug in &lt; instead of &lt;= in price filter" />
+    <MESSAGE value="implemented Service object for receiving info after performing discount calculations on a bag" />
+    <MESSAGE value="extended policy callback framework to support calculations of discounts inside a bag" />
+    <option name="LAST_COMMIT_MESSAGE" value="extended policy callback framework to support calculations of discounts inside a bag" />
   </component>
 </project>

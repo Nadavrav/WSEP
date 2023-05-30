@@ -26,4 +26,9 @@ public abstract class MultiFilterCondition implements FilterCondition {
             return ((MultiFilterCondition)condition).getConditions().equals(conditions);
         return false;
     }
+    @Override
+    public String toString(){
+      //  return "conditi"+condition
+        return "STUB";
+    }
 }

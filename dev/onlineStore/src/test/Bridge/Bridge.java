@@ -140,7 +140,7 @@ public interface Bridge {
      * @param username user to add permission to
      * @param storeName store where the user is manager at
      * @param index an array containing at most 11 indexed who range from 1 to 11, each representing a permission to be added. index values:
-     *      *              1: Can Manage Stock,2: Can Change Policy And Discounts,3: Can Set Constraints,4: Can Appoint Store Owner,5: Can Remove Store Owner,
+     *      *              1: Can Manage Stock,2: Can Change Policy And ManyDiscounts,3: Can Set Constraints,4: Can Appoint Store Owner,5: Can Remove Store Owner,
      *      *              6: Can Appoint Store Manager,7: Can Change Permissions For Store Manager,8: Can Remove Store Manager,9: Can See Staff And Permissions,
      *      *              10: Can See Comments And Rating, 11: Can See Purchase History
      * @return true if done successfully, false otherwise

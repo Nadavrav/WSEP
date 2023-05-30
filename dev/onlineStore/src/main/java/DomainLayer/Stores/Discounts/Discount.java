@@ -2,7 +2,12 @@ package DomainLayer.Stores.Discounts;
 
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NoCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
+import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
+
+import java.util.HashSet;
 
 public abstract class Discount {
     protected Condition condition;
@@ -28,4 +33,7 @@ public abstract class Discount {
      * @return total saved by discounts
      */
     public abstract double calcDiscountAmount(Bag bag);
+    public HashSet<CartProduct> getValidProducts(Bag bag) {
+        return condition.passCondition(bag);
+    }
 }

@@ -1,7 +1,7 @@
 package DomainLayer.Users;
 
 import DomainLayer.Logging.UniversalHandler;
-import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
+import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Products.StoreProduct;
 
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class Cart {
   }
 
         //check if there is bag to store
-        public void addProductToCart (int storeId, StoreProduct product,int amount, CheckStorePolicyCallback callback){
+        public void addProductToCart (int storeId, StoreProduct product,int amount, StoreCallbacks callback){
             Bag bag = bagList.get(storeId);
             if (bag == null) {
                 // If bag doesn't exist, create a new bag and add it to the bag list

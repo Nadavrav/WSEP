@@ -1,6 +1,6 @@
 package DomainLayer.Users;
 
-import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
+import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Logging.UniversalHandler;
 
@@ -81,7 +81,7 @@ public class SiteVisitor{
 
         cart.addProductToCart(storeId,product,amount);
     }
-    public void addProductToCart(int storeId, StoreProduct product,int amount, CheckStorePolicyCallback callback) {//2.3
+    public void addProductToCart(int storeId, StoreProduct product,int amount, StoreCallbacks callback) {//2.3
         logger.info("Adding product with ID " + product.getProductId() + " to cart for store with ID " + storeId);
 
         cart.addProductToCart(storeId,product,amount,callback);
