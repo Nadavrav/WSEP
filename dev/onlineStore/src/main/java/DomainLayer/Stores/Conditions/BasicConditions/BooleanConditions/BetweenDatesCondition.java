@@ -1,15 +1,15 @@
 package DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions;
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 
-public class BetweenDatesCondition implements Condition {
+public class BetweenDatesCondition implements BooleanCondition {
     private final LocalDate fromDate;
 
     private final LocalDate untilDate;

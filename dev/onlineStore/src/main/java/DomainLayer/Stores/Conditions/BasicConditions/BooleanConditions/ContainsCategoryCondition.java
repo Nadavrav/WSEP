@@ -1,13 +1,14 @@
 package DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions;
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.Product;
 import DomainLayer.Users.Bag;
 
 import java.util.HashSet;
 
-public class ContainsCategoryCondition implements Condition {
+public class ContainsCategoryCondition implements BooleanCondition {
     private final String category;
 
     public ContainsCategoryCondition(String category) {

@@ -2,13 +2,7 @@
 <module version="4">
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$/dev/onlineStore" dumb="true">
-      <sourceFolder url="file://$MODULE_DIR$/dev/onlineStore/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/dev/onlineStore/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/dev/onlineStore/src/test" isTestSource="true" />
     </content>
-  </component>
-  <component name="FacetManager">
-    <facet type="Spring" name="Spring">
-      <configuration />
-    </facet>
   </component>
 </module>

@@ -1,6 +1,7 @@
 package ServiceLayer.ServiceObjects.ServiceDiscounts;
 
-import DomainLayer.Stores.Conditions.Condition;
+
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 
 import java.util.Set;
 

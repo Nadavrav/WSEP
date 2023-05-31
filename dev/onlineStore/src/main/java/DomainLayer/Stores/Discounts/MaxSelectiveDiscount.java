@@ -1,6 +1,6 @@
 package DomainLayer.Stores.Discounts;
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Users.Bag;
 
 public class MaxSelectiveDiscount extends ManyDiscounts {

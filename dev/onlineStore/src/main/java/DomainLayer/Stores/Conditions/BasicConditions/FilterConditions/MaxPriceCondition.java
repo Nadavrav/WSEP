@@ -1,13 +1,14 @@
 package DomainLayer.Stores.Conditions.BasicConditions.FilterConditions;
 
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.FilterCondition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
 
 import java.util.HashSet;
 
-public class MaxPriceCondition implements Condition {
+public class MaxPriceCondition implements FilterCondition {
     private final double price;
 
     public MaxPriceCondition(double price) {

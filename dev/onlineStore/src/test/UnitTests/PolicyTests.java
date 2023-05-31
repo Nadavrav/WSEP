@@ -2,31 +2,17 @@ package UnitTests;
 
 import DomainLayer.Facade;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.DateCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MaxBagPriceCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinBagPriceCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinTotalProductAmountCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.*;
-import DomainLayer.Stores.Conditions.BooleanLogicConditions.AndCondition;
-import DomainLayer.Stores.Conditions.BooleanLogicConditions.OrCondition;
-import DomainLayer.Stores.Conditions.BooleanLogicConditions.WrapperCondition;
-import DomainLayer.Stores.Conditions.BooleanLogicConditions.XorCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.MultiAndCondition;
-import DomainLayer.Stores.Discounts.AdditiveDiscount;
-import DomainLayer.Stores.Discounts.BasicDiscount;
-import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
+import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
+import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.StoreProduct;
-import DomainLayer.Stores.Store;
 import DomainLayer.Users.Bag;
-import DomainLayer.Users.RegisteredUser;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PolicyTests {
-    //TODO: ADD POLICY TESTS
     Facade facade=Facade.getInstance();
     int storeId=0;
     private Bag fullBag;
@@ -82,6 +68,25 @@ public class PolicyTests {
             fail();
         }
         catch (Exception ignored){
+        }
+    }
+    //policy to have at least 5 dairy products to buy a cart
+    @Test
+    public void MinProductAmountTest(){
+            BooleanAfterFilterCondition condition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(5));
+        try {
+            facade.AddStorePolicy(visitorId,storeId,new Policy(condition));
+            facade.purchaseCart(visitorId, 4444, "Space");
+            fail();
+        }
+        catch (Exception ignored){
+            try{
+                facade.changeCartProductQuantity(milk.getProductId(),storeId,5,visitorId);
+                facade.purchaseCart(visitorId,444,"The Void");
+            }
+            catch (Exception e){
+                fail();
+            }
         }
     }
 }

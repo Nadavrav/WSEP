@@ -1,18 +1,20 @@
 package DomainLayer.Stores.Policies;
 
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NoCondition;
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
+import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Users.Bag;
 
 public class Policy {
-    private Condition condition;
-    public Policy(Condition condition){
+    private BooleanCondition condition;
+    public Policy(BooleanCondition condition){
         this.condition=condition;
     }
     public Policy(){
         this.condition=new NoCondition();
     }
-    public void SetCondition(Condition condition){
+    public void SetCondition(BooleanCondition condition){
         this.condition=condition;
     }
 
@@ -24,6 +26,6 @@ public class Policy {
      * @return boolean if the bag passes the policy.
      */
     public boolean passesPolicy(Bag bag){
-        return bag.getProducts().equals(condition.passCondition(bag));
+        return !condition.passCondition(bag).isEmpty();
     }
 }
