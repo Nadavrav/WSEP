@@ -332,7 +332,7 @@ class FacadeTest {
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
@@ -367,7 +367,7 @@ class FacadeTest {
             int pid2=f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
             f.addProductToCart(pid1,storeId,1,visitorId);
             f.addProductToCart(pid2,storeId,1,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String expectedStoreIdStr = "Store Id : "+storeId+"\n";
             String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice+"\n";
             String expectedProduct2Str = "Name: "+pName2+" Description: "+pDesc2+" Category: "+pCat2+" price per unit: "+pPrice2+" Amount: 1 total price: "+pPrice2+"\n";
@@ -399,7 +399,7 @@ class FacadeTest {
             int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid1,storeId,1,visitorId);
             f.changeCartProductQuantity(pid1, storeId, newAmount,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String expectedStoreIdStr = "Store Id : "+storeId+"\n";
             String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount+" total price: "+newAmount*pPrice+"\n";
             Assertions.assertTrue(actual.contains(expectedStoreIdStr));
@@ -438,7 +438,7 @@ class FacadeTest {
             f.addProductToCart(pid2,storeId,1,visitorId);
             f.changeCartProductQuantity(pid1, storeId, newAmount1,visitorId);
             f.changeCartProductQuantity(pid2, storeId, newAmount2,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String expectedStoreIdStr = "Store Id : "+storeId+"\n";
             String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount1+" total price: "+newAmount1*pPrice+"\n";
             String expectedProduct2Str = "Name: "+pName2+" Description: "+pDesc2+" Category: "+pCat2+" price per unit: "+pPrice2+" Amount: "+newAmount2+" total price: "+newAmount2*pPrice2+"\n";
@@ -484,7 +484,7 @@ class FacadeTest {
             f.addProductToCart(pid2,storeId2,1,visitorId);
             f.changeCartProductQuantity(pid1, storeId1, newAmount1,visitorId);
             f.changeCartProductQuantity(pid2, storeId2, newAmount2,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String expectedStoreId1Str = "Store Id : "+storeId1+"\n";
             String expectedStoreId2Str = "Store Id : "+storeId2+"\n";
             String expectedProduct1Str = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+newAmount1+" total price: "+newAmount1*pPrice+"\n";

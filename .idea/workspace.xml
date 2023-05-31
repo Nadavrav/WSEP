@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="extended policy callback framework to support calculations of discounts inside a bag">
-      <change beforePath="$PROJECT_DIR$/.idea/WSEP.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/WSEP.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/LocalHourRangeCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/LocalHourRangeCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" afterDir="false" />
-    </list>
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="fixed the whole SDK exploding again." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -213,7 +208,7 @@
       <workItem from="1684849704258" duration="2164000" />
       <workItem from="1684914630994" duration="389000" />
       <workItem from="1685375107160" duration="9100000" />
-      <workItem from="1685570300384" duration="324000" />
+      <workItem from="1685570300384" duration="825000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -257,7 +252,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685393117458</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="fixed the whole SDK exploding again.">
+      <created>1685571038688</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685571038688</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,6 +294,8 @@
     <MESSAGE value="small bug in &lt; instead of &lt;= in price filter" />
     <MESSAGE value="implemented Service object for receiving info after performing discount calculations on a bag" />
     <MESSAGE value="extended policy callback framework to support calculations of discounts inside a bag" />
-    <option name="LAST_COMMIT_MESSAGE" value="extended policy callback framework to support calculations of discounts inside a bag" />
+    <MESSAGE value="fix the whole SDK exploding again." />
+    <MESSAGE value="fixed the whole SDK exploding again." />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed the whole SDK exploding again." />
   </component>
 </project>
