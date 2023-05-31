@@ -3,7 +3,6 @@ package DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions;
 import DomainLayer.Stores.Conditions.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
