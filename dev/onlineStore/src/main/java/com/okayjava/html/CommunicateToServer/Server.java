@@ -6,6 +6,7 @@ import DomainLayer.Users.Permission;
 import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
@@ -71,7 +72,7 @@ public class Server {
         return service.loadData();
     }
 
-    public Response getProductsInMyCart() { //it should return list of strings
+    public Response<ServiceCart> getProductsInMyCart() { //it should return list of strings
         return service.getProductsInMyCart();
     }
 
