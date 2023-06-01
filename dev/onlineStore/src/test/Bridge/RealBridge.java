@@ -170,7 +170,7 @@ public class RealBridge implements Bridge {
 
     @Override
     public Response<String> OpenCart() {
-        return service.getProductsInMyCart(); //TODO: NIKITA
+        return new Response<>(service.getProductsInMyCart().getValue().toString()); //TODO: NIKITA
     }
 
     @Override

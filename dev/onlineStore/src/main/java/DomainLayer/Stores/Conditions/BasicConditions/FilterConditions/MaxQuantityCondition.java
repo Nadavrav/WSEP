@@ -1,13 +1,14 @@
 package DomainLayer.Stores.Conditions.BasicConditions.FilterConditions;
 
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.FilterCondition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
 
 import java.util.HashSet;
 
-public class MaxQuantityCondition implements Condition {
+public class MaxQuantityCondition implements FilterCondition {
     private final int quantity;
 
     public MaxQuantityCondition(int quantity) {
@@ -33,5 +34,9 @@ public class MaxQuantityCondition implements Condition {
 
     public int getQuantity() {
         return quantity;
+    }
+    @Override
+    public String toString(){
+        return "TODO";
     }
 }
