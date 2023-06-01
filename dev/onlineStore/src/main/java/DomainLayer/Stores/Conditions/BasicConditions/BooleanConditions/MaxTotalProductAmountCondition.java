@@ -33,4 +33,8 @@ public class MaxTotalProductAmountCondition implements BooleanCondition {
             return ((MaxTotalProductAmountCondition)condition).getAmount()==amount;
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

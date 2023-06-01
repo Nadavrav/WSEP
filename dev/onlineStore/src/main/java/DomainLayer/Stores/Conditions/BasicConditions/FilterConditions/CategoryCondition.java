@@ -33,4 +33,8 @@ public class CategoryCondition implements FilterCondition {
             return ((CategoryCondition)condition).getCategory().equals(category);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

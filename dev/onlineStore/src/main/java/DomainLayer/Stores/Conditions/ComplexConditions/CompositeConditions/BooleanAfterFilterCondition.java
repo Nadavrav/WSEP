@@ -43,4 +43,8 @@ public class BooleanAfterFilterCondition implements BooleanCondition {
             return ((BooleanAfterFilterCondition)condition).getFirstCondition().equals(firstCondition) && ((BooleanAfterFilterCondition)condition).getSecondCondition().equals(secondCondition);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

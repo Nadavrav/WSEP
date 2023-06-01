@@ -44,4 +44,8 @@ public class FilterOnlyIfCondition implements FilterCondition {
             return ((FilterOnlyIfCondition)condition).getFirstCondition().equals(firstCondition) && ((FilterOnlyIfCondition)condition).getSecondCondition().equals(secondCondition);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

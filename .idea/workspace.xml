@@ -4,7 +4,51 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="fixed the whole SDK exploding again." />
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="done-discount info is now the description the user gave, when defining the discount, applied discount is the same but includes the discount calculations for a given bag, plus a method to get savings per product">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/logs/23-05-29 17-30-56 Error Log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/logs/23-05-29 17-30-56 Info Log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/CallBacks/StoreCallbacks.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/CallBacks/StoreCallbacks.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/BetweenDatesCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/BetweenDatesCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsCategoryCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsCategoryCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsProductCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/ContainsProductCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DateCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DateCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DoesntContainProductCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DoesntContainProductCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/LocalHourRangeCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/LocalHourRangeCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxBagPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxBagPriceCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxTotalProductAmountCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MaxTotalProductAmountCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinBagPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinBagPriceCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinTotalProductAmountCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/MinTotalProductAmountCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/CategoryCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/CategoryCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxPriceCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxQuantityCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MaxQuantityCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinPriceCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinQuantityCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/MinQuantityCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NameCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NameCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NoCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/FilterConditions/NoCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/AndCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/AndCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/LogicCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/LogicCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/OrCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/OrCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/XorCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/XorCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/BooleanAfterFilterCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/BooleanAfterFilterCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/FilterOnlyIfCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/FilterOnlyIfCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiAndCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiAndCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiFilterCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiFilterCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiOrCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/MultiFilters/MultiOrCondition.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/AdditiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/AdditiveDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/BasicDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/BasicDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/ManyDiscounts.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/ManyDiscounts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MaxSelectiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MaxSelectiveDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MinSelectiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MinSelectiveDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Bag.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Bag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceAppliedDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceAppliedDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -259,7 +303,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685571038688</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="pulled condition changes from implement policies branch">
+      <created>1685571885211</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1685571885211</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -296,6 +347,8 @@
     <MESSAGE value="extended policy callback framework to support calculations of discounts inside a bag" />
     <MESSAGE value="fix the whole SDK exploding again." />
     <MESSAGE value="fixed the whole SDK exploding again." />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed the whole SDK exploding again." />
+    <MESSAGE value="pulled condition changes from implement policies branch" />
+    <MESSAGE value="done-discount info is now the description the user gave, when defining the discount, applied discount is the same but includes the discount calculations for a given bag, plus a method to get savings per product" />
+    <option name="LAST_COMMIT_MESSAGE" value="done-discount info is now the description the user gave, when defining the discount, applied discount is the same but includes the discount calculations for a given bag, plus a method to get savings per product" />
   </component>
 </project>

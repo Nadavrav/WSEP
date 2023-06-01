@@ -75,4 +75,8 @@ public class BetweenDatesCondition implements BooleanCondition {
         }
         return false;
     }
+    @Override
+    public String toString(){
+        return "the current date is between "+fromDate.toString()+" and "+untilDate.toString();
+    }
 }

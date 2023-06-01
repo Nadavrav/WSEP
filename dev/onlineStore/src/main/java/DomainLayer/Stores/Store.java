@@ -323,4 +323,24 @@ public class Store {
         }
         return discounts;
     }
+
+    public Collection<Discount> getDiscounts() {
+        return storeDiscounts;
+    }
+
+    public HashMap<CartProduct,Double> getDiscountPerProduct(Bag bag) {
+        if (bag == null)
+            throw new NullPointerException("Null bag in discount calculation");
+        HashMap<CartProduct,Double> totalMap = new HashMap<>();
+        for (Discount discount : storeDiscounts) {
+            HashMap<CartProduct,Double> currentMap = discount.calcDiscountPerProduct(bag);
+            for(CartProduct cartProduct:currentMap.keySet()){
+                if(totalMap.get(cartProduct)!=null){
+                    totalMap.put(cartProduct,totalMap.get(cartProduct)+currentMap.get(cartProduct));
+                }
+                else totalMap.put(cartProduct,currentMap.get(cartProduct));
+            }
+        }
+        return totalMap;
+    }
 }

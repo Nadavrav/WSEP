@@ -1423,7 +1423,9 @@ public class Facade {
         }
         return store.getProductRatingList(productId);
     }
-
+    public Collection<Discount> getStoreDiscounts(int storeId){
+        return storesList.get(storeId).getDiscounts();
+    }
     public List<Store> getStoresByUserName(int visitorId,String userName) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
         if(! (visitor instanceof RegisteredUser user)){
@@ -1443,9 +1445,6 @@ public class Facade {
     public double getBagDiscountSavings(int visitorId,int storeId) throws Exception {
         return getUserBag(visitorId,storeId).calcDiscountSavings();
     }
-    public HashMap<Discount,HashSet<CartProduct>> getBagDiscountedProducts(int visitorId,int storeId) throws Exception {
-        return getUserBag(visitorId,storeId).getProductsInADiscount();
-    }
     public boolean bagPassesPolicies(int visitorId,int storeId) throws Exception {
         return getUserBag(visitorId,storeId).passesPolicy();
     }
@@ -1459,6 +1458,9 @@ public class Facade {
             throw new Exception("no bag exists in the user's cart for the specified store");
         return bag;
     }
+    public HashMap<CartProduct,Double> getSavingsPerProduct(int visitorId,int storeId) throws Exception{
+        return getUserBag(visitorId,storeId).getSavingsPerProducts();
+    }
     private StoreCallbacks generateStoreCallback(Store store){
         return new StoreCallbacks() {
             @Override
@@ -1470,8 +1472,8 @@ public class Facade {
                 return store.calcSaved(bag);
             }
             @Override
-            public HashMap<Discount, HashSet<CartProduct>> calcDiscounts(Bag bag) {
-                return store.getValidProducts(bag);
+            public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag) {
+                return store.getDiscountPerProduct(bag);
             }
         };
     }

@@ -1,7 +1,6 @@
 package UnitTests;
 
 import DomainLayer.Facade;
-import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.Permission;

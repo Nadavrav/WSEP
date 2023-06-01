@@ -4,28 +4,21 @@ import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NoConditio
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class Discount {
-    protected Condition condition;
     protected String description;
-    public Discount(String  description){
+    public Discount(String description){
         this.description=description;
-        condition=new NoCondition();
     }
-    public Discount(String  description,Condition condition){
-        this.description=description;
-        this.condition=condition;
+
+    public String getDescription() {
+        return description;
     }
-    public Condition getConditions() {
-        return condition;
-    }
-    public void SetCondition(Condition condition){
-        this.condition=condition;
-    }
+
     /**
      * calculates the total amount saves by the discount on a product list, for products who pass the condition list
      * intuitions: run this on all discount for a bag, and remove sum of all discount from total price
@@ -33,7 +26,6 @@ public abstract class Discount {
      * @return total saved by discounts
      */
     public abstract double calcDiscountAmount(Bag bag);
-    public HashSet<CartProduct> getValidProducts(Bag bag) {
-        return condition.passCondition(bag);
-    }
+    public abstract HashMap<CartProduct,Double> calcDiscountPerProduct(Bag bag);
+    public abstract HashSet<CartProduct> getValidProducts(Bag bag);
 }

@@ -26,4 +26,8 @@ public class AndCondition extends LogicCondition {
             return ((AndCondition)condition).getFirstCondition().equals(firstCondition) && ((LogicCondition)condition).getSecondCondition().equals(secondCondition);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

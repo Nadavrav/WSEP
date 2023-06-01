@@ -23,4 +23,8 @@ public class MultiAndCondition extends MultiFilterCondition {
             return ((MultiAndCondition)condition).getConditions().equals(conditions);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

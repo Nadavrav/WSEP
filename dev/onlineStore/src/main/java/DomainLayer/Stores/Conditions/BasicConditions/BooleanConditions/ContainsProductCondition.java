@@ -36,4 +36,8 @@ public class ContainsProductCondition implements BooleanCondition {
             return ((ContainsProductCondition)condition).getProduct().equals(product);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

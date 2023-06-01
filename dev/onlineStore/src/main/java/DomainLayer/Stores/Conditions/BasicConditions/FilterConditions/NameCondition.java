@@ -35,4 +35,8 @@ public class NameCondition implements FilterCondition {
     public String getName() {
         return name;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

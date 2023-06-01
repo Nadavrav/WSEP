@@ -28,7 +28,6 @@ public abstract class MultiFilterCondition implements FilterCondition {
     }
     @Override
     public String toString(){
-      //  return "conditi"+condition
-        return "STUB";
+        return "ERROR: THIS DESCRIPTION SHOULD NOT BE REACHABLE";
     }
 }

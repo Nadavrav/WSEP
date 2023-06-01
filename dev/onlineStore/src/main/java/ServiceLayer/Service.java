@@ -2,6 +2,7 @@ package ServiceLayer;
 
 import DomainLayer.Facade;
 import DomainLayer.Response;
+import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
@@ -18,6 +19,8 @@ import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
@@ -532,7 +535,7 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<List<ServiceStore>> getProductsWhoPassDiscount(String userName) throws Exception {
+    public Response<Collection<ServiceStore>> getStoresByUserName(String userName) {
         try {
             ArrayList<ServiceStore> serviceStores = new ArrayList<>();
             List <Store> stores = facade.getStoresByUserName(visitorId,userName);
@@ -545,14 +548,21 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<List> getStoresByUserName(String userName) throws Exception {
+    public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
         try {
-            ArrayList<ServiceStore> serviceStores = new ArrayList<>();
-            List <Store> stores = facade.getStoresByUserName(visitorId,userName);
-            for(Store s : stores) {
-                serviceStores.add(new ServiceStore(s));
+            HashSet<ServiceDiscount> discounts=new HashSet<>();
+            for(Discount discount:facade.getStoreDiscounts(storeId)){
+                discounts.add(new ServiceDiscount(discount.getDescription()));
             }
-            return new Response<>(serviceStores);
+            return new Response<>(discounts);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
+        try {
+            return new Response<>(new ServiceAppliedDiscount(facade.getSavingsPerProduct(visitorId,storeId)));
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);

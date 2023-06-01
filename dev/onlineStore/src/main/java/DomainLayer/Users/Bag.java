@@ -51,8 +51,8 @@ public class Bag {
                 throw new RuntimeException("system error: report error to developers. error logged");
             }
             @Override
-            public HashMap<Discount, HashSet<CartProduct>> calcDiscounts(Bag bag) {
-                logger.severe("Error: get valid products for discount callback used in a product initialized without store callback");
+            public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag) {
+                logger.severe("Error: get discount amount callback used in a product initialized without store callback");
                 throw new RuntimeException("system error: report error to developers. error logged");
             }
         };
@@ -72,9 +72,10 @@ public class Bag {
     public boolean passesPolicy(){
         return callback.checkStorePolicies(this);
     }
-    public HashMap<Discount,HashSet<CartProduct>> getProductsInADiscount(){
-        return callback.calcDiscounts(this);
+    public HashMap<CartProduct,Double> getSavingsPerProducts(){
+        return callback.getSavingsPerProduct(this);
     }
+
     public double calcDiscountSavings(){
         return callback.getDiscountAmount(this);
     }
