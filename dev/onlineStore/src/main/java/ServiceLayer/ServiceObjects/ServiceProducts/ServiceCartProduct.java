@@ -15,7 +15,9 @@ public class ServiceCartProduct extends ServiceProduct{
     public int getAmount() {
         return amount;
     }
-
+    public double getCartProductPrice(){
+        return amount*getPrice();
+    }
 
     public ServiceCartProduct(CartProduct product) {
         super(product);

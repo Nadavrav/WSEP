@@ -12,12 +12,7 @@ public class BooleanAfterFilterCondition implements BooleanCondition {
     protected FilterCondition firstCondition;
     protected BooleanCondition secondCondition;
 
-    /**
-     * boolean condition-either returns the whole bag if eligibility logic is true, returns an empty bag otherwise.
-     * and/or filters can be done in multi or/and conditions. wrapper condition is an exception, but I am too lazy to separate it. (proper docs in wrapper)
-     * @param firstCondition one of the conditions
-     * @param secondCondition the second condition
-     */
+
     public BooleanAfterFilterCondition(FilterCondition firstCondition,BooleanCondition secondCondition){
         this.firstCondition=firstCondition;
         this.secondCondition=secondCondition;

@@ -1494,6 +1494,9 @@ public class Facade {
     public HashMap<CartProduct,Double> getSavingsPerProduct(int visitorId,int storeId) throws Exception{
         return getUserBag(visitorId,storeId).getSavingsPerProducts();
     }
+    public HashMap<CartProduct,Double> getCartDiscountInfo(int visitorId,int storeId) throws Exception{
+        return getUserBag(visitorId,storeId).getSavingsPerProducts();
+    }
     private StoreCallbacks generateStoreCallback(Store store){
         return new StoreCallbacks() {
             @Override
