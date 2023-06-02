@@ -26,9 +26,9 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 180px;
+            width: 200px;
             padding: 10px;
-            margin: auto;
+            /*margin: auto;*/
             background-color: rgba(255, 255, 255, 0.2);
         }
 
@@ -40,7 +40,7 @@
         .filter-container input[type="number"],
         .filter-container input[type="range"] {
             width: 84%;
-            padding: 10px;
+            padding: 6px;
             margin: auto;
             border: 1px solid #ccc;
             /*border-radius: 1px;*/
@@ -51,7 +51,7 @@
             background-color: #5555;
             color: #333333;
             border: none;
-            padding: 8px 20px;
+            padding: 8px 15px;
             border-radius: 4px;
             cursor: pointer;
         }
@@ -134,7 +134,7 @@
 <div class="container">
     <form action="/show-result" method="post">
         <div class="filter-container">
-            <h2>Search Filters</h2>
+            <h2 style="font-size: 18px; font-weight: bold;">Search Filters</h2>
             <input type="text" id="filter-keyword" name="filter-keyword" placeholder="What are you looking for?">
 
             <div>
