@@ -1198,6 +1198,34 @@ class FacadeTest {
             Assertions.assertFalse(true);
         }
     }
+    @Test
+    void purchaseCart_notEnoughQuan_Fail() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 1;
+            String pDesc = "Milk";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            f.addProductToCart(pid1,storeId,1,visitorId);
+            f.changeCartProductQuantity(pid1,storeId,100,visitorId);
+            List<String> actual = f.purchaseCart(visitorId,123,"Adress");
+            List<String> expected = new LinkedList<>();
+            expected.add(String.valueOf(storeId));
+            Assertions.assertEquals(expected,actual);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            Assertions.assertFalse(true);
+        }
+    }
 
     @Test
     void openNewStore_ok() {
