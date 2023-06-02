@@ -51,7 +51,7 @@ public class ConcurrencyCartTests {
         user1.EnterNewSiteVisitor();
         user2.EnterNewSiteVisitor();
         Future<Boolean> f1=executor.submit(() -> {user1.login(userName2,password2); user1.addProductToCart(productId_MegaMilk,storeId,1 ); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
-        Future<Boolean> f2=executor.submit(() -> {user2.login(userName1,password1); user1.addProductToCart(productId_MegaMilk,storeId,1 ); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
+        Future<Boolean> f2=executor.submit(() -> {user2.login(userName1,password1); user2.addProductToCart(productId_MegaMilk,storeId,1 ); return user2.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
         try {
             boolean r1=f1.get();
             boolean r2=f2.get();

@@ -1,12 +1,12 @@
 package AcceptenceTests.StoreTests;
 
+import ServiceLayer.ServiceObjects.*;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.MaxPriceProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.NameProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.NameStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
-import ServiceLayer.ServiceObjects.ServiceStore;
 import org.junit.jupiter.api.*;
 import Bridge.Bridge;
 import Bridge.Driver;
