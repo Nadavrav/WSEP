@@ -2417,6 +2417,7 @@ class FacadeTest {
             int pid  =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
             f.purchaseCart(visitorId,123,"Adress");
+            f.logout(visitorId);
             Assertions.assertThrows(Exception.class,()->f.GetStoreHistoryPurchase(storeId,visitorId));
         }
         catch (Exception e)
