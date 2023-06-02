@@ -1,12 +1,10 @@
 package ServiceLayer.ServiceObjects.ServiceDiscounts;
 
-public enum DiscountTypes {
+
+public enum ConditionTypes {
     //BOOLEAN CONDITIONS-CONDITIONS THAT RETURN TRUE/FALSE
     BetweenDatesCondition,
-    ContainsCategoryCondition,
-    ContainsProductCondition,
     DateCondition,
-    DoesntContainProductCondition,
     LocalHourRangeCondition,
     MaxBagPriceCondition,
     MinBagPriceCondition,
@@ -30,7 +28,6 @@ public enum DiscountTypes {
     //COMPOSITE CONDITIONS- BUILDS 2 CONDITION ONE AFTER ANOTHER
     IfBooleanThenFilter, //all products who pass a filter only if the boolean passes, else returns nothing (if { } AND { } OR { } then all {FILTERED} products get 30% discount
     BooleanToFilteredCondition //applies a boolean to all products who pass a filter (if all dairy products cost more than 200 NIS - filter dairy and apply min price condition)
-
 
 
 }
