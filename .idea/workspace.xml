@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="added all previous fixes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/IntegrationTests/SystemIntegrationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/IntegrationTests/SystemIntegrationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,15 +19,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="AcceptenceTestsfixes" />
+        <entry key="$PROJECT_DIR$" value="main" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -37,7 +40,7 @@
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
-        <option name="accountId" value="effbad7c-e3cc-44d1-9ab3-56baaa25647c" />
+        <option name="accountId" value="3f1061b1-b221-46ca-a649-0af57176f020" />
         <option name="url" value="https://github.com/Nadavrav/WSEP.git" />
       </UrlAndAccount>
     </option>
@@ -51,6 +54,9 @@
         <option name="useMavenConfig" value="true" />
       </MavenGeneralSettings>
     </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2Pq4b4TE6xBRvMGuR3Lc2ei1HF2" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -74,12 +80,17 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+
     &quot;last_opened_file_path&quot;: &quot;C:/Users/natal/Desktop/web-app/WSEP&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.20344828&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;,
@@ -94,80 +105,73 @@
       <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.SpringbootHtmlApplication">
-    <configuration name="PolicyTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.UnitTests.* and 1 more">
+    <configuration name="AcceptenceTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="PATTERN" value="AcceptenceTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="tests.UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
+      <option name="PACKAGE_NAME" value="AcceptenceTests" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CartTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="AcceptenceTests.UserTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.CartTests" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PolicyTests.DatePolicyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ConcurrencyCartTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="PATTERN" value="AcceptenceTests.UserTests.ConcurrencyTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="tests.UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
-      <option name="METHOD_NAME" value="DatePolicyTest" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests.ConcurrencyCartTests" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PolicyTests.NoConditionPolicyTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PurchaseHistory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="tests.UnitTests.*" />
+          <option name="PATTERN" value="AcceptenceTests.UserTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="tests.UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
-      <option name="METHOD_NAME" value="NoConditionPolicyTest" />
-      <option name="TEST_OBJECT" value="method" />
+      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PolicyTests.basicNameDiscountTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UnitTests.* and 1 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="tests.UnitTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="tests.UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="tests.UnitTests.PolicyTests" />
-      <option name="METHOD_NAME" value="basicNameDiscountTest" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UnitTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="UnitTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="UnitTests" />
-      <option name="TEST_OBJECT" value="package" />
+      <option name="TEST_OBJECT" value="pattern" />
+      <patterns>
+        <pattern testClass="UnitTests.*" />
+        <pattern testClass="IntegrationTests.*" />
+      </patterns>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -180,20 +184,20 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.UnitTests in springboot-html" />
-      <item itemvalue="JUnit.PolicyTests.NoConditionPolicyTest" />
-      <item itemvalue="JUnit.PolicyTests" />
-      <item itemvalue="JUnit.PolicyTests.DatePolicyTest" />
-      <item itemvalue="JUnit.PolicyTests.basicNameDiscountTest" />
+      <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
+      <item itemvalue="JUnit.CartTests" />
+      <item itemvalue="JUnit.ConcurrencyCartTests" />
+      <item itemvalue="JUnit.PurchaseHistory" />
+      <item itemvalue="JUnit.UnitTests.* and 1 more" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.UnitTests in springboot-html" />
-        <item itemvalue="JUnit.PolicyTests" />
-        <item itemvalue="JUnit.PolicyTests.NoConditionPolicyTest" />
-        <item itemvalue="JUnit.PolicyTests.DatePolicyTest" />
-        <item itemvalue="JUnit.PolicyTests.basicNameDiscountTest" />
+        <item itemvalue="JUnit.UnitTests.* and 1 more" />
+        <item itemvalue="JUnit.ConcurrencyCartTests" />
+        <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
+        <item itemvalue="JUnit.CartTests" />
+        <item itemvalue="JUnit.PurchaseHistory" />
       </list>
     </recent_temporary>
   </component>
@@ -208,6 +212,9 @@
       <workItem from="1684171347132" duration="56052000" />
       <workItem from="1684849704258" duration="2164000" />
       <workItem from="1684914630994" duration="389000" />
+      <workItem from="1685375107160" duration="9100000" />
+      <workItem from="1685570300384" duration="825000" />
+      <workItem from="1685708420125" duration="5144000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -230,7 +237,56 @@
       <option name="project" value="LOCAL" />
       <updated>1684689686161</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="small bug in &lt; instead of &lt;= in price filter">
+      <created>1684960575186</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1684960575186</updated>
+    </task>
+    <task id="LOCAL-00005" summary="implemented Service object for receiving info after performing discount calculations on a bag">
+      <created>1685392933245</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1685392933245</updated>
+    </task>
+    <task id="LOCAL-00006" summary="extended policy callback framework to support calculations of discounts inside a bag">
+      <created>1685393117458</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1685393117458</updated>
+    </task>
+    <task id="LOCAL-00007" summary="fixed the whole SDK exploding again.">
+      <created>1685571038688</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1685571038688</updated>
+    </task>
+    <task id="LOCAL-00008" summary="pulled condition changes from implement policies branch">
+      <created>1685571885211</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1685571885211</updated>
+    </task>
+    <task id="LOCAL-00009" summary="added and fixed tests">
+      <created>1685709849809</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1685709849809</updated>
+    </task>
+    <task id="LOCAL-00010" summary="added all previous fixes">
+      <created>1685714507752</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1685714507752</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -247,7 +303,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="AcTestsFixToMerge" />
                       </list>
                     </value>
                   </entry>
@@ -262,22 +318,18 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Natalie&amp;Majd web-app" />
     <MESSAGE value="fixed errors from project structure changes after gui impl" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed errors from project structure changes after gui impl" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java</url>
-          <line>1366</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java</url>
-          <line>238</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+
+
+    <MESSAGE value="small bug in &lt; instead of &lt;= in price filter" />
+    <MESSAGE value="implemented Service object for receiving info after performing discount calculations on a bag" />
+    <MESSAGE value="extended policy callback framework to support calculations of discounts inside a bag" />
+    <MESSAGE value="fix the whole SDK exploding again." />
+    <MESSAGE value="fixed the whole SDK exploding again." />
+    <MESSAGE value="pulled condition changes from implement policies branch" />
+    <MESSAGE value="done-discount info is now the description the user gave, when defining the discount, applied discount is the same but includes the discount calculations for a given bag, plus a method to get savings per product" />
+    <MESSAGE value="added and fixed tests" />
+    <MESSAGE value="added all previous fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="added all previous fixes" />
+
   </component>
 </project>

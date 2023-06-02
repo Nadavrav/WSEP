@@ -569,4 +569,24 @@ public class Service {
         }
     }
 
+
+    /**
+     * A function to get the quantity of a product in a store
+     * @param storeId - the store from which the product is
+     * @param productId - the id of the product
+     * @return - a response containing the amount of the product or an error response if the function failed
+     */
+    public Response<Integer> getStoreProductQuantity(int storeId,int productId)
+    {
+        try {
+            Integer amount = facade.getStoreProductQuantity(storeId,productId);
+            Response<Integer> r = new Response<>(amount);
+            return r;
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+
 }

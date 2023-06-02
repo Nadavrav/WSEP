@@ -3,7 +3,8 @@ package DomainLayer.Stores.Products;
 import DomainLayer.Users.Cart;
 
 public class CartProduct extends Product{
-    int amount;
+    private int amount;
+    private final int id;
     //public CartProduct(String name, double price, String category, String desc) {
     //    super(name, price, category, desc);
     //    amount=1;
@@ -15,11 +16,18 @@ public class CartProduct extends Product{
      */
     public CartProduct(StoreProduct storeProduct){
         super(storeProduct);
+        id= storeProduct.getProductId();
         amount=1;
     }
+
+    public int getId() {
+        return id;
+    }
+
     public CartProduct(StoreProduct storeProduct,int amount){
         super(storeProduct);
         this.amount=amount;
+        this.id=storeProduct.getProductId();
     }
     public int getAmount() {
         return amount;

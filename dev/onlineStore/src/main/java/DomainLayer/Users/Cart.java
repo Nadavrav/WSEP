@@ -78,4 +78,14 @@ public class Cart {
             return s;
         }
 
+    public void removeBag(int storeId) throws Exception {
+        try {
+            bagList.remove(storeId);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("something bad at removeBag");
+        }
+    }
+
     }

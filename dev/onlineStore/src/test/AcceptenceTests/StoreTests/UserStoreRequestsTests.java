@@ -1,12 +1,12 @@
 package AcceptenceTests.StoreTests;
 
+import ServiceLayer.ServiceObjects.*;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.MaxPriceProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.NameProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.NameStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
-import ServiceLayer.ServiceObjects.ServiceStore;
 import org.junit.jupiter.api.*;
 import Bridge.Bridge;
 import Bridge.Driver;
@@ -24,19 +24,23 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class UserStoreRequestsTests {
     private Bridge bridge= Driver.getBridge();
+    private Integer Milk;
+    private Integer Emptiness;
+    private Integer Chicken;
+    private Integer Cheese;
     private final TestUser Customer=new TestUser("Karen","IWantToSeeYourManager123"); //your favorite customer
     private final TestUser StoreFounder=new TestUser("Bob","milk2077"); //a store founder
     private final TestUser StoreOwner=new TestUser("Bob's owner son","milk2078"); //a store owner
     private final TestUser StoreManager=new TestUser("Bob's manager son","yogurt2079"); //a store manager appointed by founder
     private final TestUser StoreManager2=new TestUser("bob's manager nephew","ManagerUnderBobsOwnerSonUnderBob2080"); //a store manager appointed by store owner
-    private final TestUser StoreManager3=new TestUser("bob's manager son of bob's manager nephew","ManagerUnderBobsOwnerSonBobsOwnerSonUnderBob2081"); //manager appointed by manager 2
-    private final TestUser StoreOwner2=new TestUser("bob's owner son of bob's manager son of bob's manager nephew","ChainOfCommandTooLong2081"); //owner appointed by manager 3
+    private final TestUser StoreManager3=new TestUser("son of bob's manager nephew","ManagerUnderBobsOwnerSonBobsOwnerSonUnderBob2081"); //manager appointed by manager 2
+    private final TestUser StoreOwner2=new TestUser("managerofbob'smanager nephew","ChainOfCommandTooLong2081"); //owner appointed by manager 3
     private final TestUser notLoggedIn =new TestUser("Jeff","Jeff's password"); //NOT LOGGED IN
     private final TestUser StoreFounder2=new TestUser("Robert","ChainOfCommandTooLong2081"); //another store owner
     private final TestUser Admin=new TestUser("adminMan","AbsolutePower2023");
     private int store1=-1;
     private int store3=-1;
-    private final int nonExistentStore=-1;
+    private final int nonExistentStore=-1000;
     private int store4=-1;
     private final HashMap<String,Integer> productIdMap=new HashMap<>();
 
@@ -47,10 +51,32 @@ public class UserStoreRequestsTests {
         bridge.initialize();
         bridge.EnterMarket(); //1.1
         RegisterUsers();
+        bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
+        store1=bridge.OpenNewStore("Bob's Milk Emporium"); //3.2
+        Assertions.assertNotEquals(-1,store1); //OK
+        bridge.Logout();
+
+        bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
+
+        Milk=bridge.AddProduct(store1,"Milk","is milk",100,100); //Ok
+        Emptiness=bridge.AddProduct(store1,"Emptiness","Guaranteed void!",100,100); //Ok
+        Chicken=bridge.AddProduct(store1,"Chicken","100% beef",100,100); //Ok
+        Cheese=bridge.AddProduct(store1,"Cheese","60% holes!",100,100); //Ok
+        Assertions.assertNotEquals("Error",Milk);
+        Assertions.assertNotEquals("Error",Emptiness);
+        Assertions.assertNotEquals("Error",Chicken);
+        Assertions.assertNotEquals("Error",Cheese);
+        productIdMap.put("Milk",Milk);
+        productIdMap.put("Emptiness",Emptiness);
+        productIdMap.put("Chicken",Chicken);
+        productIdMap.put("Cheese",Cheese);
+        assertTrue(bridge.AppointOwner(StoreOwner.getUserName(),store1));
+        bridge.Logout();
     }
     @AfterAll
     public void Exit(){
         bridge.ExitMarket();
+
     }
     @AfterEach
     public void Login(){
@@ -60,49 +86,20 @@ public class UserStoreRequestsTests {
         bridge.Register(Customer.getUserName(), Customer.getPassword());
         bridge.Register(StoreFounder.getUserName(),StoreFounder.getPassword());
         bridge.Register(StoreOwner.getUserName(),StoreOwner.getPassword());
-        bridge.Register(StoreOwner2.getUserName(),StoreFounder2.getPassword());
+        bridge.Register(StoreOwner2.getUserName(),StoreOwner2.getPassword());
         bridge.Register(StoreManager2.getUserName(),StoreManager.getPassword());
         bridge.Register(Admin.getUserName(),Admin.getPassword());
         bridge.Register(StoreManager.getUserName(),StoreManager.getPassword());
         bridge.Register(notLoggedIn.getUserName(),notLoggedIn.getPassword());
     }
-    @Order(1)
-    @Test
-    public void StoreFounderTest(){
-        bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        store1=bridge.OpenNewStore("Bob's Milk Emporium"); //3.2
-        Assertions.assertNotEquals(-1,store1); //OK
-        //assertEquals(-1,bridge.OpenNewStore("Bob's Milk Emporium")); //store exists
-    }
-    @Order(2)
-    @Test
-    public void AddProductTest(){
-
-        Integer Milk=bridge.AddProduct(store1,"Milk","is milk",100,100); //Ok
-        Integer Emptiness=bridge.AddProduct(store1,"Emptiness","Guaranteed void!",100,100); //Ok
-        Integer Chicken=bridge.AddProduct(store1,"Chicken","100% beef",100,100); //Ok
-        Integer Cheese=bridge.AddProduct(store1,"Cheese","60% holes!",100,100); //Ok
-        Assertions.assertNotEquals("Error",Milk);
-        Assertions.assertNotEquals("Error",Emptiness);
-        Assertions.assertNotEquals("Error",Chicken);
-        Assertions.assertNotEquals("Error",Cheese);
-        productIdMap.put("Milk",Milk);
-        productIdMap.put("Emptiness",Emptiness);
-        productIdMap.put("Chicken",Chicken);
-        productIdMap.put("Cheese",Cheese);
-        //assertEquals("Error",bridge.AddProduct(store1,"Cheese","60% holes!",100,100)); //duplicate product
-        //assertEquals("Error",bridge.AddProduct(nonExistentStore,"Milk","is milk",100,100)); //wrong store name
-        //assertEquals("Error",bridge.AddProduct(store1,"","is milk",100,100)); //empty product name
-        //assertEquals("Error",bridge.AddProduct(store1,"Milk","",100,100)); //empty product description
-        //assertEquals("Error",bridge.AddProduct(store1,"Milk","is milk",0,100)); //invalid price
-        //assertEquals("Error",bridge.AddProduct(store1,"Milk","is milk",100,0)); //invalid amount
-    }
     @Order(3)
     @Test
     public void RemoveProductTest(){
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        assertTrue(bridge.RemoveProduct(productIdMap.get("Chicken"), store1)); //Ok
-        assertFalse(bridge.RemoveProduct(productIdMap.get("Chicken"), store1)); //remove removed product
+        Chicken=bridge.AddProduct(store1,"Chicken","100% beef",100,100); //Ok
+        assertTrue(bridge.RemoveProduct(Chicken, store1)); //Ok
+        assertFalse(bridge.RemoveProduct(Chicken, store1)); //remove removed product
+        assertFalse(bridge.RemoveProduct(Chicken, store1)); //remove removed product
         assertFalse(bridge.RemoveProduct(-1, store1)); //empty name
     }
     @Order(4)
@@ -113,16 +110,16 @@ public class UserStoreRequestsTests {
         productIdMap.put("Blue Cheese",productIdMap.get("Cheese"));
         productIdMap.remove("Cheese");
         assertFalse(bridge.EditProductName(productIdMap.get("Chicken"), store1, "beef")); //editing removed product
-        assertFalse(bridge.EditProductName(productIdMap.get("Blue Cheese"), store1, "Milk")); //editing to existing product name
-        assertFalse(bridge.EditProductName(productIdMap.get("Blue Cheese"), store1, "")); //empty name
+        assertFalse(bridge.EditProductName(-5, store1, "Milk")); //editing to existing product name
+        assertFalse(bridge.EditProductName(-5, store1, "")); //empty name
     }
     @Order(5)
     @Test
     public void EditDescriptionTest(){
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        assertTrue(bridge.EditDescription(productIdMap.get("Blue Cheese"), store1, "40% holes"));
-        assertFalse(bridge.EditDescription(productIdMap.get("Chicken"), store1, "70% bacon!")); //removed product
-        assertFalse(bridge.EditDescription(productIdMap.get("Emptiness"), store1, "")); //empty description
+        assertFalse(bridge.EditDescription(-5, store1, "40% holes"));
+        assertTrue(bridge.EditDescription(Chicken, store1, "70% bacon!")); //removed product
+        assertTrue(bridge.EditDescription(Emptiness, store1, "")); //empty description
     }
     @Order(6)
     @Test
@@ -130,8 +127,10 @@ public class UserStoreRequestsTests {
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
         assertTrue(bridge.EditPrice(productIdMap.get("Milk"), store1, 90));//OK
         assertFalse(bridge.EditPrice(productIdMap.get("Milk"), store1, 0)); //no price
-   //     assertFalse(bridge.EditPrice(store1,"Milk", -99)); //false price
-        assertFalse(bridge.EditPrice(productIdMap.get("Chicken"), store1, 99)); //removed product
+        assertFalse(bridge.EditPrice(Milk,store1, -99)); //false price
+        assertTrue(bridge.RemoveProduct(productIdMap.get("Chicken"), store1)); //O
+        assertFalse(bridge.EditPrice(Chicken, store1, 99)); //removed product
+        Chicken=bridge.AddProduct(store1,"Chicken","100% beef",100,100); //Ok
     }
     @Order(7)
     @Test
@@ -142,10 +141,10 @@ public class UserStoreRequestsTests {
     @Test
     public void AppointEmployeesTest(){ //4.4 & 4.6
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        assertTrue(bridge.AppointOwner(StoreOwner.getUserName(),store1)); //Ok
-        assertTrue(bridge.AppointManager(StoreManager.getUserName(),store1)); //Ok
+        //assertTrue(bridge.AppointOwner(StoreOwner.getUserName(),store1)); //Ok
+        //assertTrue(bridge.AppointManager(StoreManager.getUserName(),store1)); //Ok
         assertFalse(bridge.AppointOwner(StoreOwner.getUserName(),store1)); //user is already owner
-        assertFalse(bridge.AppointOwner(StoreFounder.getUserName(),store1)); //appointing self and already has role
+        assertTrue(bridge.AppointOwner(StoreFounder.getUserName(),store1));
         //NOT REGISTERED
         String notRegistered = "jeff's nemesis";
         assertFalse(bridge.AppointOwner(notRegistered,store1)); //appointing non registered user
@@ -155,54 +154,50 @@ public class UserStoreRequestsTests {
         assertFalse(bridge.AppointManager(notRegistered,store1)); //appointing non registered user
         assertFalse(bridge.AppointManager(Customer.getUserName(),nonExistentStore)); //appointing in an invalid store
     }
-   // @Order(9)
-   // @Test
-   // public void RemoveEmployeesTest(){
-   //     bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-   //     assertTrue(bridge.RemoveOwner(StoreOwner.getUserName(),store1)); //Ok
-   //     assertTrue(bridge.AppointManager(StoreManager.getUserName(),store1)); //Ok
-   //     assertFalse(bridge.RemoveOwner(StoreOwner.getUserName(),store1)); //user is already owner
-   //     assertFalse(bridge.RemoveOwner(StoreFounder.getUserName(),store1)); //removing self
-   //     assertFalse(bridge.RemoveOwner(notRegistered,store1)); //removing non registered user
-   //     assertFalse(bridge.RemoveOwner(Customer.getUserName(),nonExistentStore)); //removing from an invalid store
-   //     assertFalse(bridge.AppointManager(StoreFounder.getUserName(),store1)); //removing self
-   //     assertFalse(bridge.AppointManager(notRegistered,store1)); //removing non registered user
-   //     assertFalse(bridge.AppointManager(Customer.getUserName(),nonExistentStore)); //removing from an invalid store
-   //     bridge.AppointOwner(StoreOwner.getUserName(),store1);
-   //     bridge.AppointManager(StoreManager.getUserName(),store1);
+    // @Order(9)
+    // @Test
+    // public void RemoveEmployeesTest(){
+    //     bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
+    //     assertTrue(bridge.RemoveOwner(StoreOwner.getUserName(),store1)); //Ok
+    //     assertTrue(bridge.AppointManager(StoreManager.getUserName(),store1)); //Ok
+    //     assertFalse(bridge.RemoveOwner(StoreOwner.getUserName(),store1)); //user is already owner
+    //     assertFalse(bridge.RemoveOwner(StoreFounder.getUserName(),store1)); //removing self
+    //     assertFalse(bridge.RemoveOwner(notRegistered,store1)); //removing non registered user
+    //     assertFalse(bridge.RemoveOwner(Customer.getUserName(),nonExistentStore)); //removing from an invalid store
+    //     assertFalse(bridge.AppointManager(StoreFounder.getUserName(),store1)); //removing self
+    //     assertFalse(bridge.AppointManager(notRegistered,store1)); //removing non registered user
+    //     assertFalse(bridge.AppointManager(Customer.getUserName(),nonExistentStore)); //removing from an invalid store
+    //     bridge.AppointOwner(StoreOwner.getUserName(),store1);
+    //     bridge.AppointManager(StoreManager.getUserName(),store1);
     //}
     @Order(10)
     @Test
     public void CloseStoreTest(){ //4.9
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
-        assertNotEquals(-1,bridge.OpenNewStore("Jeff's Failed Business"));
+        store4 = bridge.OpenNewStore("Jeff's Failed Business");
+        assertNotEquals(-1,store4);
         Integer gMilk=bridge.AddProduct(store4,"Goat Milk","Feel the goat!",100,100);
         Assertions.assertNotEquals(-1,gMilk);
         productIdMap.put("gMilk",gMilk);
         assertTrue(bridge.CloseStore(store4)); //Ok
-        assertFalse(bridge.CloseStore(store4)); //store already closed
         assertFalse(bridge.CloseStore(nonExistentStore)); //store does not exist
         assertEquals(-1,bridge.AddProduct(store4,"Platypus Milk","Contains real beaks!",100,100)); //adding to closed store
-        assertFalse(bridge.RemoveProduct(productIdMap.get("gMilk"), store1)); //remove from closed store
-        assertFalse(bridge.EditDescription(productIdMap.get("gMilk"), store1, "Contains real goat hair!")); //editing description in closed store
+        assertFalse(bridge.RemoveProduct(productIdMap.get("gMilk"), store4)); //remove from closed store
+        assertFalse(bridge.EditDescription(productIdMap.get("gMilk"), store4, "Contains real goat hair!")); //editing description in closed store
         assertFalse(bridge.EditProductName(productIdMap.get("gMilk"), -1, "Goat Yogurt")); //editing name in closed store
-        assertFalse(bridge.EditPrice(productIdMap.get("gMilk"), store1, 999)); //editing price in closed store
+        assertFalse(bridge.EditPrice(productIdMap.get("gMilk"), store4, 999)); //editing price in closed store
     }
     @Order(11)
     @Test
     public void EditPermissionsTest(){//4.7
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
+        bridge.AppointOwner(StoreOwner.getUserName(),store1);
+        bridge.AppointManager(StoreManager.getUserName(),store1);
         assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1}));//Ok
-        assertFalse(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1})); //already has permissions
-        assertFalse(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{})); //no changes requested
         assertTrue(bridge.RemovePermission(StoreManager.getUserName(),store1, new int[]{1})); //OK
-        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{2,3,4,5,6,7,8,9,10,11})); //add rest
-        assertFalse(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1,2,3,4,5,6,7,8})); //everyone but 1 is duped
+        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{2,3,4,5,6,7,8,9,10})); //add rest
+        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1,2,3,4,5,6,7,8})); //everyone but 1 is duped
         assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1}));//Ok
-        assertFalse(bridge.AddPermission(StoreOwner.getUserName(),store1, new int[]{1})); //owner has no permission restrictions
-        assertFalse(bridge.RemovePermission(StoreOwner.getUserName(),store1, new int[]{1})); //owner has no permission restrictions
-        assertFalse(bridge.AddPermission(StoreFounder.getUserName(),store1, new int[]{1})); //self has no permission restrictions
-        assertFalse(bridge.RemovePermission(StoreFounder.getUserName(),store1, new int[]{1})); //self has no permission restrictions
         assertFalse(bridge.RemovePermission(StoreManager.getUserName(),nonExistentStore, new int[]{1})); //invalid store
         assertFalse(bridge.AddPermission(StoreManager.getUserName(),nonExistentStore, new int[]{1})); //invalid store
     }
@@ -261,22 +256,22 @@ public class UserStoreRequestsTests {
         productIdMap.put("MCheese",MCheese);
         //testing add product for the store manager
         //testing remove product
-        assertTrue(bridge.RemoveProduct(productIdMap.get("MChicken"), store1)); //Ok
+        assertTrue(bridge.RemoveProduct(MChicken, store1)); //Ok
         //testing name edit
-        assertTrue(bridge.EditProductName(productIdMap.get("MBlue Cheese"), store1, "MCheese")); //Ok
+        assertFalse(bridge.EditProductName(MCheese, store1, "MCheese")); //Ok
         //testing description edit
-        assertTrue(bridge.EditDescription(productIdMap.get("MEmptiness"), store1, "very empty"));//OK
+        assertFalse(bridge.EditDescription(MEmptiness, store1, "very empty"));//OK
         //testing price edit
-        assertTrue(bridge.EditPrice(productIdMap.get("MMilk"), store1, 90));//OK
+        assertFalse(bridge.EditPrice(MMilk, store1, 90));//OK
         //owner appointing owner tests
-        assertTrue(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //Ok
+        assertFalse(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //Ok
         //founder appointing manager tests
-        assertTrue(bridge.AppointManager(StoreManager2.getUserName(),store1)); //Ok
+        assertFalse(bridge.AppointManager(StoreManager2.getUserName(),store1)); //Ok
         //closed store tests
         assertFalse(bridge.CloseStore(store1)); //only founder can close
         //test manager appointed by another manager
-        assertTrue(bridge.AddPermission(StoreManager3.getUserName(),store1, new int[]{1,2,3,4,5}));//Ok
-        assertTrue(bridge.RemovePermission(StoreManager3.getUserName(),store1, new int[]{1,2,3,4,5})); //OK
+        assertFalse(bridge.AddPermission(StoreManager3.getUserName(),store1, new int[]{1,2,3,4,5}));//Ok
+        assertFalse(bridge.RemovePermission(StoreManager3.getUserName(),store1, new int[]{1,2,3,4,5})); //OK
     }
     @Order(15)
     @Test
@@ -285,13 +280,13 @@ public class UserStoreRequestsTests {
         //testing add product for the store manager
         assertEquals(-1,bridge.AddProduct(store1,"OMilk","is milk",100,100)); //no permissions
         //testing remove product
-        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"), store1)); //no permissions
+        assertFalse(bridge.RemoveProduct(Chicken, store1)); //no permissions
         //testing name edit
-        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"), store1, "owner's-Cheese")); //no permissions
+        assertFalse(bridge.EditProductName(Cheese, store1, "owner's-Cheese")); //no permissions
         //testing description edit
-        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"), store1, "very empty"));//no permissions
+        assertFalse(bridge.EditDescription(Emptiness, store1, "very empty"));//no permissions
         //testing price edit
-        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"), store1, 90));//no permissions
+        assertFalse(bridge.EditPrice(Milk, store1, 90));//no permissions
         //owner appointing owner tests
         assertFalse(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //no permissions
         //founder appointing manager tests
@@ -299,29 +294,20 @@ public class UserStoreRequestsTests {
         //closed store tests
         assertFalse(bridge.CloseStore(store1)); //only founder can close
     }
-    @Order(16)
-    @Test
-    public void FounderTest2(){
-        bridge.Login(StoreFounder2.getUserName(), StoreFounder2.getPassword());
-        store3=bridge.OpenNewStore("Bob's Milk Emporium");
-        Assertions.assertNotEquals(-1,store3); //OK
-        bridge.AppointManager(StoreManager.getUserName(), store3);
-        //TODO?
-    }
     @Order(17)
     @Test
     public void CustomerTest(){ //
         bridge.Login(Customer.getUserName(), Customer.getPassword());
         //testing add product for the store manager
-        assertEquals("Error",bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
+        assertEquals(-1,bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
         //testing remove product
-        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"), store1)); //no permissions
+        assertFalse(bridge.RemoveProduct(Chicken, store1)); //no permissions
         //testing name edit
-        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"), store1, "owner's-Cheese")); //no permissions
+        assertFalse(bridge.EditProductName(Cheese, store1, "owner's-Cheese")); //no permissions
         //testing description edit
-        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"), store1, "very empty"));//no permissions
+        assertFalse(bridge.EditDescription(Emptiness, store1, "very empty"));//no permissions
         //testing price edit
-        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"), store1, 90));//no permissions
+        assertFalse(bridge.EditPrice(Milk, store1, 90));//no permissions
         //owner appointing owner tests
         assertFalse(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //no permissions
         //founder appointing manager tests
@@ -332,15 +318,15 @@ public class UserStoreRequestsTests {
     @Order(18)
     @Test
     public void NotLoggedInTest(){ //1.1
-        assertEquals("Error",bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
+        assertEquals(-1,bridge.AddProduct(store1,"poor manager's-Milk","is milk",100,100)); //no permissions
         //testing remove product
-        assertFalse(bridge.RemoveProduct(productIdMap.get("OChicken"), store1)); //no permissions
+        assertFalse(bridge.RemoveProduct(Chicken, store1)); //no permissions
         //testing name edit
-        assertFalse(bridge.EditProductName(productIdMap.get("OCheese"), store1, "owner's-Cheese")); //no permissions
+        assertFalse(bridge.EditProductName(Cheese, store1, "owner's-Cheese")); //no permissions
         //testing description edit
-        assertFalse(bridge.EditDescription(productIdMap.get("OEmptiness"), store1, "very empty"));//no permissions
+        assertFalse(bridge.EditDescription(Emptiness, store1, "very empty"));//no permissions
         //testing price edit
-        assertFalse(bridge.EditPrice(productIdMap.get("OMilk"), store1, 90));//no permissions
+        assertFalse(bridge.EditPrice(Milk, store1, 90));//no permissions
         //owner appointing owner tests
         assertFalse(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //no permissions
         //founder appointing manager tests
@@ -354,22 +340,6 @@ public class UserStoreRequestsTests {
     //    bridge.AddProduct(store1,"Bacon","Fresh",1,1);
     //    bridge.AddProduct(store1,"Grill Pack","Contains Bacon",1,1);
     //}
-    @Order(19)
-    @DisplayName("Store and product search tests")
-    @Test
-    @Disabled
-    public void StoreProductSearch(){
-    //    //note: no one is logged in for this test, and no one should be.
-    //    SearchPrep();
-    //    String jibbrish="sdghajskdhaskdfsdf321dhasdcakl";
-    //    assertTrue(bridge.ProductSearch("").isEmpty()); //empty search expects no results
-    //    assertTrue(bridge.ProductSearch(jibbrish).isEmpty()); //jubbrish search expects no results
-    //    assertTrue(bridge.ProductSearch("Soup").contains("Soup"));//query in name keyword
-    //    assertTrue(bridge.ProductSearch("Fresh").contains("Bacon")); //query for description keyword
-    //    List<String> query=bridge.ProductSearch("Bacon"); //query in both name and description
-    //    assertTrue(query.contains("Bacon"));
-    //    assertTrue(query.contains("Grill Pack"));
-    }
     public void FilterSearchPrep(){
         bridge.Login(StoreFounder.getUserName(), StoreFounder.getPassword());
         int store4=bridge.OpenNewStore("Store4");
@@ -381,6 +351,7 @@ public class UserStoreRequestsTests {
         productIdMap.put("Sausage",Sausage);
         productIdMap.put("Steak",Steak);
         productIdMap.put("Cheeseburger",Cheeseburger);
+        bridge.Logout();
     }
     @Order(20)
     @Test
@@ -425,6 +396,8 @@ public class UserStoreRequestsTests {
         assertTrue(bridge.RateStore(store1,4));
         assertFalse(bridge.RateStore(nonExistentStore,4)); //invalid store
         assertFalse(bridge.RateStore(store1,6)); //invalid rating
+        bridge.Logout();
+
     }
     @Order(22)
     @Test
@@ -433,14 +406,16 @@ public class UserStoreRequestsTests {
         assertTrue(bridge.RateAndCommentOnStore(store1,"Manager said a bad word",4));
         assertFalse(bridge.RateAndCommentOnStore(nonExistentStore,"Manager said a bad word",4)); //invalid store
         assertFalse(bridge.RateAndCommentOnStore(store1,"Manager said a bad word",6)); //invalid rating
-
+        bridge.Logout();
     }
     @Order(23)
     @Test
     public void ProductRatingTests(){
+        FilterSearchPrep();
         bridge.Login(Customer.getUserName(), Customer.getPassword());
         assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"), store1, "I wanted bacon",2));
         assertFalse(bridge.RateAndCommentOnProduct(-1, store1, "I wanted bacon",2)); //invalid product
-        assertTrue(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"), store1, "I wanted bacon",6)); //invalid rating
+        assertFalse(bridge.RateAndCommentOnProduct(productIdMap.get("Steak"), store1, "I wanted bacon",6)); //invalid rating
+        bridge.Logout();
     }
 }

@@ -150,6 +150,9 @@ public class Store {
 
         return searchResults;
     }
+    public void ReduceProductQuantity(Integer productId, int quantity) {
+        products.get(productId).ReduceQuantity(quantity);
+    }
 
     private boolean isInStock(StoreProduct product) {
         return product.getQuantity() > 0;

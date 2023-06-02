@@ -291,7 +291,7 @@ public class SystemIntegrationTests {
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
             f.addProductToCart(pid1,storeId,1,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
@@ -327,7 +327,7 @@ public class SystemIntegrationTests {
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
             f.addProductToCart(pid1,storeId,1,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
@@ -336,7 +336,7 @@ public class SystemIntegrationTests {
             f.ExitSiteVisitor(visitorId);
 
             int newSiteVisitor = f.EnterNewSiteVisitor();
-            String actualCart = f.getProductsInMyCart(newSiteVisitor);
+            String actualCart = f.getProductsInMyCart(newSiteVisitor).cartToString();
             String expectedCart = "";
             Assertions.assertEquals(actualCart,expectedCart);
 
@@ -370,7 +370,7 @@ public class SystemIntegrationTests {
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
             f.addProductToCart(pid1,storeId,1,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
@@ -410,14 +410,14 @@ public class SystemIntegrationTests {
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
             f.addProductToCart(pid1,storeId,1,visitorId);
-            String actual = f.getProductsInMyCart(visitorId);
+            String actual = f.getProductsInMyCart(visitorId).cartToString();
             String ExpectedstoreIdStr = "Store Id : "+storeId;
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
             Assertions.assertTrue(actual.contains(ExpectedproductsInCartStr));
 
             f.changeCartProductQuantity(pid1,storeId,100,visitorId);
-            String actualInCart = f.getProductsInMyCart(visitorId);
+            String actualInCart = f.getProductsInMyCart(visitorId).cartToString();
             String ExpectedstoreIdStr1 = "Store Id : "+storeId;
             String ExpectedproductsInCartStr1 = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: "+100+" total price: "+100*pPrice;
             Assertions.assertTrue(actualInCart.contains(ExpectedstoreIdStr1));
@@ -425,7 +425,7 @@ public class SystemIntegrationTests {
 
             List<String> actualPurchase = f.purchaseCart(visitorId,123,"Adress");
             List<String> expectedPurchase = new LinkedList<>();
-            expectedPurchase.add(ExpectedproductsInCartStr1);
+            expectedPurchase.add(String.valueOf(storeId));
             Assertions.assertEquals(expectedPurchase,actualPurchase);
 
             f.ExitSiteVisitor(visitorId);

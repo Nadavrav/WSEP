@@ -20,4 +20,14 @@ public class ServiceCart {
     public Set<ServiceBag> getBags() {
         return bags;
     }
+
+    @Override
+    public String toString () {
+        String s = "";
+        for (ServiceBag serviceBag:bags) {
+            s += "Store Id : " + serviceBag.getStoreId() + "\n" + bags.toString();
+
+        }
+        return s;
+    }
 }
