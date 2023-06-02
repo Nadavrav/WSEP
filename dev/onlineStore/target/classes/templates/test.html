@@ -1,0 +1,158 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <link rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">-->
+<!--    <title>Admin Page</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            background-image: url("https://media.istockphoto.com/id/1438337441/photo/business-management-concept-development-and-management-executives-looking-virtual-screens.jpg?s=612x612&w=0&k=20&c=F2-E8sUkjY8p5y_FfHRSYcLfrt9zdjdEjzWyCoy4p1c=");-->
+<!--            background-repeat: no-repeat;-->
+<!--            background-size: cover;-->
+<!--        }-->
+
+<!--        .container {-->
+<!--            width: 100%;-->
+<!--            max-width: 1200px;-->
+<!--            margin: 0 auto;-->
+<!--            padding: 20px;-->
+<!--            color: white;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            font-size: 34px;-->
+<!--            margin-bottom: 20px;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        p {-->
+<!--            font-size: 18px;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        .button {-->
+<!--            display: inline-block;-->
+<!--            padding: 10px 20px;-->
+<!--            background-color: #ffffff;-->
+<!--            color: #333333;-->
+<!--            font-size: 18px;-->
+<!--            border-radius: 4px;-->
+<!--            text-decoration: none;-->
+<!--            margin-right: 10px;-->
+<!--        }-->
+
+<!--        /* Modal Styles */-->
+<!--        .modal {-->
+<!--            position: fixed;-->
+<!--            left: 0;-->
+<!--            top: 0;-->
+<!--            width: 280px;-->
+<!--            height: 100%;-->
+<!--            background-color: rgba(255,255,255,0.2);-->
+<!--            color: whitesmoke;-->
+<!--            padding: 20px;-->
+<!--            transform: translateX(-100%);-->
+<!--            transition: transform 0.3s ease-in-out;-->
+<!--        }-->
+
+<!--        .modal.open {-->
+<!--            transform: translateX(0);-->
+<!--        }-->
+
+<!--        .modal-content {-->
+<!--            /*margin-top: 20px;*/-->
+<!--        }-->
+
+<!--        .close-button {-->
+<!--            display: block;-->
+<!--            margin-top: 0px;-->
+<!--            color: white;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+<!--        /* Button Styles */-->
+<!--        .permissions-button {-->
+<!--            display: inline-block;-->
+<!--            padding: 15px 15px;-->
+<!--            font-size: 14px;-->
+<!--            /*font-weight: bold;*/-->
+<!--            width: 230px;-->
+<!--            color: black;-->
+<!--            background-color: #d2d3d5;-->
+<!--            border: none;-->
+<!--            border-radius: 4px;-->
+<!--            text-decoration: none;-->
+<!--            margin: 4px;-->
+<!--            cursor: pointer;-->
+<!--            /*transition: background-color 0.3s ease;*/-->
+<!--        }-->
+
+<!--        .permissions-button:hover {-->
+<!--            background-color: #5555;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>-->
+
+<!--<header>-->
+<!--    <button style="background-color: transparent; color: #d2d3d5; border: none;position: fixed; top: 2px; right: 2px;">-->
+<!--        <svg onclick="window.location.href='MainPage';" width="30" height="35" fill="currentColor" class="bi bi-house" viewBox="0 0 21 8">-->
+<!--            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>-->
+<!--        </svg>-->
+<!--    </button>-->
+<!--    <button style="background-color: transparent; color: #d2d3d5; border: none; position: fixed; right: 27px;top: 2px;">-->
+<!--        <svg onclick="window.location.href='Bag';" width="28" height="35" fill="currentColor" class="bi bi-cart3" viewBox="0 0 21 8">-->
+<!--            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>-->
+<!--        </svg>-->
+<!--    </button>-->
+<!--</header>-->
+<!--<div th:replace="fragments/alert :: alert(${alert})"></div>-->
+
+<!--<div class="container">-->
+<!--    <h1>Welcome to Admin Page</h1>-->
+<!--    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('notification-modal')">Notification History</a>-->
+<!--    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('users-info-modal')">Users Info</a>-->
+<!--</div>-->
+<!--<script>-->
+<!--    var currentModal = null;-->
+
+<!--    function openModal(modalId) {-->
+<!--        if (currentModal !== null) {-->
+<!--            closeModal(currentModal);-->
+<!--        }-->
+
+<!--        var modal = document.getElementById(modalId);-->
+<!--        modal.classList.add('open');-->
+<!--        currentModal = modalId;-->
+<!--    }-->
+
+<!--    function closeModal(modalId) {-->
+<!--        var modal = document.getElementById(modalId);-->
+<!--        modal.classList.remove('open');-->
+<!--        currentModal = null;-->
+<!--    }-->
+<!--</script>-->
+
+<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Notification Modal &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--<div id="notification-modal" class="modal">-->
+<!--    <a class="close-button" onclick="closeModal('notification-modal')">&#x2613</a>-->
+<!--    <h2>Notifications</h2>-->
+<!--    <form id="notification-form" action="/notification-history" method="post">-->
+
+<!--    </form>-->
+<!--</div>-->
+
+<!--&lt;!&ndash;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Users Info Modal &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--<div id="users-info-modal" class="modal">-->
+<!--    <a class="close-button" onclick="closeModal('users-info-modal')">&#x2613</a>-->
+<!--    <h2>Users Info</h2>-->
+<!--    <form action="/users-info" method="post">-->
+
+<!--    </form>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
