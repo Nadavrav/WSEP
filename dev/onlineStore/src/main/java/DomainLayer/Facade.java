@@ -1063,6 +1063,8 @@ public class Facade {
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
             }
+            if(!store.getActive())
+                throw  new Exception("store is closed");
             store.RemoveProduct(ProductId);
             //return new Response<>("the Product is successfully added", false);
             return;
@@ -1118,12 +1120,16 @@ public class Facade {
     public void UpdateProductQuantity(int visitorId,int storeId, int productID,int quantity) throws Exception{
         //lock product (get product object)
         //try
-                logger.fine("Entering method UpdateProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", quantity: " + quantity);
+        logger.fine("Entering method UpdateProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", quantity: " + quantity);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productID);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductQuantity(productID,quantity);
-                logger.fine("Exiting method UpdateProductQuantity()");
+        logger.fine("Exiting method UpdateProductQuantity()");
 
         //catch
         //release lock product
@@ -1154,10 +1160,14 @@ public class Facade {
     }
 
     public void UpdateProductName(int visitorId, int productId,int storeId,String Name) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", name: " + Name);
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", name: " + Name);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductName(productId,Name);
         logger.fine("Exiting method UpdateProductName()");
 
@@ -1166,12 +1176,16 @@ public class Facade {
     public void UpdateProductPrice(int visitorId, int productId,int storeId,double price) throws Exception{
         //lock product (get product object)
         //try
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", price: " + price);
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", price: " + price);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductPrice(productId,price);
-                logger.fine("Exiting method UpdateProductPrice()");
+        logger.fine("Exiting method UpdateProductPrice()");
 
         //catch
         //release lock product
@@ -1180,12 +1194,16 @@ public class Facade {
     }
 
     public void UpdateProductCategory(int visitorId, int productId,int storeId,String category) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductCategory(productId,category);
-                logger.fine("Exiting method UpdateProductCategory()");
+        logger.fine("Exiting method UpdateProductCategory()");
 
 
     }
@@ -1195,6 +1213,8 @@ public class Facade {
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store != null) {
+            if(!store.getActive())
+                throw  new Exception("store is closed");
             store.UpdateProductDescription(productId, description);
             logger.fine("Exiting method UpdateProductDescription()");
         }
@@ -1309,12 +1329,21 @@ public class Facade {
         return store.getInfo();
     }
     //6.4
-   public List<String> GetStoreHistoryPurchase(int StoreId, int visitorId) throws Exception {
+    public List<String> GetStoreHistoryPurchase(int StoreId, int visitorId) throws Exception {
         logger.info("Entering method GetStoreHistoryPurchase() with StoreId: " + StoreId + " and visitorId: " + visitorId);
         SiteVisitor User = onlineList.get(visitorId);
+        Employment employment = null;
         if(! (User instanceof Admin)){
-            logger.log(Level.SEVERE, "An error occurred while getting store purchase history for visitorId: " + visitorId);
-            throw new Exception("invalid visitor Id");
+            try{
+                employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
+            }catch (Exception e){
+                logger.warning("there is no store to this user");
+                throw  new Exception("this user dont have any store");
+            }
+            if(!employment.checkIfFounder()) {
+                logger.log(Level.SEVERE, "An error occurred while getting store purchase history for visitorId: " + visitorId);
+                throw new Exception("this user cant view the store purchase history");
+            }
         }
         Store store = storesList.get(StoreId);
         if (store == null) {
@@ -1480,5 +1509,23 @@ public class Facade {
                 return store.getDiscountPerProduct(bag);
             }
         };
+    }
+
+    /**
+     * A function to get the quantity of a product
+     * @param storeId - the store that the product belongs to
+     * @param productId - the id of the product
+     * @return an integer that is the quantity of the product that the store has right now
+     */
+    public Integer getStoreProductQuantity(int storeId, int productId)
+    {
+        logger.info("Starting getStoreProductQuantity");
+        if(!storesList.containsKey(storeId))
+            throw new IllegalArgumentException("There is no store with this id");
+        Store s =  storesList.get(storeId);
+        if(s.getProductByID(productId) == null)
+            throw new NullPointerException("There is no such product with this id:"+productId+" in the store with the id:"+storeId);
+        Integer quantity = s.getProductByID(productId).getQuantity();
+        return quantity;
     }
 }
