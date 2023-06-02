@@ -9,8 +9,8 @@ import java.util.StringJoiner;
 
 public class MaxSelectiveDiscount extends ManyDiscounts {
 
-    public MaxSelectiveDiscount(String description) {
-        super(description);
+    public MaxSelectiveDiscount(String description,int id) {
+        super(description,id);
     }
 
     @Override

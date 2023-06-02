@@ -4,16 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="added all previous fixes">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="added more utility/information gathering methods in service discount objects">
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/DiscountTypes.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/BooleanAfterFilterCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/BooleanAfterFilterCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/FilterOnlyIfCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/FilterOnlyIfCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceAppliedDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceAppliedDiscount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceProducts/ServiceCartProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceProducts/ServiceCartProduct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceProducts/ServiceProduct.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceProducts/ServiceProduct.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/AdditiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/AdditiveDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/BasicDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/BasicDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/ManyDiscounts.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/ManyDiscounts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MaxSelectiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MaxSelectiveDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MinSelectiveDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/MinSelectiveDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/ConcurrencyTests/UserConcurrencyTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/AcceptenceTests/UserTests/ConcurrencyTests/UserConcurrencyTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/DiscountTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/DiscountTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +28,7 @@
       <list>
         <option value="Interface" />
         <option value="Class" />
+        <option value="Enum" />
       </list>
     </option>
   </component>
@@ -120,21 +124,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="CartTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="AcceptenceTests.UserTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.CartTests" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="ConcurrencyCartTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
@@ -157,6 +146,21 @@
         <pattern testClass="UnitTests.*" />
         <pattern testClass="IntegrationTests.*" />
       </patterns>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserConcurrencyTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="AcceptenceTests.UserTests.ConcurrencyTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests" />
+      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests.UserConcurrencyTests" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -190,9 +194,9 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="JUnit.UserConcurrencyTests" />
       <item itemvalue="JUnit.test in springboot-html" />
       <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
-      <item itemvalue="JUnit.CartTests" />
       <item itemvalue="JUnit.ConcurrencyCartTests" />
       <item itemvalue="JUnit.UnitTests.* and 1 more" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
@@ -200,10 +204,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.test in springboot-html" />
+        <item itemvalue="JUnit.UserConcurrencyTests" />
         <item itemvalue="JUnit.UnitTests.* and 1 more" />
         <item itemvalue="JUnit.ConcurrencyCartTests" />
         <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
-        <item itemvalue="JUnit.CartTests" />
       </list>
     </recent_temporary>
   </component>
@@ -292,7 +296,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685714507752</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="added more utility/information gathering methods in service discount objects">
+      <created>1685734954154</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1685734954154</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -333,6 +344,7 @@
     <MESSAGE value="done-discount info is now the description the user gave, when defining the discount, applied discount is the same but includes the discount calculations for a given bag, plus a method to get savings per product" />
     <MESSAGE value="added and fixed tests" />
     <MESSAGE value="added all previous fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="added all previous fixes" />
+    <MESSAGE value="added more utility/information gathering methods in service discount objects" />
+    <option name="LAST_COMMIT_MESSAGE" value="added more utility/information gathering methods in service discount objects" />
   </component>
 </project>

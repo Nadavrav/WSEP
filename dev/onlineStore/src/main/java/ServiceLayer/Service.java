@@ -552,7 +552,7 @@ public class Service {
         try {
             HashSet<ServiceDiscount> discounts=new HashSet<>();
             for(Discount discount:facade.getStoreDiscounts(storeId)){
-                discounts.add(new ServiceDiscount(discount.getDescription()));
+                discounts.add(new ServiceDiscount(discount.getDescription(), discount.getId()));
             }
             return new Response<>(discounts);
         }

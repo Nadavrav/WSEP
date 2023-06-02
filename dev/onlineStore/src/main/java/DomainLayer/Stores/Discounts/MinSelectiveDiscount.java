@@ -9,8 +9,8 @@ import java.util.StringJoiner;
 
 public class MinSelectiveDiscount extends ManyDiscounts {
 
-    public MinSelectiveDiscount(String description) {
-        super(description);
+    public MinSelectiveDiscount(String description,int id) {
+        super(description,id);
     }
     @Override
     public double calcDiscountAmount(Bag bag) {

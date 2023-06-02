@@ -43,8 +43,8 @@ public class DiscountTest {
     }
     @Test
     public void NoConditionDiscountTest(){
-        BasicDiscount basicDiscount10 =new BasicDiscount("10% discount on everything!",10);
-        BasicDiscount basicDiscount100 =new BasicDiscount("100% discount on everything!",100);
+        BasicDiscount basicDiscount10 =new BasicDiscount("10% discount on everything!",1,10);
+        BasicDiscount basicDiscount100 =new BasicDiscount("100% discount on everything!",2,100);
         double saved= basicDiscount10.calcDiscountAmount(fullBag);
         double free= basicDiscount100.calcDiscountAmount(fullBag);
         Assertions.assertEquals(16,saved);
@@ -53,7 +53,7 @@ public class DiscountTest {
     @Test
     public void basicNameDiscountTest(){
         NameCondition nameCondition=new NameCondition("Steak");
-        BasicDiscount basicDiscount =new BasicDiscount("10% basicDiscount on steaks!",10,nameCondition);
+        BasicDiscount basicDiscount =new BasicDiscount("10% basicDiscount on steaks!",1,10,nameCondition);
         double saved= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(saved,10);
 
@@ -61,7 +61,7 @@ public class DiscountTest {
     @Test
     public void basicCategoryDiscountTest(){
         CategoryCondition categoryCondition=new CategoryCondition("Meat");
-        BasicDiscount basicDiscount =new BasicDiscount("10% basicDiscount on meats!!",10,categoryCondition);
+        BasicDiscount basicDiscount =new BasicDiscount("10% basicDiscount on meats!!",1,10,categoryCondition);
         double saved= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(saved,13); //10% of steak and chicken, priced 100 and 30
 
@@ -71,8 +71,8 @@ public class DiscountTest {
         MinPriceCondition minPriceCondition =new MinPriceCondition(20);
         MaxPriceCondition maxPriceCondition =new MaxPriceCondition(99.9);
 
-        BasicDiscount minBasicDiscount =new BasicDiscount("50% discount on products priced above 20",50,minPriceCondition);
-        BasicDiscount maxBasicDiscount =new BasicDiscount("10% discount on products priced below 99.9",10,maxPriceCondition);
+        BasicDiscount minBasicDiscount =new BasicDiscount("50% discount on products priced above 20",1,50,minPriceCondition);
+        BasicDiscount maxBasicDiscount =new BasicDiscount("10% discount on products priced below 99.9",2,10,maxPriceCondition);
         double maxSaved= maxBasicDiscount.calcDiscountAmount(fullBag);
         double minSaved= minBasicDiscount.calcDiscountAmount(fullBag);
 
@@ -85,8 +85,8 @@ public class DiscountTest {
         MaxQuantityCondition maxQuantityCondition =new MaxQuantityCondition(10); //everything but steak
         fullBag.changeProductAmount(steak,20);
         fullBag.changeProductAmount(bread,15);
-        BasicDiscount minBasicDiscount =new BasicDiscount("50% discount if there is at least 17 of a product",50,minQuantityCondition);
-        BasicDiscount maxBasicDiscount =new BasicDiscount("10% discount if there is at at most 10 of a product",10,maxQuantityCondition);
+        BasicDiscount minBasicDiscount =new BasicDiscount("50% discount if there is at least 17 of a product",1,50,minQuantityCondition);
+        BasicDiscount maxBasicDiscount =new BasicDiscount("10% discount if there is at at most 10 of a product",2,10,maxQuantityCondition);
         double maxSaved= maxBasicDiscount.calcDiscountAmount(fullBag);
         double minSaved= minBasicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(50*20,minSaved);
@@ -96,8 +96,8 @@ public class DiscountTest {
     public void basicTotalPriceTest(){
         MaxBagPriceCondition maxBagPriceCondition =new MaxBagPriceCondition(200); //chicken and steak
         MinBagPriceCondition minBagPriceCondition =new MinBagPriceCondition(200); //everything but steak
-        BasicDiscount minBasicDiscount =new BasicDiscount("50% discount if total price above 200 ",50,minBagPriceCondition);
-        BasicDiscount maxBasicDiscount =new BasicDiscount("10% discount if total price below 200",10,maxBagPriceCondition);
+        BasicDiscount minBasicDiscount =new BasicDiscount("50% discount if total price above 200 ",1,50,minBagPriceCondition);
+        BasicDiscount maxBasicDiscount =new BasicDiscount("10% discount if total price below 200",2,10,maxBagPriceCondition);
         double maxSaved= maxBasicDiscount.calcDiscountAmount(fullBag);
         double minSaved= minBasicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,minSaved);
@@ -115,7 +115,7 @@ public class DiscountTest {
         MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
         nameAndMinQuantityCondition.addCondition(nameCondition);
         nameAndMinQuantityCondition.addCondition(minQuantityCondition);
-        BasicDiscount basicDiscount =new BasicDiscount("50% basicDiscount on steaks if you buy 2",50,nameAndMinQuantityCondition);
+        BasicDiscount basicDiscount =new BasicDiscount("50% basicDiscount on steaks if you buy 2",1,50,nameAndMinQuantityCondition);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
         fullBag.changeProductAmount(steak,3);
@@ -124,7 +124,7 @@ public class DiscountTest {
     }
     //TODO: BORING CHORE-ADD MORE BASIC TESTS
 
-//There is a 50% meat discount  only if the bag contains at least 5 breads and also at least 6 dairy products
+//There is a 50% meat discount only if the bag contains at least 5 breads and also at least 6 dairy products
     @Test
     public void ComplexAndDiscount(){
         BooleanAfterFilterCondition breadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
@@ -133,7 +133,7 @@ public class DiscountTest {
         MultiAndCondition multiAndCondition=new MultiAndCondition();
         multiAndCondition.addCondition(andCondition);
         multiAndCondition.addCondition(new CategoryCondition("Meat"));
-        BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads and also at least 6 dairy products",50,multiAndCondition);
+        BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads and also at least 6 dairy products",1,50,multiAndCondition);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
         fullBag.changeProductAmount(bread,5);
@@ -158,7 +158,7 @@ public class DiscountTest {
         MultiAndCondition multiAndCondition=new MultiAndCondition();
         multiAndCondition.addCondition(orCondition);
         multiAndCondition.addCondition(new CategoryCondition("Meat"));
-        BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",50,multiAndCondition);
+        BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,multiAndCondition);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
         fullBag.changeProductAmount(bread,5);
@@ -183,7 +183,7 @@ public class DiscountTest {
         MultiAndCondition multiAndCondition=new MultiAndCondition();
         multiAndCondition.addCondition(xorCondition);
         multiAndCondition.addCondition(new CategoryCondition("Meat"));
-        BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",50,multiAndCondition);
+        BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,multiAndCondition);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
         fullBag.changeProductAmount(bread,5);
@@ -205,7 +205,7 @@ public class DiscountTest {
         MinBagPriceCondition minBagPriceCondition=new MinBagPriceCondition(200);
         AndCondition andCondition=new AndCondition(minBagPriceCondition,minYogurtAmount);
         FilterOnlyIfCondition dairyDiscount=new FilterOnlyIfCondition(andCondition,new CategoryCondition("Dairy"));
-        BasicDiscount basicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200 and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",50,dairyDiscount);
+        BasicDiscount basicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200 and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,dairyDiscount);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
         fullBag.changeProductAmount(yogurt,3); //160+2*15=190 (added 2 yogurts)
@@ -221,9 +221,9 @@ public class DiscountTest {
     public void MaxBetweenMultipleDiscountsTest(){
         NameCondition milkCondition=new NameCondition("Milk");
         CategoryCondition meatCategoryCondition=new CategoryCondition("Meat");
-        BasicDiscount meatsDiscount=new BasicDiscount("20% discount on all milk cartons",20,milkCondition);
-        BasicDiscount milkDiscount =new BasicDiscount("25% discount on all meat products",25,meatCategoryCondition);
-        MaxSelectiveDiscount maxSelectiveDiscount=new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them");
+        BasicDiscount meatsDiscount=new BasicDiscount("20% discount on all milk cartons",1,20,milkCondition);
+        BasicDiscount milkDiscount =new BasicDiscount("25% discount on all meat products",2,25,meatCategoryCondition);
+        MaxSelectiveDiscount maxSelectiveDiscount=new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them",3);
         maxSelectiveDiscount.addDiscount(meatsDiscount);
         maxSelectiveDiscount.addDiscount(milkDiscount);
         double discount= maxSelectiveDiscount.calcDiscountAmount(fullBag);
@@ -242,9 +242,9 @@ public class DiscountTest {
    @Test
    public void AdditiveDiscountsTest(){
        CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
-       BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",20);
-       BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",50,dairyCategoryCondition);
-       AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products");
+       BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
+       BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
+       AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
        additiveDiscount.addDiscount(storeDiscount);
        additiveDiscount.addDiscount(dairyDiscount);
        double discount= additiveDiscount.calcDiscountAmount(fullBag);
