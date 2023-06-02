@@ -1,4 +1,4 @@
-package ServiceLayer.ServiceObjects.ServiceDiscounts;
+package ServiceLayer.ServiceObjects.ServiceConditions;
 
 
 public enum ConditionTypes {

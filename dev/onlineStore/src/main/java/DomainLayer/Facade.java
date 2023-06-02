@@ -1531,5 +1531,4 @@ public class Facade {
         Integer quantity = s.getProductByID(productId).getQuantity();
         return quantity;
     }
-
 }
