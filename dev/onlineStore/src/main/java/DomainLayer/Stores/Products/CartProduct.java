@@ -27,6 +27,7 @@ public class CartProduct extends Product{
     public CartProduct(StoreProduct storeProduct,int amount){
         super(storeProduct);
         this.amount=amount;
+        this.id=storeProduct.getProductId();
     }
     public int getAmount() {
         return amount;
