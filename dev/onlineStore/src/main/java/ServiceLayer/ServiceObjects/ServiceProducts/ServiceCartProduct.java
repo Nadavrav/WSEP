@@ -20,4 +20,10 @@ public class ServiceCartProduct extends ServiceProduct{
         this.amount=product.getAmount();
         this.id=product.getId();
     }
+
+    @Override
+    public String toString(){
+        return "Name: "+getName()+" Description: "+getDescription()+" Category: "+getCategory()+" price per unit: "+getPrice()+" Amount: "+amount+
+                " total price: "+getPrice()*amount;
+    }
 }

@@ -98,10 +98,7 @@ public class Bag {
             throw new NullPointerException("attempted to remove null product");
         if(productList.get(product)==null)
             throw new RuntimeException("product to remove not in cart");
-        CartProduct cartProduct=new CartProduct(product);
-        if(productList.get(product).equals(cartProduct))
-                productList.remove(cartProduct);
-        else throw new RuntimeException();
+        productList.remove(product);
     }
     public void removeProduct(CartProduct product) {
         if(product==null)
@@ -113,8 +110,10 @@ public class Bag {
         else throw new RuntimeException();
     }
     public void changeProductAmount(Product product,int newAmount) {
-       CartProduct cartProduct=productList.get(product);
-       cartProduct.setAmount(newAmount);
+        if(newAmount <= 0)
+            throw new IllegalArgumentException("Cant set amount to 0 or negative");
+        CartProduct cartProduct=productList.get(product);
+        cartProduct.setAmount(newAmount);
     }
     public double calculateTotalAmount() {
         double totalAmount = 0;
