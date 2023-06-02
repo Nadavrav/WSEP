@@ -8,7 +8,6 @@ public class Product implements StoreProductObserver {
     private static final Logger logger=Logger.getLogger("Product logger");
     protected String name;
     protected Double price;
-
     protected String description;
     protected String category;
     private boolean stillInCart;
