@@ -4,7 +4,6 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
