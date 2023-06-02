@@ -1,12 +1,13 @@
 package DomainLayer.Stores.Conditions.BasicConditions.FilterConditions;
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.FilterCondition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
 
 import java.util.HashSet;
 
-public class CategoryCondition implements Condition {
+public class CategoryCondition implements FilterCondition {
     private final String category;
 
     public CategoryCondition(String category) {
@@ -31,5 +32,9 @@ public class CategoryCondition implements Condition {
         if(condition instanceof CategoryCondition)
             return ((CategoryCondition)condition).getCategory().equals(category);
         return false;
+    }
+    @Override
+    public String toString(){
+        return "TODO";
     }
 }

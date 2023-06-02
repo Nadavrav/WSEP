@@ -6,6 +6,7 @@ import DomainLayer.Users.Permission;
 import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
@@ -71,7 +72,7 @@ public class Server {
         return service.loadData();
     }
 
-    public Response getProductsInMyCart() { //it should return list of strings
+    public Response<ServiceCart> getProductsInMyCart() { //it should return list of strings
         return service.getProductsInMyCart();
     }
 
@@ -79,6 +80,9 @@ public class Server {
         return service.removeProductFromCart(productId, storeId);
     }
 
+    public Response<?> changeCartProductQuantity(int productId, int storeId, int newAmount){
+        return service.changeCartProductQuantity(productId, storeId, newAmount);
+    }
 
     public Response<Integer> AddProduct(int storeID, String productName, double price, String category, int quantity, String description) {
         return service.AddProduct(storeID, productName, price, category, quantity,description);
@@ -170,4 +174,14 @@ public class Server {
     public Response<?> GetStoreRate(int storeID){
         return service.GetStoreRate(storeID);
     }
+
+    public Response<?> deleteUser(String userName){
+        return service.deleteUser(userName);
+    }
+
+    public Response<List<ServiceUser>> getRegisteredUsersInfo(){
+        return service.getRegisteredUsersInfo();
+    }
+
 }
+

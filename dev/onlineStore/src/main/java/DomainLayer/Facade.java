@@ -2,14 +2,14 @@ package DomainLayer;
 
 
 
-import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
+import DomainLayer.Stores.CallBacks.StoreCallbacks;
+import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
 
-import DomainLayer.Stores.Rating;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
@@ -17,10 +17,8 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
-import ServiceLayer.ServiceObjects.ServiceStore;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 public class Facade {
@@ -300,7 +298,7 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
-            user.addProductToCart(storeId, product,amount,store::passesPolicies);
+            user.addProductToCart(storeId, product,amount, generateStoreCallback(store));
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
         catch (Exception e){
@@ -377,14 +375,14 @@ public class Facade {
     }
 
 
-    public String getProductsInMyCart(int visitorId) throws Exception {//2.4
+    public Cart getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("trying to add from a null user");
             throw  new Exception("Invalid Visitor ID");
         }
 
-        return user.cartToString();
+        return user.getCart();
         //return user.GetCart
 
     }
@@ -1425,13 +1423,14 @@ public class Facade {
         }
         return store.getProductRatingList(productId);
     }
-
+    public Collection<Discount> getStoreDiscounts(int storeId){
+        return storesList.get(storeId).getDiscounts();
+    }
     public List<Store> getStoresByUserName(int visitorId,String userName) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
-        if(! (visitor instanceof RegisteredUser)){
+        if(! (visitor instanceof RegisteredUser user)){
             throw new Exception("invalid visitor Id");
         }
-        RegisteredUser user = (RegisteredUser)visitor;
         if(!user.getUserName().equals(userName)){
             throw new Exception("This is not your userName");
         }
@@ -1442,5 +1441,40 @@ public class Facade {
             stores.add(storesList.get(i));
         }
         return stores;
+    }
+    public double getBagDiscountSavings(int visitorId,int storeId) throws Exception {
+        return getUserBag(visitorId,storeId).calcDiscountSavings();
+    }
+    public boolean bagPassesPolicies(int visitorId,int storeId) throws Exception {
+        return getUserBag(visitorId,storeId).passesPolicy();
+    }
+    private Bag getUserBag(int visitorId,int storeId) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(! (visitor instanceof RegisteredUser user)){
+            throw new Exception("invalid visitor Id");
+        }
+        Bag bag=user.getCart().getBags().get(storeId);
+        if(bag==null)
+            throw new Exception("no bag exists in the user's cart for the specified store");
+        return bag;
+    }
+    public HashMap<CartProduct,Double> getSavingsPerProduct(int visitorId,int storeId) throws Exception{
+        return getUserBag(visitorId,storeId).getSavingsPerProducts();
+    }
+    private StoreCallbacks generateStoreCallback(Store store){
+        return new StoreCallbacks() {
+            @Override
+            public boolean checkStorePolicies(Bag bag) {
+                return store.passesPolicies(bag);
+            }
+            @Override
+            public double getDiscountAmount(Bag bag) {
+                return store.calcSaved(bag);
+            }
+            @Override
+            public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag) {
+                return store.getDiscountPerProduct(bag);
+            }
+        };
     }
 }

@@ -2,6 +2,7 @@ package com.okayjava.html.controller;
 import DomainLayer.Response;
 import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.ServiceStore;
+import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,10 +11,14 @@ import java.util.*;
 
 @Controller
 public class ManagerController {
+
+    Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
 
     @GetMapping("/Manager")
-    public String menu() {
+    public String menu(Model model) {
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
         return "Manager";
     }
 
@@ -37,17 +42,19 @@ public class ManagerController {
 
         Response<Integer> response = server.OpenStore(storeName);
         if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
             System.out.println("Error");
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
         } else {
-            model.addAttribute("message", response.getMessage());
-            System.out.println("Store ID: " + response.getValue());
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            System.out.println("Store Opened with ID: " + response.getValue());
         }
+        alert.reset();
         return "redirect:/Manager";
     }
-
 
     @RequestMapping(value = "/permissions", method = RequestMethod.POST)
     public String permissions(Model model) {
@@ -66,16 +73,17 @@ public class ManagerController {
         Response<Integer> response = server.AddProduct(storeID, productName, price, category, quantity, description);
 
         if (response.isError()) {
-            System.out.println("Manager Menu: \n error in adding a product!!");
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            System.out.println("Error in adding a product!!");
         } else {
-            //add the product to allProduct list
-            model.addAttribute("message", response.getMessage());
-            System.out.println("Manager Menu: \n - product: " + productName + " was added successfully to store: " + storeID);
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            System.out.println(productName + " was added successfully to storeId: " + storeID);
         }
-
+        alert.reset();
         return "Manager";
     }
 
@@ -86,15 +94,17 @@ public class ManagerController {
 
         Response<?> response = server.RemoveProduct(productID, storeID);
         if (response.isError()) {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         } else {
-            model.addAttribute("message", response.getMessage());
-            System.out.println("Manager Menu: \n - product with id: " + productID + " was removed successfully from store: " + storeID);
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            System.out.println("product with id: " + productID + " was removed successfully from storeId: " + storeID);
         }
-
-        return "Manager";
+        alert.reset();
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/update-product", method = RequestMethod.POST)
@@ -110,55 +120,83 @@ public class ManagerController {
         if (productName != null) {
             Response<?> response = server.UpdateProductName(productID, storeID, productName);
             if (response.isError()) {
-                System.out.println("fails here - 1");
-                model.addAttribute("isError", true);
-                model.addAttribute("errorMessage", response.getMessage());
-                return "error";
+                alert.setFail(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+                alert.reset();
+                return "redirect:/Manager";
             }
-            else model.addAttribute("message", response.getMessage());
+            else{
+                alert.setSuccess(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+            }
         }
         if (price > 0) {
             Response<?> response = server.UpdateProductPrice(productID, storeID, price);
             if (response.isError()) {
-                System.out.println("fails here - 2");
-                model.addAttribute("isError", true);
-                model.addAttribute("errorMessage", response.getMessage());
-                return "error";
+                alert.setFail(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+                alert.reset();
+                return "redirect:/Manager";
             }
-            else model.addAttribute("message", response.getMessage());
+            else{
+                alert.setSuccess(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+            }
         }
         if (quantity > 0) {
             Response<?> response = server.UpdateProductQuantity(productID, storeID, quantity);
             if (response.isError()) {
-                System.out.println("fails here - 3");
-                model.addAttribute("isError", true);
-                model.addAttribute("errorMessage", response.getMessage());
-                return "error";
+                alert.setFail(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+                alert.reset();
+                return "redirect:/Manager";
             }
-            else model.addAttribute("message", response.getMessage());
+            else{
+                alert.setSuccess(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+            }
         }
         if (category != null) {
             Response<?> response = server.UpdateProductCategory(productID, storeID, category);
             if (response.isError()) {
-                System.out.println("fails here - 4");
-                model.addAttribute("isError", true);
-                model.addAttribute("errorMessage", response.getMessage());
-                return "error";
+                alert.setFail(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", response.getMessage());
+                alert.reset();
+                return "redirect:/Manager";
             }
-            else model.addAttribute("message", response.getMessage());
+            else{
+                alert.setSuccess(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+            }
         }
         if (description != null) {
             Response<?> response = server.UpdateProductDescription(productID, storeID, description);
             if (response.isError()) {
-                System.out.println("fails here - 5");
-                model.addAttribute("isError", true);
-                model.addAttribute("errorMessage", response.getMessage());
-                return "error";
+                alert.setFail(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+                alert.reset();
+                return "redirect:/Manager";
             }
-            else model.addAttribute("message", response.getMessage());
+            else{
+                alert.setSuccess(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+            }
         }
-
-        return "Manager";
+        alert.setSuccess(true);
+        alert.setMessage("Product Updated Successfully");
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
@@ -167,14 +205,18 @@ public class ManagerController {
 
         Response<List<String>> response = server.GetStoreHistoryPurchase(storeID);
         if (response.isError()) {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         } else {
             System.out.println("Purchase History should be displayed!");
-            model.addAttribute("purchaseHistory", response.getValue()); //List<String>
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         }
-        return "Manager";
+        model.addAttribute("purchaseHistory", response.getValue()); //List<String>
+        alert.reset();
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
@@ -183,12 +225,17 @@ public class ManagerController {
 
         Response<?> response = server.CloseStore(storeID);
         if (response.isError()) {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         }
-        else model.addAttribute("message", response.getMessage());
-        return "Manager";
+        else{
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/employee-info", method = RequestMethod.POST)
@@ -198,11 +245,17 @@ public class ManagerController {
 
         Response<?> response = server.getRolesData(storeID);
         if (response.isError()) {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
-        } else model.addAttribute("employeeInfo", response.getValue()); //String
-        return "Manager";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else{
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("employeeInfo", response.getValue()); //String
+        }
+        alert.reset();
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/appoint-store-owner", method = RequestMethod.POST)
@@ -212,11 +265,16 @@ public class ManagerController {
 
         Response<?> response = server.appointNewStoreOwner(ownerName, storeID);
         if (response.isError()) {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
-        } else model.addAttribute("message", response.getValue());
-        return "Manager";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else{
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/appoint-store-manager", method = RequestMethod.POST)
@@ -226,11 +284,16 @@ public class ManagerController {
 
         Response<?> response = server.appointNewStoreManager(managerName, StoreID);
         if (response.isError()) {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
-        } else model.addAttribute("message", response.getValue());
-        return "Manager";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else{
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/change-permission", method = RequestMethod.POST)
@@ -241,10 +304,15 @@ public class ManagerController {
 
         Response<?> response = server.changeStoreManagerPermission(managerName, storeID, permissions);
         if (response.isError()) {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
-        } else model.addAttribute("message", response.getValue());
-        return "Manager";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else{
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/Manager";
     }
 }
