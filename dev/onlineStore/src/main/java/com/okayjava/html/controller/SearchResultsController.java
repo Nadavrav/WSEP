@@ -7,6 +7,7 @@ import ServiceLayer.ServiceObjects.Fiters.StoreFilters.NameStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.RatingStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceStore;
+import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 
 import org.springframework.stereotype.Controller;
@@ -15,18 +16,24 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SearchResultsController {
+    Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
 
     @GetMapping("/SearchResults")
-    public String searchResult() {
+    public String searchResult(Model model) {
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
         return "SearchResults";
     }
 
     @PostMapping("/SearchResults")
-    public String resultPage(){
+    public String resultPage(Model model){
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
         return "SearchResults";
     }
 
@@ -69,16 +76,19 @@ public class SearchResultsController {
         System.out.println(productFilter.size() + "product filter size");
         System.out.println(storeFilter.size() + "store filter size");
         Response<List<ServiceStore>> response = server.FilterProductSearch(productFilter, storeFilter);
-        List<ServiceStore> serviceStoreList = response.getValue();
+//        List<ServiceStore> serviceStoreList = response.getValue();
 
         if (response.isError()){
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
         }
 
-//        System.out.println("- size of searchList after loop: "+ store.getSearchList().size());
-        model.addAttribute("searchList", response.getValue()); //searchList is only for displaying the products after search
+        model.addAttribute("searchList", response.getValue());
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
         return "SearchResults";
     }
 
@@ -109,12 +119,15 @@ public class SearchResultsController {
 
         Response<?> response = server.addProductToCart(productId, storeId, quantity);
         if (response.isError()) {
-            model.addAttribute("isError", true);
-            model.addAttribute("errorMessage", response.getMessage());
-            return "error";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
         }
-        model.addAttribute("message", response.getMessage());
+        else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+        }
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
         return "SearchResults";
     }
-
 }

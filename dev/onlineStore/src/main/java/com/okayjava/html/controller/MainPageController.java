@@ -1,6 +1,7 @@
 package com.okayjava.html.controller;
 
 import DomainLayer.Response;
+
 import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,23 +10,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 @Controller
 public class MainPageController {
-    private Server server = Server.getInstance();
+    Alert alert = Alert.getInstance();
+    private final Server server = Server.getInstance();
+    private static boolean isInitialized = false;
 
     @GetMapping("/")
     public String mainPage(Model model) throws Exception {
-        server.loadData();
+        if (!isInitialized){
+            Response<?> response = server.loadData();
+            System.out.println("Loading Data ... ");
+            if (response.isError()){
+                alert.setFail(true);
+                alert.setMessage(response.getMessage());
+                model.addAttribute("alert", alert.copy());
+            }
+            isInitialized = true;
+        }
+        model.addAttribute("alert", alert.copy());
         server.EnterNewSiteVisitor();
         System.out.println("user logged in with id: " + server.EnterNewSiteVisitor().getValue());
-		System.out.println("Loading Data ... ");
+        alert.reset();
         return "MainPage";
     }
 
     @GetMapping("MainPage")
     public String reMainPage(Model model) {
+        model.addAttribute("alert", alert.copy());
         model.addAttribute("logged", server.isLogged());
-
+        if (server.isAdmin().getValue()) {
+            model.addAttribute("Admin", true);
+        }
+        alert.reset();
         return "MainPage";
     }
 
@@ -35,22 +53,45 @@ public class MainPageController {
                          Model model) {
 
         Response<?> response = server.login(username, password);
+        System.out.println(response.getMessage());
         if (response.isError()) {
             System.out.println("error in login ");
             model.addAttribute("logged", server.isLogged());
-            model.addAttribute("isError", true);
-//            model.addAttribute("showModal", true);
-//            model.addAttribute("activeModal", "loginModal");
-            model.addAttribute("errorMessageLogin", response.getMessage());
-//            return "error";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         } else {
             server.setLogged(true);
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            System.out.println(alert.getMessage());
             model.addAttribute("logged", server.isLogged());
+            model.addAttribute("alert", alert.copy());
             if (server.isAdmin().getValue()) {
                 model.addAttribute("Admin", true);
             }
         }
+        alert.reset();
         return ("MainPage");
+    }
+
+    @RequestMapping(value="/delete", method = RequestMethod.POST)
+    public String deleteUser(@RequestParam("usernameToDelete") String username,
+                             Model model) {
+
+        Response<?> response = server.deleteUser(username);
+        if (response.isError()) {
+            System.out.println("error in deleting user ");
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage("User Is Deleted");
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return ("redirect:/MainPage");
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
@@ -61,36 +102,41 @@ public class MainPageController {
         Response<?> response = server.Register(username, password);
         if (response.isError()) {
             System.out.println("Error in register!!!");
-            model.addAttribute("isError", true);
-//            model.addAttribute("showModal", true);
-//            model.addAttribute("activeModal", "registerModal");
-            model.addAttribute("errorMessageRegister", response.getMessage());
-//            return "error";
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         } else {
             System.out.println("Registered Successfully\n");
+            alert.setSuccess(true);
+            alert.setMessage("Registered Successfully!");
+            model.addAttribute("alert", alert.copy());
         }
+        alert.reset();
         return "MainPage";
     }
 
     @GetMapping("/logout")
     public String logout(Model model) {
-        server.logout();
+        Response response = server.logout();
+        if (response.isError()){
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            System.out.println("logging out!\n" + "Status of logged:" + server.isLogged());
+        }
         model.addAttribute("logged", server.isLogged());
-        System.out.println("logging out!\n" + "Status of logged:" + server.isLogged());
+        alert.reset();
         return "MainPage";
     }
 
     @RequestMapping(value = "/complaints", method = RequestMethod.POST)
     public String complaints(@RequestParam("complaints") String message,
                              Model model) {
-//		Response response = server.complaint(message);
-//		if (response.isError()) {
-//			model.addAttribute("isError", true);
-//		model.addAttribute("showModal", true);
-        model.addAttribute("showModal", true);
-        model.addAttribute("activeModal", "complaintModal");
-        model.addAttribute("complaintMessage", "Your Complaint Is On Processing.."); //change to response.getMessage()
-//		}
+
         return "redirect:/MainPage";
     }
 
@@ -100,17 +146,18 @@ public class MainPageController {
 
         Response<Integer> response = server.OpenStore(storeName);
         if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
             System.out.println("Error with opening store.");
-            System.out.println("response.getValue = " + response.getValue() + "," + response.getMessage());
-            model.addAttribute("isError", true);
-//            model.addAttribute("showModal", true);
-//            model.addAttribute("activeModal", "storeModal");
-            model.addAttribute("errorMessage", response.getMessage());
-//            return "error";
         } else {
-            model.addAttribute("message", response.getMessage());
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
             System.out.println("Store is opened successfully with id: " + response.getValue());
         }
+
+        alert.reset();
         return "redirect:/MainPage";
     }
 

@@ -4,8 +4,10 @@ import DomainLayer.Stores.Products.CartProduct;
 
 public class ServiceCartProduct extends ServiceProduct{
     private final int amount;
+
     private final int id;
     public ServiceCartProduct(String name, Double price, String category, String description ,int amount,int id) {
+
         super(name, price, category, description);
         this.amount = amount;
         this.id = id;

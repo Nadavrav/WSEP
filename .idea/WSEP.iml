@@ -8,6 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit4">
         <CLASSES>
@@ -32,5 +33,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-messaging:5.3.13" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-websocket:5.3.13" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.6.1" level="project" />
+
   </component>
 </module>

@@ -569,6 +569,7 @@ public class Service {
         }
     }
 
+
     /**
      * A function to get the quantity of a product in a store
      * @param storeId - the store from which the product is
@@ -586,5 +587,6 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
 
 }
