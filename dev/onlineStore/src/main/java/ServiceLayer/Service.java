@@ -587,37 +587,6 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    /**
-     * A function to get list of the online visitors in the system
-     * @return - a response containing the list of the online visitors in the system
-     */
-    public Response<List<ServiceUser>> getOnlineUsers()
-    {
-        try {
-            List<ServiceUser> serviceUsers = new ArrayList<>();
-            for (SiteVisitor sv : facade.getOnlineUsers())
-                serviceUsers.add(new ServiceUser(sv));
-            Response<List<ServiceUser>> r = new Response(serviceUsers);
-            return r;
-        }
-        catch (Exception e){
-            return new Response<>(e.getMessage(),true);
-        }
-    }
-
-    public Response<List<ServiceUser>> getOfflineUsers()
-    {
-        try {
-            List<ServiceUser> serviceUsers = new ArrayList<>();
-            for (RegisteredUser sv : facade.getOfflineUsers())
-                serviceUsers.add(new ServiceUser(sv));
-            Response<List<ServiceUser>> r = new Response(serviceUsers);
-            return r;
-        }
-        catch (Exception e){
-            return new Response<>(e.getMessage(),true);
-        }
-    }
 
 
 }
