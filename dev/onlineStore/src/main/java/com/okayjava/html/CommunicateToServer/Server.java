@@ -209,5 +209,9 @@ public class Server {
     public Response<Collection<ServiceStore>> getStoresByUserName(String userName){
         return service.getStoresByUserName(userName);
     }
+
+    public Response<List<String>> PurchaseCart(int visitorCard, String address){
+        return service.PurchaseCart(visitorCard, address);
+    }
 }
 

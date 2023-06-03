@@ -62,6 +62,7 @@
 
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<div th:replace="fragments/alert :: alert(${alert})"></div>
 
 <button style="background-color: transparent; color: #d2d3d5; border: none;position: fixed; top: 2px; right: 0.5%;">
     <svg onclick="window.location.href='MainPage';" width="30" height="35" fill="currentColor" class="bi bi-house" viewBox="0 0 21 8">
@@ -78,14 +79,15 @@
 
 <div class="container">
 <!--    <h1 style="color: #333333;">Buy with Card</h1>-->
-    <form id="paymentForm" >
-        <input type="text" placeholder="Cardholder Name" required>
-        <input type="text" placeholder="Card Number" required>
+    <form id="paymentForm" action="/done" method="post">
+<!--        <input type="text" name="cardholderName" placeholder="Cardholder Name">-->
+        <input type="text" name="cardNumber" placeholder="Card Number" required>
         <div>
-            <input style="width: fit-content;" type="number" placeholder="Expiration Month" min="1" max="12" required>
-            <input style="width: fit-content;" type="number" placeholder="Expiration Year" min="2023" max="2050" required>
+<!--            <input style="width: fit-content;" type="number" name="expirationMonth" placeholder="Expiration Month" min="1" max="12">-->
+<!--            <input style="width: fit-content;" type="number" name="expirationYear" placeholder="Expiration Year" min="2023" max="2050">-->
         </div>
-        <input type="text" placeholder="CVV" required>
+        <input type="text" name="address" placeholder="Address" required>
+<!--        <input type="text" name="cvv" placeholder="CVV">-->
         <input type="submit" value="Buy Now">
     </form>
 </div>

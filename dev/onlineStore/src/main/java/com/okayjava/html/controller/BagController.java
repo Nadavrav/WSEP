@@ -19,7 +19,7 @@ public class BagController {
         model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<ServiceCart> response = server.getProductsInMyCart();
-        System.out.println(response.getValue().getBags().size() + "sizeosh");
+        System.out.println("size: " + response.getValue().getBags().size());
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -31,7 +31,7 @@ public class BagController {
         }
         alert.reset();
 
-//        Response<ServiceCart> responseT = server.;
+//        Response<ServiceCart> responseT = server.; for total amount
 //        if (responseT.isError()){
 //            alert.setFail(true);
 //            alert.setMessage(responseT.getMessage());

@@ -728,6 +728,7 @@ public class Facade {
         }
 
         LinkedList<String> failedPurchases = new LinkedList<>();
+        System.out.println("in facade");
 
 
         for(Bag b : visitor.getCart().getBags().values()) {
@@ -776,13 +777,14 @@ public class Facade {
                                 }
                                 storesList.get(b.getStoreID()).addToStoreHistory(b);
                                 visitor.removeBag(b.getStoreID());
-
+                                System.out.println("in facade1 ");
                             }
                         }
                     }
                 }
             }
         }
+        System.out.println("in facade2 " + failedPurchases.size());
         return failedPurchases;
 
     }

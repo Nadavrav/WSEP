@@ -214,6 +214,7 @@ public class ManagerController {
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
         }
+        System.out.println(response.getValue()+"getV");
         model.addAttribute("purchaseHistory", response.getValue()); //List<String>
         alert.reset();
         return "redirect:/Manager";
