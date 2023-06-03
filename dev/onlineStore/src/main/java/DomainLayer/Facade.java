@@ -595,7 +595,7 @@ public class Facade {
     private void RemoveAllEmployee(String appointerUserName, int storeId) {
         for(Map<Integer,Employment> employmentMap : employmentList.values()){
             Employment employment =employmentMap.get(storeId);
-            if(employment!=null && employment.getAppointer().equals(registeredUserList.get(appointerUserName))){
+            if(employment!=null && employment.getAppointer()!=null && employment.getAppointer().equals(registeredUserList.get(appointerUserName))){
                 String appointedUserName =employment.getEmployee().getUserName();
                 RemoveAllEmployee(appointedUserName,storeId);
                 employmentList.get(appointedUserName).remove(storeId);
