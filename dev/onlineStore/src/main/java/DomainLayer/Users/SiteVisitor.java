@@ -127,9 +127,5 @@ public class SiteVisitor{
         return FreeVisitorID;
     }
 
-    @Override
-    public String toString(){
-          return "VisitorID : "+visitorId;
-    }
 
 }
