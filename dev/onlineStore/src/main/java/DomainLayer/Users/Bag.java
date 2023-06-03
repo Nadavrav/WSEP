@@ -136,17 +136,4 @@ public class Bag {
         }
         return s.toString();
     }
-
-    /**
-     * A function to get the price of all the items in the bag
-     * @return the price of the contents of the bag
-     */
-    public Double getTotalBagPrice()
-    {
-        Double totalPrice = 0.0;
-        for (CartProduct cProd: productList.values()) {
-            totalPrice += cProd.getPrice() * cProd.getAmount();
-        }
-        return totalPrice;
-    }
 }

@@ -96,7 +96,7 @@ public class Cart {
         {
             Double total = 0.0;
             for (Bag b: bagList.values()) {
-                total += b.getTotalBagPrice();
+                total += b.calculateTotalAmount();
             }
             return total;
         }
