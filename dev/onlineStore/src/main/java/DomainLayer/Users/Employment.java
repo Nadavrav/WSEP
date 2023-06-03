@@ -135,4 +135,33 @@ public class Employment {
     }
 
 
+    public boolean CanManageStock() {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanManageStock))
+            return true;
+        return false;
+    }
+
+    public boolean CanChangePolicyAndDiscounts() {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanChangePolicyAndDiscounts))
+            return true;
+        return false;
+    }
+
+    public boolean CanChangePermissionsForStoreManager() {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanChangePermissionsForStoreManager))
+            return true;
+        return false;
+    }
+
+    public boolean CanSeeStaffAndPermissions() {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanSeeStaffAndPermissions))
+            return true;
+        return false;
+    }
+
+    public boolean CanSeePurchaseHistory() {
+        if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanSeePurchaseHistory))
+            return true;
+        return false;
+    }
 }
