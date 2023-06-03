@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("https://media.istockphoto.com/id/1297721828/photo/business-holding-virtual-shopping-cart-trolley-with-blue-bokeh-online-shopping-concept.jpg?s=612x612&w=0&k=20&c=0z2gs_-XrqPHHjnRzAJ6aoKV7PK0lUCGDT4iPtJTrc0=");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        header {
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 65vh;
+        }
+
+        .cart {
+            padding: 25px;
+            background-color: transparent;
+        }
+
+        .product-list-container {
+            max-height: 290px;
+            overflow-y: auto;
+            background-color: rgba(255, 255, 255, 0.07);
+            padding: 10px;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 15px;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 240px;
+            padding: 5px;
+            text-align: center;
+            color: white;
+        }
+
+        .total-amount {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .buy-button {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .buy-button button {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        .buy-button button:hover {
+            background-color: #555;
+            cursor: pointer;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<div th:replace="fragments/alert :: alert(${alert})"></div>
+
+<header>
+    <h1>My Shopping Cart</h1>
+</header>
+
+<main>
+    <button style="background-color: transparent; color: #d2d3d5; border: none;position: fixed; top: 2px; right: 0.5%;">
+        <svg onclick="window.location.href='MainPage';" width="30" height="35" fill="currentColor" class="bi bi-house" viewBox="0 0 21 8">
+            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
+        </svg>
+    </button>
+    <button style="color: white;background-color: transparent;border: none;position: fixed;right: 3%; top: 3px;" onclick="window.location.href='SearchResults';">
+        <svg width="26" height="35" fill="currentColor" class="bi bi-search" viewBox="0 0 21 8">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+        </svg>
+    </button>
+
+    <section class="cart">
+        <div class="product-list-container">
+            <div class="product-list">
+                <div class="product" th:each="bag : ${myCart}">
+                    <div th:each="product : ${bag.getProductList()}">
+                        <div class="product-details">
+                            <h2 th:text="${product.getName()}"></h2>
+                            <p>
+                                <span>Price:</span>
+                                <span th:text="${product.getPrice()}"></span>
+                            </p>
+                            <p>
+                                <span>Category:</span>
+                                <span th:text="${product.getCategory()}"></span>
+                            </p>
+                            <!--                                <p>-->
+                            <!--                                    <span>Description:</span>-->
+                            <!--                                    <span th:text="${product.getDescription()}"></span>-->
+                            <!--                                </p>-->
+                            <!--                                <p>-->
+                            <!--                                    <span>Amount:</span>-->
+                            <!--                                    <span th:text="${product.getAmount()}"></span>-->
+                            <!--                                </p>-->
+                            <!--                                <p>-->
+                            <!--                                    <span>Amount:</span>-->
+                            <!--                                    <input type="number" th:value="${product.getAmount()}" min="1" onchange="updateAmount('${product.id}', '${bag.getStoreId()}', this.value)" />-->
+                            <!--                                </p>-->
+
+                            <form action="/removeFromCart" method="post">
+                                <input type="hidden" name="storeId" th:value="${bag.getStoreId()}"/>
+                                <!--                                    <input type="hidden" name="productId" th:value="${product.id}"/>-->
+                                <!--                                    <span>Quantity: </span>-->
+                                <!--                                    <input style="width: 20px;" type="number" name="quantity" value="1" min="1" required/>-->
+                                <button class="remove-button" style="background-color: transparent;border: none;" type="submit">
+                                    <svg width="16" height="16" fill="white" class="bi bi-bag-dash-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM6 9.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--        <div class="total-amount">-->
+        <!--            <h3>Total Amount:</h3>-->
+        <!--            <p th:text="'$' + ${totalAmount}"></p>-->
+        <!--        </div>-->
+        <div class="buy-button">
+            <button onclick="window.location.href='Buy';">BUY</button>
+        </div>
+    </section>
+
+    <!--    <script>-->
+    <!--        function updateAmount(productId, storeId, amount) {-->
+    <!--            axios.post('/updateAmount', { productId: productId, storeId: storeId, amount: amount })-->
+    <!--                    .then(function (response) {-->
+    <!--                    console.log(response.data);-->
+    <!--                })-->
+    <!--                .catch(function (error) {-->
+    <!--                    console.error(error);-->
+    <!--                });-->
+    <!--        }-->
+    <!--    </script>-->
+</main>
+</body>
+</html>
