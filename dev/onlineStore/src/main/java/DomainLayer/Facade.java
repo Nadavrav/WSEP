@@ -458,6 +458,7 @@ public class Facade {
             employmentList.put(appointedUserName, newEmploymentMap);
         }
         employmentList.get(appointedUserName).put(storeId, appointedEmployment);
+        store.addNewListener(appointed);
         logger.fine("new store owner with name" + appointedUserName +" added successfully");
         //catch
         //release lock appointer
@@ -521,6 +522,7 @@ public class Facade {
             employmentList.put(appointedUserName, newEmploymentMap);
         }
         employmentList.get(appointedUserName).put(storeId,appointedEmployment);
+        store.addNewListener(appointed);
         logger.fine("new store manager with name" + appointedUserName +" added successfully");
         //catch
         //release lock appointer
@@ -583,6 +585,7 @@ public class Facade {
             }
             RemoveAllEmployee(appointedUserName,storeId);
             employmentList.get(appointedUserName).remove(storeId);
+            store.addNewListener(registeredUserList.get(appointedUserName));
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
@@ -598,6 +601,8 @@ public class Facade {
                 employmentList.get(appointedUserName).remove(storeId);
                 if(employmentList.get(appointedUserName).isEmpty()){
                     employmentList.remove(appointerUserName);
+                    storesList.get(storeId).addNewListener(registeredUserList.get(appointedUserName));
+                    registeredUserList.get(appointedUserName).update("You are no longer employee of the store '"+storesList.get(storeId).getName()+"'");
                 }
             }
         }
@@ -764,10 +769,14 @@ public class Facade {
                                 InstantPurchase p = new InstantPurchase(visitor, productsId, amount);
                                 if (visitor instanceof RegisteredUser) {
                                     ((RegisteredUser) visitor).addPurchaseToHistory(p);
-
+                                    storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
+                                }
+                                else{
+                                    storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
                                 }
                                 storesList.get(b.getStoreID()).addToStoreHistory(b);
                                 visitor.removeBag(b.getStoreID());
+
                             }
                         }
                     }
@@ -871,6 +880,7 @@ public class Facade {
         }
         //open new store ()
         Store store = new Store(storeName);
+        store.addNewListener((RegisteredUser)User);
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
@@ -947,6 +957,7 @@ public class Facade {
             logger.fine("store status changed from active to closed");
             logger.info("store is closed now");
             store.CloseStore();
+
            return;
         }
 
@@ -1550,6 +1561,27 @@ public class Facade {
             }
         }
         return offlineUsersList;
+    }
+
+    public boolean checkForNewMessages(String userName) throws Exception {
+        try{
+            Boolean hasNewMessages = registeredUserList.get(userName).hasNewMessage();
+
+            return hasNewMessages;
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
+
+    public LinkedList<String> getNewMessages(String userName) throws Exception {
+        try{
+            registeredUserList.get(userName).setHasNewMessage(false);
+            return registeredUserList.get(userName).getWaitingMessages();
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
     }
 
 

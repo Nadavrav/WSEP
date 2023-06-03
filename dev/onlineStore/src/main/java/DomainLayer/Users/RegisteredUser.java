@@ -7,6 +7,7 @@ import DomainLayer.Logging.UniversalHandler;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.logging.*;
 
 
@@ -20,6 +21,16 @@ public class RegisteredUser extends SiteVisitor{
     private boolean loggedIn;
     //add lock
 
+    public boolean hasNewMessage() {
+        return hasNewMessage;
+    }
+
+    boolean hasNewMessage = false;
+    LinkedList<String> waitingMessages;
+
+    public LinkedList<String> getWaitingMessages() {
+        return waitingMessages;
+    }
 
     @Override
     public String toString(){
@@ -48,6 +59,16 @@ public class RegisteredUser extends SiteVisitor{
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         return md.digest(unHashedBytes);
     }
+
+    public void update(String message){
+        waitingMessages.add(message);
+        hasNewMessage = true;
+    }
+
+    public void setHasNewMessage(boolean b){
+        hasNewMessage=b;
+    }
+
      public RegisteredUser(SiteVisitor visitor,String userName, String password) throws NoSuchAlgorithmException {
         super(visitor.getVisitorId());
             UniversalHandler.GetInstance().HandleError(logger);
