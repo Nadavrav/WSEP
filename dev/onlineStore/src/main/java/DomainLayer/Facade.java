@@ -1529,4 +1529,21 @@ public class Facade {
         return quantity;
     }
 
+    public List<SiteVisitor> getOnlineUsers(){
+        logger.info("Starting getOnlineUsers");
+        return new LinkedList<>(onlineList.values());
+    }
+
+    public List<RegisteredUser> getOfflineUsers(){
+        logger.info("Starting getOfflineUsers");
+        LinkedList<RegisteredUser> offlineUsersList = new LinkedList<>();
+        for (RegisteredUser registeredUser:registeredUserList.values()) {
+            if(!onlineList.containsValue(registeredUser)){
+                offlineUsersList.add(registeredUser);
+            }
+        }
+        return offlineUsersList;
+    }
+
+
 }
