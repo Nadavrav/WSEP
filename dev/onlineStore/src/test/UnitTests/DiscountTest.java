@@ -174,7 +174,7 @@ public class DiscountTest {
         Assertions.assertEquals(65,discount); //50% off 1 steak and 1 chicken, 50+15
     }
 
-    //There is a 50% meat discount  only if the bag contains at least 5 breads or at least 6 dairy products, but not both
+    //There is a 50% meat discount only if the bag contains at least 5 breads or at least 6 dairy products, but not both
     @Test
     public void ComplexXorDiscount(){
         BooleanAfterFilterCondition breadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
