@@ -1420,6 +1420,10 @@ public class Facade {
             logger.info("User deletion failed: username "+userName+" does not exist");
             throw new Exception("username " + userName + " does not exists");
         }
+        if(!(employmentList.get(userName) == null || employmentList.get(userName).size() == 0)){
+            logger.info("User deletion failed: username "+userName+" has store");
+            throw new Exception("username " + userName + " has store");
+        }
         registeredUserList.remove(userName);
     }
 
