@@ -2,6 +2,7 @@ package com.okayjava.html.controller;
 
 import DomainLayer.Response;
 
+import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
