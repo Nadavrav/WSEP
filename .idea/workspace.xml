@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="added all previous fixes">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,17 +143,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PurchaseHistory" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UnitTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="AcceptenceTests.UserTests.*" />
+          <option name="PATTERN" value="UnitTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.PurchaseHistory" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="UnitTests" />
+      <option name="TEST_OBJECT" value="package" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -170,19 +168,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="springboot-html" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="springboot-html" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="SpringbootHtmlApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="springboot-html" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.okayjava.html.SpringbootHtmlApplication" />
@@ -191,20 +176,20 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="JUnit.UnitTests in springboot-html" />
       <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
       <item itemvalue="JUnit.CartTests" />
       <item itemvalue="JUnit.ConcurrencyCartTests" />
-      <item itemvalue="JUnit.PurchaseHistory" />
       <item itemvalue="JUnit.UnitTests.* and 1 more" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
+        <item itemvalue="JUnit.UnitTests in springboot-html" />
         <item itemvalue="JUnit.UnitTests.* and 1 more" />
         <item itemvalue="JUnit.ConcurrencyCartTests" />
-        <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
         <item itemvalue="JUnit.CartTests" />
-        <item itemvalue="JUnit.PurchaseHistory" />
       </list>
     </recent_temporary>
   </component>
@@ -222,6 +207,7 @@
       <workItem from="1685375107160" duration="9100000" />
       <workItem from="1685570300384" duration="825000" />
       <workItem from="1685708420125" duration="5144000" />
+      <workItem from="1685784754127" duration="6738000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -335,5 +321,16 @@
     <MESSAGE value="added and fixed tests" />
     <MESSAGE value="added all previous fixes" />
     <option name="LAST_COMMIT_MESSAGE" value="added all previous fixes" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java</url>
+          <line>22</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
