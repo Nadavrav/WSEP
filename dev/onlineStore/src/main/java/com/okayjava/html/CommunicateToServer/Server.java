@@ -7,9 +7,12 @@ import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceCart;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
+import java.util.Collection;
 import java.util.List;
 
 public class Server {
@@ -183,5 +186,28 @@ public class Server {
         return service.getRegisteredUsersInfo();
     }
 
+    public Response<?> removeEmployee(int storeId,String userName){
+        return service.removeEmployee(storeId, userName);
+    }
+
+    public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
+        return service.getBagDiscountInfo(storeId);
+    }
+
+    public Response<List<ServiceUser>> getOnlineUsers(){
+        return service.getOnlineUsers();
+    }
+
+    public Response<List<ServiceUser>> getOfflineUsers(){
+        return service.getOfflineUsers();
+    }
+
+    public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
+        return service.getStoreDiscountInfo(storeId);
+    }
+
+    public Response<Collection<ServiceStore>> getStoresByUserName(String userName){
+        return service.getStoresByUserName(userName);
+    }
 }
 

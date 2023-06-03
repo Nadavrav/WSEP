@@ -114,13 +114,12 @@
     </svg>
   </button>
 </header>
-<!--<div th:replace="fragments/alert :: alert(${alert})"></div>-->
 
 <div class="container">
   <h1>Welcome to Admin Page</h1>
   <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('delete-user-modal')">Delete User</a>
-  <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('notification-modal')">Notification History</a>
-  <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('users-info-modal')">Users Info</a>
+  <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('online-users-modal')">Online Users</a>
+  <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('offline-users-modal')">Offline Users</a>
 
 </div>
 <script>
@@ -157,26 +156,18 @@
       <button type="submit">DELETE USER</button>
     </form>
 </div>
-<!------------------------------ Notification Modal ------------------------------>
-<div id="notification-modal" class="modal">
-  <a class="close-button" onclick="closeModal('notification-modal')">&#x2613</a>
-<!--  <h2>Notifications</h2>-->
-  <form id="notification-form" action="/notification-history" method="post">
-    <h2>Not Implemented Yet!</h2>
-  </form>
-</div>
 
-<!------------------------------ Users Info Modal ------------------------------>
-<div id="users-info-modal" class="modal">
-  <a class="close-button" onclick="closeModal('users-info-modal')">&#x2613</a>
+<!------------------------------ Online Users Modal ------------------------------>
+<div id="online-users-modal" class="modal">
+  <a class="close-button" onclick="closeModal('online-users-modal')">&#x2613</a>
   <div style="overflow-y: auto;">
-<!--    <h1 style="color: whitesmoke;">Users Info</h1>-->
+<!--    <h1 style="color: whitesmoke;">Online Users</h1>-->
     <table>
       <tr>
         <th>User Name</th>
         <th>User Info</th>
       </tr>
-      <tr th:each="user : ${usersInfo}">
+      <tr th:each="user : ${onlineUsersInfo}">
         <td><span th:text="${user.userName}"></span></td>
         <td><span th:text="${user.info}"></span></td>
       </tr>
@@ -184,5 +175,22 @@
   </div>
 </div>
 
+<!------------------------------ Offline Users Modal ------------------------------>
+<div id="offline-users-modal" class="modal">
+  <a class="close-button" onclick="closeModal('offline-users-modal')">&#x2613</a>
+  <div style="overflow-y: auto;">
+    <!--    <h1 style="color: whitesmoke;">Offline Users</h1>-->
+    <table>
+      <tr>
+        <th>User Name</th>
+        <th>User Info</th>
+      </tr>
+      <tr th:each="user : ${offlineUsersInfo}">
+        <td><span th:text="${user.userName}"></span></td>
+        <td><span th:text="${user.info}"></span></td>
+      </tr>
+    </table>
+  </div>
+</div>
 </body>
 </html>

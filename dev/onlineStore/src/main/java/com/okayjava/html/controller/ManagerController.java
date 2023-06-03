@@ -258,6 +258,26 @@ public class ManagerController {
         return "redirect:/Manager";
     }
 
+    @RequestMapping(value = "/remove-employee", method = RequestMethod.POST)
+    public String removeEmployee(@RequestParam("storeID-remove-emp") int storeID,
+                                 @RequestParam("username-remove-emp") String userName,
+                                 Model model) {
+
+        Response<?> response = server.removeEmployee(storeID, userName);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
+            System.out.println(userName + " was removed successfully from storeId: " + storeID);
+        }
+        alert.reset();
+        return "redirect:/Manager";
+    }
+
     @RequestMapping(value = "/appoint-store-owner", method = RequestMethod.POST)
     public String appointStoreOwner(@RequestParam("storeID-add-owner") int storeID,
                                     @RequestParam("owner-name-add") String ownerName,

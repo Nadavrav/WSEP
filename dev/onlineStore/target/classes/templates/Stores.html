@@ -22,6 +22,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
+            overflow-y: auto;
         }
 
         .store-list li {
@@ -36,6 +37,7 @@
             text-align: center;
             cursor: pointer;
             transition: transform 0.3s;
+            overflow-y: auto;
         }
 
         .store-list li:hover {
@@ -313,7 +315,7 @@
 
     <ul class="store-list">
         <li style="color: #d2d3d5;" th:each="store : ${stores}">
-            <span class="store-name" th:text="${store.getName()}" th:attr="data-name=${store.getName()}, data-storeid=${store.getId()}, data-info=${store.getInfo()}, data-discount=${store.getDiscounts()}" onclick="displayStoreComments(this.dataset.name, this.dataset.storeid, this.dataset.info, this.dataset.discount)"></span>
+            <span style="overflow-y: auto;" class="store-name" th:text="${store.getName()}" th:attr="data-name=${store.getName()}, data-storeid=${store.getId()}, data-info=${store.getInfo()}, data-discount=${store.getDiscounts()}" onclick="displayStoreComments(this.dataset.name, this.dataset.storeid, this.dataset.info, this.dataset.discount)"></span>
         </li>
     </ul>
 </body>

@@ -31,7 +31,7 @@ public class MainPageController {
             isInitialized = true;
         }
         model.addAttribute("alert", alert.copy());
-        server.EnterNewSiteVisitor();
+//        server.EnterNewSiteVisitor();
         System.out.println("user logged in with id: " + server.EnterNewSiteVisitor().getValue());
         alert.reset();
         return "MainPage";
@@ -65,7 +65,6 @@ public class MainPageController {
             server.setLogged(true);
             alert.setSuccess(true);
             alert.setMessage(response.getMessage());
-            System.out.println(alert.getMessage());
             model.addAttribute("logged", server.isLogged());
             model.addAttribute("alert", alert.copy());
             if (server.isAdmin().getValue()) {

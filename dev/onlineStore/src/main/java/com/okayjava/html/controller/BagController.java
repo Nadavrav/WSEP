@@ -30,6 +30,17 @@ public class BagController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
+
+//        Response<ServiceCart> responseT = server.;
+//        if (responseT.isError()){
+//            alert.setFail(true);
+//            alert.setMessage(responseT.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//        }
+//        else{
+//            model.addAttribute("totalAmount", responseT.getValue());
+//            model.addAttribute("alert", alert.copy());
+//        }
         return "Bag";
     }
 
@@ -60,6 +71,7 @@ public class BagController {
                                                @RequestParam("storeId") int storeId,
                                                @RequestParam("amount") int amount) {
 
+        System.out.println("here!");
         server.changeCartProductQuantity(productId, storeId, amount);
         // Return a success response
         return ResponseEntity.ok("Amount updated successfully");
