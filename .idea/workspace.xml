@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="implemented the function">
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="fixed a mistake">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Bag.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Bag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Cart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/CartTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/CartTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +99,7 @@
       <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.CartTest">
+  <component name="RunManager" selected="JUnit.FacadeTest">
     <configuration name="AcceptenceTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
@@ -130,16 +129,16 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ConcurrencyCartTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="FacadeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="AcceptenceTests.UserTests.ConcurrencyTests.*" />
+          <option name="PATTERN" value="UnitTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests" />
-      <option name="MAIN_CLASS_NAME" value="AcceptenceTests.UserTests.ConcurrencyTests.ConcurrencyCartTests" />
+      <option name="PACKAGE_NAME" value="UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="UnitTests.FacadeTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -179,19 +178,19 @@
     </configuration>
     <list>
       <item itemvalue="JUnit.CartTest" />
+      <item itemvalue="JUnit.FacadeTest" />
       <item itemvalue="JUnit.UnitTests in springboot-html" />
       <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
-      <item itemvalue="JUnit.ConcurrencyCartTests" />
       <item itemvalue="JUnit.UnitTests.* and 1 more" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.FacadeTest" />
         <item itemvalue="JUnit.CartTest" />
         <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
         <item itemvalue="JUnit.UnitTests in springboot-html" />
         <item itemvalue="JUnit.UnitTests.* and 1 more" />
-        <item itemvalue="JUnit.ConcurrencyCartTests" />
       </list>
     </recent_temporary>
   </component>
@@ -210,7 +209,7 @@
       <workItem from="1685570300384" duration="825000" />
       <workItem from="1685708420125" duration="5144000" />
       <workItem from="1685784754127" duration="6738000" />
-      <workItem from="1685812242846" duration="1457000" />
+      <workItem from="1685812242846" duration="1671000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -289,7 +288,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685813293642</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="fixed a mistake">
+      <created>1685813749557</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1685813749557</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -331,7 +337,8 @@
     <MESSAGE value="added and fixed tests" />
     <MESSAGE value="added all previous fixes" />
     <MESSAGE value="implemented the function" />
-    <option name="LAST_COMMIT_MESSAGE" value="implemented the function" />
+    <MESSAGE value="fixed a mistake" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed a mistake" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
