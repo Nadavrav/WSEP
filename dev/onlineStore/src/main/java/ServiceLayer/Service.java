@@ -619,5 +619,22 @@ public class Service {
         }
     }
 
+    public Response<Boolean> checkForNewMessages(String userName) throws Exception {
+        try{
+            return new Response<>(facade.checkForNewMessages(userName));
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
+
+    public Response<LinkedList<String>> getNewMessages(String userName) throws Exception {
+        try{
+            return new Response<>(facade.getNewMessages(userName));
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
+    }
 
 }
