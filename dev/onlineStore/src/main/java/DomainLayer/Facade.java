@@ -641,7 +641,7 @@ public class Facade {
             throw  new Exception("the appointer is not owner of store");
         }
 
-        if(appointerEmployment==null|| (!appointerEmployment.checkIfOwner() && !appointerEmployment.checkIfFounder())){
+        if(appointerEmployment==null|| (!appointerEmployment.CanChangePermissionsForStoreManager())){
             throw  new Exception("the appointer is not owner of store");
         }
 
@@ -694,7 +694,10 @@ public class Facade {
         if(!(appointer instanceof Admin)) {
             //is he storeowner
             try {
-                employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+                Employment appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+                if(!appointerEmployment.CanSeeStaffAndPermissions()){
+                    throw new Exception("You do not have the permission to see staff and permissions.");
+                }
             } catch (Exception e) {
                 logger.warning("the appointer is not owner of store");
                 throw  new Exception("the appointer is not owner of store id");
@@ -978,7 +981,7 @@ public class Facade {
             logger.warning("employment is null");
             throw  new Exception("there is no employee with this id ");
         }
-        if (!employment.checkIfFounder() && !employment.checkIfOwner() && !employment.checkIfManager()) {
+        if (!employment.CanManageStock()) {
             logger.warning("user are not allowed to add products");
             throw  new Exception("you are not allowed to add products to this store");
         }
@@ -1058,7 +1061,7 @@ public class Facade {
         }
         if (employment == null)
             throw  new Exception("there is no employee with this id ");
-        if (employment.checkIfFounder() || employment.checkIfOwner() || employment.checkIfStoreManager()) {
+        if (employment.CanManageStock()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
@@ -1071,7 +1074,7 @@ public class Facade {
         }
         logger.warning("Only the owner can close the store: " + visitorId);
         logger.fine("Exiting method RemoveProduct()");
-        throw  new Exception("Just the owner can Close the Store ");
+        throw  new Exception("You do not have permission to remove product from this store. ");
 
         //catch
         //release lock user
@@ -1103,9 +1106,9 @@ public class Facade {
             logger.warning("employment is null");
             throw  new Exception("there is no employee with this id ");
         }
-        if (!employment.checkIfFounder() && !employment.checkIfOwner() && !employment.checkIfManager()) {
+        if (!employment.CanChangePolicyAndDiscounts()) {
             logger.warning("user are not allowed to add products");
-            throw  new Exception("you are not allowed to add products to this store");
+            throw  new Exception("you are not allowed to add policies to this store");
         }
         if(store.getActive())
             store.addPolicy(policy);
@@ -1239,7 +1242,7 @@ public class Facade {
         }
         if (employment == null)
             throw new Exception("invalid store id ");
-        if (employment.checkIfOwner() || employment.checkIfFounder()) {
+        if (employment.CanManageStock()) {
             Store store = storesList.get(storeId);
             if (store == null) {
                 throw new Exception("there is no store with this id ");
@@ -1340,7 +1343,7 @@ public class Facade {
                 logger.warning("there is no store to this user");
                 throw  new Exception("this user dont have any store");
             }
-            if(!employment.checkIfFounder()) {
+            if(!employment.CanSeePurchaseHistory()) {
                 logger.log(Level.SEVERE, "An error occurred while getting store purchase history for visitorId: " + visitorId);
                 throw new Exception("this user cant view the store purchase history");
             }
