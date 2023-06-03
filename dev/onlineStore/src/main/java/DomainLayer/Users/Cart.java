@@ -78,14 +78,26 @@ public class Cart {
             return s;
         }
 
-    public void removeBag(int storeId) throws Exception {
-        try {
-            bagList.remove(storeId);
+        public void removeBag(int storeId) throws Exception {
+            try {
+                bagList.remove(storeId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("something bad at removeBag");
+            }
         }
-        catch (Exception e)
-        {
-            throw new Exception("something bad at removeBag");
-        }
-    }
 
-    }
+        /**
+         * A function that gets the price of the user's cart
+         * @return - the price of the user's cart
+         */
+        public Double getTotalPrice()
+        {
+            Double total = 0.0;
+            for (Bag b: bagList.values()) {
+                total += b.getTotalBagPrice();
+            }
+            return total;
+        }
+}

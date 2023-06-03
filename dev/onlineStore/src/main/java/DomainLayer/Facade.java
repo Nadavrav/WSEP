@@ -1590,5 +1590,20 @@ public class Facade {
         }
     }
 
+    /**
+     * A function to get the total amount of the current user's cart
+     * @param visitorId - the id of the current user (session number)
+     * @return the value of the products he has in his cart
+     */
+    public Double getTotalPrice(int visitorId) throws Exception {
+        SiteVisitor user = onlineList.get(visitorId);
+        if (user == null) {
+            logger.warning("this User by  ID:"+ visitorId + "is null");
+            throw new IllegalArgumentException("Invalid Visitor ID");
+        }
+        Double totalPrice = user.getCart().getTotalPrice();
+        return totalPrice;
+    }
+
 
 }

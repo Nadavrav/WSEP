@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="added all previous fixes">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Bag.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Bag.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Cart.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Users/Cart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,34 +67,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/natal/Desktop/web-app/WSEP",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.20344828",
-    "settings.editor.selected.configurable": "editor.preferences.import",
-    "spring.configuration.checksum": "8f9201e8a0da0c17e63d95a9ea4f02a8",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/natal/Desktop/web-app/WSEP&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.20344828&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;,
+    &quot;spring.configuration.checksum&quot;: &quot;8f9201e8a0da0c17e63d95a9ea4f02a8&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\denis\IdeaProjects\WSEP\dev\onlineStore" />
@@ -208,6 +212,7 @@
       <workItem from="1685570300384" duration="825000" />
       <workItem from="1685708420125" duration="5144000" />
       <workItem from="1685784754127" duration="6738000" />
+      <workItem from="1685812242846" duration="958000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>
@@ -327,7 +332,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java</url>
-          <line>22</line>
+          <line>37</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
