@@ -254,9 +254,10 @@ public class ManagerController {
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
             model.addAttribute("employeeInfo", response.getValue()); //String
+//            model.addAttribute("showEmployeeInfoModal", true);
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/remove-employee", method = RequestMethod.POST)

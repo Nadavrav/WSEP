@@ -13,6 +13,7 @@ import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Server {
@@ -212,6 +213,14 @@ public class Server {
 
     public Response<List<String>> PurchaseCart(int visitorCard, String address){
         return service.PurchaseCart(visitorCard, address);
+    }
+
+    public Response<LinkedList<String>> getNewMessages() throws Exception {
+        return service.getNewMessages(this.username);
+    }
+
+    public Response<Boolean> checkForNewMessages() throws Exception {
+        return service.checkForNewMessages(this.username);
     }
 }
 

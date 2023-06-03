@@ -183,6 +183,7 @@ public class Facade {
             Admin admin=new Admin(userName, password);
             registeredUserList.replace(userName,admin);
             logger.fine("New admin successfully registered");
+            registeredUserList.get(userName).update("You are an Admin now!");
         }
 
     }
@@ -237,6 +238,7 @@ public class Facade {
         RegisteredUser r = new RegisteredUser(userName, password);
         //onlineList.replace(visitorId,r);
         registeredUserList.put(userName, r);
+        registeredUserList.get(userName).update("Registered to Site");
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
@@ -460,7 +462,9 @@ public class Facade {
         employmentList.get(appointedUserName).put(storeId, appointedEmployment);
         store.addNewListener(appointed);
         logger.fine("new store owner with name" + appointedUserName +" added successfully");
-        //catch
+          registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
+
+          //catch
         //release lock appointer
         //release lockappointed if locked
         //throw e
@@ -524,7 +528,9 @@ public class Facade {
         employmentList.get(appointedUserName).put(storeId,appointedEmployment);
         store.addNewListener(appointed);
         logger.fine("new store manager with name" + appointedUserName +" added successfully");
-        //catch
+       System.out.println("hereeee11111");
+       registeredUserList.get(appointedUserName).update("You are Manager of the store '"+storesList.get(storeId).getName()+"'");
+//catch
         //release lock appointer
         //release lockappointed if locked
         //throw e
@@ -586,6 +592,7 @@ public class Facade {
             RemoveAllEmployee(appointedUserName,storeId);
             employmentList.get(appointedUserName).remove(storeId);
             store.addNewListener(registeredUserList.get(appointedUserName));
+            registeredUserList.get(appointedUserName).update("You are no longer an employee of store "+storesList.get(storeId).getName());
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
@@ -675,6 +682,7 @@ public class Facade {
             appointedEmployment.togglePermission(permission);
         logger.config("all permission has been changed");
         logger.info("changes successfully");
+        registeredUserList.get(username).update("Your permissions of store "+storesList.get(storeID).getName() + " has been changed!");
         return appointedEmployment;
         //catch
         //release lock appointer
@@ -712,7 +720,7 @@ public class Facade {
         String output="";
         for(Map<Integer,Employment> userEmployments : employmentList.values()){
             if(userEmployments.containsKey(storeId)){
-               output+= userEmployments.get(storeId).toString()+"/n";        //employment.toString
+               output+= userEmployments.get(storeId).toString() + '\n';        //employment.toString
             }
         }
         return output;
@@ -728,8 +736,6 @@ public class Facade {
         }
 
         LinkedList<String> failedPurchases = new LinkedList<>();
-        System.out.println("in facade");
-
 
         for(Bag b : visitor.getCart().getBags().values()) {
 
@@ -777,14 +783,12 @@ public class Facade {
                                 }
                                 storesList.get(b.getStoreID()).addToStoreHistory(b);
                                 visitor.removeBag(b.getStoreID());
-                                System.out.println("in facade1 ");
                             }
                         }
                     }
                 }
             }
         }
-        System.out.println("in facade2 " + failedPurchases.size());
         return failedPurchases;
 
     }

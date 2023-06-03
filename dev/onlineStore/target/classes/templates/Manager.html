@@ -275,7 +275,7 @@
   <a class="close-button" onclick="closeModal('show-purchase-history-modal')">&#x2613</a>
   <h2>Purchase History:</h2>
   <div th:each="item: ${purchaseHistory}" class="product">
-    <td th:text="${item}"></td>
+    <p th:text="${item}"></p>
   </div>
 </div>
 <!------------------------------ Close Store Modal ------------------------------>
@@ -308,14 +308,19 @@
     <input type="text" id="storeID-employee" name="storeID-employee" required>
     <br><br>
     <button type="submit" onclick="openModal('show-employee-info-modal')">SHOW INFO</button>
+    <p th:text="${employeeInfo}"></p>
   </form>
 </div>
 
-<div id="show-employee-info-modal" class="modal">
-  <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613</a>
-  <h2>Employee Info:</h2>
-  <td th:text="${employeeInfo}"></td>
-</div>
+<!--<div id="show-employee-info-modal" class="modal" th:if="${showEmployeeInfoModal}">-->
+<!--  <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613</a>-->
+<!--  <h2>Employee Info:</h2>-->
+<!--  <p th:text="${employeeInfo}"></p>-->
+
+<!--&lt;!&ndash;  <div th:if="${alert}" th:class="${alert.isSuccess() ? 'success' : 'error'}">&ndash;&gt;-->
+<!--&lt;!&ndash;    <p th:text="${alert.getMessage()}"></p>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+<!--</div>-->
 
 <!------------------------------ Remove Employee Modal ------------------------------>
 <div id="remove-employee-modal" class="modal">
