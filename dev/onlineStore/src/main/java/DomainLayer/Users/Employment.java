@@ -118,12 +118,20 @@ public class Employment {
     }
     @Override
     public String toString() {
-        return "Employment{" +
-                "appointer=" + appointer.getUserName() +
+        String appointerUserName;
+         if(appointer == null)
+             appointerUserName= " no appointer ";
+         else  {
+             appointerUserName = appointer.getUserName();
+         }
+        String output =  "Employment{" +
+                "appointer=" + appointerUserName +
                 ", employee=" + employee.getUserName() +
                 ", role=" + role +
                 ", permissions=" + permissions +
                 '}';
+
+        return output;
     }
 
 
