@@ -1551,7 +1551,13 @@ public class Facade {
 
     public List<SiteVisitor> getOnlineUsers(){
         logger.info("Starting getOnlineUsers");
-        return new LinkedList<>(onlineList.values());
+        LinkedList <SiteVisitor> onlineusers = new LinkedList<>();
+        for (SiteVisitor sv : onlineList.values())
+        {
+            if(sv.getVisitorId()!=0)
+                onlineusers.add(sv);
+        }
+        return onlineusers;
     }
 
     public List<RegisteredUser> getOfflineUsers(){
