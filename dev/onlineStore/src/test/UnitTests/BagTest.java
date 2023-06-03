@@ -4,7 +4,6 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ class BagTest {
     @Test
     public void testAddProductWithNewProduct() {
         Bag bag = new Bag(StoreId1);
-        bag.addProduct(p1);
+        bag.addProduct(p1,1);
         String ActualproductList = bag.bagToString();
         String expectedList = "Name: Milk Description: Its Milk what did you expect Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n";
        assertEquals(expectedList, ActualproductList);
@@ -37,8 +36,8 @@ class BagTest {
     public void testAddProductWithExistingProduct() {
         Bag bag = new Bag(StoreId1);
         try {
-            bag.addProduct(p1);
-            bag.addProduct(p1);
+            bag.addProduct(p1,1);
+            bag.addProduct(p1,1);
         }
         catch (Exception ignored){}
         String ActualproductList = bag.bagToString();
@@ -68,7 +67,7 @@ class BagTest {
     @Test
     public void testCalculateTotalAmountOneProductMultipleTimes() {
         Bag bag = new Bag(StoreId1);
-        bag.addProduct(p1);
+        bag.addProduct(p1,1);
         bag.changeProductAmount(p1,10);
         double actualTotalAmount = bag.calculateTotalAmount();
         double expectedTotalAmount = p1.getPrice()*10;
@@ -77,8 +76,8 @@ class BagTest {
     @Test
     public void testCalculateTotalAmountWithMultipleProducts() {
         Bag bag = new Bag(StoreId1);
-        bag.addProduct(p1);
-        bag.addProduct(p2);
+        bag.addProduct(p1,1);
+        bag.addProduct(p2,1);
         double actualTotalAmount = bag.calculateTotalAmount();
         double expectedTotalAmount = p1.getPrice()+p2.getPrice();
         assertEquals(expectedTotalAmount, actualTotalAmount);

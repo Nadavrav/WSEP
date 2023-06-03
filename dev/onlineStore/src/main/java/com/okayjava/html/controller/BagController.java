@@ -1,54 +1,67 @@
 package com.okayjava.html.controller;
-
-import ServiceLayer.*;
+import ServiceLayer.ServiceObjects.ServiceCart;
+import com.okayjava.html.CommunicateToServer.Alert;
+import com.okayjava.html.CommunicateToServer.Server;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 import DomainLayer.Response;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 
 @Controller
 public class BagController {
-    private Service server = new Service();
+    Alert alert = Alert.getInstance();
+    private Server server = Server.getInstance();
 
     @GetMapping("/Bag")
-    public String Bag() {
-        return "Bag";
-    }
-
-    @PostMapping("/Bag")
-    public String myBag() {
-        return "Bag";
-    }
-
-//    @PostMapping("/remove-product")
-//    public void removeProduct(@RequestParam("") Model model){
-//        Response response = server.removeProductFromCart(productID, storeID);
-//        if(response.isError()){
-//            model.addAttribute("message", response.isError());
-//        }
-//    }
-
-    @PostMapping("/remove-product-from-cart")
-    public String removeProductFromCart(@RequestParam("productId") int productID,
-                                        Model model) {
-//        Response response = server.removeProductFromCart(productID, storeID);
-//        if(response.isError()){
-//            model.addAttribute("isError", true);
-//            model.addAttribute("message", response.getMessage());
-//        }
-        List<Object[]> cartList = (List<Object[]>) model.getAttribute("cartList");
-        for(Object[] obj : cartList){
-            if(obj[3].equals(productID)){
-                cartList.remove(obj);
-            }
+    public String Bag(Model model) {
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
+        Response<ServiceCart> response = server.getProductsInMyCart();
+        System.out.println(response.getValue().getBags().size() + "sizeosh");
+        if (response.isError()){
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         }
-        model.addAttribute("cartList", cartList);
-        return "/Bag";
+        else{
+            model.addAttribute("myCart", response.getValue().getBags()); //Set<ServiceBag>
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "Bag";
+    }
+
+    @PostMapping("/removeFromCart")
+    public String removeFromCart(@RequestParam("storeId") int storeId,
+                                 @RequestParam("productId") int productId,
+                                 Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
+        Response<?> response = server.removeProductFromCart(productId, storeId);
+        if(response.isError()){
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            System.out.println("productId: " + productId + " was removed!");
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+        }
+
+        return "Bag";
+    }
+
+    @PostMapping("/updateAmount")
+    @ResponseBody
+    public ResponseEntity<String> updateAmount(@RequestParam("productId") int productId,
+                                               @RequestParam("storeId") int storeId,
+                                               @RequestParam("amount") int amount) {
+
+        server.changeCartProductQuantity(productId, storeId, amount);
+        // Return a success response
+        return ResponseEntity.ok("Amount updated successfully");
     }
 }

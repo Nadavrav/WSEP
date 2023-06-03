@@ -1,7 +1,8 @@
 package DomainLayer.Users;
 
 import DomainLayer.Logging.UniversalHandler;
-import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
+import DomainLayer.Stores.CallBacks.StoreCallbacks;
+import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
@@ -22,14 +23,14 @@ public class Bag {
      */
     //Map<String,Integer> productsAmount;
     private static final Logger logger=Logger.getLogger("Bag logger");
-    private final CheckStorePolicyCallback checkPolicy;
+    private final StoreCallbacks callback;
     int storeId;
 
-    public Bag (int storeId,CheckStorePolicyCallback checkPolicy){
+    public Bag (int storeId, StoreCallbacks callback){
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
         this.storeId=storeId;
-        this.checkPolicy=checkPolicy;
+        this.callback = callback;
         productList = new HashMap<>();
        // productsAmount = new HashMap<>();
     }
@@ -38,30 +39,51 @@ public class Bag {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         this.storeId=storeId;
-        this.checkPolicy= (Bag bag) -> false;
+        this.callback = new StoreCallbacks() {
+            @Override
+            public boolean checkStorePolicies(Bag bag) {
+                logger.severe("Error: check policy callback used in a product initialized without store callback");
+                throw new RuntimeException("system error: report error to developers. error logged");
+            }
+            @Override
+            public double getDiscountAmount(Bag bag) {
+                logger.severe("Error: get discount amount callback used in a product initialized without store callback");
+                throw new RuntimeException("system error: report error to developers. error logged");
+            }
+            @Override
+            public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag) {
+                logger.severe("Error: get discount amount callback used in a product initialized without store callback");
+                throw new RuntimeException("system error: report error to developers. error logged");
+            }
+        };
         productList = new HashMap<>();
-        // productsAmount = new HashMap<>();
     }
     public Bag (Bag bag){
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         this.storeId=bag.storeId;
-        this.checkPolicy=bag.getCheckPolicy();
+        this.callback =bag.getCallback();
         productList = new HashMap<>();
-        // productsAmount = new HashMap<>();
     }
 
-    public CheckStorePolicyCallback getCheckPolicy() {
-        return checkPolicy;
+    public StoreCallbacks getCallback() {
+        return callback;
     }
     public boolean passesPolicy(){
-        return checkPolicy.checkBag(this);
+        return callback.checkStorePolicies(this);
     }
-    public void addProduct(StoreProduct product) {
+    public HashMap<CartProduct,Double> getSavingsPerProducts(){
+        return callback.getSavingsPerProduct(this);
+    }
+
+    public double calcDiscountSavings(){
+        return callback.getDiscountAmount(this);
+    }
+    public void addProduct(StoreProduct product,int amount) {
         logger.info("Starting add product");
         if(productList.get(product)!=null)
             throw new RuntimeException("Cart already contains "+product.getName());
-        productList.put(product,new CartProduct(product));
+        productList.put(product,new CartProduct(product,amount));
         logger.info("Add product Succeeded");
     }
     public void addProduct(CartProduct product) {
@@ -76,10 +98,7 @@ public class Bag {
             throw new NullPointerException("attempted to remove null product");
         if(productList.get(product)==null)
             throw new RuntimeException("product to remove not in cart");
-        CartProduct cartProduct=new CartProduct(product);
-        if(productList.get(product).equals(cartProduct))
-                productList.remove(cartProduct);
-        else throw new RuntimeException();
+        productList.remove(product);
     }
     public void removeProduct(CartProduct product) {
         if(product==null)
@@ -91,8 +110,10 @@ public class Bag {
         else throw new RuntimeException();
     }
     public void changeProductAmount(Product product,int newAmount) {
-       CartProduct cartProduct=productList.get(product);
-       cartProduct.setAmount(newAmount);
+        if(newAmount <= 0)
+            throw new IllegalArgumentException("Cant set amount to 0 or negative");
+        CartProduct cartProduct=productList.get(product);
+        cartProduct.setAmount(newAmount);
     }
     public double calculateTotalAmount() {
         double totalAmount = 0;

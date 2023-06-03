@@ -2,14 +2,14 @@ package DomainLayer;
 
 
 
-import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
+import DomainLayer.Stores.CallBacks.StoreCallbacks;
+import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
 
-import DomainLayer.Stores.Rating;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
@@ -17,10 +17,8 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
-import ServiceLayer.ServiceObjects.ServiceStore;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 public class Facade {
@@ -188,6 +186,11 @@ public class Facade {
         }
 
     }
+
+    public boolean isAdmin(int visitorID){
+        return onlineList.get(visitorID) instanceof Admin;
+    }
+
     private void registerInitialAdmin() {
         logger.info("Starting initial admin registration");
         if(registeredUserList.containsKey("admin")) {
@@ -237,7 +240,7 @@ public class Facade {
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
-
+        //
         RegisteredUser user = registeredUserList.get(userName);
         boolean b = registeredUserList.get("admin")!=null;
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
@@ -273,7 +276,7 @@ public class Facade {
         return visitorId;
     }
 
-     public void addProductToCart(int productId,int storeId, int visitorId) throws Exception {//2.3
+     public void addProductToCart(int productId, int storeId, int amount, int visitorId) throws Exception {//2.3
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("trying to add product from null user");
@@ -295,7 +298,7 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
-            user.addProductToCart(storeId, product,store::passesPolicies);
+            user.addProductToCart(storeId, product,amount, generateStoreCallback(store));
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
         catch (Exception e){
@@ -372,14 +375,14 @@ public class Facade {
     }
 
 
-    public String getProductsInMyCart(int visitorId) throws Exception {//2.4
+    public Cart getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("trying to add from a null user");
             throw  new Exception("Invalid Visitor ID");
         }
 
-        return user.cartToString();
+        return user.getCart();
         //return user.GetCart
 
     }
@@ -752,12 +755,16 @@ public class Facade {
                             if (!supplier.supplyProducts(productsId)) {
                                 failedPurchases.add(b.getStoreID().toString());
                             } else {
+                                for (CartProduct p : b.getProducts()) {
+                                    s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
+                                }
                                 InstantPurchase p = new InstantPurchase(visitor, productsId, amount);
                                 if (visitor instanceof RegisteredUser) {
                                     ((RegisteredUser) visitor).addPurchaseToHistory(p);
 
                                 }
                                 storesList.get(b.getStoreID()).addToStoreHistory(b);
+                                visitor.removeBag(b.getStoreID());
                             }
                         }
                     }
@@ -1056,6 +1063,8 @@ public class Facade {
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
             }
+            if(!store.getActive())
+                throw  new Exception("store is closed");
             store.RemoveProduct(ProductId);
             //return new Response<>("the Product is successfully added", false);
             return;
@@ -1111,12 +1120,16 @@ public class Facade {
     public void UpdateProductQuantity(int visitorId,int storeId, int productID,int quantity) throws Exception{
         //lock product (get product object)
         //try
-                logger.fine("Entering method UpdateProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", quantity: " + quantity);
+        logger.fine("Entering method UpdateProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", quantity: " + quantity);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productID);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductQuantity(productID,quantity);
-                logger.fine("Exiting method UpdateProductQuantity()");
+        logger.fine("Exiting method UpdateProductQuantity()");
 
         //catch
         //release lock product
@@ -1147,10 +1160,14 @@ public class Facade {
     }
 
     public void UpdateProductName(int visitorId, int productId,int storeId,String Name) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", name: " + Name);
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", name: " + Name);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductName(productId,Name);
         logger.fine("Exiting method UpdateProductName()");
 
@@ -1159,12 +1176,16 @@ public class Facade {
     public void UpdateProductPrice(int visitorId, int productId,int storeId,double price) throws Exception{
         //lock product (get product object)
         //try
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", price: " + price);
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", price: " + price);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductPrice(productId,price);
-                logger.fine("Exiting method UpdateProductPrice()");
+        logger.fine("Exiting method UpdateProductPrice()");
 
         //catch
         //release lock product
@@ -1173,12 +1194,16 @@ public class Facade {
     }
 
     public void UpdateProductCategory(int visitorId, int productId,int storeId,String category) throws Exception{
-                logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
+        logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store == null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
+        if(!store.getActive())
+            throw  new Exception("store is closed");
         store.UpdateProductCategory(productId,category);
-                logger.fine("Exiting method UpdateProductCategory()");
+        logger.fine("Exiting method UpdateProductCategory()");
 
 
     }
@@ -1188,6 +1213,8 @@ public class Facade {
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store != null) {
+            if(!store.getActive())
+                throw  new Exception("store is closed");
             store.UpdateProductDescription(productId, description);
             logger.fine("Exiting method UpdateProductDescription()");
         }
@@ -1302,12 +1329,21 @@ public class Facade {
         return store.getInfo();
     }
     //6.4
-   public List<String> GetStoreHistoryPurchase(int StoreId, int visitorId) throws Exception {
+    public List<String> GetStoreHistoryPurchase(int StoreId, int visitorId) throws Exception {
         logger.info("Entering method GetStoreHistoryPurchase() with StoreId: " + StoreId + " and visitorId: " + visitorId);
         SiteVisitor User = onlineList.get(visitorId);
+        Employment employment = null;
         if(! (User instanceof Admin)){
-            logger.log(Level.SEVERE, "An error occurred while getting store purchase history for visitorId: " + visitorId);
-            throw new Exception("invalid visitor Id");
+            try{
+                employment = employmentList.get(((RegisteredUser) User).getUserName()).get(StoreId);
+            }catch (Exception e){
+                logger.warning("there is no store to this user");
+                throw  new Exception("this user dont have any store");
+            }
+            if(!employment.checkIfFounder()) {
+                logger.log(Level.SEVERE, "An error occurred while getting store purchase history for visitorId: " + visitorId);
+                throw new Exception("this user cant view the store purchase history");
+            }
         }
         Store store = storesList.get(StoreId);
         if (store == null) {
@@ -1420,13 +1456,14 @@ public class Facade {
         }
         return store.getProductRatingList(productId);
     }
-
+    public Collection<Discount> getStoreDiscounts(int storeId){
+        return storesList.get(storeId).getDiscounts();
+    }
     public List<Store> getStoresByUserName(int visitorId,String userName) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
-        if(! (visitor instanceof RegisteredUser)){
+        if(! (visitor instanceof RegisteredUser user)){
             throw new Exception("invalid visitor Id");
         }
-        RegisteredUser user = (RegisteredUser)visitor;
         if(!user.getUserName().equals(userName)){
             throw new Exception("This is not your userName");
         }
@@ -1438,4 +1475,75 @@ public class Facade {
         }
         return stores;
     }
+    public double getBagDiscountSavings(int visitorId,int storeId) throws Exception {
+        return getUserBag(visitorId,storeId).calcDiscountSavings();
+    }
+    public boolean bagPassesPolicies(int visitorId,int storeId) throws Exception {
+        return getUserBag(visitorId,storeId).passesPolicy();
+    }
+    private Bag getUserBag(int visitorId,int storeId) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(! (visitor instanceof RegisteredUser user)){
+            throw new Exception("invalid visitor Id");
+        }
+        Bag bag=user.getCart().getBags().get(storeId);
+        if(bag==null)
+            throw new Exception("no bag exists in the user's cart for the specified store");
+        return bag;
+    }
+    public HashMap<CartProduct,Double> getSavingsPerProduct(int visitorId,int storeId) throws Exception{
+        return getUserBag(visitorId,storeId).getSavingsPerProducts();
+    }
+    private StoreCallbacks generateStoreCallback(Store store){
+        return new StoreCallbacks() {
+            @Override
+            public boolean checkStorePolicies(Bag bag) {
+                return store.passesPolicies(bag);
+            }
+            @Override
+            public double getDiscountAmount(Bag bag) {
+                return store.calcSaved(bag);
+            }
+            @Override
+            public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag) {
+                return store.getDiscountPerProduct(bag);
+            }
+        };
+    }
+
+    /**
+     * A function to get the quantity of a product
+     * @param storeId - the store that the product belongs to
+     * @param productId - the id of the product
+     * @return an integer that is the quantity of the product that the store has right now
+     */
+    public Integer getStoreProductQuantity(int storeId, int productId)
+    {
+        logger.info("Starting getStoreProductQuantity");
+        if(!storesList.containsKey(storeId))
+            throw new IllegalArgumentException("There is no store with this id");
+        Store s =  storesList.get(storeId);
+        if(s.getProductByID(productId) == null)
+            throw new NullPointerException("There is no such product with this id:"+productId+" in the store with the id:"+storeId);
+        Integer quantity = s.getProductByID(productId).getQuantity();
+        return quantity;
+    }
+
+    public List<SiteVisitor> getOnlineUsers(){
+        logger.info("Starting getOnlineUsers");
+        return new LinkedList<>(onlineList.values());
+    }
+
+    public List<RegisteredUser> getOfflineUsers(){
+        logger.info("Starting getOfflineUsers");
+        LinkedList<RegisteredUser> offlineUsersList = new LinkedList<>();
+        for (RegisteredUser registeredUser:registeredUserList.values()) {
+            if(!onlineList.containsValue(registeredUser)){
+                offlineUsersList.add(registeredUser);
+            }
+        }
+        return offlineUsersList;
+    }
+
+
 }

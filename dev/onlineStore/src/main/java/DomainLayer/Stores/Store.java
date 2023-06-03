@@ -1,6 +1,7 @@
 package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
+import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
@@ -27,11 +28,13 @@ public class Store {
      * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
      */
     private final HashSet<Policy> storePolicies;
+    private final HashSet<Discount> storeDiscounts;
 
     private Double Rate=0.0;
     private static final Logger logger=Logger.getLogger("Store logger");
     
     public Store(String name) {
+        storeDiscounts=new HashSet<>();
         storePolicies=new HashSet<>();
         rateMapForStore=new HashMap<>();
         UniversalHandler.GetInstance().HandleError(logger);
@@ -61,6 +64,7 @@ public class Store {
     public double getRate(){
         return Rate;
     }
+
 
     //2.1
    public String getInfo() throws Exception {
@@ -145,6 +149,9 @@ public class Store {
         logger.info("Product search by name completed. Search keyword: " + Name + ", Number of results: " + searchResults.size());
 
         return searchResults;
+    }
+    public void ReduceProductQuantity(Integer productId, int quantity) {
+        products.get(productId).ReduceQuantity(quantity);
     }
 
     private boolean isInStock(StoreProduct product) {
@@ -296,5 +303,47 @@ public class Store {
 
     public HashMap<String, String> getProductRatingList(int productId) {
         return products.get(productId).getProductRatingList();
+    }
+    public void addDiscount(Discount discount){
+        storeDiscounts.add(discount);
+    }
+    public boolean removeDiscount(Discount discount){
+        return storeDiscounts.remove(discount);
+    }
+    public double calcSaved(Bag bag){
+        double totalSaved=0;
+        for(Discount discount:storeDiscounts){
+            totalSaved+=discount.calcDiscountAmount(bag);
+        }
+        return totalSaved;
+    }
+    public HashMap<Discount,HashSet<CartProduct>> getValidProducts(Bag bag){
+        HashMap<Discount,HashSet<CartProduct>> discounts=new HashMap<>();
+        for(Discount discount:storeDiscounts){
+            HashSet<CartProduct> validProducts=discount.getValidProducts(bag);
+            if(!validProducts.isEmpty())
+                discounts.put(discount,validProducts);
+        }
+        return discounts;
+    }
+
+    public Collection<Discount> getDiscounts() {
+        return storeDiscounts;
+    }
+
+    public HashMap<CartProduct,Double> getDiscountPerProduct(Bag bag) {
+        if (bag == null)
+            throw new NullPointerException("Null bag in discount calculation");
+        HashMap<CartProduct,Double> totalMap = new HashMap<>();
+        for (Discount discount : storeDiscounts) {
+            HashMap<CartProduct,Double> currentMap = discount.calcDiscountPerProduct(bag);
+            for(CartProduct cartProduct:currentMap.keySet()){
+                if(totalMap.get(cartProduct)!=null){
+                    totalMap.put(cartProduct,totalMap.get(cartProduct)+currentMap.get(cartProduct));
+                }
+                else totalMap.put(cartProduct,currentMap.get(cartProduct));
+            }
+        }
+        return totalMap;
     }
 }

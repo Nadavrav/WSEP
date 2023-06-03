@@ -21,7 +21,7 @@ class HistoryTest {
         h= new History();
         StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
         int StoreId = 0;
-        shoppingCart.addProductToCart(StoreId,p1);
+        shoppingCart.addProductToCart(StoreId,p1,1);
     }
     @Test
     void addPurchasedShoppingCart() {
@@ -36,9 +36,9 @@ class HistoryTest {
         StoreProduct p4 = new StoreProduct(1,"Eggs",6.8,"Eggs",6,"What came first?"); //store 1
         int StoreId1 = 0;
         int StoreId2 = 1;
-        shoppingCart.addProductToCart(StoreId1,p3);
-        shoppingCart.addProductToCart(StoreId2,p2);
-        shoppingCart.addProductToCart(StoreId2,p4);
+        shoppingCart.addProductToCart(StoreId1,p3,1);
+        shoppingCart.addProductToCart(StoreId2,p2,1);
+        shoppingCart.addProductToCart(StoreId2,p4,1);
 
         h.AddPurchasedShoppingCart(shoppingCart);
         LinkedList<Bag> bagsHistory = h.getShoppingBags();

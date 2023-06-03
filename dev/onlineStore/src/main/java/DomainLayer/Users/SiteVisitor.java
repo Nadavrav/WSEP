@@ -1,6 +1,6 @@
 package DomainLayer.Users;
 
-import DomainLayer.Stores.CallBacks.CheckStorePolicyCallback;
+import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Logging.UniversalHandler;
 
@@ -76,15 +76,15 @@ public class SiteVisitor{
         }
         return true;
     }
-    public void addProductToCart(int storeId, StoreProduct product) {//2.3
+    public void addProductToCart(int storeId, StoreProduct product,int amount) {//2.3
         logger.info("Adding product with ID " + product.getProductId() + " to cart for store with ID " + storeId);
 
-        cart.addProductToCart(storeId,product);
+        cart.addProductToCart(storeId,product,amount);
     }
-    public void addProductToCart(int storeId, StoreProduct product, CheckStorePolicyCallback callback) {//2.3
+    public void addProductToCart(int storeId, StoreProduct product,int amount, StoreCallbacks callback) {//2.3
         logger.info("Adding product with ID " + product.getProductId() + " to cart for store with ID " + storeId);
 
-        cart.addProductToCart(storeId,product,callback);
+        cart.addProductToCart(storeId,product,amount,callback);
     }
 
     public void removeProductFromCart(int storeId, StoreProduct product) {//2.3
@@ -101,6 +101,10 @@ public class SiteVisitor{
 
     public String cartToString() {
         return cart.cartToString();
+    }
+
+    public void removeBag(int storeId) throws Exception {
+        cart.removeBag(storeId);
     }
 
     //-----------getter / setter-----------------
@@ -123,5 +127,9 @@ public class SiteVisitor{
         return FreeVisitorID;
     }
 
+    @Override
+    public String toString(){
+          return "VisitorID : "+visitorId;
+    }
 
 }

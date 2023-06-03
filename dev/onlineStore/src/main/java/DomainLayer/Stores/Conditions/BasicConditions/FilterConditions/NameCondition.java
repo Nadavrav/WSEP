@@ -1,13 +1,14 @@
 package DomainLayer.Stores.Conditions.BasicConditions.FilterConditions;
 
 
-import DomainLayer.Stores.Conditions.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.FilterCondition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
 
 import java.util.HashSet;
 
-public class NameCondition implements Condition {
+public class NameCondition implements FilterCondition {
     private final String name;
 
     public NameCondition(String name) {
@@ -33,5 +34,9 @@ public class NameCondition implements Condition {
 
     public String getName() {
         return name;
+    }
+    @Override
+    public String toString(){
+        return "TODO";
     }
 }

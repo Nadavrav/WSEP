@@ -11,6 +11,8 @@ public class KeywordProductFilter implements ProductFilter{
 
     @Override
     public boolean PassFilter(StoreProduct product) {
+        if(keyword.equals(""))
+            return true;
         return product.getName().contains(keyword) ||
                 product.getDescription().contains(keyword) ||
                 product.getCategory().contains(keyword) ||

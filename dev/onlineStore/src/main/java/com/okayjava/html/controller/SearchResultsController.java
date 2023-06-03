@@ -1,67 +1,133 @@
 package com.okayjava.html.controller;
 
 import DomainLayer.Response;
-import DomainLayer.Stores.Products.Product;
 import ServiceLayer.*;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.*;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.NameStoreFilter;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.RatingStoreFilter;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceStore;
+import com.okayjava.html.CommunicateToServer.Alert;
+import com.okayjava.html.CommunicateToServer.Server;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class SearchResultsController {
-    private Service server = new Service();
-    double totalAmount = 0.0;
-    List<Product> products = new ArrayList<>();
-    List<Object[]> cartList = new ArrayList<>(); //productName & price & quantity
-
-    @RequestMapping(value = "/add-to-cart", method = RequestMethod.POST)
-//    @PostMapping("/add-to-cart")
-    public String addToCart(@RequestParam("productId") int productId, @ModelAttribute("productList") List<Object[]> productList,
-                            Model model){
-        System.out.println("selectedproductlength");
-
-//        productList = model.getAttribute("productList");
-        System.out.println(productList.size() + "sizrooo");
-
-        Object[] selectedProduct = productList.get(productId);
-
-//        Response response = server.addProductToCart();
-//        if(response.isError()){
-//            model.addAttribute("isError", true);
-//            model.addAttribute("message", response.getMessage());
-//        }
-        Object[] obj = new Object[4];
-        obj[0] = selectedProduct[1]; //product name
-        obj[1] = selectedProduct[2]; //price
-        obj[2] = selectedProduct[5]; //quantity
-        obj[3] = productId;
-        cartList.add(obj);
-
-        for (Object[] product : cartList) {
-            totalAmount += Double.parseDouble(product[1].toString());
-        }
-        model.addAttribute("cartList", cartList);
-        model.addAttribute("totalAmount", totalAmount);
-        return "SearchResults";
-    }
+    Alert alert = Alert.getInstance();
+    private Server server = Server.getInstance();
 
     @GetMapping("/SearchResults")
     public String searchResult(Model model) {
-
-        model.addAttribute("products", products);
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
         return "SearchResults";
     }
 
-//    @PostMapping("/buy-now")
-//    public String buyNow(@RequestParam("productId") int productId, Model model){
-//        List<Object[]> productList = (List<Object[]>) model.getAttribute("productList");
-//        Object[] selectedProduct = productList.get(productId);
-//        model.addAttribute("priceToBuy", selectedProduct[2]);
-////        Response response = server.PurchaseCart();//for buying a product selected in the table
-//        return "Buy";
-//    }
+    @PostMapping("/SearchResults")
+    public String resultPage(Model model){
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
+        return "SearchResults";
+    }
+
+    @RequestMapping(value = "/show-result", method = RequestMethod.POST)
+    public String userSearch(@RequestParam(value = "filter-keyword" , defaultValue = "") String keywordStr,
+                             @RequestParam(value = "filter-product-name", defaultValue = "") String productNameStr,
+                             @RequestParam(value = "filter-store-name", defaultValue = "") String storeNameStr,
+                             @RequestParam(value = "filter-category", defaultValue = "") String categoryStr,
+                             @RequestParam(value = "filter-description", defaultValue = "") String descriptionStr,
+                             @RequestParam(value = "min-price", defaultValue = "-1") String minPriceStr,
+                             @RequestParam(value = "max-price", defaultValue = "-1") String maxPriceStr,
+                             @RequestParam(value = "product_rate", defaultValue = "-1") String productRateStr,
+                             @RequestParam(value = "store_rate", defaultValue = "-1") String storeRateStr,
+                             Model model) {
+
+        String keyword = parseOrDefaultS(keywordStr, "");
+        String productName = parseOrDefaultS(productNameStr, "");
+        String storeName = parseOrDefaultS(storeNameStr, "");
+        String category = parseOrDefaultS(categoryStr, "");
+        String description = parseOrDefaultS(descriptionStr, "");
+        int minPrice = parseOrDefault(minPriceStr, -1);
+        int maxPrice = parseOrDefault(maxPriceStr, -1);
+        int productRate = parseOrDefault(productRateStr, -1);
+        int storeRate = parseOrDefault(storeRateStr, -1);
+
+        //filter - product
+        List<ProductFilter> productFilter = new ArrayList<>();
+        productFilter.add(new CategoryProductFilter(category));
+        productFilter.add(new NameProductFilter(productName));
+        productFilter.add(new RatingProductFilter(productRate));
+        productFilter.add(new MinPriceProductFilter(minPrice));
+        productFilter.add(new MaxPriceProductFilter(maxPrice));
+        productFilter.add(new DescriptionProductFilter(description));
+        productFilter.add(new KeywordProductFilter(keyword));
+
+        // filter - store
+        List<StoreFilter> storeFilter = new ArrayList<>();
+        storeFilter.add(new NameStoreFilter(storeName));
+        storeFilter.add(new RatingStoreFilter(storeRate));
+        System.out.println(productFilter.size() + "product filter size");
+        System.out.println(storeFilter.size() + "store filter size");
+        Response<List<ServiceStore>> response = server.FilterProductSearch(productFilter, storeFilter);
+//        List<ServiceStore> serviceStoreList = response.getValue();
+
+        if (response.isError()){
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+        }
+
+        model.addAttribute("searchList", response.getValue());
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
+        return "SearchResults";
+    }
+
+    private int parseOrDefault(String value, int defaultValue) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    private String parseOrDefaultS(String value, String defaultValue) {
+        try {
+            if (value == null) {
+                throw new NumberFormatException();
+            }
+            return value;
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
+    }
+
+    @RequestMapping(value = "/add-to-cart", method = {RequestMethod.GET, RequestMethod.POST})
+    public String addToCart(@RequestParam("storeId") int storeId,
+                            @RequestParam("productId") int productId,
+                            @RequestParam("quantity") int quantity,
+                            Model model) {
+
+        Response<?> response = server.addProductToCart(productId, storeId, quantity);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+        }
+        else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+        }
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
+        return "SearchResults";
+    }
 }
