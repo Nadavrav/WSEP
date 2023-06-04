@@ -1476,6 +1476,9 @@ class FacadeTest {
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
+            LinkedList<Permission> permissions = new LinkedList<>();
+            permissions.add(Permission.CanManageStock);
+            f.changeStoreManagerPermission(visitorId,Username2,storeId,permissions);
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
             int actual = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);//add a product
@@ -2334,7 +2337,7 @@ class FacadeTest {
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             String actual = f.GetInformation(storeId);
           
-            String expected = "Store Name is MyStoreStore Rate is:0.0 Product Name is :Milk The rating is : 0.0\n";
+            String expected = "Store Name: MyStore\nStore Rate: 0.0\n - Product Name:Milk, rating: 0.0\n";
             Assertions.assertTrue(actual.contains(expected));
         }
         catch (Exception e)

@@ -193,13 +193,13 @@ public class UserStoreRequestsTests {
         bridge.Login(StoreFounder.getUserName(),StoreFounder.getPassword());
         bridge.AppointOwner(StoreOwner.getUserName(),store1);
         bridge.AppointManager(StoreManager.getUserName(),store1);
-        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1}));//Ok
-        assertTrue(bridge.RemovePermission(StoreManager.getUserName(),store1, new int[]{1})); //OK
-        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{2,3,4,5,6,7,8,9,10})); //add rest
-        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1,2,3,4,5,6,7,8})); //everyone but 1 is duped
-        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1}));//Ok
-        assertFalse(bridge.RemovePermission(StoreManager.getUserName(),nonExistentStore, new int[]{1})); //invalid store
-        assertFalse(bridge.AddPermission(StoreManager.getUserName(),nonExistentStore, new int[]{1})); //invalid store
+        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{0}));//Ok
+        assertTrue(bridge.RemovePermission(StoreManager.getUserName(),store1, new int[]{0})); //OK
+        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1,2,3,4,5,6,7,8,9})); //add rest
+        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{1,2,3,4,5,6,7})); //everyone but 1 is duped
+        assertTrue(bridge.AddPermission(StoreManager.getUserName(),store1, new int[]{0}));//Ok
+        assertFalse(bridge.RemovePermission(StoreManager.getUserName(),nonExistentStore, new int[]{0})); //invalid store
+        assertFalse(bridge.AddPermission(StoreManager.getUserName(),nonExistentStore, new int[]{0})); //invalid store
     }
     @Order(12)
     @Test
@@ -235,8 +235,8 @@ public class UserStoreRequestsTests {
         //closed store tests
         assertFalse(bridge.CloseStore(store1)); //only founder can sloe
         //testing permission adding
-        assertTrue(bridge.AddPermission(StoreManager2.getUserName(),store1, new int[]{1,2,3,4,5}));//Ok
-        assertTrue(bridge.RemovePermission(StoreManager2.getUserName(),store1, new int[]{1,2,3,4,5})); //OK
+        assertTrue(bridge.AddPermission(StoreManager2.getUserName(),store1, new int[]{0,1,2,3,4}));//Ok
+        assertTrue(bridge.RemovePermission(StoreManager2.getUserName(),store1, new int[]{0,1,2,3,4})); //OK
     }
     @Order(13)
     @Test
@@ -258,11 +258,11 @@ public class UserStoreRequestsTests {
         //testing remove product
         assertTrue(bridge.RemoveProduct(MChicken, store1)); //Ok
         //testing name edit
-        assertFalse(bridge.EditProductName(MCheese, store1, "MCheese")); //Ok
+        assertTrue(bridge.EditProductName(MCheese, store1, "MCheese")); //Ok
         //testing description edit
-        assertFalse(bridge.EditDescription(MEmptiness, store1, "very empty"));//OK
+        assertTrue(bridge.EditDescription(MEmptiness, store1, "very empty"));//OK
         //testing price edit
-        assertFalse(bridge.EditPrice(MMilk, store1, 90));//OK
+        assertTrue(bridge.EditPrice(MMilk, store1, 90));//OK
         //owner appointing owner tests
         assertFalse(bridge.AppointOwner(StoreOwner2.getUserName(),store1)); //Ok
         //founder appointing manager tests
