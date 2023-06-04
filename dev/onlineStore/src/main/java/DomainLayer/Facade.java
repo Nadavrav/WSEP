@@ -190,7 +190,9 @@ public class Facade {
             MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
             majdMultiAndCondition.addCondition(majdXorCondition);
             majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
-            BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products but not both",1,50,majdMultiAndCondition);
+
+            BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
+
             addDiscount(majdBasicDiscount,majdStoreID);
             // DenisStore discounts:
             BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
@@ -198,7 +200,9 @@ public class Facade {
             AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
             FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
             BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
-                    " and the basket also contains at least 3 yogurts then there is a 50% discount on dairy products",1,50,denisCondition);
+
+                    " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
+
             addDiscount(denisBasicDiscount,denisStoreID);
             // NikitaStore discounts:
             NameCondition milkCondition=new NameCondition("Milk");
@@ -1346,70 +1350,6 @@ public class Facade {
         throw new Exception("This user isn't allowed to update this product");
     }
 
-    //2.2 search  product
-
-    /**
-     * can be done with filter search
-     */
-  //public String SearchProductByName( String Name) throws Exception{
-  //      logger.info("Entering method SearchProductByName() with Name: " + Name);
-  //      String output ="";
-  //      try {
-  //          for (Store store : storesList.values()) {
-  //              output += store.SearchProductByName(Name).toString();
-  //          }
-  //      }
-  //      catch (Exception e) {
-  //          // Log the exception
-  //          logger.log(Level.SEVERE, "An error occurred while searching product by name: " + Name, e);
-  //          throw e; // Rethrow the exception
-  //      }
-  //      logger.info("Exiting method SearchProductByName() with output: " + output);
-//
-  //      return output;
-  //  }
-  //
-    /**
-     * can be done with filter search
-     */
-    //public String SearchProductByCategory( String Category) throws Exception {
-    //    logger.info("Entering method SearchProductByCategory() with Category: " + Category);
-    //    String output = "";
-    //    try {
-    //        for (Store store : storesList.values()) {
-    //            output += store.SearchProductByCategory(Category).toString();
-    //        }
-    //    } catch (Exception e) {
-    //        // Log the exception
-    //        logger.log(Level.SEVERE, "An error occurred while searching product by category: " + Category, e);
-    //        throw e; // Rethrow the exception
-    //    }
-    //    logger.info("Exiting method SearchProductByCategory() with output: " + output);
-    //    return output;
-    //}
-    /**
-     * can be done with filter search
-     */
-    //public List<String> SearchProductBykey( String key) {
-//
-    //    logger.info("Entering method SearchProductByKey() with Key: " + key);
-//
-    //    ArrayList<String> output = new ArrayList<>();
-    //    try {
-    //        for (Store store : storesList.values()) {
-    //            for (StoreProduct product : store.SearchProductByKey(key)) {
-    //                output.add(product.toString());
-    //            }
-    //        }
-    //    } catch (Exception e) {
-    //        // Log the exception
-    //        logger.log(Level.SEVERE, "An error occurred while searching product by key: " + key, e);
-    //    }
-//
-    //    logger.info("Exiting method SearchProductByKey() with output: " + output);
-    //    return output;
-//
-    //}
 
 //2.1
    public String GetInformation(int StoreId) throws Exception {
@@ -1559,6 +1499,7 @@ public class Facade {
         storesList.get(storeId).addDiscount(discount);
     }
 
+
     public Collection<Discount> getStoreDiscounts(int storeId){
         return storesList.get(storeId).getDiscounts();
     }
@@ -1605,6 +1546,9 @@ public class Facade {
     public HashMap<CartProduct,Double> getSavingsPerProduct(int visitorId,int storeId) throws Exception{
         return getUserBag(visitorId,storeId).getSavingsPerProducts();
 
+    }
+    public HashMap<CartProduct,Double> getCartDiscountInfo(int visitorId,int storeId) throws Exception{
+        return getUserBag(visitorId,storeId).getSavingsPerProducts();
     }
     private StoreCallbacks generateStoreCallback(Store store){
         return new StoreCallbacks() {
@@ -1698,6 +1642,7 @@ public class Facade {
         Double totalPrice = user.getCart().getTotalPrice();
         return totalPrice;
     }
+
 
 
 }

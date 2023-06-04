@@ -5,10 +5,10 @@ import DomainLayer.Stores.Products.StoreProduct;
 
 public class ServiceProduct {
 
-    private final String Name;
-    private final double Price;
-    private final String Category;
-    private final  String Description;
+    protected final String Name;
+    protected final double Price;
+    protected final String Category;
+    protected final  String Description;
 
     public ServiceProduct(String name, Double price, String category, String description) {
         Name = name;

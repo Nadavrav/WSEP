@@ -23,13 +23,9 @@ import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServicePolicy;
 
 import ServiceLayer.ServiceObjects.ServiceCart;
-import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
-import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
-import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
-import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 
 
 import ServiceLayer.ServiceObjects.ServiceStore;
@@ -40,7 +36,7 @@ import java.util.*;
 
 public class Service {
 
-    private Facade facade;
+    private final Facade facade;
     private int visitorId;
 
     public Service(){
@@ -577,7 +573,8 @@ public class Service {
         try {
             HashSet<ServiceDiscount> discounts=new HashSet<>();
             for(Discount discount:facade.getStoreDiscounts(storeId)){
-                discounts.add(new ServiceDiscount(discount.getDescription()));
+                discounts.add(new ServiceDiscount(discount.getDescription(), discount.getId()));
+
             }
             return new Response<>(discounts);
         }
@@ -593,8 +590,6 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-
-
     /**
      * A function to get the quantity of a product in a store
      * @param storeId - the store from which the product is
@@ -612,6 +607,7 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
     /**
      * A function to get list of the online visitors in the system
      * @return - a response containing the list of the online visitors in the system
@@ -673,4 +669,6 @@ public class Service {
         }
     }
 
+
 }
+
