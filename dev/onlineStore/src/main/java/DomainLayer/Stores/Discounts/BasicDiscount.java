@@ -69,7 +69,8 @@ public class BasicDiscount extends Discount {
     }
     @Override
     public String toString(){
-        return "A "+discount+"% discount "+condition;
+        return this.description;
+//        return "A "+discount+"% discount "+condition;
     }
 
 

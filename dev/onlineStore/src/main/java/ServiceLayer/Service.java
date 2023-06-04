@@ -2,7 +2,11 @@ package ServiceLayer;
 
 import DomainLayer.Facade;
 import DomainLayer.Response;
+
+import DomainLayer.Stores.Policies.Policy;
+
 import DomainLayer.Stores.Discounts.Discount;
+
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
@@ -15,10 +19,14 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
+
+import ServiceLayer.ServiceObjects.ServicePolicy;
+
 import ServiceLayer.ServiceObjects.ServiceCart;
 
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
+
 
 import ServiceLayer.ServiceObjects.ServiceStore;
 
@@ -544,7 +552,24 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
+    public Response<HashSet<ServicePolicy>> getStorePolicy(int storeId){
+        try {
+           Collection<Policy> storePolicies=facade.getStorePolicies(visitorId,storeId);
+           HashSet<ServicePolicy> servicePolicies=new HashSet<>();
+           for(Policy policy:storePolicies){
+               servicePolicies.add(new ServicePolicy(policy));
+           }
+           return new Response<>(servicePolicies);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<List> getStoresByUserName(String userName) throws Exception {
+
     public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
+
         try {
             HashSet<ServiceDiscount> discounts=new HashSet<>();
             for(Discount discount:facade.getStoreDiscounts(storeId)){
@@ -582,5 +607,68 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
+    /**
+     * A function to get list of the online visitors in the system
+     * @return - a response containing the list of the online visitors in the system
+     */
+    public Response<List<ServiceUser>> getOnlineUsers()
+    {
+        try {
+            List<ServiceUser> serviceUsers = new ArrayList<>();
+            for (SiteVisitor sv : facade.getOnlineUsers())
+                serviceUsers.add(new ServiceUser(sv));
+            Response<List<ServiceUser>> r = new Response(serviceUsers);
+            return r;
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<List<ServiceUser>> getOfflineUsers()
+    {
+        try {
+            List<ServiceUser> serviceUsers = new ArrayList<>();
+            for (RegisteredUser sv : facade.getOfflineUsers())
+                serviceUsers.add(new ServiceUser(sv));
+            Response<List<ServiceUser>> r = new Response(serviceUsers);
+            return r;
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<Boolean> checkForNewMessages(String userName) {
+        try{
+            return new Response<>(facade.checkForNewMessages(userName));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<LinkedList<String>> getNewMessages(String userName) {
+        try{
+            return new Response<>(facade.getNewMessages(userName));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<Double> getTotalPrice()
+    {
+        try{
+            return new Response<>(facade.getTotalPrice(visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+
 }
 

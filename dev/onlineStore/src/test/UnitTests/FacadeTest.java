@@ -1476,6 +1476,9 @@ class FacadeTest {
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
+            LinkedList<Permission> permissions = new LinkedList<>();
+            permissions.add(Permission.CanManageStock);
+            f.changeStoreManagerPermission(visitorId,Username2,storeId,permissions);
             f.logout(visitorId);// logout user1
             f.login(visitorId,Username2,password2);//login user2
             int actual = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);//add a product
@@ -2334,7 +2337,7 @@ class FacadeTest {
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             String actual = f.GetInformation(storeId);
           
-            String expected = "Store Name is MyStoreStore Rate is:0.0 Product Name is :Milk The rating is : 0.0\n";
+            String expected = "Store Name: MyStore\nStore Rate: 0.0\n - Product Name:Milk, rating: 0.0\n";
             Assertions.assertTrue(actual.contains(expected));
         }
         catch (Exception e)
@@ -2527,6 +2530,72 @@ class FacadeTest {
             f.addProductToCart(pid,storeId,1,visitorId);
             f.purchaseCart(visitorId,123,"Adress");
             Assertions.assertThrows(Exception.class,()->f.GetUserHistoryPurchase("NotRealUser",visitorId));
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            Assertions.assertFalse(true);
+        }
+    }
+    @Test
+    void getCartPrice() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            String pCat2 = "Bread";
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            int pid2 = f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
+            f.addProductToCart(pid1,storeId,1,visitorId);
+            f.addProductToCart(pid2,storeId,1,visitorId);
+            Double expectedPrice = 11.0;
+            Double actualPrice = f.getTotalPrice(visitorId);
+            Assertions.assertEquals(expectedPrice,actualPrice);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            Assertions.assertFalse(true);
+        }
+    }
+    @Test
+    void getCartPriceMultipleProducts() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            String pCat2 = "Bread";
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            int pid2 = f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
+            f.addProductToCart(pid1,storeId,18,visitorId);
+            f.addProductToCart(pid2,storeId,21,visitorId);
+            Double expectedPrice = 216.0;
+            Double actualPrice = f.getTotalPrice(visitorId);
+            Assertions.assertEquals(expectedPrice,actualPrice);
         }
         catch (Exception e)
         {//Should happen

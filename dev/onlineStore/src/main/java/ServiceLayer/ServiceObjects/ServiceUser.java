@@ -1,6 +1,7 @@
 package ServiceLayer.ServiceObjects;
 
 import DomainLayer.Users.RegisteredUser;
+import DomainLayer.Users.SiteVisitor;
 
 public class ServiceUser {
     public String userName;
@@ -12,5 +13,10 @@ public class ServiceUser {
         this.info = registeredUser.toString();
         //userId= registeredUser.getVisitorId();
         //connected= (userId != 0);
+    }
+
+    public ServiceUser(SiteVisitor siteVisitor){
+        this.userName = "Visitor with visitorID : "+siteVisitor.getVisitorId();
+        this.info = siteVisitor.toString();
     }
 }

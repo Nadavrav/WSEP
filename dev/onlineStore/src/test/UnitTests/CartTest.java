@@ -66,6 +66,25 @@ class CartTest {
         assertTrue(actualBag2.bagToString().contains(expectedP4));
     }
     @Test
-    void removeProductFromCart() {
+    void calculateCartPrice() {
+        Cart cart = new Cart();
+        cart.addProductToCart(StoreId1, p1,1);
+        cart.addProductToCart(StoreId1, p3,1);
+        cart.addProductToCart(StoreId2, p2,1);
+        cart.addProductToCart(StoreId2, p4,1);
+        double expectedPrice = 22.4;
+        double actualPrice = cart.getTotalPrice();
+        assertEquals(expectedPrice,actualPrice);
+    }
+    @Test
+    void calculateCartPrice_MultipleProducts() {
+        Cart cart = new Cart();
+        cart.addProductToCart(StoreId1, p1,1);
+        cart.addProductToCart(StoreId1, p3,5);
+        cart.addProductToCart(StoreId2, p2,12);
+        cart.addProductToCart(StoreId2, p4,3);
+        double expectedPrice = 128.8;
+        double actualPrice = cart.getTotalPrice();
+        assertEquals(expectedPrice,actualPrice);
     }
 }
