@@ -3,8 +3,7 @@ package DomainLayer;
 
 
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinBagPriceCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinTotalProductAmountCondition;
+import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.*;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.MinQuantityCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
@@ -24,6 +23,7 @@ import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
 
+import DomainLayer.Stores.Purchases.PublicAuctionPurchase;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
@@ -140,7 +140,45 @@ public class Facade {
             int nikitaStoreID = OpenNewStore(nikitaID,"NikitaStore");
 
             //New Products
-            AddProduct(nadavID,nadavStoreID,"Milk",6,"Milk",30,"Good milk");
+
+            //new
+            AddProduct(nadavID,nadavStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(nadavID,nadavStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(nadavID,nadavStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(nadavID,nadavStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(nadavID,nadavStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(nadiaID,nadiaStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(nadiaID,nadiaStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(nadiaID,nadiaStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(nadiaID,nadiaStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(nadiaID,nadiaStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(natalieID,natalieStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(natalieID,natalieStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(natalieID,natalieStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(natalieID,natalieStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(natalieID,natalieStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(majdID,majdStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(majdID,majdStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(majdID,majdStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(majdID,majdStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(majdID,majdStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(denisID,denisStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(denisID,denisStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(denisID,denisStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(denisID,denisStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(denisID,denisStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(nikitaID,nikitaStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(nikitaID,nikitaStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(nikitaID,nikitaStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(nikitaID,nikitaStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(nikitaID,nikitaStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            //old
             AddProduct(nadiaID,nadiaStoreID,"Orange Juice",16,"Juice",90,"Good juice");
             AddProduct(natalieID,natalieStoreID,"Apples",900,"Fruits",1,"Good apples");
             AddProduct(majdID,majdStoreID,"Milk",6,"Milk",30,"Good milk");
@@ -205,13 +243,32 @@ public class Facade {
 
             addDiscount(denisBasicDiscount,denisStoreID);
             // NikitaStore discounts:
-            NameCondition milkCondition=new NameCondition("Milk");
+            NameCondition milkCondition=new NameCondition("Milk 15%");
             CategoryCondition meatCategoryCondition=new CategoryCondition("Meat");
-            BasicDiscount meatsDiscount=new BasicDiscount("20% discount on all milk cartons",1,20,milkCondition);
+            BasicDiscount meatsDiscount=new BasicDiscount("20% discount on all 15% milk cartons",1,20,milkCondition);
             BasicDiscount milkDiscount =new BasicDiscount("25% discount on all meat products",2,25,meatCategoryCondition);
             MaxSelectiveDiscount maxSelectiveDiscount=new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them",3);
             maxSelectiveDiscount.addDiscount(meatsDiscount);
             maxSelectiveDiscount.addDiscount(milkDiscount);
+            //add policies
+            BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
+            BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
+            BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
+
+
+            Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
+            Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
+            Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
+            Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
+            addPolicy(DairyPolicy,nadavStoreID);
+            addPolicy(BreadPolicy,nadavStoreID);
+            addPolicy(Meatpolicy,nadiaStoreID);
+            addPolicy(BreadPolicy,denisStoreID);
+            addPolicy(BreadPolicy,nadiaStoreID);
+            addPolicy(BagPolicy,denisStoreID);
+            addPolicy(BagPolicy,nadiaStoreID);
+            addPolicy(BagPolicy,natalieStoreID);
+
             logout(nadavID);
             logout(nadiaID);
             logout(natalieID);
@@ -1457,7 +1514,9 @@ public class Facade {
         }
         registeredUserList.remove(userName);
     }
-
+    public void addPolicy(Policy policy,int storeId){
+        storesList.get(storeId).addPolicy(policy);
+    }
     public LinkedList<Store> getStoresName() throws Exception {
         LinkedList<Store> storesName = new LinkedList<>();
         for(Store store : storesList.values()){
