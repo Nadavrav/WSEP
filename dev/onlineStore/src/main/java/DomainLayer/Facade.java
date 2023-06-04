@@ -1459,6 +1459,13 @@ public class Facade {
             throw new Exception("no bag exists in the user's cart for the specified store");
         return bag;
     }
+    public Collection<Policy> getStorePolicies(int visitorId,int storeId) throws Exception{
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(! (visitor instanceof RegisteredUser user)){
+            throw new Exception("invalid visitor Id");
+        }
+        return storesList.get(storeId).getPolicies();
+    }
     private StoreCallbacks generateStoreCallback(Store store){
         return new StoreCallbacks() {
             @Override

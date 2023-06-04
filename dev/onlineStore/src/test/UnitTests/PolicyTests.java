@@ -63,7 +63,7 @@ public class PolicyTests {
     public void DatePolicyTest(){
         try {
             DateCondition condition=new DateCondition(18,2,2030);
-            facade.AddStorePolicy(visitorId,storeId,new Policy(condition));
+            facade.AddStorePolicy(visitorId,storeId,new Policy("All products can only be bought on the 18.2.2030",condition));
             facade.purchaseCart(visitorId, 4444, "Space");
             fail();
         }
@@ -75,7 +75,7 @@ public class PolicyTests {
     public void MinProductAmountTest(){
             BooleanAfterFilterCondition condition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(5));
         try {
-            facade.AddStorePolicy(visitorId,storeId,new Policy(condition));
+            facade.AddStorePolicy(visitorId,storeId,new Policy("Cart must have at least 5 dairy products to make a purchase",condition));
             facade.purchaseCart(visitorId, 4444, "Space");
             fail();
         }

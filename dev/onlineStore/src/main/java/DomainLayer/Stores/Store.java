@@ -323,4 +323,8 @@ public class Store {
         }
         return discounts;
     }
+
+    public Collection<Policy> getPolicies() {
+        return storePolicies;
+    }
 }

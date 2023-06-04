@@ -2,6 +2,7 @@ package ServiceLayer;
 
 import DomainLayer.Facade;
 import DomainLayer.Response;
+import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
@@ -14,11 +15,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
-import ServiceLayer.ServiceObjects.ServiceCart;
-import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
-import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
-
-import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServicePolicy;
 
 import ServiceLayer.ServiceObjects.ServiceStore;
 
@@ -541,6 +538,19 @@ public class Service {
                 serviceStores.add(new ServiceStore(s));
             }
             return new Response<>(serviceStores);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<HashSet<ServicePolicy>> getStorePolicy(int storeId){
+        try {
+           Collection<Policy> storePolicies=facade.getStorePolicies(visitorId,storeId);
+           HashSet<ServicePolicy> servicePolicies=new HashSet<>();
+           for(Policy policy:storePolicies){
+               servicePolicies.add(new ServicePolicy(policy));
+           }
+           return new Response<>(servicePolicies);
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
