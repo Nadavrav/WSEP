@@ -354,6 +354,10 @@ public class Store {
         return discounts;
     }
 
+
+    public Collection<Policy> getPolicies() {
+        return storePolicies;
+
     public Collection<Discount> getDiscounts() {
         return storeDiscounts;
     }
@@ -372,5 +376,6 @@ public class Store {
             }
         }
         return totalMap;
+
     }
 }

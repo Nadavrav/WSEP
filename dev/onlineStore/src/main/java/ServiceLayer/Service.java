@@ -2,7 +2,11 @@ package ServiceLayer;
 
 import DomainLayer.Facade;
 import DomainLayer.Response;
+
+import DomainLayer.Stores.Policies.Policy;
+
 import DomainLayer.Stores.Discounts.Discount;
+
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
@@ -15,6 +19,9 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
+
+import ServiceLayer.ServiceObjects.ServicePolicy;
+
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
@@ -23,6 +30,7 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+
 
 import ServiceLayer.ServiceObjects.ServiceStore;
 
@@ -548,7 +556,24 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
+    public Response<HashSet<ServicePolicy>> getStorePolicy(int storeId){
+        try {
+           Collection<Policy> storePolicies=facade.getStorePolicies(visitorId,storeId);
+           HashSet<ServicePolicy> servicePolicies=new HashSet<>();
+           for(Policy policy:storePolicies){
+               servicePolicies.add(new ServicePolicy(policy));
+           }
+           return new Response<>(servicePolicies);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<List> getStoresByUserName(String userName) throws Exception {
+
     public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
+
         try {
             HashSet<ServiceDiscount> discounts=new HashSet<>();
             for(Discount discount:facade.getStoreDiscounts(storeId)){

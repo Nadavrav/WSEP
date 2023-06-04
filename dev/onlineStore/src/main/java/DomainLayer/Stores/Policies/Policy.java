@@ -8,12 +8,20 @@ import DomainLayer.Users.Bag;
 
 public class Policy {
     private BooleanCondition condition;
-    public Policy(BooleanCondition condition){
+    private final String description;
+    public Policy(String description,BooleanCondition condition){
         this.condition=condition;
+        this.description=description;
     }
-    public Policy(){
+    public Policy(String description){
+        this.description=description;
         this.condition=new NoCondition();
     }
+
+    public String getDescription() {
+        return description;
+    }
+
     public void SetCondition(BooleanCondition condition){
         this.condition=condition;
     }
