@@ -3,8 +3,7 @@ package DomainLayer;
 
 
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinBagPriceCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinTotalProductAmountCondition;
+import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.*;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.MinQuantityCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
@@ -24,6 +23,7 @@ import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
 
+import DomainLayer.Stores.Purchases.PublicAuctionPurchase;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
@@ -140,7 +140,45 @@ public class Facade {
             int nikitaStoreID = OpenNewStore(nikitaID,"NikitaStore");
 
             //New Products
-            AddProduct(nadavID,nadavStoreID,"Milk",6,"Milk",30,"Good milk");
+
+            //new
+            AddProduct(nadavID,nadavStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(nadavID,nadavStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(nadavID,nadavStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(nadavID,nadavStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(nadavID,nadavStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(nadiaID,nadiaStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(nadiaID,nadiaStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(nadiaID,nadiaStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(nadiaID,nadiaStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(nadiaID,nadiaStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(natalieID,natalieStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(natalieID,natalieStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(natalieID,natalieStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(natalieID,natalieStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(natalieID,natalieStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(majdID,majdStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(majdID,majdStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(majdID,majdStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(majdID,majdStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(majdID,majdStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(denisID,denisStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(denisID,denisStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(denisID,denisStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(denisID,denisStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(denisID,denisStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            AddProduct(nikitaID,nikitaStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
+            AddProduct(nikitaID,nikitaStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
+            AddProduct(nikitaID,nikitaStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
+            AddProduct(nikitaID,nikitaStoreID,"Chicken",30,"Meat",1,"40% chicken");
+            AddProduct(nikitaID,nikitaStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+
+            //old
             AddProduct(nadiaID,nadiaStoreID,"Orange Juice",16,"Juice",90,"Good juice");
             AddProduct(natalieID,natalieStoreID,"Apples",900,"Fruits",1,"Good apples");
             AddProduct(majdID,majdStoreID,"Milk",6,"Milk",30,"Good milk");
@@ -190,7 +228,9 @@ public class Facade {
             MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
             majdMultiAndCondition.addCondition(majdXorCondition);
             majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
-            BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products but not both",1,50,majdMultiAndCondition);
+
+            BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
+
             addDiscount(majdBasicDiscount,majdStoreID);
             // DenisStore discounts:
             BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
@@ -198,16 +238,37 @@ public class Facade {
             AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
             FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
             BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
-                    " and the basket also contains at least 3 yogurts then there is a 50% discount on dairy products",1,50,denisCondition);
+
+                    " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
+
             addDiscount(denisBasicDiscount,denisStoreID);
             // NikitaStore discounts:
-            NameCondition milkCondition=new NameCondition("Milk");
+            NameCondition milkCondition=new NameCondition("Milk 15%");
             CategoryCondition meatCategoryCondition=new CategoryCondition("Meat");
-            BasicDiscount meatsDiscount=new BasicDiscount("20% discount on all milk cartons",1,20,milkCondition);
+            BasicDiscount meatsDiscount=new BasicDiscount("20% discount on all 15% milk cartons",1,20,milkCondition);
             BasicDiscount milkDiscount =new BasicDiscount("25% discount on all meat products",2,25,meatCategoryCondition);
             MaxSelectiveDiscount maxSelectiveDiscount=new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them",3);
             maxSelectiveDiscount.addDiscount(meatsDiscount);
             maxSelectiveDiscount.addDiscount(milkDiscount);
+            //add policies
+            BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
+            BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
+            BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
+
+
+            Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
+            Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
+            Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
+            Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
+            addPolicy(DairyPolicy,nadavStoreID);
+            addPolicy(BreadPolicy,nadavStoreID);
+            addPolicy(Meatpolicy,nadiaStoreID);
+            addPolicy(BreadPolicy,denisStoreID);
+            addPolicy(BreadPolicy,nadiaStoreID);
+            addPolicy(BagPolicy,denisStoreID);
+            addPolicy(BagPolicy,nadiaStoreID);
+            addPolicy(BagPolicy,natalieStoreID);
+
             logout(nadavID);
             logout(nadiaID);
             logout(natalieID);
@@ -1346,70 +1407,6 @@ public class Facade {
         throw new Exception("This user isn't allowed to update this product");
     }
 
-    //2.2 search  product
-
-    /**
-     * can be done with filter search
-     */
-  //public String SearchProductByName( String Name) throws Exception{
-  //      logger.info("Entering method SearchProductByName() with Name: " + Name);
-  //      String output ="";
-  //      try {
-  //          for (Store store : storesList.values()) {
-  //              output += store.SearchProductByName(Name).toString();
-  //          }
-  //      }
-  //      catch (Exception e) {
-  //          // Log the exception
-  //          logger.log(Level.SEVERE, "An error occurred while searching product by name: " + Name, e);
-  //          throw e; // Rethrow the exception
-  //      }
-  //      logger.info("Exiting method SearchProductByName() with output: " + output);
-//
-  //      return output;
-  //  }
-  //
-    /**
-     * can be done with filter search
-     */
-    //public String SearchProductByCategory( String Category) throws Exception {
-    //    logger.info("Entering method SearchProductByCategory() with Category: " + Category);
-    //    String output = "";
-    //    try {
-    //        for (Store store : storesList.values()) {
-    //            output += store.SearchProductByCategory(Category).toString();
-    //        }
-    //    } catch (Exception e) {
-    //        // Log the exception
-    //        logger.log(Level.SEVERE, "An error occurred while searching product by category: " + Category, e);
-    //        throw e; // Rethrow the exception
-    //    }
-    //    logger.info("Exiting method SearchProductByCategory() with output: " + output);
-    //    return output;
-    //}
-    /**
-     * can be done with filter search
-     */
-    //public List<String> SearchProductBykey( String key) {
-//
-    //    logger.info("Entering method SearchProductByKey() with Key: " + key);
-//
-    //    ArrayList<String> output = new ArrayList<>();
-    //    try {
-    //        for (Store store : storesList.values()) {
-    //            for (StoreProduct product : store.SearchProductByKey(key)) {
-    //                output.add(product.toString());
-    //            }
-    //        }
-    //    } catch (Exception e) {
-    //        // Log the exception
-    //        logger.log(Level.SEVERE, "An error occurred while searching product by key: " + key, e);
-    //    }
-//
-    //    logger.info("Exiting method SearchProductByKey() with output: " + output);
-    //    return output;
-//
-    //}
 
 //2.1
    public String GetInformation(int StoreId) throws Exception {
@@ -1517,7 +1514,9 @@ public class Facade {
         }
         registeredUserList.remove(userName);
     }
-
+    public void addPolicy(Policy policy,int storeId){
+        storesList.get(storeId).addPolicy(policy);
+    }
     public LinkedList<Store> getStoresName() throws Exception {
         LinkedList<Store> storesName = new LinkedList<>();
         for(Store store : storesList.values()){
@@ -1559,6 +1558,7 @@ public class Facade {
         storesList.get(storeId).addDiscount(discount);
     }
 
+
     public Collection<Discount> getStoreDiscounts(int storeId){
         return storesList.get(storeId).getDiscounts();
     }
@@ -1594,7 +1594,19 @@ public class Facade {
             throw new Exception("no bag exists in the user's cart for the specified store");
         return bag;
     }
+
+    public Collection<Policy> getStorePolicies(int visitorId,int storeId) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if (!(visitor instanceof RegisteredUser user)) {
+            throw new Exception("invalid visitor Id");
+        }
+        return storesList.get(storeId).getPolicies();
+    }
     public HashMap<CartProduct,Double> getSavingsPerProduct(int visitorId,int storeId) throws Exception{
+        return getUserBag(visitorId,storeId).getSavingsPerProducts();
+
+    }
+    public HashMap<CartProduct,Double> getCartDiscountInfo(int visitorId,int storeId) throws Exception{
         return getUserBag(visitorId,storeId).getSavingsPerProducts();
     }
     private StoreCallbacks generateStoreCallback(Store store){
@@ -1687,8 +1699,16 @@ public class Facade {
             throw new IllegalArgumentException("Invalid Visitor ID");
         }
         Double totalPrice = user.getCart().getTotalPrice();
+        Cart userCart = user.getCart();
+        for (Bag currbag: userCart.getBags().values()) {
+            Store s = storesList.get(currbag.getStoreID());
+            if(s  == null)
+                throw new NullPointerException("getTotalPriceError:Couldnt find a store with this store id:"+currbag.getStoreID());
+            totalPrice -= s.calcSaved(currbag);
+        }
         return totalPrice;
     }
+
 
 
 }

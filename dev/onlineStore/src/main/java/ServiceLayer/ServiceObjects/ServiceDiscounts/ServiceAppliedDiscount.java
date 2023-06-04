@@ -22,12 +22,17 @@ public class ServiceAppliedDiscount {
         for(CartProduct cartProduct:savingsPerProduct.keySet())
             this.savingsPerProduct.put(new ServiceCartProduct(cartProduct),savingsPerProduct.get(cartProduct));
     }
-
+    public double getDiscountPercent(ServiceCartProduct cartProduct){
+        return (savingsPerProduct.get(cartProduct)/cartProduct.getCartProductPrice())*100;
+    }
     public HashSet<ServiceCartProduct> getProductsInDiscount() {
         return new HashSet<>(savingsPerProduct.keySet());
     }
     public double getProductSavings(ServiceCartProduct cartProduct){
         return savingsPerProduct.get(cartProduct);
+    }
+    public double getProductPriceAfterDiscount(ServiceCartProduct cartProduct){
+        return cartProduct.getCartProductPrice()-savingsPerProduct.get(cartProduct);
     }
 
     /**

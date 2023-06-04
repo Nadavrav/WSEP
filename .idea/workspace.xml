@@ -4,167 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="fixed a mistake">
+    <list default="true" id="1a99faf5-72a6-48dd-8bf1-132db1d159eb" name="Changes" comment="merge bugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/CartTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/CartTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Interface" />
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">
-    <option name="selectedUrlAndAccountId">
-      <UrlAndAccount>
-        <option name="accountId" value="3f1061b1-b221-46ca-a649-0af57176f020" />
-        <option name="url" value="https://github.com/Nadavrav/WSEP.git" />
-      </UrlAndAccount>
-    </option>
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="useMavenConfig" value="true" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectId" id="2Pq4b4TE6xBRvMGuR3Lc2ei1HF2" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="ProjectViewState">
-    <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showLibraryContents" value="true" />
-  </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
-    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/natal/Desktop/web-app/WSEP&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.20344828&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;8f9201e8a0da0c17e63d95a9ea4f02a8&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "extract.method.default.visibility": "private",
+    "node.js.selected.package.tslint": "(autodetect)"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\denis\IdeaProjects\WSEP\dev\onlineStore" />
-      <recent name="C:\Users\denis\IdeaProjects\WSEP\dev\onlineStore\src" />
-      <recent name="C:\Users\natal\Desktop\web-app\WSEP\dev\onlineStore" />
-    </key>
-  </component>
-  <component name="RunManager" selected="JUnit.FacadeTest">
-    <configuration name="AcceptenceTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+}]]></component>
+  <component name="RunManager" selected="JUnit.All in springboot-html">
+    <configuration name="All in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="AcceptenceTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="AcceptenceTests" />
+      <option name="PACKAGE_NAME" value="" />
       <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="CartTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="UnitTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="UnitTests.CartTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="FacadeTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="UnitTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="UnitTests.FacadeTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UnitTests in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="UnitTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="UnitTests" />
-      <option name="TEST_OBJECT" value="package" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UnitTests.* and 1 more" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <option name="TEST_OBJECT" value="pattern" />
-      <patterns>
-        <pattern testClass="UnitTests.*" />
-        <pattern testClass="IntegrationTests.*" />
-      </patterns>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -177,178 +42,28 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="JUnit.CartTest" />
-      <item itemvalue="JUnit.FacadeTest" />
-      <item itemvalue="JUnit.UnitTests in springboot-html" />
-      <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
-      <item itemvalue="JUnit.UnitTests.* and 1 more" />
+      <item itemvalue="JUnit.All in springboot-html" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.FacadeTest" />
-        <item itemvalue="JUnit.CartTest" />
-        <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
-        <item itemvalue="JUnit.UnitTests in springboot-html" />
-        <item itemvalue="JUnit.UnitTests.* and 1 more" />
+        <item itemvalue="JUnit.All in springboot-html" />
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="" />
-      <created>1684171346129</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1684171346129</updated>
-      <workItem from="1684171347132" duration="56052000" />
-      <workItem from="1684849704258" duration="2164000" />
-      <workItem from="1684914630994" duration="389000" />
-      <workItem from="1685375107160" duration="9100000" />
-      <workItem from="1685570300384" duration="825000" />
-      <workItem from="1685708420125" duration="5144000" />
-      <workItem from="1685784754127" duration="6738000" />
-      <workItem from="1685812242846" duration="1671000" />
-    </task>
-    <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
-      <created>1684172106809</created>
+    <task id="LOCAL-00001" summary="merge bugs">
+      <created>1685885511985</created>
       <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL‎-00001" />
-      <option name="project" value="LOCAL‎" />
-      <updated>1684172106809</updated>
-    </task>
-    <task id="LOCAL‎-00002" summary="Natalie&amp;Majd web-app">
-      <created>1684172157800</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL‎-00002" />
-      <option name="project" value="LOCAL‎" />
-      <updated>1684172157800</updated>
-    </task>
-    <task id="LOCAL-00003" summary="fixed errors from project structure changes after gui impl">
-      <created>1684689686161</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
+      <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1684689686161</updated>
+      <updated>1685885511985</updated>
     </task>
-    <task id="LOCAL-00004" summary="small bug in &lt; instead of &lt;= in price filter">
-      <created>1684960575186</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1684960575186</updated>
-    </task>
-    <task id="LOCAL-00005" summary="implemented Service object for receiving info after performing discount calculations on a bag">
-      <created>1685392933245</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1685392933245</updated>
-    </task>
-    <task id="LOCAL-00006" summary="extended policy callback framework to support calculations of discounts inside a bag">
-      <created>1685393117458</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1685393117458</updated>
-    </task>
-    <task id="LOCAL-00007" summary="fixed the whole SDK exploding again.">
-      <created>1685571038688</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1685571038688</updated>
-    </task>
-    <task id="LOCAL-00008" summary="pulled condition changes from implement policies branch">
-      <created>1685571885211</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1685571885211</updated>
-    </task>
-    <task id="LOCAL-00009" summary="added and fixed tests">
-      <created>1685709849809</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1685709849809</updated>
-    </task>
-    <task id="LOCAL-00010" summary="added all previous fixes">
-      <created>1685714507752</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1685714507752</updated>
-    </task>
-    <task id="LOCAL-00011" summary="implemented the function">
-      <created>1685813293642</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1685813293642</updated>
-    </task>
-    <task id="LOCAL-00012" summary="fixed a mistake">
-      <created>1685813749557</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1685813749557</updated>
-    </task>
-    <option name="localTasksCounter" value="13" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="AcTestsFixToMerge" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Natalie&amp;Majd web-app" />
-    <MESSAGE value="fixed errors from project structure changes after gui impl" />
-    <MESSAGE value="small bug in &lt; instead of &lt;= in price filter" />
-    <MESSAGE value="implemented Service object for receiving info after performing discount calculations on a bag" />
-    <MESSAGE value="extended policy callback framework to support calculations of discounts inside a bag" />
-    <MESSAGE value="fix the whole SDK exploding again." />
-    <MESSAGE value="fixed the whole SDK exploding again." />
-    <MESSAGE value="pulled condition changes from implement policies branch" />
-    <MESSAGE value="done-discount info is now the description the user gave, when defining the discount, applied discount is the same but includes the discount calculations for a given bag, plus a method to get savings per product" />
-    <MESSAGE value="added and fixed tests" />
-    <MESSAGE value="added all previous fixes" />
-    <MESSAGE value="implemented the function" />
-    <MESSAGE value="fixed a mistake" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed a mistake" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java</url>
-          <line>37</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="merge bugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="merge bugs" />
   </component>
 </project>

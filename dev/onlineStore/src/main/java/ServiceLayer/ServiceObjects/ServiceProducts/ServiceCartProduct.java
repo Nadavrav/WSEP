@@ -16,9 +16,16 @@ public class ServiceCartProduct extends ServiceProduct{
         return amount;
     }
 
+    public double getCartProductPrice(){
+        return amount*getPrice();
+    }
+
+
+
     public int getId(){
         return id;
     }
+
     public ServiceCartProduct(CartProduct product) {
         super(product);
         this.amount=product.getAmount();
