@@ -566,7 +566,6 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<List> getStoresByUserName(String userName) throws Exception {
 
     public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
 

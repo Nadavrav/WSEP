@@ -1536,13 +1536,13 @@ public class Facade {
         return bag;
     }
 
-    public Collection<Policy> getStorePolicies(int visitorId,int storeId) throws Exception{
+    public Collection<Policy> getStorePolicies(int visitorId,int storeId) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
-        if(! (visitor instanceof RegisteredUser user)){
+        if (!(visitor instanceof RegisteredUser user)) {
             throw new Exception("invalid visitor Id");
         }
         return storesList.get(storeId).getPolicies();
-
+    }
     public HashMap<CartProduct,Double> getSavingsPerProduct(int visitorId,int storeId) throws Exception{
         return getUserBag(visitorId,storeId).getSavingsPerProducts();
 

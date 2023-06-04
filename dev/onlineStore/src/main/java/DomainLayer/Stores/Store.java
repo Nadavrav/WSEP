@@ -357,6 +357,7 @@ public class Store {
 
     public Collection<Policy> getPolicies() {
         return storePolicies;
+    }
 
     public Collection<Discount> getDiscounts() {
         return storeDiscounts;
