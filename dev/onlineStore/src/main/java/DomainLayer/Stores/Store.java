@@ -81,9 +81,9 @@ public class Store {
             logger.warning("Store is closed: " + this.Name);
             throw new Exception(" this store is closed");
         }
-        StringBuilder s = new StringBuilder("Store Name is " + this.Name + "Store Rate is:" + getRate());
+        StringBuilder s = new StringBuilder("Store Name: " + this.Name + "\nStore Rate: " + getRate() + "\n");
         for (StoreProduct i : products.values()) {
-            s.append(" Product Name is :").append(i.getName()).append(" The rating is : ").append(i.getAverageRating()).append("\n");
+            s.append(" - Product Name:").append(i.getName()).append(", rating: ").append(i.getAverageRating()).append("\n");
         }
         return s.toString();
     }
@@ -331,6 +331,7 @@ public class Store {
         return products.get(productId).getProductRatingList();
     }
     public void addDiscount(Discount discount){
+        System.out.println(discount.getDescription());
         storeDiscounts.add(discount);
     }
     public boolean removeDiscount(Discount discount){
@@ -353,6 +354,11 @@ public class Store {
         return discounts;
     }
 
+
+    public Collection<Policy> getPolicies() {
+        return storePolicies;
+    }
+
     public Collection<Discount> getDiscounts() {
         return storeDiscounts;
     }
@@ -371,5 +377,6 @@ public class Store {
             }
         }
         return totalMap;
+
     }
 }

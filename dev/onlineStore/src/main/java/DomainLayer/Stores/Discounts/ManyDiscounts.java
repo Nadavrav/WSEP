@@ -10,8 +10,8 @@ import java.util.Set;
 public abstract class ManyDiscounts extends Discount{
     protected final Set<Discount> discounts;
 
-    public ManyDiscounts(String description) {
-        super(description);
+    public ManyDiscounts(String description,int id) {
+        super(description,id);
         discounts=new HashSet<>();
     }
     public void addDiscount(Discount discount){

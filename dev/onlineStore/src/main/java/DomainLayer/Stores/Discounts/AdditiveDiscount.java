@@ -11,8 +11,8 @@ import java.util.StringJoiner;
 public class AdditiveDiscount extends ManyDiscounts {
 
 
-    public AdditiveDiscount(String description) {
-        super(description);
+    public AdditiveDiscount(String description,int id) {
+        super(description,id);
     }
 
 

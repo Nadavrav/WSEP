@@ -7,43 +7,54 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-public class CommentsAndRatingsController {
-    Alert alert = Alert.getInstance();
-    private Server server = Server.getInstance();
-    public int storeID, productID;
+import java.util.HashMap;
 
-    @GetMapping("/CommentsAndRatings")
-    public String commentsAndRatingsPage(@RequestParam("storeId") int storeId, @RequestParam("productId") int productId, Model model) {
-        System.out.println(storeId);
-        System.out.println(productId);
+@Controller
+public class ProductRatingsController {
+    private Alert alert = Alert.getInstance();
+    private Server server = Server.getInstance();
+    private int storeID;
+    private int productID;
+
+    @GetMapping("/ProductRatings")
+    public String productsPage(Model model) {
         model.addAttribute("alert", alert.copy());
         alert.reset();
+        return "CommentsAndRatings";
+    }
+
+    @GetMapping("/CommentsAndRatings")
+    public String commentsAndRatings(@RequestParam("storeId") int storeId,
+                                     @RequestParam("productId") int productId,
+                                     Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
+
         Response<?> response = server.getProductRatingList(storeId, productId);
-        if(response.isError()){
+        if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
-//            return "redirect:/CommentsAndRatings";
+        } else {
+            model.addAttribute("ProductRatingList", response.getValue());
         }
-        model.addAttribute("ProductRatingList", response.getValue()); //HashMap<String, String>
 
         Response<?> response1 = server.GetStoreRate(storeId);
-        if(response1.isError()){
+        if (response1.isError()) {
             alert.setFail(true);
             alert.setMessage(response1.getMessage());
             model.addAttribute("alert", alert.copy());
-//            return "redirect:/CommentsAndRatings";
+        } else {
+            model.addAttribute("StoreRate", response1.getValue());
         }
-        model.addAttribute("StoreRate", response1.getValue()); //Double
 
-        // Add the storeId and productId to the model
         this.storeID = storeId;
         this.productID = productId;
         model.addAttribute("storeId", storeId);
         model.addAttribute("productId", productId);
         model.addAttribute("alert", alert.copy());
-        return "CommentsAndRatings";
+        return "ProductRatings";
     }
 
     @PostMapping("/add-product-comment")
@@ -53,17 +64,27 @@ public class CommentsAndRatingsController {
 
         model.addAttribute("alert", alert.copy());
         alert.reset();
+
         Response<?> response = server.addProductRateAndComment(productID, storeID, rate, comment);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
-        }
-        else {
+        } else {
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("Comment & Rate Is Added!");
+
+            // Update the ratings list
+            Response<?> ratingsResponse = server.getProductRatingList(storeID, productID);
+            if (!ratingsResponse.isError()) {
+                model.addAttribute("ProductRatingList", ratingsResponse.getValue());
+            }
         }
+
         model.addAttribute("alert", alert.copy());
+        model.addAttribute("StoreRate", server.GetStoreRate(storeID).getValue());
+        model.addAttribute("storeId", storeID);
+        model.addAttribute("productId", productID);
         alert.reset();
-        return "CommentsAndRatings";
+        return "ProductRatings";
     }
 }

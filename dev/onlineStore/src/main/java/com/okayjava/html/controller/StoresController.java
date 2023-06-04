@@ -17,6 +17,8 @@ public class StoresController {
 
     @GetMapping("/Stores")
     public String getStoreAndProductsNames(Model model) {
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
         Response<?> response = server.getStoresName(); //linkedlist stores
         if (response.isError()){
             alert.setFail(true);
@@ -38,6 +40,8 @@ public class StoresController {
                                       @RequestParam("storeID") int storeID,
                                       Model model){
 
+        model.addAttribute("alert", alert.copy());
+        alert.reset();
         Response<?> response = server.addStoreRateAndComment(storeID, rating, comment);
         if (response.isError()){
             alert.setFail(true);
@@ -46,32 +50,12 @@ public class StoresController {
             System.out.println("error");
         } else {
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("Your Comment & Rating is added to the store.");
             model.addAttribute("alert", alert.copy());
             System.out.println("adding comment: " + comment + " with rating: " + rating + " to storeid: " + storeID);
         }
+        model.addAttribute("stores", server.getStoresName().getValue());
         alert.reset();
-        return "Stores";
-    }
-
-    @RequestMapping(value = "/add-store-discount" , method = RequestMethod.POST)
-    public String storeDiscount(@RequestParam("store-discount") String discount,
-                                @RequestParam("storeID") int storeID,
-                                Model model){
-
-//        Response<?> response = server.addDiscount(storeID, discount);
-//        if (response.isError()){
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//            System.out.println("error");
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-////            model.addAttribute("alert", alert.copy());
-//            System.out.println("adding discount: " + discount + " to storeid: " + storeID);
-//        }
-//        alert.reset();
         return "Stores";
     }
 }

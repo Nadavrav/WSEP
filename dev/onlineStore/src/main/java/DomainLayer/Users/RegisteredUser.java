@@ -51,6 +51,7 @@ public class RegisteredUser extends SiteVisitor{
         this.password=hashString(password);
         this.purchaseHistory = new PurchaseHistory();
         loggedIn=false;
+        waitingMessages=new LinkedList<String>();
         
     }
     private byte[] hashString(String str) throws NoSuchAlgorithmException{

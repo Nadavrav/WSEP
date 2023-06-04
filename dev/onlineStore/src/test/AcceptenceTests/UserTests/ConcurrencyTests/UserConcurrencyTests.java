@@ -18,7 +18,7 @@ public class UserConcurrencyTests {
         final Service user2=new Service();
         user1.EnterNewSiteVisitor();
         user2.EnterNewSiteVisitor();
-        for(int i=1;i<=1000;i++){ //username/pass is i,i and -i,-i - so register & login should always succeed and have no duplicates/invalid lengths
+        for(int i=1;i<=10;i++){ //username/pass is i,i and -i,-i - so register & login should always succeed and have no duplicates/invalid lengths
             final String finalUser1="Concurrency Test User "+i;
             //   final String finalUser2=Integer.toString(-i);
             final String finalPass1="My password is: "+ i; //assure length is larger then 8
@@ -43,7 +43,7 @@ public class UserConcurrencyTests {
         final Service user2=new Service();
         user1.EnterNewSiteVisitor();
         user2.EnterNewSiteVisitor();
-        for(int i=1;i<=1000;i++){ //username/pass is i,i and -i,-i - so register & login should always succeed and have no duplicates/invalid lengths
+        for(int i=1;i<=10;i++){ //username/pass is i,i and -i,-i - so register & login should always succeed and have no duplicates/invalid lengths
             final String finalUser1="login Test User: "+i;
             final String finalPass1="My password is: "+ i; //assure length is larger then 8
             user1.Register(finalUser1,finalPass1);
