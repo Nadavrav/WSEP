@@ -19,22 +19,41 @@ public class ManagerController {
     public String menu(Model model) {
         model.addAttribute("alert", alert.copy());
         alert.reset();
+        Response<Collection<ServiceStore>> response = server.getStoresByUserName();
+        if (response.isError()){
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("myStoresList", response.getValue());
+        }
+        alert.reset();
         return "Manager";
     }
 
-//    @RequestMapping(value = "/my-stores", method = RequestMethod.POST)
-//    public String showMyStores(Model model) throws Exception {
-//        System.out.println("here!");
-//        Response<List<ServiceStore>> response = server.getStoresByUserName();
-//        if (response.isError()) {
-//            System.out.println("Error");
-//            model.addAttribute("isError", true);
-//            model.addAttribute("errorMessage", response.getMessage());
-//            return "error";
-//        } else
-//            model.addAttribute("myStoresList", response.getValue()); //List<ServiceStore>
-//        return "redirect:/Manager";
-//    }
+    @RequestMapping(value = "/add-store-discount" , method = RequestMethod.POST)
+    public String storeDiscount(@RequestParam("cond-desc") String discount,
+                                @RequestParam("storeID-add-desc") int storeID,
+                                Model model){
+
+//        Response<?> response = server.addDiscount(storeID, discount);
+//        if (response.isError()){
+//            alert.setFail(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//            System.out.println("error");
+//        } else {
+//            alert.setSuccess(true);
+//            alert.setMessage(response.getMessage());
+////            model.addAttribute("alert", alert.copy());
+//            System.out.println("adding discount: " + discount + " to storeid: " + storeID);
+//        }
+//        alert.reset();
+        return "Manager";
+    }
 
     @RequestMapping(value = "/openStore", method = RequestMethod.POST)
     public String openStore(@RequestParam("store-name") String storeName,
@@ -48,12 +67,12 @@ public class ManagerController {
             System.out.println("Error");
         } else {
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage(storeName + " Store is Opened - ID - " + response.getValue());
             model.addAttribute("alert", alert.copy());
             System.out.println("Store Opened with ID: " + response.getValue());
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/permissions", method = RequestMethod.POST)
@@ -79,7 +98,7 @@ public class ManagerController {
             System.out.println("Error in adding a product!!");
         } else {
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage(productName + " was added successfully to storeId: " + storeID);
             model.addAttribute("alert", alert.copy());
             System.out.println(productName + " was added successfully to storeId: " + storeID);
         }
@@ -99,12 +118,12 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         } else {
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("product with id: " + productID + " was removed successfully from storeId: " + storeID);
             model.addAttribute("alert", alert.copy());
             System.out.println("product with id: " + productID + " was removed successfully from storeId: " + storeID);
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/update-product", method = RequestMethod.POST)
@@ -123,12 +142,12 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
-                alert.reset();
-                return "redirect:/Manager";
+//                alert.reset();
+//                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
-                alert.setMessage(response.getMessage());
+                alert.setMessage("Product Name Updated to " + productName + " Successfully!");
                 model.addAttribute("alert", alert.copy());
             }
         }
@@ -138,12 +157,12 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
-                alert.reset();
-                return "redirect:/Manager";
+//                alert.reset();
+//                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
-                alert.setMessage(response.getMessage());
+                alert.setMessage("Product Price Updated to " + price + " Successfully!");
                 model.addAttribute("alert", alert.copy());
             }
         }
@@ -153,12 +172,12 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
-                alert.reset();
-                return "redirect:/Manager";
+//                alert.reset();
+//                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
-                alert.setMessage(response.getMessage());
+                alert.setMessage("Product Quantity Updated to " + quantity + " Successfully!");
                 model.addAttribute("alert", alert.copy());
             }
         }
@@ -168,12 +187,12 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", response.getMessage());
-                alert.reset();
-                return "redirect:/Manager";
+//                alert.reset();
+//                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
-                alert.setMessage(response.getMessage());
+                alert.setMessage("Product Quantity Updated to " + category + " Successfully!");
                 model.addAttribute("alert", alert.copy());
             }
         }
@@ -183,12 +202,12 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
-                alert.reset();
-                return "redirect:/Manager";
+//                alert.reset();
+//                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
-                alert.setMessage(response.getMessage());
+                alert.setMessage("Product Description Updated to " + description + " Successfully!");
                 model.addAttribute("alert", alert.copy());
             }
         }
@@ -196,7 +215,7 @@ public class ManagerController {
         alert.setMessage("Product Updated Successfully");
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
@@ -211,13 +230,12 @@ public class ManagerController {
         } else {
             System.out.println("Purchase History should be displayed!");
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("Purchase History for store with ID: " + storeID);
             model.addAttribute("alert", alert.copy());
+            model.addAttribute("purchaseHistory", response.getValue()); //List<String>
         }
-        System.out.println(response.getValue()+"getV");
-        model.addAttribute("purchaseHistory", response.getValue()); //List<String>
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
@@ -232,17 +250,16 @@ public class ManagerController {
         }
         else{
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("Store With ID: " + storeID + "Is Closed!");
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/employee-info", method = RequestMethod.POST)
     public String employeeInfo(@RequestParam("storeID-employee") int storeID,
                                Model model) {
-
 
         Response<?> response = server.getRolesData(storeID);
         if (response.isError()) {
@@ -251,10 +268,9 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         } else{
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("Employee Info for StoreId: " + storeID);
             model.addAttribute("alert", alert.copy());
             model.addAttribute("employeeInfo", response.getValue()); //String
-//            model.addAttribute("showEmployeeInfoModal", true);
         }
         alert.reset();
         return "Manager";
@@ -272,12 +288,12 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         } else {
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
+            alert.setMessage(userName + " Was Removed!");
+            model.addAttribute("alert", alert.copy());
             System.out.println(userName + " was removed successfully from storeId: " + storeID);
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/appoint-store-owner", method = RequestMethod.POST)
@@ -292,11 +308,11 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         } else{
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage(ownerName + " is OWNER for storeID: " + storeID);
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/appoint-store-manager", method = RequestMethod.POST)
@@ -311,11 +327,11 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         } else{
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage(managerName + " is a Manager for storeID: " + StoreID);
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 
     @RequestMapping(value = "/change-permission", method = RequestMethod.POST)
@@ -331,10 +347,10 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         } else{
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("Permissions has been changed successfully!");
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
 }

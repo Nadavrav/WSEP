@@ -30,7 +30,6 @@ public class Messages {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-
         return "Messages";
     }
 }

@@ -1,20 +1,21 @@
 package DomainLayer.Stores.Discounts;
 
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NoCondition;
-import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
+
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
-
 import java.util.HashMap;
 import java.util.HashSet;
 
 public abstract class Discount {
     protected String description;
-    public Discount(String description){
+    protected final int id;
+    public Discount(String description,int id){
         this.description=description;
+        this.id=id;
     }
-
+    public int getId() {
+        return id;
+    }
     public String getDescription() {
         return description;
     }

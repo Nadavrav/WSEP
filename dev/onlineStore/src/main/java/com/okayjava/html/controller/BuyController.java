@@ -39,6 +39,8 @@ public class BuyController {
             model.addAttribute("alert", alert.copy());
         }
         else{
+            alert.setSuccess(true);
+            alert.setMessage("Thank You ;)");
             model.addAttribute("buy", response.getValue()); //List<String>
             model.addAttribute("alert", alert.copy());
         }

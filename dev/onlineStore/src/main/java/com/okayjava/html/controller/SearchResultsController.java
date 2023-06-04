@@ -73,21 +73,19 @@ public class SearchResultsController {
         List<StoreFilter> storeFilter = new ArrayList<>();
         storeFilter.add(new NameStoreFilter(storeName));
         storeFilter.add(new RatingStoreFilter(storeRate));
-        System.out.println(productFilter.size() + "product filter size");
-        System.out.println(storeFilter.size() + "store filter size");
         Response<List<ServiceStore>> response = server.FilterProductSearch(productFilter, storeFilter);
-//        List<ServiceStore> serviceStoreList = response.getValue();
 
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         } else {
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("Filtered Products: ");
+            model.addAttribute("alert", alert.copy());
         }
 
         model.addAttribute("searchList", response.getValue());
-        model.addAttribute("alert", alert.copy());
         alert.reset();
         return "SearchResults";
     }
@@ -121,12 +119,13 @@ public class SearchResultsController {
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
         }
         else {
             alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
+            alert.setMessage("Product added to cart.");
+            model.addAttribute("alert", alert.copy());
         }
-        model.addAttribute("alert", alert.copy());
         alert.reset();
         return "SearchResults";
     }

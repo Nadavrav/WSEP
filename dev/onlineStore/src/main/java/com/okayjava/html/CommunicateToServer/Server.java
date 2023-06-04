@@ -207,8 +207,8 @@ public class Server {
         return service.getStoreDiscountInfo(storeId);
     }
 
-    public Response<Collection<ServiceStore>> getStoresByUserName(String userName){
-        return service.getStoresByUserName(userName);
+    public Response<Collection<ServiceStore>> getStoresByUserName(){
+        return service.getStoresByUserName(this.username);
     }
 
     public Response<List<String>> PurchaseCart(int visitorCard, String address){
