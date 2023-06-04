@@ -159,4 +159,8 @@ public class RegisteredUser extends SiteVisitor{
     public boolean isLoggedIn() {
         return loggedIn;
     }
+
+    public void setMessagesAsRead() {
+        hasNewMessage = false;
+    }
 }

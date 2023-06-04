@@ -222,5 +222,9 @@ public class Server {
     public Response<Boolean> checkForNewMessages() throws Exception {
         return service.checkForNewMessages(this.username);
     }
+
+    public Response<?> markMessagesAsRead() {
+        return service.markMessagesAsRead(this.username);
+    }
 }
 

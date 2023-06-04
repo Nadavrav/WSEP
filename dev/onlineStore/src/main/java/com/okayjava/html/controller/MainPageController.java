@@ -12,9 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.model.IModel;
 
+import java.awt.*;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
 @Controller
-public class MainPageController{
+public class MainPageController extends Thread{
     Alert alert = Alert.getInstance();
     private final Server server = Server.getInstance();
     private static boolean isInitialized = false;
@@ -73,12 +78,16 @@ public class MainPageController{
                 alert.setMessage("HELLO " + username);
                 model.addAttribute("alert", alert.copy());
             }
-//            Thread T1= new Thread();
-//            T1.start();
-            if(!server.checkForNewMessages().isError()){
-                alert.setMessage("Hey " + username + "! You Have New Messages.");
-            } else alert.setMessage("WELCOME TO OUR STORE");
+            else {
+                //alert.setMessage("SHALOM " + username);
+            }
+//            (!server.checkForNewMessages().isError()){
+//               // alert.setMessage("Hey " + username + "! You Have New Messages.");
+//            } else alert.setMessage("WELCOME TO OUR STORE");
+            alert.setMessage("HELLO2 " + username);
             model.addAttribute("alert", alert.copy());
+            alert.reset();
+            new MyThread(model).start();
         }
         alert.reset();
         return ("MainPage");
@@ -145,7 +154,7 @@ public class MainPageController{
             System.out.println("Store is opened successfully with id: " + response.getValue());
         }
         model.addAttribute("logged", server.isLogged());
-        alert.reset();
+        //alert.reset();
         return "MainPage";
     }
 
@@ -157,16 +166,52 @@ public class MainPageController{
 
 //    @Override
 //    public void run() {
-//        while (true){
-//            try {
-//                if(server.checkForNewMessages().getValue()){
-//                    alert.setSuccess(true);
-//                    alert.setMessage("You Have New Messages");
-//                    m.addAttribute("alert", alert.copy());
-//                }
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
+
 //    }
+
+
+    class MyThread extends Thread {
+
+        private Model model1;
+
+        public MyThread(Model model1) {
+            this.model1 = model1;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+
+                try {
+                    Response r = server.checkForNewMessages();
+                    if (!r.isError() && r.getValue().equals(true)) {
+                    //if (!r.isError()) {
+                        alert.setSuccess(true);
+                        System.out.println("You Have New Messages BDIKA!" + LocalDateTime.now());
+                        alert.setMessage("You Have New Messages BDIKA!" + LocalDateTime.now());
+                        model1.addAttribute("alert", alert.copy());
+
+                        server.markMessagesAsRead();
+                        //alert.reset();
+                    }
+                    else {
+//                        alert.setSuccess(true);
+//                        System.out.println("NO NEW MESSAGES :(" + LocalDateTime.now());
+//                        alert.setMessage("NO NEW MESSAGES :(" + LocalDateTime.now());
+//                        model1.addAttribute("alert", alert.copy());
+
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+
+
 }
+
+
+
+

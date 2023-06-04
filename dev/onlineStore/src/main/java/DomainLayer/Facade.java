@@ -1691,4 +1691,9 @@ public class Facade {
     }
 
 
+    public boolean markMessagesAsRead(String username) {
+
+            registeredUserList.get(username).setMessagesAsRead();
+            return true;
+    }
 }

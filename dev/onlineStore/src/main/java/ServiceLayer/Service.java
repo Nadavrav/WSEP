@@ -648,4 +648,13 @@ public class Service {
         }
     }
 
+    public Response<?> markMessagesAsRead(String username) {
+        try{
+            return new Response<>(facade.markMessagesAsRead(username));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
 }
