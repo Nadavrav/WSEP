@@ -2603,4 +2603,38 @@ class FacadeTest {
             Assertions.assertFalse(true);
         }
     }
+    //TODO implement discount addition in facade and then make this test
+    /*@Test
+    void getCartPriceMultipleProductsWithDiscounts() {
+        try {
+            int visitorId = f.EnterNewSiteVisitor();
+            String Username = "ValidUsername";
+            String password = "123456789";
+            String pName = "Milk";
+            double pPrice = 5.0;
+            String pCat = "Milk";
+            int pQuan = 10;
+            String pDesc = "Milk";
+            String pName2 = "Bread";
+            double pPrice2 = 6.0;
+            String pCat2 = "Bread";
+            int pQuan2 = 10;
+            String pDesc2 = "Bread";
+            f.Register(visitorId,Username,password);
+            f.login(visitorId,Username,password);
+            int storeId = f.OpenNewStore(visitorId,"MyStore");
+            int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
+            int pid2 = f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
+            f.addProductToCart(pid1,storeId,18,visitorId);
+            f.addProductToCart(pid2,storeId,21,visitorId);
+            Double expectedPrice = 216.0;
+            Double actualPrice = f.getTotalPrice(visitorId);
+            Assertions.assertEquals(expectedPrice,actualPrice);
+        }
+        catch (Exception e)
+        {//Should happen
+            System.out.println(e.getMessage());
+            Assertions.assertFalse(true);
+        }
+    }*/
 }
