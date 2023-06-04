@@ -637,4 +637,15 @@ public class Service {
         }
     }
 
+    public Response<Double> getTotalPrice()
+    {
+        try{
+            return new Response<>(facade.getTotalPrice(visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
 }
