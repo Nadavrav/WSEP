@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="fixed a mistake">
+    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="Created tests to check the function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/CartTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/CartTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/FacadeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -187,10 +187,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.FacadeTest" />
-        <item itemvalue="JUnit.CartTest" />
+        <item itemvalue="JUnit.UnitTests.* and 1 more" />
         <item itemvalue="JUnit.AcceptenceTests in springboot-html" />
         <item itemvalue="JUnit.UnitTests in springboot-html" />
-        <item itemvalue="JUnit.UnitTests.* and 1 more" />
+        <item itemvalue="JUnit.CartTest" />
       </list>
     </recent_temporary>
   </component>
@@ -210,6 +210,8 @@
       <workItem from="1685708420125" duration="5144000" />
       <workItem from="1685784754127" duration="6738000" />
       <workItem from="1685812242846" duration="1671000" />
+      <workItem from="1685874505693" duration="176000" />
+      <workItem from="1685875000854" duration="1263000" />
     </task>
     <task id="LOCAL‎-00001" summary="Natalie&amp;Majd web-app">
       <created>1684172106809</created>

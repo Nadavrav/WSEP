@@ -1602,6 +1602,13 @@ public class Facade {
             throw new IllegalArgumentException("Invalid Visitor ID");
         }
         Double totalPrice = user.getCart().getTotalPrice();
+        Cart userCart = user.getCart();
+        for (Bag currbag: userCart.getBags().values()) {
+            Store s = storesList.get(currbag.getStoreID());
+            if(s  == null)
+                throw new NullPointerException("getTotalPriceError:Couldnt find a store with this store id:"+currbag.getStoreID());
+            totalPrice -= s.calcSaved(currbag);
+        }
         return totalPrice;
     }
 
