@@ -33,4 +33,8 @@ public class MinBagPriceCondition implements BooleanCondition {
             return ((MinBagPriceCondition)condition).getPrice()==price;
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

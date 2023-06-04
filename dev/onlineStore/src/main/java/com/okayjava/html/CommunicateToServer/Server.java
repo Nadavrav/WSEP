@@ -6,9 +6,14 @@ import DomainLayer.Users.Permission;
 import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceCart;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Server {
@@ -71,7 +76,7 @@ public class Server {
         return service.loadData();
     }
 
-    public Response getProductsInMyCart() { //it should return list of strings
+    public Response<ServiceCart> getProductsInMyCart() { //it should return list of strings
         return service.getProductsInMyCart();
     }
 
@@ -79,6 +84,9 @@ public class Server {
         return service.removeProductFromCart(productId, storeId);
     }
 
+    public Response<?> changeCartProductQuantity(int productId, int storeId, int newAmount){
+        return service.changeCartProductQuantity(productId, storeId, newAmount);
+    }
 
     public Response<Integer> AddProduct(int storeID, String productName, double price, String category, int quantity, String description) {
         return service.AddProduct(storeID, productName, price, category, quantity,description);
@@ -170,4 +178,49 @@ public class Server {
     public Response<?> GetStoreRate(int storeID){
         return service.GetStoreRate(storeID);
     }
+
+    public Response<?> deleteUser(String userName){
+        return service.deleteUser(userName);
+    }
+
+    public Response<List<ServiceUser>> getRegisteredUsersInfo(){
+        return service.getRegisteredUsersInfo();
+    }
+
+    public Response<?> removeEmployee(int storeId,String userName){
+        return service.removeEmployee(storeId, userName);
+    }
+
+    public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
+        return service.getBagDiscountInfo(storeId);
+    }
+
+    public Response<List<ServiceUser>> getOnlineUsers(){
+        return service.getOnlineUsers();
+    }
+
+    public Response<List<ServiceUser>> getOfflineUsers(){
+        return service.getOfflineUsers();
+    }
+
+    public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
+        return service.getStoreDiscountInfo(storeId);
+    }
+
+    public Response<Collection<ServiceStore>> getStoresByUserName(){
+        return service.getStoresByUserName(this.username);
+    }
+
+    public Response<List<String>> PurchaseCart(int visitorCard, String address){
+        return service.PurchaseCart(visitorCard, address);
+    }
+
+    public Response<LinkedList<String>> getNewMessages() throws Exception {
+        return service.getNewMessages(this.username);
+    }
+
+    public Response<Boolean> checkForNewMessages() throws Exception {
+        return service.checkForNewMessages(this.username);
+    }
 }
+

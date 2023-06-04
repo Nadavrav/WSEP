@@ -35,4 +35,8 @@ public class MaxQuantityCondition implements FilterCondition {
     public int getQuantity() {
         return quantity;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

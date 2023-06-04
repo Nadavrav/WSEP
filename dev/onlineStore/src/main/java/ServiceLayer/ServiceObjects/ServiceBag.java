@@ -24,4 +24,13 @@ public class ServiceBag {
     public int getStoreId() {
         return storeId;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder s= new StringBuilder();
+        for (ServiceCartProduct cartProduct :productList) {
+            s.append(cartProduct.toString()).append("\n");
+        }
+        return s.toString();
+    }
 }

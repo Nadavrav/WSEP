@@ -33,4 +33,8 @@ public class MinTotalProductAmountCondition implements BooleanCondition {
             return ((MinTotalProductAmountCondition)condition).getAmount()==amount;
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

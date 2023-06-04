@@ -1,48 +1,44 @@
 package ServiceLayer.ServiceObjects.ServiceDiscounts;
 
 import DomainLayer.Stores.Products.CartProduct;
-import DomainLayer.Users.Cart;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class ServiceAppliedDiscount {
-    private final double totalSaved;
-    private final double discountPercent;
-    private final String discountDescription;
 
-    private final HashSet<ServiceCartProduct> productsInDiscount;
+    private final HashMap<ServiceCartProduct,Double> savingsPerProduct;
 
-    public ServiceAppliedDiscount(String discountDescription, double discountPercent, HashSet<CartProduct> productsInDiscount) {
-        this.discountDescription=discountDescription;
-        this.discountPercent = discountPercent;
-        this.productsInDiscount=new HashSet<>();
-        for(CartProduct cartProduct:productsInDiscount){
-            this.productsInDiscount.add(new ServiceCartProduct(cartProduct));
-        }
-        double accumulatedTotalAmount = 0;
-        for(CartProduct product:productsInDiscount){
-            accumulatedTotalAmount += product.getAmount() * (product.getPrice() * (discountPercent / 100));
-        }
-        totalSaved = accumulatedTotalAmount;
-    }
-
-    public String getDiscountDescription() {
-        return discountDescription;
-    }
-
-    public double getDiscountPercent() {
-        return discountPercent;
-    }
-
-    public double getTotalSaved() {
-        return totalSaved;
+    /**
+     * calculates the savings info after all store discounts are applied to a bag
+     * note: this is info that includes many operations from many discounts,
+     * so no description or percent is included since this isn't from one specific discount
+     * @param savingsPerProduct amount of savings per product, meaning, money saved
+     *                          per product after all store discounts are applied
+     */
+    public ServiceAppliedDiscount( HashMap<CartProduct,Double> savingsPerProduct) {
+        this.savingsPerProduct=new HashMap<>();
+        for(CartProduct cartProduct:savingsPerProduct.keySet())
+            this.savingsPerProduct.put(new ServiceCartProduct(cartProduct),savingsPerProduct.get(cartProduct));
     }
 
     public HashSet<ServiceCartProduct> getProductsInDiscount() {
-        return productsInDiscount;
+        return new HashSet<>(savingsPerProduct.keySet());
     }
-    public double calculateProductSavings(ServiceCartProduct cartProduct){
-        return (cartProduct.getAmount()*cartProduct.getPrice())*(discountPercent/100);
+    public double getProductSavings(ServiceCartProduct cartProduct){
+        return savingsPerProduct.get(cartProduct);
     }
+
+    /**
+     *  just a sum of all savings on all products
+     * @return total amount of money saved when purchasing the bag
+     */
+    public double calcTotalSavings(){
+        double sum=0;
+        for(Double saving: savingsPerProduct.values())
+            sum+=saving;
+        return sum;
+    }
+
 }

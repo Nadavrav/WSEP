@@ -20,4 +20,12 @@ public class MultiOrCondition extends MultiFilterCondition {
             return ((MultiOrCondition)condition).getConditions().equals(conditions);
         return false;
     }
+    @Override
+    public String toString(){
+        StringBuilder ret= new StringBuilder();
+        for(Condition condition:conditions){
+            ret.append(condition.toString()).append(" or ");
+        }
+        return ret.toString();
+    }
 }

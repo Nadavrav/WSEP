@@ -90,6 +90,8 @@ public class StoreProduct extends Product {
         return RateMap;
     }
     public void setPrice(Double price) {
+        if(price <= 0)
+            throw new IllegalArgumentException("Price cant be negative");
         this.price = price;
         notifyObservers();
     }
@@ -228,7 +230,7 @@ public class StoreProduct extends Product {
         name ="NOTICE "+ name +"WAS REMOVED FROM THE STORE";
         description ="PRODUCT REMOVED FROM STORE";
         category="";
-        setPrice(0.0);
+        price = 0.0;
         notifyObservers();
     }
 
@@ -239,6 +241,12 @@ public class StoreProduct extends Product {
             ratingList.put(userName,RateMap.get(userName).toString());
         }
         return ratingList;
+    }
+
+    public void ReduceQuantity(int quantity) {
+        if(quantity<0)
+            throw new IllegalArgumentException("quantity reduction cant be negative");
+        setQuantity(this.Quantity-quantity);
     }
 
 

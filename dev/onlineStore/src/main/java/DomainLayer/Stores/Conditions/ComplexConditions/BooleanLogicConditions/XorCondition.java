@@ -33,4 +33,8 @@ public class XorCondition extends LogicCondition {
             return ((XorCondition)condition).getFirstCondition().equals(firstCondition) && ((LogicCondition)condition).getSecondCondition().equals(secondCondition);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

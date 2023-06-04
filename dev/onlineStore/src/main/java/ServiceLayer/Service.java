@@ -2,7 +2,11 @@ package ServiceLayer;
 
 import DomainLayer.Facade;
 import DomainLayer.Response;
+
 import DomainLayer.Stores.Policies.Policy;
+
+import DomainLayer.Stores.Discounts.Discount;
+
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
@@ -15,7 +19,18 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
+
 import ServiceLayer.ServiceObjects.ServicePolicy;
+
+import ServiceLayer.ServiceObjects.ServiceCart;
+import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
+import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+
 
 import ServiceLayer.ServiceObjects.ServiceStore;
 
@@ -148,15 +163,13 @@ public class Service {
     }
 
 
-    public Response<String> getProductsInMyCart() {//2.4
-        String products;
+    public Response<ServiceCart> getProductsInMyCart() {//2.4
         try {
-            products = facade.getProductsInMyCart(visitorId);
+            return new Response<>(new ServiceCart(facade.getProductsInMyCart(visitorId)));
 
         } catch (Exception e) {
             return new Response<>(e.getMessage(), true);
         }
-        return new Response<>(products);
     }
     /*public Response<?> getProductsInMyCart1()
     {
@@ -474,7 +487,7 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<?> getStoresName()  {
+    public Response<?> getStoresName(){
         try{
            return new Response<>(facade.getStoresName());
         }catch (Exception e){
@@ -530,7 +543,7 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<List<ServiceStore>> getProductsWhoPassDiscount(String userName) throws Exception {
+    public Response<Collection<ServiceStore>> getStoresByUserName(String userName) {
         try {
             ArrayList<ServiceStore> serviceStores = new ArrayList<>();
             List <Store> stores = facade.getStoresByUserName(visitorId,userName);
@@ -543,6 +556,7 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
     public Response<HashSet<ServicePolicy>> getStorePolicy(int storeId){
         try {
            Collection<Policy> storePolicies=facade.getStorePolicies(visitorId,storeId);
@@ -557,15 +571,104 @@ public class Service {
         }
     }
     public Response<List> getStoresByUserName(String userName) throws Exception {
+
+    public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
+
         try {
-            ArrayList<ServiceStore> serviceStores = new ArrayList<>();
-            List <Store> stores = facade.getStoresByUserName(visitorId,userName);
-            for(Store s : stores) {
-                serviceStores.add(new ServiceStore(s));
+            HashSet<ServiceDiscount> discounts=new HashSet<>();
+            for(Discount discount:facade.getStoreDiscounts(storeId)){
+                discounts.add(new ServiceDiscount(discount.getDescription()));
             }
-            return new Response<>(serviceStores);
+            return new Response<>(discounts);
         }
         catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
+        try {
+            return new Response<>(new ServiceAppliedDiscount(facade.getSavingsPerProduct(visitorId,storeId)));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+
+    /**
+     * A function to get the quantity of a product in a store
+     * @param storeId - the store from which the product is
+     * @param productId - the id of the product
+     * @return - a response containing the amount of the product or an error response if the function failed
+     */
+    public Response<Integer> getStoreProductQuantity(int storeId,int productId)
+    {
+        try {
+            Integer amount = facade.getStoreProductQuantity(storeId,productId);
+            Response<Integer> r = new Response<>(amount);
+            return r;
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    /**
+     * A function to get list of the online visitors in the system
+     * @return - a response containing the list of the online visitors in the system
+     */
+    public Response<List<ServiceUser>> getOnlineUsers()
+    {
+        try {
+            List<ServiceUser> serviceUsers = new ArrayList<>();
+            for (SiteVisitor sv : facade.getOnlineUsers())
+                serviceUsers.add(new ServiceUser(sv));
+            Response<List<ServiceUser>> r = new Response(serviceUsers);
+            return r;
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<List<ServiceUser>> getOfflineUsers()
+    {
+        try {
+            List<ServiceUser> serviceUsers = new ArrayList<>();
+            for (RegisteredUser sv : facade.getOfflineUsers())
+                serviceUsers.add(new ServiceUser(sv));
+            Response<List<ServiceUser>> r = new Response(serviceUsers);
+            return r;
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<Boolean> checkForNewMessages(String userName) {
+        try{
+            return new Response<>(facade.checkForNewMessages(userName));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<LinkedList<String>> getNewMessages(String userName) {
+        try{
+            return new Response<>(facade.getNewMessages(userName));
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<Double> getTotalPrice()
+    {
+        try{
+            return new Response<>(facade.getTotalPrice(visitorId));
+        }
+        catch (Exception e)
+        {
             return new Response<>(e.getMessage(),true);
         }
     }

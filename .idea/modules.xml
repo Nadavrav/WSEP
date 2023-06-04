@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/WSEP.iml" filepath="$PROJECT_DIR$/.idea/WSEP.iml" />
       <module fileurl="file://$PROJECT_DIR$/dev/onlineStore/springboot-html.iml" filepath="$PROJECT_DIR$/dev/onlineStore/springboot-html.iml" />
     </modules>
   </component>

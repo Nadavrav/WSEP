@@ -10,5 +10,5 @@ import java.util.HashSet;
 public interface StoreCallbacks {
     boolean checkStorePolicies(Bag bag);
     double getDiscountAmount(Bag bag);
-    HashMap<Discount, HashSet<CartProduct>> calcDiscounts(Bag bag);
+    public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag);
 }

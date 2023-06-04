@@ -56,4 +56,8 @@ public class DateCondition implements BooleanCondition {
         }
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

@@ -7,6 +7,7 @@ import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Users.Bag;
+import DomainLayer.Users.RegisteredUser;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 
 import java.util.*;
@@ -32,7 +33,9 @@ public class Store {
 
     private Double Rate=0.0;
     private static final Logger logger=Logger.getLogger("Store logger");
-    
+
+    private LinkedList<RegisteredUser> listeners;
+
     public Store(String name) {
         storeDiscounts=new HashSet<>();
         storePolicies=new HashSet<>();
@@ -43,8 +46,13 @@ public class Store {
         Name = name;
         History = new History();
         products = new ConcurrentHashMap<>();
+        listeners = new LinkedList<>();
 
         this.Active=true;
+    }
+
+    public void addNewListener(RegisteredUser storeowner){
+        listeners.add(storeowner);
     }
 
     private Integer getNewProductId() {
@@ -73,9 +81,9 @@ public class Store {
             logger.warning("Store is closed: " + this.Name);
             throw new Exception(" this store is closed");
         }
-        StringBuilder s = new StringBuilder("Store Name is " + this.Name + "Store Rate is:" + getRate());
+        StringBuilder s = new StringBuilder("Store Name: " + this.Name + "\nStore Rate: " + getRate() + "\n");
         for (StoreProduct i : products.values()) {
-            s.append(" Product Name is :").append(i.getName()).append(" The rating is : ").append(i.getAverageRating()).append("\n");
+            s.append(" - Product Name:").append(i.getName()).append(", rating: ").append(i.getAverageRating()).append("\n");
         }
         return s.toString();
     }
@@ -84,12 +92,30 @@ public class Store {
     }
     public void CloseStore() {
         Active = false;
+        NotifyOwners("The store "+Name+" is closed now.");
+    }
+
+    public void OpenStore() {
+        Active = true;
+        NotifyOwners("The store "+Name+" is open now.");
+    }
+
+    public void NewBuyNotification(String name){
+        NotifyOwners(Name+" just bought from your shop ("+name+").");
+    }
+
+    private void NotifyOwners(String message){
+        for (RegisteredUser listener : listeners) {
+            listener.update(message);
+        }
     }
 
     // history 6.4
     public LinkedList<Bag> GetStorePurchaseHistory() {
         return this.History.getShoppingBags();
     }
+
+
 
     public StoreProduct getProduct(CartProduct product){
         for(StoreProduct storeProduct:getProducts().values()){
@@ -149,6 +175,9 @@ public class Store {
         logger.info("Product search by name completed. Search keyword: " + Name + ", Number of results: " + searchResults.size());
 
         return searchResults;
+    }
+    public void ReduceProductQuantity(Integer productId, int quantity) {
+        products.get(productId).ReduceQuantity(quantity);
     }
 
     private boolean isInStock(StoreProduct product) {
@@ -302,6 +331,7 @@ public class Store {
         return products.get(productId).getProductRatingList();
     }
     public void addDiscount(Discount discount){
+        System.out.println(discount.getDescription());
         storeDiscounts.add(discount);
     }
     public boolean removeDiscount(Discount discount){
@@ -324,7 +354,28 @@ public class Store {
         return discounts;
     }
 
+
     public Collection<Policy> getPolicies() {
         return storePolicies;
+
+    public Collection<Discount> getDiscounts() {
+        return storeDiscounts;
+    }
+
+    public HashMap<CartProduct,Double> getDiscountPerProduct(Bag bag) {
+        if (bag == null)
+            throw new NullPointerException("Null bag in discount calculation");
+        HashMap<CartProduct,Double> totalMap = new HashMap<>();
+        for (Discount discount : storeDiscounts) {
+            HashMap<CartProduct,Double> currentMap = discount.calcDiscountPerProduct(bag);
+            for(CartProduct cartProduct:currentMap.keySet()){
+                if(totalMap.get(cartProduct)!=null){
+                    totalMap.put(cartProduct,totalMap.get(cartProduct)+currentMap.get(cartProduct));
+                }
+                else totalMap.put(cartProduct,currentMap.get(cartProduct));
+            }
+        }
+        return totalMap;
+
     }
 }

@@ -35,4 +35,8 @@ public class ContainsCategoryCondition implements BooleanCondition {
             return ((ContainsCategoryCondition)condition).getCategory().equals(category);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

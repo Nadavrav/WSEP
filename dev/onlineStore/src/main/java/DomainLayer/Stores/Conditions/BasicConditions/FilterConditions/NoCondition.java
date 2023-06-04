@@ -21,4 +21,8 @@ public class NoCondition implements BooleanCondition {
     public boolean equals(Condition condition) {
         return (condition instanceof NoCondition);
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

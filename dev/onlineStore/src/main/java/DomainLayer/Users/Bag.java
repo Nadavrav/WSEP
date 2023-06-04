@@ -51,8 +51,8 @@ public class Bag {
                 throw new RuntimeException("system error: report error to developers. error logged");
             }
             @Override
-            public HashMap<Discount, HashSet<CartProduct>> calcDiscounts(Bag bag) {
-                logger.severe("Error: get valid products for discount callback used in a product initialized without store callback");
+            public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag) {
+                logger.severe("Error: get discount amount callback used in a product initialized without store callback");
                 throw new RuntimeException("system error: report error to developers. error logged");
             }
         };
@@ -72,9 +72,10 @@ public class Bag {
     public boolean passesPolicy(){
         return callback.checkStorePolicies(this);
     }
-    public HashMap<Discount,HashSet<CartProduct>> getProductsInADiscount(){
-        return callback.calcDiscounts(this);
+    public HashMap<CartProduct,Double> getSavingsPerProducts(){
+        return callback.getSavingsPerProduct(this);
     }
+
     public double calcDiscountSavings(){
         return callback.getDiscountAmount(this);
     }
@@ -97,10 +98,7 @@ public class Bag {
             throw new NullPointerException("attempted to remove null product");
         if(productList.get(product)==null)
             throw new RuntimeException("product to remove not in cart");
-        CartProduct cartProduct=new CartProduct(product);
-        if(productList.get(product).equals(cartProduct))
-                productList.remove(cartProduct);
-        else throw new RuntimeException();
+        productList.remove(product);
     }
     public void removeProduct(CartProduct product) {
         if(product==null)
@@ -112,8 +110,10 @@ public class Bag {
         else throw new RuntimeException();
     }
     public void changeProductAmount(Product product,int newAmount) {
-       CartProduct cartProduct=productList.get(product);
-       cartProduct.setAmount(newAmount);
+        if(newAmount <= 0)
+            throw new IllegalArgumentException("Cant set amount to 0 or negative");
+        CartProduct cartProduct=productList.get(product);
+        cartProduct.setAmount(newAmount);
     }
     public double calculateTotalAmount() {
         double totalAmount = 0;

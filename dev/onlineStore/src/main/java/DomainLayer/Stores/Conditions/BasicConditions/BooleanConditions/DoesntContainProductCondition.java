@@ -35,4 +35,8 @@ public class DoesntContainProductCondition implements BooleanCondition {
             return ((DoesntContainProductCondition)condition).getProduct().equals(product);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

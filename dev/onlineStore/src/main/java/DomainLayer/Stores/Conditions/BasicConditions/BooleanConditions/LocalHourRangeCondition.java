@@ -57,4 +57,8 @@ public class LocalHourRangeCondition implements BooleanCondition {
         }
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

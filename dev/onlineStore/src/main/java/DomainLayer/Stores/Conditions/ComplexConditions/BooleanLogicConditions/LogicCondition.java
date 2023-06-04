@@ -31,4 +31,8 @@ public abstract class LogicCondition implements BooleanCondition {
             return ((LogicCondition)condition).getFirstCondition().equals(firstCondition) && ((LogicCondition)condition).getSecondCondition().equals(secondCondition);
         return false;
     }
+    @Override
+    public String toString(){
+        return "ERROR: THIS DESCRIPTION SHOULD NOT BE REACHABLE";
+    }
 }

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <title>Shopping Cart</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            /*background-image: url("https://media.istockphoto.com/id/1346000906/photo/businessman-holding-smartphone-with-shopping-trolley-cart-to-input-new-order-for-online.jpg?s=612x612&w=0&k=20&c=tu_3ErD09NitwBMHMGNUhvsP_Fyvz4ri5w2FsBajC90=");*/
             background-image: url("https://media.istockphoto.com/id/1297721828/photo/business-holding-virtual-shopping-cart-trolley-with-blue-bokeh-online-shopping-concept.jpg?s=612x612&w=0&k=20&c=0z2gs_-XrqPHHjnRzAJ6aoKV7PK0lUCGDT4iPtJTrc0=");
             background-size: cover;
             background-repeat: no-repeat;
@@ -14,23 +14,21 @@
 
         header {
             color: #fff;
-            /*text-align: center;*/
+            text-align: center;
+            padding: 20px;
         }
 
         main {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: left;
+            justify-content: center;
             height: 65vh;
         }
 
         .cart {
-            /*background-color: rgba(255, 255, 255, 0.2);*/
             padding: 25px;
             background-color: transparent;
-            position: fixed;
-            left: 50px;
         }
 
         .product-list-container {
@@ -41,18 +39,16 @@
         }
 
         .product-list {
-            /*display: flex;*/
-            /*flex-wrap: wrap;*/
+            display: flex;
+            flex-wrap: wrap;
             justify-content: flex-start;
             gap: 15px;
-
         }
 
         .product {
             border: 1px solid #ccc;
             border-radius: 5px;
-            flex-basis: 10%;
-            width: 270px;
+            width: 240px;
             padding: 5px;
             text-align: center;
             color: white;
@@ -102,6 +98,11 @@
 </head>
 
 <body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<div th:replace="fragments/alert :: alert(${alert})"></div>
+
 <header>
     <h1>My Shopping Cart</h1>
 </header>
@@ -121,29 +122,67 @@
     <section class="cart">
         <div class="product-list-container">
             <div class="product-list">
-<!--     myCart is a list of strings - update it!!           -->
-                <div th:text="${myCart}" class="product"></div>
+                <div class="product" th:each="bag : ${myCart}">
+                    <div th:each="product : ${bag.getProductList()}">
+                        <div class="product-details">
+                            <h2 th:text="${product.getName()}"></h2>
+                            <p>
+                                <span>Price:</span>
+                                <span th:text="${product.getPrice()}"></span>
+                            </p>
+                            <p>
+                                <span>Category:</span>
+                                <span th:text="${product.getCategory()}"></span>
+                            </p>
+                            <p>
+                                <span>Description:</span>
+                                <span th:text="${product.getDescription()}"></span>
+                            </p>
+                            <p>
+                            <span>Amount:</span>
+                                <input type="number" th:value="${product.getAmount()}" min="1" onchange="updateAmount('${product.getId()}', '${bag.getStoreId()}', this.value)"/>
+                            </p>
 
-<!--                <div th:each="item, index : ${myCart}" class="product">-->
-<!--                    <td th:text="${item}"></td>-->
-<!--                    <td>-->
-<!--                        <form th:action="@{/removeFromCart}" method="post">-->
-<!--                            <input type="hidden" name="index" th:value="${item.index}" />-->
-<!--                            <button type="submit">Remove</button>-->
-<!--                        </form>-->
-<!--                    </td>-->
-<!--                </div>-->
+                            <form action="/removeFromCart" method="post">
+                                <input type="hidden" name="storeId" th:value="${bag.getStoreId()}"/>
+                                <input type="hidden" name="productId" th:value="${product.getId()}"/>
+<!--                                <span>Quantity: </span>-->
+<!--                                <input style="width: 20px;" type="number" name="quantity" value="1" min="1" required/>-->
+                                <button class="remove-button" style="background-color: transparent;border: none;" type="submit">
+                                    <svg width="16" height="16" fill="white" class="bi bi-bag-dash-fill" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM6 9.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
-<!--        <div class="total-amount">-->
-<!--            <h3>Total Amount:</h3>-->
-<!--            <p th:text="'$' + ${totalAmount}"></p>-->
-<!--        </div>-->
+                <div class="total-amount">
+                    <h3 style="color: #d2d3d5">Total Amount:</h3>
+                    <p th:text="'$' + ${totalAmount}"></p>
+                </div>
         <div class="buy-button">
             <button onclick="window.location.href='Buy';">BUY</button>
         </div>
     </section>
+
+        <script>
+            function updateAmount(productId, storeId, amount) {
+
+                axios.post('/updateAmount', { productId: productId, storeId: storeId, amount: amount })
+                    .then(function (response) {
+                        console.log(response.data);
+                        console.log({ productId: productId, storeId: storeId, amount: amount });
+
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                    });
+            }
+        </script>
 </main>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package AcceptenceTests.UserTests.ConcurrencyTests;
 
+import DomainLayer.Response;
 import ServiceLayer.Service;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import Bridge.Bridge;
 import Bridge.Driver;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -50,8 +52,9 @@ public class ConcurrencyCartTests {
         final Service user2=new Service();
         user1.EnterNewSiteVisitor();
         user2.EnterNewSiteVisitor();
-        Future<Boolean> f1=executor.submit(() -> {user1.login(userName2,password2); user1.addProductToCart(productId_MegaMilk,storeId,1 ); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
-        Future<Boolean> f2=executor.submit(() -> {user2.login(userName1,password1); user1.addProductToCart(productId_MegaMilk,storeId,1 ); return user1.PurchaseCart(927391237,"Deadvlei, Namibia").isError();});
+        Future<Boolean> f1=executor.submit(() -> {
+            assertFalse(user1.login(userName2,password2).isError()); assertFalse(user1.addProductToCart(productId_MegaMilk,storeId,1 ).isError()); Response<List<String>> output1 =  user1.PurchaseCart(927391237,"Deadvlei, Namibia"); if(!output1.isError()){return output1.getValue().isEmpty();} else return false;});
+        Future<Boolean> f2=executor.submit(() -> {assertFalse(user2.login(userName1,password1).isError()); assertFalse(user2.addProductToCart(productId_MegaMilk,storeId,1 ).isError()); Response<List<String>> output2 =  user2.PurchaseCart(927391237,"Deadvlei, Namibia"); if(!output2.isError()){return output2.getValue().isEmpty();} else return false;});
         try {
             boolean r1=f1.get();
             boolean r2=f2.get();

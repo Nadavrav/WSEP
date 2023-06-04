@@ -33,4 +33,8 @@ public class MaxBagPriceCondition implements BooleanCondition {
             return ((MaxBagPriceCondition)condition).getPrice()==price;
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

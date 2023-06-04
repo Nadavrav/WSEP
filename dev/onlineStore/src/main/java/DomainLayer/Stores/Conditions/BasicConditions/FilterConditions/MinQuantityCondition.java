@@ -35,4 +35,8 @@ public class MinQuantityCondition implements FilterCondition {
     public int getQuantity() {
         return quantity;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

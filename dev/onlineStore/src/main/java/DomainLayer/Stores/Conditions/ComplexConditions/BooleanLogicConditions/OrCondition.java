@@ -25,4 +25,8 @@ public class OrCondition extends LogicCondition {
             return ((OrCondition)condition).getFirstCondition().equals(firstCondition) && ((LogicCondition)condition).getSecondCondition().equals(secondCondition);
         return false;
     }
+    @Override
+    public String toString(){
+        return "TODO";
+    }
 }

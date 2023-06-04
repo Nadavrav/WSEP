@@ -103,6 +103,10 @@ public class SiteVisitor{
         return cart.cartToString();
     }
 
+    public void removeBag(int storeId) throws Exception {
+        cart.removeBag(storeId);
+    }
+
     //-----------getter / setter-----------------
     public Cart getCart() {
         return cart;
@@ -123,5 +127,9 @@ public class SiteVisitor{
         return FreeVisitorID;
     }
 
+    @Override
+    public String toString(){
+          return "VisitorID : "+visitorId;
+    }
 
 }
