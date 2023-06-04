@@ -17,13 +17,13 @@ public class BasicDiscount extends Discount {
      */
     private double discount;
 
-    public BasicDiscount(String description, double discount){
-        super(description);
+    public BasicDiscount(String description,int id, double discount){
+        super(description,id);
         this.discount=discount;
         this.condition=new NoCondition();
     }
-    public BasicDiscount(String description, double discount, Condition condition){
-        super(description);
+    public BasicDiscount(String description,int id, double discount, Condition condition){
+        super(description,id);
         this.discount=discount;
         this.condition=condition;
     }
@@ -69,7 +69,8 @@ public class BasicDiscount extends Discount {
     }
     @Override
     public String toString(){
-        return "A "+discount+"% discount "+condition;
+        return this.description;
+//        return "A "+discount+"% discount "+condition;
     }
 
 

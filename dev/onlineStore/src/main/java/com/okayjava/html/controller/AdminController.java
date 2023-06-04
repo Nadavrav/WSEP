@@ -19,20 +19,47 @@ public class AdminController {
     public String adminPage(Model model) {
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<List<ServiceUser>> response = server.getRegisteredUsersInfo();
+
+        Response<List<ServiceUser>> response = server.getOnlineUsers();
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
-            System.out.println("Error");
         } else {
             alert.setSuccess(true);
             alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-            model.addAttribute("usersInfo", response.getValue());
-            System.out.println("usersInfo size: " + response.getValue().size());
+            model.addAttribute("onlineUsersInfo", response.getValue());
         }
-        alert.reset();
+
+        Response<List<ServiceUser>> responseOff = server.getOfflineUsers();
+        if (responseOff.isError()) {
+            alert.setFail(true);
+            alert.setMessage(responseOff.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(responseOff.getMessage());
+            model.addAttribute("offlineUsersInfo", responseOff.getValue());
+        }
+
+        return "Admin";
+    }
+
+    @RequestMapping(value="/delete", method = RequestMethod.POST)
+    public String deleteUser(@RequestParam("usernameToDelete") String username,
+                             Model model) {
+
+        Response<?> response = server.deleteUser(username);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(username + " Is Deleted!");
+            model.addAttribute("alert", alert.copy());
+        }
+
         return "Admin";
     }
 
