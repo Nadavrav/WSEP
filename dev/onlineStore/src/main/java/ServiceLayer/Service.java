@@ -619,21 +619,32 @@ public class Service {
         }
     }
 
-    public Response<Boolean> checkForNewMessages(String userName) throws Exception {
+    public Response<Boolean> checkForNewMessages(String userName) {
         try{
             return new Response<>(facade.checkForNewMessages(userName));
         }
         catch (Exception e){
-            throw new Exception(e);
+            return new Response<>(e.getMessage(),true);
         }
     }
 
-    public Response<LinkedList<String>> getNewMessages(String userName) throws Exception {
+    public Response<LinkedList<String>> getNewMessages(String userName) {
         try{
             return new Response<>(facade.getNewMessages(userName));
         }
         catch (Exception e){
-            throw new Exception(e);
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<Double> getTotalPrice()
+    {
+        try{
+            return new Response<>(facade.getTotalPrice(visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
         }
     }
 
