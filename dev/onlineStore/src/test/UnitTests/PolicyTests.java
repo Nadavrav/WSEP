@@ -1,7 +1,7 @@
 package UnitTests;
 
 import DomainLayer.Facade;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.DateCondition;
+import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.BetweenDatesCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinTotalProductAmountCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
@@ -65,7 +65,7 @@ public class PolicyTests {
     @Test
     public void DatePolicyTest(){
         try {
-            DateCondition condition=new DateCondition(18,2,2030);
+            BetweenDatesCondition condition=new BetweenDatesCondition(18,2,2030,18,2,2030);
             facade.AddStorePolicy(visitorId,storeId,new Policy("All products can only be bought on the 18.2.2030",condition));
             facade.purchaseCart(visitorId, 4444, "Space");
             fail();

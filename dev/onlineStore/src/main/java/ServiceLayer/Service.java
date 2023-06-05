@@ -19,7 +19,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
-
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicy;
 
 import ServiceLayer.ServiceObjects.ServiceCart;
@@ -572,14 +572,26 @@ public class Service {
         try {
             HashSet<ServiceDiscount> discounts=new HashSet<>();
             for(Discount discount:facade.getStoreDiscounts(storeId)){
-           //     discounts.add(new ServiceDiscount(discount.getDescription(), discount.getId()));
-        //TODO AFTER DISCOUNT SERVICE REFACTORING IS DONE- DENIS
+                discounts.add(new ServiceDiscount(discount));
             }
             return new Response<>(discounts);
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
+    }
+    public Response<ServiceDiscount> addDiscount(ServiceBasicDiscount serviceDiscount,int storeId){
+        try {
+           return new Response<>(new ServiceDiscount(facade.addDiscount(serviceDiscount,storeId)));
+
+        }
+        catch (StackOverflowError e){
+            return new Response<>("CODE ERROR: STACK OVERFLOW. PROBABLE CAUSE: DISCOUNT ADDITION TYPE UNDEFINED { addDiscount( [Discount type] ,...) } FOR RECEIVED DISCOUNT",true);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+
     }
     public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
         try {
@@ -667,6 +679,7 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
 
 
 }

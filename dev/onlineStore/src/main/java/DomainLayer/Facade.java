@@ -26,6 +26,8 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -1551,6 +1553,9 @@ public class Facade {
 
     public void addDiscount(Discount discount,int storeId){
         storesList.get(storeId).addDiscount(discount);
+    }
+    public Discount addDiscount(ServiceBasicDiscount serviceDiscount, int storeId) {
+        return storesList.get(storeId).addDiscount(serviceDiscount);
     }
 
 

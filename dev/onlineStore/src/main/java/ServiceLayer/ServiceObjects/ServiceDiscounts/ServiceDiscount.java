@@ -1,17 +1,21 @@
 package ServiceLayer.ServiceObjects.ServiceDiscounts;
 
 
-import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.ConditionRecord;
+import DomainLayer.Stores.Discounts.Discount;
 
 public class ServiceDiscount {
     public final String description;
-    public final ConditionRecord conditionRecord;
-    public final double discountAmount;
+    public final int id;
 
 
-    public ServiceDiscount(String description,ConditionRecord conditionRecord,double discountAmount){
+    public ServiceDiscount(String description,int id){
         this.description=description;
-        this.conditionRecord=conditionRecord;
-        this.discountAmount=discountAmount;
+        this.id=id;
     }
+
+    public ServiceDiscount(Discount discount) {
+        description=discount.getDescription();
+        id=discount.getId();
+    }
+
 }

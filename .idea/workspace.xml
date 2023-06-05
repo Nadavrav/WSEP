@@ -4,26 +4,35 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6344d34-1e18-494c-9ba8-386a53544871" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CheckForCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CheckIfCondition.java" afterDir="false" />
+    <list default="true" id="d6344d34-1e18-494c-9ba8-386a53544871" name="Changes" comment="updated old todo">
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/BetweenDatesConditionRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CategoryCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CheckForCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CheckIfCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/LocalHourRangeConditionRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxBagPriceConditionRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxPriceCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxQuantityCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxTotalProductAmountConditionRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinBagPriceConditionRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinPriceCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinQuantityCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinTotalProductAmountConditionRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NoCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NotCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/OrCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/XorCondition.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceBasicDiscount.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/springboot-html.iml" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/springboot-html.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/AndCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/AndCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/LogicCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/LogicCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/NotCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/NotCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/OrCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/OrCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/BooleanLogicConditions/XorCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/XorCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/BooleanAfterFilterCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/CompositeConditions/BooleanAfterFilterCondition.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Policies/Policy.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Policies/Policy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DateCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/AndConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/AndConditionRecord.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/ConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/ConditionRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NameCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NameConditionRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/DiscountTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/DiscountTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NameConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NameConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/PolicyTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/PolicyTests.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,6 +67,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/denis/IdeaProjects/WSEP/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -69,22 +79,12 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="JUnit.UnitTests in springboot-html">
-    <configuration name="DiscountTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="springboot-html" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="UnitTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="UnitTests.DiscountTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\denis\IdeaProjects\WSEP\dev\onlineStore\src\main\java\ServiceLayer\ServiceObjects\ServiceConditions\ConditionRecords" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.test in springboot-html">
     <configuration name="DiscountTest.ComplexAndDiscount" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
       <extension name="coverage">
@@ -140,6 +140,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="test in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-html" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/dev/onlineStore/src/test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="SpringbootHtmlApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="springboot-html" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.okayjava.html.SpringbootHtmlApplication" />
@@ -152,16 +160,16 @@
       <item itemvalue="JUnit.PolicyTests" />
       <item itemvalue="JUnit.PolicyTests.MinProductAmountTest" />
       <item itemvalue="JUnit.UnitTests in springboot-html" />
-      <item itemvalue="JUnit.DiscountTest" />
+      <item itemvalue="JUnit.test in springboot-html" />
       <item itemvalue="Spring Boot.SpringbootHtmlApplication" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.test in springboot-html" />
         <item itemvalue="JUnit.UnitTests in springboot-html" />
         <item itemvalue="JUnit.PolicyTests.MinProductAmountTest" />
         <item itemvalue="JUnit.PolicyTests" />
         <item itemvalue="JUnit.DiscountTest.ComplexAndDiscount" />
-        <item itemvalue="JUnit.DiscountTest" />
       </list>
     </recent_temporary>
   </component>
@@ -173,11 +181,31 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685985544278</updated>
-      <workItem from="1685985545531" duration="2259000" />
+      <workItem from="1685985545531" duration="8413000" />
     </task>
+    <task id="LOCAL-00001" summary="refactored condition structure, for simplification purposes. renamed a few and deleted a few. old condition types are still in the project, but are excluded from compilation.">
+      <created>1685987914276</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1685987914276</updated>
+    </task>
+    <task id="LOCAL-00002" summary="updated old todo">
+      <created>1685988109137</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1685988109137</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactored condition structure, for simplification purposes. renamed a few and deleted a few. old condition types are still in the project, but are excluded from compilation." />
+    <MESSAGE value="updated old todo" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated old todo" />
   </component>
 </project>

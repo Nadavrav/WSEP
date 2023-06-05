@@ -2,6 +2,8 @@ package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
+import DomainLayer.Stores.Conditions.ComplexConditions.AndCondition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
@@ -10,8 +12,11 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.RegisteredUser;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
+import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.AndConditionRecord;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.ConditionRecord;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.NameConditionRecord;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,6 +27,8 @@ import java.util.logging.Logger;
 public class Store {
     private static final AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
     private final AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
+    private final AtomicInteger DiscountID_GENERATOR = new AtomicInteger(0);
+
     private int Id;
     private String Name;
     private Boolean Active;
@@ -32,7 +39,7 @@ public class Store {
      * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
      */
     private final HashSet<Policy> storePolicies;
-    private final HashSet<Discount> storeDiscounts;
+    private final HashMap<Integer,Discount> storeDiscounts;
 
     private Double Rate=0.0;
     private static final Logger logger=Logger.getLogger("Store logger");
@@ -40,7 +47,7 @@ public class Store {
     private LinkedList<RegisteredUser> listeners;
 
     public Store(String name) {
-        storeDiscounts=new HashSet<>();
+        storeDiscounts=new HashMap<>();
         storePolicies=new HashSet<>();
         rateMapForStore=new HashMap<>();
         UniversalHandler.GetInstance().HandleError(logger);
@@ -334,29 +341,46 @@ public class Store {
         return products.get(productId).getProductRatingList();
     }
     public void addDiscount(Discount discount){
-        System.out.println(discount.getDescription());
-        storeDiscounts.add(discount);
+        storeDiscounts.put(discount.getId(), discount);
     }
-    public void addDiscount(ConditionRecord conditionRecord){
-        conditionRecord.accept(this);
+    public Discount addDiscount(ServiceBasicDiscount discount){
+        return addDiscount(discount.conditionRecord,discount.description,discount.discountAmount);
     }
-    public void addDiscount(NameConditionRecord nameConditionRecord){
-     //   storeDiscounts.add(new BasicDiscount(new NameConditionRecord(nameConditionRecord.name()),1,1));
-        // TODO AFTER DISCOUNT SERVICE REFACTORING IS DONE- DENIS
+    public Discount addDiscount(ConditionRecord conditionRecord,String description,double discountAmount){
+       return conditionRecord.accept(this,description,discountAmount);
     }
-    public boolean removeDiscount(Discount discount){
-        return storeDiscounts.remove(discount);
+    public Discount addDiscount(NameConditionRecord nameConditionRecord,String description,double discountAmount){
+        BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new NameCondition(nameConditionRecord.name()));
+        storeDiscounts.put(discount.getId(),discount);
+        return discount;
+    }
+    public Discount addDiscount(AndConditionRecord andConditionRecord, String description, double discountAmount){
+        if(!storeDiscounts.containsKey(andConditionRecord.id1()) || !storeDiscounts.containsKey(andConditionRecord.id2()))
+            throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
+        try {
+            Condition c1 = ((BasicDiscount) (storeDiscounts.get(andConditionRecord.id1()))).getConditions();
+            Condition c2 = ((BasicDiscount) (storeDiscounts.get(andConditionRecord.id2()))).getConditions();
+            BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new AndCondition(c1,c2));
+            storeDiscounts.put(discount.getId(),discount);
+            return discount;
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Invalid discount types detected: multi discount detected while trying to build an 'AND conditioned discount.\nsystem message:\n"+e.getMessage());
+        }
+    }
+    public Discount removeDiscount(Discount discount){
+        return storeDiscounts.remove(discount.getId());
     }
     public double calcSaved(Bag bag){
         double totalSaved=0;
-        for(Discount discount:storeDiscounts){
+        for(Discount discount:storeDiscounts.values()){
             totalSaved+=discount.calcDiscountAmount(bag);
         }
         return totalSaved;
     }
     public HashMap<Discount,HashSet<CartProduct>> getValidProducts(Bag bag){
         HashMap<Discount,HashSet<CartProduct>> discounts=new HashMap<>();
-        for(Discount discount:storeDiscounts){
+        for(Discount discount:storeDiscounts.values()){
             HashSet<CartProduct> validProducts=discount.getValidProducts(bag);
             if(!validProducts.isEmpty())
                 discounts.put(discount,validProducts);
@@ -370,14 +394,14 @@ public class Store {
     }
 
     public Collection<Discount> getDiscounts() {
-        return storeDiscounts;
+        return storeDiscounts.values();
     }
 
     public HashMap<CartProduct,Double> getDiscountPerProduct(Bag bag) {
         if (bag == null)
             throw new NullPointerException("Null bag in discount calculation");
         HashMap<CartProduct,Double> totalMap = new HashMap<>();
-        for (Discount discount : storeDiscounts) {
+        for (Discount discount : storeDiscounts.values()) {
             HashMap<CartProduct,Double> currentMap = discount.calcDiscountPerProduct(bag);
             for(CartProduct cartProduct:currentMap.keySet()){
                 if(totalMap.get(cartProduct)!=null){
