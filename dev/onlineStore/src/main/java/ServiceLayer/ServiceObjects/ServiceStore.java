@@ -12,6 +12,7 @@ public class ServiceStore {
     private final String storeName;
     private final ArrayList<ServiceStoreProduct> productList;
     private final HashSet<ServicePolicy> storePolicies;
+
     public ServiceStore(Store store)
     {
         this.storeId= store.getId();
