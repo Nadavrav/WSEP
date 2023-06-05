@@ -1557,7 +1557,9 @@ public class Facade {
     public Discount addDiscount(ServiceBasicDiscount serviceDiscount, int storeId) {
         return storesList.get(storeId).addDiscount(serviceDiscount);
     }
-
+    public Discount removeDiscount(int discountId, int storeId) {
+        return storesList.get(storeId).removeDiscount(discountId);
+    }
 
     public Collection<Discount> getStoreDiscounts(int storeId){
         return storesList.get(storeId).getDiscounts();

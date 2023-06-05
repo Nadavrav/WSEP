@@ -593,6 +593,18 @@ public class Service {
         }
 
     }
+    public Response<ServiceDiscount> removeDiscount(int discountId,int storeId){
+        try {
+            return new Response<>(new ServiceDiscount(facade.removeDiscount(discountId,storeId)));
+        }
+        catch (StackOverflowError e){
+            return new Response<>("CODE ERROR: STACK OVERFLOW. PROBABLE CAUSE: DISCOUNT ADDITION TYPE UNDEFINED { addDiscount( [Discount type] ,...) } FOR RECEIVED DISCOUNT",true);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+
+    }
     public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
         try {
             return new Response<>(new ServiceAppliedDiscount(facade.getSavingsPerProduct(visitorId,storeId)));
