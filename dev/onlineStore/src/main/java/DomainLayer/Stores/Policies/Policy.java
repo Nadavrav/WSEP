@@ -1,15 +1,15 @@
 package DomainLayer.Stores.Policies;
 
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NoCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
+//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Users.Bag;
 
 public class Policy {
-    private BooleanCondition condition;
+    private Condition condition;
     private final String description;
-    public Policy(String description,BooleanCondition condition){
+    public Policy(String description, Condition condition){
         this.condition=condition;
         this.description=description;
     }

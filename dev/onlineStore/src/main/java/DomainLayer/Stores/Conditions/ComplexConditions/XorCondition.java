@@ -1,4 +1,4 @@
-package DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions;
+package DomainLayer.Stores.Conditions.ComplexConditions;
 
 import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;

@@ -5,15 +5,11 @@ package DomainLayer;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.*;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.MinQuantityCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions.AndCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions.OrCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions.XorCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
-import DomainLayer.Stores.Discounts.AdditiveDiscount;
+import DomainLayer.Stores.Conditions.ComplexConditions.AndCondition;
+//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
+//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
+//import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
 import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
@@ -23,7 +19,6 @@ import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
 
-import DomainLayer.Stores.Purchases.PublicAuctionPurchase;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;
@@ -186,62 +181,62 @@ public class Facade {
             AddProduct(nikitaID,nikitaStoreID,"Milk",6,"Milk",30,"Good milk");
             //new Discounts
             // NadavStore discounts:
-            addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
-            MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
-            MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
-            nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
-            nameAndMinQuantityCondition.addCondition(minQuantityCondition);
-            AdditiveDiscount nadavAdditiveDiscount=new AdditiveDiscount("10% Discount on steaks and another 50% discount on steaks if you buy 2",1);
-            nadavAdditiveDiscount.addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")));
-            nadavAdditiveDiscount.addDiscount(new BasicDiscount("50% Discount on steaks if you buy 2",1,50,nameAndMinQuantityCondition));
-            addDiscount(nadavAdditiveDiscount,nadavStoreID);
-            // NadiaStore discounts:
-            BooleanAfterFilterCondition nadiabreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-            BooleanAfterFilterCondition nadiadairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-            AndCondition andCondition=new AndCondition(nadiabreadCondition,nadiadairyCondition);
-            MultiAndCondition nadiaMultiAndCondition=new MultiAndCondition();
-            nadiaMultiAndCondition.addCondition(andCondition);
-            nadiaMultiAndCondition.addCondition(new CategoryCondition("Meat"));
-            BasicDiscount nadiaDiscount =new BasicDiscount(" 50% discount on all meat products if you buy least 5 bread loafs and also at least 6 dairy products",1,50,nadiaMultiAndCondition);
-            CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
-            BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
-            BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
-            AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
-            additiveDiscount.addDiscount(storeDiscount);
-            additiveDiscount.addDiscount(dairyDiscount);
-            addDiscount(nadiaDiscount,nadiaStoreID);
-            addDiscount(additiveDiscount,nadiaStoreID);
-            // NatalieStore discounts:
-            BooleanAfterFilterCondition natalieBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-            BooleanAfterFilterCondition natalieDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-            OrCondition natalieorCondition=new OrCondition(natalieBreadCondition,natalieDairyCondition);
-            MultiAndCondition NataliemultiAndCondition=new MultiAndCondition();
-            NataliemultiAndCondition.addCondition(natalieorCondition);
-            NataliemultiAndCondition.addCondition(new CategoryCondition("Meat"));
-            BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,NataliemultiAndCondition);
-            addDiscount(basicDiscount,natalieStoreID);
-
-            // MajdStore discounts:
-            BooleanAfterFilterCondition majdBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-            BooleanAfterFilterCondition majdDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-            XorCondition majdXorCondition=new XorCondition(majdBreadCondition,majdDairyCondition);
-            MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
-            majdMultiAndCondition.addCondition(majdXorCondition);
-            majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
-
-            BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
-
-            addDiscount(majdBasicDiscount,majdStoreID);
+           // addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
+           // MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
+           // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
+           // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
+           // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
+           // AdditiveDiscount nadavAdditiveDiscount=new AdditiveDiscount("10% Discount on steaks and another 50% discount on steaks if you buy 2",1);
+           // nadavAdditiveDiscount.addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")));
+           // nadavAdditiveDiscount.addDiscount(new BasicDiscount("50% Discount on steaks if you buy 2",1,50,nameAndMinQuantityCondition));
+           // addDiscount(nadavAdditiveDiscount,nadavStoreID);
+           // // NadiaStore discounts:
+           // BooleanAfterFilterCondition nadiabreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+           // BooleanAfterFilterCondition nadiadairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+           // AndCondition andCondition=new AndCondition(nadiabreadCondition,nadiadairyCondition);
+           // MultiAndCondition nadiaMultiAndCondition=new MultiAndCondition();
+           // nadiaMultiAndCondition.addCondition(andCondition);
+           // nadiaMultiAndCondition.addCondition(new CategoryCondition("Meat"));
+           // BasicDiscount nadiaDiscount =new BasicDiscount(" 50% discount on all meat products if you buy least 5 bread loafs and also at least 6 dairy products",1,50,nadiaMultiAndCondition);
+           // CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
+           // BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
+           // BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
+           // AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
+           // additiveDiscount.addDiscount(storeDiscount);
+           // additiveDiscount.addDiscount(dairyDiscount);
+           // addDiscount(nadiaDiscount,nadiaStoreID);
+           // addDiscount(additiveDiscount,nadiaStoreID);
+           // // NatalieStore discounts:
+           // BooleanAfterFilterCondition natalieBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+           // BooleanAfterFilterCondition natalieDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+           // OrCondition natalieorCondition=new OrCondition(natalieBreadCondition,natalieDairyCondition);
+           // MultiAndCondition NataliemultiAndCondition=new MultiAndCondition();
+           // NataliemultiAndCondition.addCondition(natalieorCondition);
+           // NataliemultiAndCondition.addCondition(new CategoryCondition("Meat"));
+           // BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,NataliemultiAndCondition);
+           // addDiscount(basicDiscount,natalieStoreID);
+//
+           // // MajdStore discounts:
+           // BooleanAfterFilterCondition majdBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+           // BooleanAfterFilterCondition majdDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+           // XorCondition majdXorCondition=new XorCondition(majdBreadCondition,majdDairyCondition);
+           // MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
+           // majdMultiAndCondition.addCondition(majdXorCondition);
+           // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
+//
+           // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
+//
+           // addDiscount(majdBasicDiscount,majdStoreID);
             // DenisStore discounts:
-            BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
-            MinBagPriceCondition denisMinBagPriceCondition=new MinBagPriceCondition(200);
-            AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
-            FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
-            BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
-
-                    " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
-
-            addDiscount(denisBasicDiscount,denisStoreID);
+           // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
+           // MinBagPriceCondition denisMinBagPriceCondition=new MinBagPriceCondition(200);
+           // AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
+           // FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
+           // BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
+//
+            //        " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
+//
+            //addDiscount(denisBasicDiscount,denisStoreID);
             // NikitaStore discounts:
             NameCondition milkCondition=new NameCondition("Milk 15%");
             CategoryCondition meatCategoryCondition=new CategoryCondition("Meat");
@@ -251,23 +246,23 @@ public class Facade {
             maxSelectiveDiscount.addDiscount(meatsDiscount);
             maxSelectiveDiscount.addDiscount(milkDiscount);
             //add policies
-            BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
-            BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
-            BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
-
-
-            Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
-            Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
-            Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
-            Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
-            addPolicy(DairyPolicy,nadavStoreID);
-            addPolicy(BreadPolicy,nadavStoreID);
-            addPolicy(Meatpolicy,nadiaStoreID);
-            addPolicy(BreadPolicy,denisStoreID);
-            addPolicy(BreadPolicy,nadiaStoreID);
-            addPolicy(BagPolicy,denisStoreID);
-            addPolicy(BagPolicy,nadiaStoreID);
-            addPolicy(BagPolicy,natalieStoreID);
+            //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
+            //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
+            //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
+//
+//
+            //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
+            //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
+            //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
+            //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
+            //addPolicy(DairyPolicy,nadavStoreID);
+            //addPolicy(BreadPolicy,nadavStoreID);
+            //addPolicy(Meatpolicy,nadiaStoreID);
+            //addPolicy(BreadPolicy,denisStoreID);
+            //addPolicy(BreadPolicy,nadiaStoreID);
+            //addPolicy(BagPolicy,denisStoreID);
+            //addPolicy(BagPolicy,nadiaStoreID);
+            //addPolicy(BagPolicy,natalieStoreID);
 
             logout(nadavID);
             logout(nadiaID);

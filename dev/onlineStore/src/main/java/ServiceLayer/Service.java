@@ -572,8 +572,8 @@ public class Service {
         try {
             HashSet<ServiceDiscount> discounts=new HashSet<>();
             for(Discount discount:facade.getStoreDiscounts(storeId)){
-                discounts.add(new ServiceDiscount(discount.getDescription(), discount.getId()));
-
+           //     discounts.add(new ServiceDiscount(discount.getDescription(), discount.getId()));
+        //TODO AFTER DISCOUNT SERVICE REFACTORING IS DONE- DENIS
             }
             return new Response<>(discounts);
         }

@@ -1,8 +1,7 @@
 package ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords;
 
-import ServiceLayer.ServiceObjects.ServiceConditions.ConditionTypes;
+import DomainLayer.Stores.Store;
 
 public interface ConditionRecord {
-
-    ConditionRecord getInstance();
+    void accept(Store store);
 }

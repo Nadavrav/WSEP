@@ -1,14 +1,17 @@
 package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
+import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
+import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
-import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.RegisteredUser;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
+import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.ConditionRecord;
+import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.NameConditionRecord;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -333,6 +336,12 @@ public class Store {
     public void addDiscount(Discount discount){
         System.out.println(discount.getDescription());
         storeDiscounts.add(discount);
+    }
+    public void addDiscount(ConditionRecord conditionRecord){
+        conditionRecord.accept(this);
+    }
+    public void addDiscount(NameConditionRecord nameConditionRecord){
+     //   storeDiscounts.add(new BasicDiscount(new NameConditionRecord(nameConditionRecord.name()),1,1)); //TODO
     }
     public boolean removeDiscount(Discount discount){
         return storeDiscounts.remove(discount);
