@@ -4,36 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d6344d34-1e18-494c-9ba8-386a53544871" name="Changes" comment="updated old todo">
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/BetweenDatesConditionRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CategoryCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CheckForCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CheckIfCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/LocalHourRangeConditionRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxBagPriceConditionRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxPriceCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxQuantityCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxTotalProductAmountConditionRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinBagPriceConditionRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinPriceCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinQuantityCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinTotalProductAmountConditionRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NoCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NotCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/OrCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/XorCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceBasicDiscount.java" afterDir="false" />
+    <list default="true" id="d6344d34-1e18-494c-9ba8-386a53544871" name="Changes" comment="added all the necessary record classes">
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/ConditionFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NoConditionRecord.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Facade.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/BasicConditions/BooleanConditions/DateCondition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Discounts/Discount.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/XorCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Conditions/ComplexConditions/XorCondition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/Service.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/AndConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/AndConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/BetweenDatesConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/BetweenDatesConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CategoryCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CategoryConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CheckForCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CheckForConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CheckIfCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/CheckIfConditionRecord.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/ConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/ConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/LocalHourRangeConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/LocalHourRangeConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxBagPriceConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxBagPriceConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxPriceConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxQuantityCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxQuantityConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxTotalProductAmountConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MaxTotalProductAmountConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinBagPriceConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinBagPriceConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinPriceCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinPriceConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinQuantityCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinQuantityConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinTotalProductAmountConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/MinTotalProductAmountConditionRecord.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NameConditionRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NameConditionRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceDiscounts/ServiceDiscount.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/PolicyTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/test/UnitTests/PolicyTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NoCondition.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NotCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/NotConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/OrCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/OrConditionRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/XorCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/ServiceLayer/ServiceObjects/ServiceConditions/ConditionRecords/XorConditionRecord.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,7 +177,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1685985544278</updated>
-      <workItem from="1685985545531" duration="8413000" />
+      <workItem from="1685985545531" duration="11569000" />
     </task>
     <task id="LOCAL-00001" summary="refactored condition structure, for simplification purposes. renamed a few and deleted a few. old condition types are still in the project, but are excluded from compilation.">
       <created>1685987914276</created>
@@ -197,7 +193,14 @@
       <option name="project" value="LOCAL" />
       <updated>1685988109137</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="added all the necessary record classes">
+      <created>1685994712906</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1685994712906</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -206,6 +209,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="refactored condition structure, for simplification purposes. renamed a few and deleted a few. old condition types are still in the project, but are excluded from compilation." />
     <MESSAGE value="updated old todo" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated old todo" />
+    <MESSAGE value="added all the necessary record classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="added all the necessary record classes" />
   </component>
 </project>

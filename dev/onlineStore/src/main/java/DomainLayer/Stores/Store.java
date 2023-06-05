@@ -1,10 +1,8 @@
 package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.AndCondition;
-import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
-import DomainLayer.Stores.Discounts.BasicDiscount;
+
+import DomainLayer.Stores.Discounts.ConditionFactory;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
@@ -12,12 +10,7 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.RegisteredUser;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
-import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.AndConditionRecord;
-import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.ConditionRecord;
-import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.NameConditionRecord;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,7 +20,7 @@ import java.util.logging.Logger;
 public class Store {
     private static final AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
     private final AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
-    private final AtomicInteger DiscountID_GENERATOR = new AtomicInteger(0);
+    private final ConditionFactory conditionFactory=new ConditionFactory();
 
     private int Id;
     private String Name;
@@ -44,12 +37,13 @@ public class Store {
     private Double Rate=0.0;
     private static final Logger logger=Logger.getLogger("Store logger");
 
-    private LinkedList<RegisteredUser> listeners;
+    private final LinkedList<RegisteredUser> listeners;
 
     public Store(String name) {
         storeDiscounts=new HashMap<>();
         storePolicies=new HashSet<>();
         rateMapForStore=new HashMap<>();
+        conditionFactory.setStore(this);
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         Id = StoreID_GENERATOR.getAndIncrement();
@@ -70,7 +64,7 @@ public class Store {
     }
 
     /**
-     * called when rating is edited, to update the average rating to reduce load on many rating getters
+     * called when rating is edited, to update the average rating to reduce the load on many rating getters
      */
     private void updateAvgRating() {
         double sum = 0;
@@ -343,31 +337,21 @@ public class Store {
     public void addDiscount(Discount discount){
         storeDiscounts.put(discount.getId(), discount);
     }
-    public Discount addDiscount(ServiceBasicDiscount discount){
-        return addDiscount(discount.conditionRecord,discount.description,discount.discountAmount);
-    }
-    public Discount addDiscount(ConditionRecord conditionRecord,String description,double discountAmount){
-       return conditionRecord.accept(this,description,discountAmount);
-    }
-    public Discount addDiscount(NameConditionRecord nameConditionRecord,String description,double discountAmount){
-        BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new NameCondition(nameConditionRecord.name()));
+    public Discount addDiscount(ServiceBasicDiscount serviceDiscount){
+        Discount discount= conditionFactory.addDiscount(serviceDiscount.conditionRecord,serviceDiscount.description,serviceDiscount.discountAmount);
         storeDiscounts.put(discount.getId(),discount);
         return discount;
     }
-    public Discount addDiscount(AndConditionRecord andConditionRecord, String description, double discountAmount){
-        if(!storeDiscounts.containsKey(andConditionRecord.id1()) || !storeDiscounts.containsKey(andConditionRecord.id2()))
-            throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
-        try {
-            Condition c1 = ((BasicDiscount) (storeDiscounts.get(andConditionRecord.id1()))).getConditions();
-            Condition c2 = ((BasicDiscount) (storeDiscounts.get(andConditionRecord.id2()))).getConditions();
-            BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new AndCondition(c1,c2));
-            storeDiscounts.put(discount.getId(),discount);
-            return discount;
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Invalid discount types detected: multi discount detected while trying to build an 'AND conditioned discount.\nsystem message:\n"+e.getMessage());
-        }
+    public boolean containsDiscount(int id){
+        return storeDiscounts.containsKey(id);
     }
+    public Discount getDiscount(int id){
+        return storeDiscounts.get(id);
+    }
+    public Discount removeDiscount(int id){
+        return storeDiscounts.remove(id);
+    }
+
     public Discount removeDiscount(Discount discount){
         return storeDiscounts.remove(discount.getId());
     }
