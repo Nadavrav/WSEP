@@ -9,12 +9,8 @@ import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
 import java.util.List;
-//TODO: FIX THE DAMN DOCS
 public interface Bridge {
-    /**
-     *
-     * @return return corresponding response
-     */
+
     boolean initialize();
     /**
      * A function to enter the market

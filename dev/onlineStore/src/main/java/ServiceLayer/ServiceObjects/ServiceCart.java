@@ -9,7 +9,6 @@ import java.util.Set;
 
 public class ServiceCart {
     private final Set<ServiceBag> bags;
-    //TODO: FROM WHAT I READ, THIS APPROACH IS NOT CORRECT AND WE NEED SEPARATE MAPPER CLASSES TO CONVERT DOMAIN OBJECTS TO SERVICE OBJECTS
     public ServiceCart(Cart cart){
         bags=new HashSet<>();
         for(Bag bag: cart.getBags().values()){

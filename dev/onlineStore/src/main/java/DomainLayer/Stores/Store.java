@@ -341,7 +341,8 @@ public class Store {
         conditionRecord.accept(this);
     }
     public void addDiscount(NameConditionRecord nameConditionRecord){
-     //   storeDiscounts.add(new BasicDiscount(new NameConditionRecord(nameConditionRecord.name()),1,1)); //TODO
+     //   storeDiscounts.add(new BasicDiscount(new NameConditionRecord(nameConditionRecord.name()),1,1));
+        // TODO AFTER DISCOUNT SERVICE REFACTORING IS DONE- DENIS
     }
     public boolean removeDiscount(Discount discount){
         return storeDiscounts.remove(discount);
