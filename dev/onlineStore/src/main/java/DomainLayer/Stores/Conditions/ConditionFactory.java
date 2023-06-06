@@ -95,7 +95,7 @@ public class ConditionFactory {
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
         try {
             Condition c1 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id1()))).getConditions();
-            Condition c2 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id1()))).getConditions();
+            Condition c2 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id2()))).getConditions();
             BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new AndCondition(c1,c2));
             store.removeDiscount(andConditionRecord.id1());
             store.removeDiscount(andConditionRecord.id2());
@@ -123,7 +123,7 @@ public class ConditionFactory {
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
         try {
             Condition c1 = ((BasicDiscount) (store.getDiscount(orConditionRecord.id1()))).getConditions();
-            Condition c2 = ((BasicDiscount) (store.getDiscount(orConditionRecord.id1()))).getConditions();
+            Condition c2 = ((BasicDiscount) (store.getDiscount(orConditionRecord.id2()))).getConditions();
             BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new OrCondition(c1,c2));
             store.removeDiscount(orConditionRecord.id1());
             store.removeDiscount(orConditionRecord.id2());
@@ -138,7 +138,7 @@ public class ConditionFactory {
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
         try {
             Condition c1 = ((BasicDiscount) (store.getDiscount(xorConditionRecord.id1()))).getConditions();
-            Condition c2 = ((BasicDiscount) (store.getDiscount(xorConditionRecord.id1()))).getConditions();
+            Condition c2 = ((BasicDiscount) (store.getDiscount(xorConditionRecord.id2()))).getConditions();
             BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new XorCondition(c1,c2));
             store.removeDiscount(xorConditionRecord.id1());
             store.removeDiscount(xorConditionRecord.id2());
@@ -153,7 +153,7 @@ public class ConditionFactory {
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
         try {
             Condition c1 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id1()))).getConditions();
-            Condition c2 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id1()))).getConditions();
+            Condition c2 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id2()))).getConditions();
             BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new CheckIfCondition(c1,c2));
             store.removeDiscount(andConditionRecord.id1());
             store.removeDiscount(andConditionRecord.id2());
@@ -168,7 +168,7 @@ public class ConditionFactory {
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
         try {
             Condition c1 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id1()))).getConditions();
-            Condition c2 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id1()))).getConditions();
+            Condition c2 = ((BasicDiscount) (store.getDiscount(andConditionRecord.id2()))).getConditions();
             BasicDiscount discount=new BasicDiscount(description,DiscountID_GENERATOR.getAndIncrement(),discountAmount,new CheckForCondition((FilterCondition) c1,(BooleanCondition) c2));
             store.removeDiscount(andConditionRecord.id1());
             store.removeDiscount(andConditionRecord.id2());

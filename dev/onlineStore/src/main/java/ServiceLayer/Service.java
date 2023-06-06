@@ -583,10 +583,10 @@ public class Service {
         }
     }
 
-    public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
+    public Response<Collection<ServiceDiscountInfo>> getStoreDiscountInfo(int storeId){
 
         try {
-            HashSet<ServiceDiscount> discounts=new HashSet<>();
+            HashSet<ServiceDiscountInfo> discounts=new HashSet<>();
             for(Discount discount:facade.getStoreDiscounts(storeId)){
                 discounts.add(new ServiceDiscountInfo(discount));
             }
@@ -610,7 +610,7 @@ public class Service {
 
     }
 
-    public Response<ServiceDiscount> removeDiscount(int discountId,int storeId){
+    public Response<ServiceDiscountInfo> removeDiscount(int discountId,int storeId){
         try {
             return new Response<>(new ServiceDiscountInfo(facade.removeDiscount(discountId,storeId)));
         }

@@ -9,6 +9,7 @@ import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
@@ -203,7 +204,7 @@ public class Server {
         return service.getOfflineUsers();
     }
 
-    public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
+    public Response<Collection<ServiceDiscountInfo>> getStoreDiscountInfo(int storeId){
         return service.getStoreDiscountInfo(storeId);
     }
 
