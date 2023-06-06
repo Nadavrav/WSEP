@@ -1,5 +1,7 @@
 package ServiceLayer.ServiceObjects.ServiceDiscounts;
 
+import DomainLayer.Stores.Conditions.ConditionFactory;
+import DomainLayer.Stores.Discounts.Discount;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.ConditionRecord;
 
 public class ServiceBasicDiscount extends ServiceDiscount{
@@ -8,13 +10,13 @@ public class ServiceBasicDiscount extends ServiceDiscount{
 
 
     public ServiceBasicDiscount(String description,int discountAmount,ConditionRecord conditionRecord) {
-        super(description,-1);
+        super(description);
         this.discountAmount=discountAmount;
         this.conditionRecord = conditionRecord;
     }
-    public ServiceBasicDiscount(String description,int id,int discountAmount,ConditionRecord conditionRecord) {
-        super(description,id);
-        this.discountAmount=discountAmount;
-        this.conditionRecord = conditionRecord;
+
+    @Override
+    public Discount accept(ConditionFactory conditionFactory) {
+        return conditionFactory.addDiscount(this);
     }
 }

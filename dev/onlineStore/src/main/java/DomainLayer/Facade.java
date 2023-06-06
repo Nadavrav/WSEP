@@ -28,6 +28,8 @@ import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceMultiDiscount;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -1269,6 +1271,82 @@ public class Facade {
         //release lock user
         //throw e
     }
+    public Policy AddStorePolicy(int visitorId, int storeId, ServicePolicy policy) throws Exception {
+        SiteVisitor User = onlineList.get(visitorId);
+        //lock user
+        //try
+        if(! (User instanceof RegisteredUser)){
+            logger.severe("Invalid visitor Id: " + visitorId);
+            throw  new Exception("invalid visitor Id");
+        }
+        Store store = storesList.get(storeId);
+        if(store==null){
+            logger.warning(" store is null");
+            throw  new Exception("there is no store with this id ");
+        }
+        Employment employment = null;
+        try{
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
+        }catch (Exception e){
+            logger.warning("user with no store");
+            throw  new Exception("this user dont have any store");
+        }
+        if (employment == null){
+            logger.warning("employment is null");
+            throw  new Exception("there is no employee with this id ");
+        }
+        if (!employment.CanChangePolicyAndDiscounts()) {
+            logger.warning("user are not allowed to add products");
+            throw  new Exception("you are not allowed to add policies to this store");
+        }
+        if(store.getActive())
+            return store.addPolicy(policy);
+        else {
+            logger.warning("Store is closed, store id :"+storeId);
+            throw new Exception("Store is closed");
+        }
+        //catch
+        //release lock user
+        //throw e
+    }
+    public Policy removeStorePolicy(int visitorId, int storeId,int policyId) throws Exception {
+        SiteVisitor User = onlineList.get(visitorId);
+        //lock user
+        //try
+        if(! (User instanceof RegisteredUser)){
+            logger.severe("Invalid visitor Id: " + visitorId);
+            throw  new Exception("invalid visitor Id");
+        }
+        Store store = storesList.get(storeId);
+        if(store==null){
+            logger.warning(" store is null");
+            throw  new Exception("there is no store with this id ");
+        }
+        Employment employment = null;
+        try{
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
+        }catch (Exception e){
+            logger.warning("user with no store");
+            throw  new Exception("this user dont have any store");
+        }
+        if (employment == null){
+            logger.warning("employment is null");
+            throw  new Exception("there is no employee with this id ");
+        }
+        if (!employment.CanChangePolicyAndDiscounts()) {
+            logger.warning("user are not allowed to add products");
+            throw  new Exception("you are not allowed to add policies to this store");
+        }
+        if(store.getActive())
+            return store.removePolicy(policyId);
+        else {
+            logger.warning("Store is closed, store id :"+storeId);
+            throw new Exception("Store is closed");
+        }
+        //catch
+        //release lock user
+        //throw e
+    }
     public void UpdateProductQuantity(int visitorId,int storeId, int productID,int quantity) throws Exception{
         //lock product (get product object)
         //try
@@ -1511,9 +1589,9 @@ public class Facade {
         }
         registeredUserList.remove(userName);
     }
-    public void addPolicy(Policy policy,int storeId){
-        storesList.get(storeId).addPolicy(policy);
-    }
+//    public void addPolicy(Policy policy,int storeId){
+//        storesList.get(storeId).addPolicy(policy);
+//    }
     public LinkedList<Store> getStoresName() throws Exception {
         LinkedList<Store> storesName = new LinkedList<>();
         for(Store store : storesList.values()){
@@ -1554,9 +1632,12 @@ public class Facade {
     public void addDiscount(Discount discount,int storeId){
         storesList.get(storeId).addDiscount(discount);
     }
-    public Discount addDiscount(ServiceBasicDiscount serviceDiscount, int storeId) {
-        return storesList.get(storeId).addDiscount(serviceDiscount);
+    public Discount addDiscount(ServiceDiscount discount, int storeId){
+       return storesList.get(storeId).addDiscount(discount);
     }
+//    public Discount addDiscount(ServiceBasicDiscount serviceDiscount, int storeId) {
+//        return storesList.get(storeId).addDiscount(serviceDiscount);
+//    }
     public Discount removeDiscount(int discountId, int storeId) {
         return storesList.get(storeId).removeDiscount(discountId);
     }

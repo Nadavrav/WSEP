@@ -1,8 +1,6 @@
 package DomainLayer.Stores.Conditions.ComplexConditions;
 
-import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
-import DomainLayer.Stores.Discounts.ConditionFactory;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
 

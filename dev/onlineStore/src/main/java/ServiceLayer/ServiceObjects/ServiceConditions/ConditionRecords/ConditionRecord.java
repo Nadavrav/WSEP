@@ -1,8 +1,11 @@
 package ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords;
 
-import DomainLayer.Stores.Discounts.ConditionFactory;
+import DomainLayer.Stores.Conditions.ConditionFactory;
 import DomainLayer.Stores.Discounts.Discount;
+import DomainLayer.Stores.Policies.Policy;
 
 public interface ConditionRecord {
-    Discount accept(ConditionFactory factory, String description, double amount);
+    Discount acceptDiscount(ConditionFactory factory, String description, double amount);
+    Policy acceptPolicy(ConditionFactory factory, String description);
+
 }

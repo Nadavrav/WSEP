@@ -3,6 +3,8 @@ package ServiceLayer.ServiceObjects;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
 
 import java.util.*;
@@ -19,7 +21,7 @@ public class ServiceStore {
         this.storeName=store.getName();
         storePolicies=new HashSet<>();
         for(Policy policy:store.getPolicies())
-            storePolicies.add(new ServicePolicy(policy));
+            storePolicies.add(new ServicePolicyInfo(policy));
         productList=new ArrayList<>();
     }
 

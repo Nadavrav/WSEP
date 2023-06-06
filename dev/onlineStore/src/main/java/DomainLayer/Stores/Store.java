@@ -2,7 +2,7 @@ package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 
-import DomainLayer.Stores.Discounts.ConditionFactory;
+import DomainLayer.Stores.Conditions.ConditionFactory;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
@@ -10,7 +10,12 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.RegisteredUser;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.DiscountType;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceMultiDiscount;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,7 +36,7 @@ public class Store {
     /**
      * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
      */
-    private final HashSet<Policy> storePolicies;
+    private final HashMap<Integer,Policy> storePolicies;
     private final HashMap<Integer,Discount> storeDiscounts;
 
     private Double Rate=0.0;
@@ -41,7 +46,7 @@ public class Store {
 
     public Store(String name) {
         storeDiscounts=new HashMap<>();
-        storePolicies=new HashSet<>();
+        storePolicies=new HashMap<>();
         rateMapForStore=new HashMap<>();
         conditionFactory.setStore(this);
         UniversalHandler.GetInstance().HandleError(logger);
@@ -91,8 +96,13 @@ public class Store {
         }
         return s.toString();
     }
-    public boolean addPolicy(Policy policy){
-        return storePolicies.add(policy);
+    public void addPolicy(Policy policy){
+        storePolicies.put(policy.getId(),policy);
+    }
+    public Policy addPolicy(ServicePolicy policy) {
+        Policy createdPolicy=conditionFactory.addPolicy(policy);
+        storePolicies.put(createdPolicy.getId(),createdPolicy);
+        return createdPolicy;
     }
     public void CloseStore() {
         Active = false;
@@ -288,7 +298,7 @@ public class Store {
      * @return true if it passes, false otherwise.
      */
     public boolean passesPolicies(Bag bag){
-        for(Policy policy:storePolicies)
+        for(Policy policy:storePolicies.values())
             if(!policy.passesPolicy(bag))
                 return false;
         return true;
@@ -337,11 +347,17 @@ public class Store {
     public void addDiscount(Discount discount){
         storeDiscounts.put(discount.getId(), discount);
     }
-    public Discount addDiscount(ServiceBasicDiscount serviceDiscount){
-        Discount discount= conditionFactory.addDiscount(serviceDiscount.conditionRecord,serviceDiscount.description,serviceDiscount.discountAmount);
+    public Discount addDiscount(ServiceDiscount serviceDiscount){
+        Discount discount= conditionFactory.addDiscount(serviceDiscount);
         storeDiscounts.put(discount.getId(),discount);
         return discount;
     }
+//    public Discount addDiscount(ServiceMultiDiscount serviceDiscount){
+//        conditionFactory.addDiscount(serviceDiscount.getDiscountType(),serviceDiscount.getDiscounts(),serviceDiscount.description, serviceDiscount.id);
+//        Discount discount= conditionFactory.addDiscount(serviceDiscount.conditionRecord,serviceDiscount.description,serviceDiscount.discountAmount);
+//        storeDiscounts.put(discount.getId(),discount);
+//        return discount;
+//    }
     public boolean containsDiscount(int id){
         return storeDiscounts.containsKey(id);
     }
@@ -374,7 +390,7 @@ public class Store {
 
 
     public Collection<Policy> getPolicies() {
-        return storePolicies;
+        return storePolicies.values();
     }
 
     public Collection<Discount> getDiscounts() {
@@ -396,5 +412,20 @@ public class Store {
         }
         return totalMap;
 
+    }
+
+    public Policy getPolicy(int id) {
+        return storePolicies.get(id);
+    }
+
+    public boolean containsPolicy(int id) {
+        return storePolicies.containsKey(id);
+    }
+
+
+    public Policy removePolicy(int policyId) {
+        if(!storePolicies.containsKey(policyId))
+            throw new RuntimeException("Id error: invalid policy id while trying to remove policy");
+        return storePolicies.remove(policyId);
     }
 }

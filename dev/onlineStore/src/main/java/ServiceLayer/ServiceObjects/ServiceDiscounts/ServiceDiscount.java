@@ -1,21 +1,20 @@
 package ServiceLayer.ServiceObjects.ServiceDiscounts;
 
 
+import DomainLayer.Stores.Conditions.ConditionFactory;
 import DomainLayer.Stores.Discounts.Discount;
 
-public class ServiceDiscount {
+public abstract class ServiceDiscount {
     public final String description;
-    public final int id;
 
 
-    public ServiceDiscount(String description,int id){
+    public ServiceDiscount(String description){
         this.description=description;
-        this.id=id;
     }
 
     public ServiceDiscount(Discount discount) {
         description=discount.getDescription();
-        id=discount.getId();
     }
 
+    public abstract Discount accept(ConditionFactory conditionFactory);
 }
