@@ -73,7 +73,7 @@ public class Service {
 
     }
 
-    public Response<?> loadData() throws Exception {
+    public Response<?> loadData() {
         try{
             facade.loadData();
 

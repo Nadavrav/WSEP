@@ -22,7 +22,8 @@ public class RealBridge implements Bridge {
     Service service=new Service();
     @Override
     public boolean initialize() {
-        return false;
+        service.loadData();
+        return true;
     }
 
     @Override

@@ -105,7 +105,7 @@ public class Facade {
     }
 
     public void loadData() throws Exception {
-
+        resetData();
         try{
             //New users
             int nadavID = EnterNewSiteVisitor();

@@ -7,9 +7,7 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.*;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
 import com.jayway.jsonpath.internal.function.numeric.Min;
 import org.junit.jupiter.api.*;
 import Bridge.Driver;
@@ -22,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CreateDiscountTests {
-    private final Bridge bridge= Driver.getBridge();
+    private Bridge bridge= Driver.getBridge();
     int storeId=0;
     private final StoreProduct bread=new StoreProduct(0,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
     private final StoreProduct milk=new StoreProduct(1,"Milk",5,"Dairy",1,"Freshly milked");
@@ -36,7 +34,8 @@ public class CreateDiscountTests {
     @BeforeEach
     public void setUp() {
         try {
-            Facade.getInstance().resetData();
+            bridge=Driver.getBridge();
+            bridge.initialize();
             bridge.EnterMarket();
             bridge.Register("user", "admin123456");
             bridge.Login("user", "admin123456");
@@ -143,5 +142,38 @@ public class CreateDiscountTests {
         Response<ServiceAppliedDiscount> appliedDiscount=bridge.getBagDiscountInfo(storeId);
         assertFalse(appliedDiscount.isError());
         assertEquals(appliedDiscount.getValue().calcTotalSavings(),52.5);
+    }
+    @Test
+    public void MaxBetweenComplexDiscount(){
+        ServiceBasicDiscount minPriceDiscount=new ServiceBasicDiscount("50% discounts products priced above 45 NIS",50,new MinPriceConditionRecord(45));
+        Response<ServiceDiscountInfo> response1=bridge.addDiscount(minPriceDiscount,storeId);
+        ServiceBasicDiscount categoryDiscount1=new ServiceBasicDiscount("50% discounts on meat products",50,new CategoryConditionRecord("Meat"));
+        Response<ServiceDiscountInfo> response2=bridge.addDiscount(categoryDiscount1,storeId);
+        ServiceBasicDiscount andDiscount1=new ServiceBasicDiscount("50% discount for meat products priced above 45 NIS",50,new AndConditionRecord(response1.getValue().id,response2.getValue().id));
+        Response<ServiceDiscountInfo> response3=bridge.addDiscount(andDiscount1,storeId);
+        ServiceBasicDiscount maxPriceDiscount=new ServiceBasicDiscount("50% discount for products priced below 10 NIS",50,new MaxPriceConditionRecord(10));
+        Response<ServiceDiscountInfo> response4=bridge.addDiscount(maxPriceDiscount,storeId);
+        ServiceBasicDiscount categoryDiscount2=new ServiceBasicDiscount("50% discounts on dairy products",50,new CategoryConditionRecord("Dairy"));
+        Response<ServiceDiscountInfo> response5=bridge.addDiscount(categoryDiscount2,storeId);
+        ServiceBasicDiscount andDiscount2=new ServiceBasicDiscount("50% discount for dairy products priced below 10",50,new AndConditionRecord(response4.getValue().id,response5.getValue().id));
+        Response<ServiceDiscountInfo> response6=bridge.addDiscount(andDiscount2,storeId);
+        String desc="Min between 50% discount for dairy products priced below 10 and 50% discount for meat products priced above 45 NIS";
+        ServiceMultiDiscount serviceMultiDiscount=new ServiceMultiDiscount(DiscountType.MinBetweenDiscount,desc);
+        serviceMultiDiscount.addDiscount(response6.getValue().id);
+        serviceMultiDiscount.addDiscount(response3.getValue().id);
+        Response<ServiceDiscountInfo> response7=bridge.addDiscount(serviceMultiDiscount,storeId);
+        assertFalse(response1.isError());
+        assertFalse(response2.isError());
+        assertFalse(response3.isError());
+        assertFalse(response4.isError());
+        assertFalse(response5.isError());
+        assertFalse(response6.isError());
+        assertFalse(response7.isError());
+        Response<Collection<ServiceDiscountInfo>> discounts=bridge.getDiscountInfo(storeId);
+        for(ServiceDiscountInfo serviceDiscountInfo:discounts.getValue())
+            assertEquals(serviceDiscountInfo.description,desc);
+        Response<ServiceAppliedDiscount> appliedDiscount=bridge.getBagDiscountInfo(storeId);
+        assertFalse(appliedDiscount.isError());
+        assertEquals(appliedDiscount.getValue().calcTotalSavings(),2.5);
     }
 }

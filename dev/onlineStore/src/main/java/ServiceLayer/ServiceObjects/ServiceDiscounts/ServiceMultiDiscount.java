@@ -16,14 +16,18 @@ public class ServiceMultiDiscount extends ServiceDiscount{
         discounts=new HashSet<>();
     }
 
-    public ServiceMultiDiscount(DiscountType discountType,ManyDiscounts manyDiscounts) {
-        super(manyDiscounts);
+    public ServiceMultiDiscount(DiscountType discountType,String description,Collection<Integer> ids) {
+        super(description);
         discounts=new HashSet<>();
-        for(Discount discount:manyDiscounts.getDiscounts())
-            discounts.add(discount.getId());
+        discounts.addAll(ids);
         this.discountType=discountType;
     }
-
+    public void addDiscount(int id){
+        discounts.add(id);
+    }
+    public boolean removeDiscount(int id){
+        return discounts.remove(id);
+    }
     public Collection<Integer> getDiscounts() {
         return discounts;
     }
