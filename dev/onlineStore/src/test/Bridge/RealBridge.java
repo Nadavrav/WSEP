@@ -25,6 +25,11 @@ public class RealBridge implements Bridge {
         service.loadData();
         return true;
     }
+    @Override
+    public boolean reset() {
+        service.reset();
+        return true;
+    }
 
     @Override
     public boolean EnterMarket() {

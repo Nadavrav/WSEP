@@ -82,7 +82,15 @@ public class Service {
         }
         return new Response<>("Success");
     }
+    public Response<?> reset() {
+        try{
+            facade.resetData();
 
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
 
 
     public Response<?> Register( String userName, String password) {//1.3

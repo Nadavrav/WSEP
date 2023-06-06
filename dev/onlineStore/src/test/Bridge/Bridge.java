@@ -14,7 +14,7 @@ import ServiceLayer.ServiceObjects.ServiceStore;
 import java.util.Collection;
 import java.util.List;
 public interface Bridge {
-
+    boolean reset();
     boolean initialize();
     /**
      * A function to enter the market

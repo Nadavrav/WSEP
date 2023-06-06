@@ -35,11 +35,11 @@ public class CreateDiscountTests {
     public void setUp() {
         try {
             bridge=Driver.getBridge();
-            bridge.initialize();
+            bridge.reset();
             bridge.EnterMarket();
             bridge.Register("user", "admin123456");
             bridge.Login("user", "admin123456");
-            bridge.OpenNewStore( "Store1");
+            storeId=bridge.OpenNewStore( "Store1");
             bridge.AddProduct(storeId, bread.getName(), bread.getDescription(),bread.getCategory(), bread.getPrice(),bread.getQuantity());
             bridge.AddProduct(storeId, milk.getName(), milk.getDescription(),milk.getCategory(), milk.getPrice(),milk.getQuantity());
             bridge.AddProduct(storeId, yogurt.getName(), yogurt.getDescription(),yogurt.getCategory(), yogurt.getPrice(),yogurt.getQuantity());
@@ -147,27 +147,27 @@ public class CreateDiscountTests {
     public void MaxBetweenComplexDiscount(){
         ServiceBasicDiscount minPriceDiscount=new ServiceBasicDiscount("50% discounts products priced above 45 NIS",50,new MinPriceConditionRecord(45));
         Response<ServiceDiscountInfo> response1=bridge.addDiscount(minPriceDiscount,storeId);
+        assertFalse(response1.isError());
         ServiceBasicDiscount categoryDiscount1=new ServiceBasicDiscount("50% discounts on meat products",50,new CategoryConditionRecord("Meat"));
         Response<ServiceDiscountInfo> response2=bridge.addDiscount(categoryDiscount1,storeId);
+        assertFalse(response2.isError());
         ServiceBasicDiscount andDiscount1=new ServiceBasicDiscount("50% discount for meat products priced above 45 NIS",50,new AndConditionRecord(response1.getValue().id,response2.getValue().id));
         Response<ServiceDiscountInfo> response3=bridge.addDiscount(andDiscount1,storeId);
+        assertFalse(response3.isError());
         ServiceBasicDiscount maxPriceDiscount=new ServiceBasicDiscount("50% discount for products priced below 10 NIS",50,new MaxPriceConditionRecord(10));
         Response<ServiceDiscountInfo> response4=bridge.addDiscount(maxPriceDiscount,storeId);
+        assertFalse(response4.isError());
         ServiceBasicDiscount categoryDiscount2=new ServiceBasicDiscount("50% discounts on dairy products",50,new CategoryConditionRecord("Dairy"));
         Response<ServiceDiscountInfo> response5=bridge.addDiscount(categoryDiscount2,storeId);
+        assertFalse(response5.isError());
         ServiceBasicDiscount andDiscount2=new ServiceBasicDiscount("50% discount for dairy products priced below 10",50,new AndConditionRecord(response4.getValue().id,response5.getValue().id));
         Response<ServiceDiscountInfo> response6=bridge.addDiscount(andDiscount2,storeId);
+        assertFalse(response6.isError());
         String desc="Min between 50% discount for dairy products priced below 10 and 50% discount for meat products priced above 45 NIS";
         ServiceMultiDiscount serviceMultiDiscount=new ServiceMultiDiscount(DiscountType.MinBetweenDiscount,desc);
         serviceMultiDiscount.addDiscount(response6.getValue().id);
         serviceMultiDiscount.addDiscount(response3.getValue().id);
         Response<ServiceDiscountInfo> response7=bridge.addDiscount(serviceMultiDiscount,storeId);
-        assertFalse(response1.isError());
-        assertFalse(response2.isError());
-        assertFalse(response3.isError());
-        assertFalse(response4.isError());
-        assertFalse(response5.isError());
-        assertFalse(response6.isError());
         assertFalse(response7.isError());
         Response<Collection<ServiceDiscountInfo>> discounts=bridge.getDiscountInfo(storeId);
         for(ServiceDiscountInfo serviceDiscountInfo:discounts.getValue())
