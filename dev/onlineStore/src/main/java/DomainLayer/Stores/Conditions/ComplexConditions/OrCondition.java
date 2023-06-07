@@ -1,4 +1,4 @@
-package DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions;
+package DomainLayer.Stores.Conditions.ComplexConditions;
 
 import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
@@ -7,7 +7,7 @@ import DomainLayer.Users.Bag;
 import java.util.HashSet;
 
 public class OrCondition extends LogicCondition {
-    public OrCondition(BooleanCondition firstCondition, BooleanCondition secondCondition) {
+    public OrCondition(Condition firstCondition, Condition secondCondition) {
         super(firstCondition, secondCondition);
     }
 
@@ -17,7 +17,11 @@ public class OrCondition extends LogicCondition {
         HashSet<CartProduct> eligibleProducts2=secondCondition.passCondition(bag);
         if(eligibleProducts1.isEmpty() && eligibleProducts2.isEmpty())
             return new HashSet<>();
-        return new HashSet<>(bag.getProducts());
+       else{
+           eligibleProducts1.addAll(eligibleProducts2);
+           return eligibleProducts1;
+
+        }
     }
     @Override
     public boolean equals(Condition condition) {

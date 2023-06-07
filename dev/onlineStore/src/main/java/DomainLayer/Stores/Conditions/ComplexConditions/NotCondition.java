@@ -1,4 +1,4 @@
-package DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions;
+package DomainLayer.Stores.Conditions.ComplexConditions;
 
 import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
@@ -8,9 +8,9 @@ import DomainLayer.Users.Bag;
 import java.util.HashSet;
 
 public class NotCondition implements BooleanCondition {
-    private final BooleanCondition condition;
+    private final Condition condition;
 
-    public NotCondition(BooleanCondition condition) {
+    public NotCondition(Condition condition) {
         this.condition = condition;
     }
 

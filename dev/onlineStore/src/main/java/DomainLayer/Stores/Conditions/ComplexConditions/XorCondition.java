@@ -1,6 +1,5 @@
-package DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions;
+package DomainLayer.Stores.Conditions.ComplexConditions;
 
-import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
@@ -8,7 +7,7 @@ import DomainLayer.Users.Bag;
 import java.util.HashSet;
 
 public class XorCondition extends LogicCondition {
-    public XorCondition(BooleanCondition firstCondition, BooleanCondition secondCondition) {
+    public XorCondition(Condition firstCondition, Condition secondCondition) {
         super(firstCondition, secondCondition);
     }
 
