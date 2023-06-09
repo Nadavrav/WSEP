@@ -7,8 +7,8 @@ import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.ConditionR
 public class ServiceBasicPolicy extends ServicePolicy{
     private final ConditionRecord conditionRecord;
 
-    public ServiceBasicPolicy(String description,int id,ConditionRecord conditionRecord) {
-        super(description,id);
+    public ServiceBasicPolicy(String description,ConditionRecord conditionRecord) {
+        super(description);
         this.conditionRecord=conditionRecord;
     }
 

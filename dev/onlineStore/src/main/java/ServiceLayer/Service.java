@@ -615,7 +615,6 @@ public class Service {
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
-
     }
 
     public Response<ServiceDiscountInfo> removeDiscount(int discountId,int storeId){
