@@ -4,14 +4,18 @@ import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
 public class ManagerController {
-
+    @Autowired
+    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
 
@@ -19,7 +23,7 @@ public class ManagerController {
     public String menu(Model model) {
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<Collection<ServiceStore>> response = server.getStoresByUserName();
+        Response<Collection<ServiceStore>> response = server.getStoresByUserName(request);
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -59,7 +63,7 @@ public class ManagerController {
     public String openStore(@RequestParam("store-name") String storeName,
                             Model model) {
 
-        Response<Integer> response = server.OpenStore(storeName);
+        Response<Integer> response = server.OpenStore(request,storeName);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -89,7 +93,7 @@ public class ManagerController {
                              @RequestParam("product-desc") String description,
                              Model model) {
 
-        Response<Integer> response = server.AddProduct(storeID, productName, price, category, quantity, description);
+        Response<Integer> response = server.AddProduct(request,storeID, productName, price, category, quantity, description);
 
         if (response.isError()) {
             alert.setFail(true);
@@ -111,7 +115,7 @@ public class ManagerController {
                                 @RequestParam("productID-remove") int productID,
                                 Model model) {
 
-        Response<?> response = server.RemoveProduct(productID, storeID);
+        Response<?> response = server.RemoveProduct(request,productID, storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -137,7 +141,7 @@ public class ManagerController {
                                 Model model) {
 
         if (productName != null) {
-            Response<?> response = server.UpdateProductName(productID, storeID, productName);
+            Response<?> response = server.UpdateProductName(request,productID, storeID, productName);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -152,7 +156,7 @@ public class ManagerController {
             }
         }
         if (price > 0) {
-            Response<?> response = server.UpdateProductPrice(productID, storeID, price);
+            Response<?> response = server.UpdateProductPrice(request,productID, storeID, price);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -167,7 +171,7 @@ public class ManagerController {
             }
         }
         if (quantity > 0) {
-            Response<?> response = server.UpdateProductQuantity(productID, storeID, quantity);
+            Response<?> response = server.UpdateProductQuantity(request,productID, storeID, quantity);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -182,7 +186,7 @@ public class ManagerController {
             }
         }
         if (category != null) {
-            Response<?> response = server.UpdateProductCategory(productID, storeID, category);
+            Response<?> response = server.UpdateProductCategory(request,productID, storeID, category);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -197,7 +201,7 @@ public class ManagerController {
             }
         }
         if (description != null) {
-            Response<?> response = server.UpdateProductDescription(productID, storeID, description);
+            Response<?> response = server.UpdateProductDescription(request,productID, storeID, description);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -222,7 +226,7 @@ public class ManagerController {
     public String purchaseHistory(@RequestParam("storeID-purchase") int storeID,
                                   Model model) {
 
-        Response<List<String>> response = server.GetStoreHistoryPurchase(storeID);
+        Response<List<String>> response = server.GetStoreHistoryPurchase(request,storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -242,7 +246,7 @@ public class ManagerController {
     public String closeStore(@RequestParam("storeID-close") int storeID,
                              Model model) {
 
-        Response<?> response = server.CloseStore(storeID);
+        Response<?> response = server.CloseStore(request,storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -261,7 +265,7 @@ public class ManagerController {
     public String employeeInfo(@RequestParam("storeID-employee") int storeID,
                                Model model) {
 
-        Response<?> response = server.getRolesData(storeID);
+        Response<?> response = server.getRolesData(request,storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -281,7 +285,7 @@ public class ManagerController {
                                  @RequestParam("username-remove-emp") String userName,
                                  Model model) {
 
-        Response<?> response = server.removeEmployee(storeID, userName);
+        Response<?> response = server.removeEmployee(request,storeID, userName);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -301,7 +305,7 @@ public class ManagerController {
                                     @RequestParam("owner-name-add") String ownerName,
                                     Model model) {
 
-        Response<?> response = server.appointNewStoreOwner(ownerName, storeID);
+        Response<?> response = server.appointNewStoreOwner(request,ownerName, storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -320,7 +324,7 @@ public class ManagerController {
                                       @RequestParam("manager-name-add") String managerName,
                                       Model model) {
 
-        Response<?> response = server.appointNewStoreManager(managerName, StoreID);
+        Response<?> response = server.appointNewStoreManager(request,managerName, StoreID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -340,7 +344,7 @@ public class ManagerController {
                                    @RequestParam("permission") List<Permission> permissions,
                                    Model model) {
 
-        Response<?> response = server.changeStoreManagerPermission(managerName, storeID, permissions);
+        Response<?> response = server.changeStoreManagerPermission(request,managerName, storeID, permissions);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());

@@ -3,6 +3,7 @@ package com.okayjava.html.controller;
 import DomainLayer.Response;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,8 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class StoresController {
+    @Autowired
+    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
 
@@ -19,7 +24,7 @@ public class StoresController {
     public String getStoreAndProductsNames(Model model) {
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<?> response = server.getStoresName(); //linkedlist stores
+        Response<?> response = server.getStoresName(request); //linkedlist stores
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -42,7 +47,7 @@ public class StoresController {
 
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<?> response = server.addStoreRateAndComment(storeID, rating, comment);
+        Response<?> response = server.addStoreRateAndComment(request,storeID, rating, comment);
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -54,7 +59,7 @@ public class StoresController {
             model.addAttribute("alert", alert.copy());
             System.out.println("adding comment: " + comment + " with rating: " + rating + " to storeid: " + storeID);
         }
-        model.addAttribute("stores", server.getStoresName().getValue());
+        model.addAttribute("stores", server.getStoresName(request).getValue());
         alert.reset();
         return "Stores";
     }

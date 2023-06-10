@@ -10,16 +10,20 @@ import ServiceLayer.ServiceObjects.ServiceStore;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 public class SearchResultsController {
+    @Autowired
+    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
 
@@ -73,7 +77,7 @@ public class SearchResultsController {
         List<StoreFilter> storeFilter = new ArrayList<>();
         storeFilter.add(new NameStoreFilter(storeName));
         storeFilter.add(new RatingStoreFilter(storeRate));
-        Response<List<ServiceStore>> response = server.FilterProductSearch(productFilter, storeFilter);
+        Response<List<ServiceStore>> response = server.FilterProductSearch(request,productFilter, storeFilter);
 
         if (response.isError()){
             alert.setFail(true);
@@ -115,7 +119,7 @@ public class SearchResultsController {
                             @RequestParam("quantity") int quantity,
                             Model model) {
 
-        Response<?> response = server.addProductToCart(productId, storeId, quantity);
+        Response<?> response = server.addProductToCart(request,productId, storeId, quantity);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());

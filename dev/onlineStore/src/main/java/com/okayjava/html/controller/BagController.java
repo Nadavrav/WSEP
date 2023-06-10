@@ -2,15 +2,20 @@ package com.okayjava.html.controller;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import DomainLayer.Response;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @Controller
 public class BagController {
+    @Autowired
+    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
 
@@ -18,7 +23,7 @@ public class BagController {
     public String Bag(Model model) {
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<ServiceCart> response = server.getProductsInMyCart();
+        Response<ServiceCart> response = server.getProductsInMyCart(request);
         System.out.println("size: " + response.getValue().getBags().size());
         if (response.isError()){
             alert.setFail(true);
@@ -51,7 +56,7 @@ public class BagController {
 
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<?> response = server.removeProductFromCart(productId, storeId);
+        Response<?> response = server.removeProductFromCart(request,productId, storeId);
         if(response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -72,7 +77,7 @@ public class BagController {
                                                @RequestParam("amount") int amount) {
 
         System.out.println("here!");
-        server.changeCartProductQuantity(productId, storeId, amount);
+        server.changeCartProductQuantity(request,productId, storeId, amount);
         // Return a success response
         return ResponseEntity.ok("Amount updated successfully");
     }

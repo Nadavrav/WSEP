@@ -4,14 +4,18 @@ import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.ServiceUser;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 public class AdminController {
+    @Autowired
+    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
     private final Server server = Server.getInstance();
 
@@ -20,7 +24,7 @@ public class AdminController {
         model.addAttribute("alert", alert.copy());
         alert.reset();
 
-        Response<List<ServiceUser>> response = server.getOnlineUsers();
+        Response<List<ServiceUser>> response = server.getOnlineUsers(request);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -31,7 +35,7 @@ public class AdminController {
             model.addAttribute("onlineUsersInfo", response.getValue());
         }
 
-        Response<List<ServiceUser>> responseOff = server.getOfflineUsers();
+        Response<List<ServiceUser>> responseOff = server.getOfflineUsers(request);
         if (responseOff.isError()) {
             alert.setFail(true);
             alert.setMessage(responseOff.getMessage());
@@ -49,7 +53,7 @@ public class AdminController {
     public String deleteUser(@RequestParam("usernameToDelete") String username,
                              Model model) {
 
-        Response<?> response = server.deleteUser(username);
+        Response<?> response = server.deleteUser(request,username);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
