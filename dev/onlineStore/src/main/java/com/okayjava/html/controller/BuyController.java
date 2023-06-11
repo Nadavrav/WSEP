@@ -15,7 +15,9 @@ public class BuyController {
     private Server server = Server.getInstance();
     @GetMapping("/Buy")
     public String purchase(Model model) {
-        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("Admin", server.isAdmin().getValue());
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
         return "Buy";
     }
@@ -29,7 +31,8 @@ public class BuyController {
 //                           @RequestParam("cvv") String cvv,
                            Model model) {
 
-        model.addAttribute("alert", alert.copy());
+
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<List<String>> response = server.PurchaseCart(cardNumber, address);
         if (response.isError()){

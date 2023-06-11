@@ -9,10 +9,13 @@ import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
+import ServiceLayer.ServiceObjects.ServicePolicy;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
+import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,6 +41,7 @@ public class Server {
     private static Server server = null;
     private Service service;
 
+    private MyWebSocketHandler socket;
     public static Server getInstance(){
         if (server == null){
             server = new Server();
@@ -47,7 +51,12 @@ public class Server {
 
     private Server(){
         service = new Service();
+//        socket = MyWebSocketHandler.getInstance();
     }
+
+//    public void sendMessage(String userName, String message) throws IOException{
+//        socket.sendMessage(userName, message);
+//    }
 
     public Response<Integer> EnterNewSiteVisitor() {
         return service.EnterNewSiteVisitor();
@@ -207,6 +216,10 @@ public class Server {
         return service.getStoreDiscountInfo(storeId);
     }
 
+    public Response<HashSet<ServicePolicy>> getStorePolicy(int storeId){
+        return service.getStorePolicy(storeId);
+    }
+
     public Response<Collection<ServiceStore>> getStoresByUserName(){
         return service.getStoresByUserName(this.username);
     }
@@ -226,5 +239,9 @@ public class Server {
     public Response<Double> getTotalPrice(){
         return service.getTotalPrice();
     }
+
+//    public Response addDiscount(){
+//        return service.addDiscount();
+//    }
 }
 

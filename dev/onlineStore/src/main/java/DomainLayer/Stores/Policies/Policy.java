@@ -7,8 +7,8 @@ import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Users.Bag;
 
 public class Policy {
-    private BooleanCondition condition;
-    private final String description;
+    protected BooleanCondition condition;
+    protected final String description;
     public Policy(String description,BooleanCondition condition){
         this.condition=condition;
         this.description=description;

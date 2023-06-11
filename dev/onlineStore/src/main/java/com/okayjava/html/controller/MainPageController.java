@@ -10,18 +10,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.model.IModel;
 
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class MainPageController{
     Alert alert = Alert.getInstance();
     private final Server server = Server.getInstance();
     private static boolean isInitialized = false;
-    Model m;
 
     @GetMapping("/")
-    public String mainPage(Model model) throws Exception {
+    public String mainPage(HttpSession session, Model model) throws Exception {
         if (!isInitialized){
             Response<?> response = server.loadData();
             System.out.println("Loading Data ... ");
@@ -29,16 +28,26 @@ public class MainPageController{
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
+                return "/";
             }
             isInitialized = true;
         }
+
+        Response<Integer> responseId = server.EnterNewSiteVisitor();
+        System.out.println("user logged in with id: " + responseId.getValue());
+        session.setAttribute("userId", responseId.getValue());
         model.addAttribute("alert", alert.copy());
-//        server.EnterNewSiteVisitor();
-        System.out.println("user logged in with id: " + server.EnterNewSiteVisitor().getValue());
-        m = model;
         alert.reset();
+
         return "MainPage";
     }
+
+//    @MessageMapping("/websocket-endpoint")
+//    @SendTo("/topic/messages")
+//    public String handleWebSocketMessage(String message) {
+//        // Logic to handle the received message
+//        return "Response from server";
+//    }
 
     @GetMapping("MainPage")
     public String reMainPage(Model model) {
@@ -52,7 +61,8 @@ public class MainPageController{
     }
 
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
-    public String signIn(@RequestParam("username") String username,
+    public String signIn(HttpSession session,
+                         @RequestParam("username") String username,
                          @RequestParam("password") String password,
                          Model model) throws Exception {
 
@@ -67,14 +77,15 @@ public class MainPageController{
             server.setLogged(true);
             alert.setSuccess(true);
 
+            session.setAttribute("username", username);
+
             model.addAttribute("logged", server.isLogged());
             if (server.isAdmin().getValue()) {
                 model.addAttribute("Admin", true);
                 alert.setMessage("HELLO " + username);
                 model.addAttribute("alert", alert.copy());
             }
-//            Thread T1= new Thread();
-//            T1.start();
+
             if(!server.checkForNewMessages().isError()){
                 alert.setMessage("Hey " + username + "! You Have New Messages.");
             } else alert.setMessage("WELCOME TO OUR STORE");
@@ -104,7 +115,7 @@ public class MainPageController{
     }
 
     @GetMapping("/logout")
-    public String logout(Model model) {
+    public String logout(HttpSession session, Model model) {
         Response<?> response = server.logout();
         if (response.isError()){
             alert.setFail(true);
@@ -154,19 +165,4 @@ public class MainPageController{
         model.addAttribute("errorMessage", "Page Not Found");
         return "error";
     }
-
-//    @Override
-//    public void run() {
-//        while (true){
-//            try {
-//                if(server.checkForNewMessages().getValue()){
-//                    alert.setSuccess(true);
-//                    alert.setMessage("You Have New Messages");
-//                    m.addAttribute("alert", alert.copy());
-//                }
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
 }

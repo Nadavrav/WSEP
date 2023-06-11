@@ -1,7 +1,6 @@
 package com.okayjava.html.controller;
 
 import DomainLayer.Response;
-import ServiceLayer.*;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.*;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.NameStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.RatingStoreFilter;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class SearchResultsController {
@@ -25,17 +23,19 @@ public class SearchResultsController {
 
     @GetMapping("/SearchResults")
     public String searchResult(Model model) {
+        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("Admin", server.isAdmin().getValue());
         model.addAttribute("alert", alert.copy());
         alert.reset();
         return "SearchResults";
     }
 
-    @PostMapping("/SearchResults")
-    public String resultPage(Model model){
-        model.addAttribute("alert", alert.copy());
-        alert.reset();
-        return "SearchResults";
-    }
+//    @PostMapping("/SearchResults")
+//    public String resultPage(Model model){
+//        model.addAttribute("alert", alert.copy());
+//        alert.reset();
+//        return "SearchResults";
+//    }
 
     @RequestMapping(value = "/show-result", method = RequestMethod.POST)
     public String userSearch(@RequestParam(value = "filter-keyword" , defaultValue = "") String keywordStr,
