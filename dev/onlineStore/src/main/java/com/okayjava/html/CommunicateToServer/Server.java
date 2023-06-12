@@ -1,26 +1,24 @@
 package com.okayjava.html.CommunicateToServer;
 
 import DomainLayer.Response;
-import DomainLayer.Stores.Store;
 import DomainLayer.Users.Permission;
 import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Server {
+
     private boolean logged = false;
     private String username = "";
 
@@ -40,7 +38,8 @@ public class Server {
         logged = status;
     }
     private static Server server = null;
-    private final Service service;
+    //private Service service;
+    private final HashMap<String,Service> activeSessions;
 
     public static Server getInstance(){
         if (server == null){
@@ -50,185 +49,194 @@ public class Server {
     }
 
     private Server(){
-        service = new Service();
+      //  service = new Service();
+        activeSessions=new HashMap<>();
+
+    }
+    public Service getSession(HttpServletRequest request) {
+        String sessionId = request.getSession().getId();
+        if(!activeSessions.containsKey(sessionId))
+            activeSessions.put(sessionId,new Service());
+        return activeSessions.get(sessionId);
+    }
+    public Response<Integer> EnterNewSiteVisitor(HttpServletRequest request) {
+        return getSession(request).EnterNewSiteVisitor();
     }
 
-    public Response<Integer> EnterNewSiteVisitor() {
-        return service.EnterNewSiteVisitor();
-    }
-
-    public Response<?> login(String username, String password) {
+    public Response<?> login(HttpServletRequest request,String username, String password) {
         this.username = username;
-        return service.login(username, password);
+        return getSession(request).login(username, password);
     }
 
 
-    public Response<?> Register(String username, String password) {
-        return service.Register(username, password);
+    public Response<?> Register(HttpServletRequest request,String username, String password) {
+        return getSession(request).Register(username, password);
     }
 
-    public Response<?> logout() {
+    public Response<?> logout(HttpServletRequest request) {
         logged = false;
-        return service.logout();
+        return getSession(request).logout();
     }
 
-    public Response<Integer> OpenStore(String storeName) {
-        return service.OpenStore(storeName);
+    public Response<Integer> OpenStore(HttpServletRequest request,String storeName) {
+        return getSession(request).OpenStore(storeName);
     }
 
-    public Response<?> loadData() throws Exception {
-        return service.loadData();
+    public Response<?> loadData(HttpServletRequest request) throws Exception {
+        return getSession(request).loadData();
     }
 
-    public Response<ServiceCart> getProductsInMyCart() { //it should return list of strings
-        return service.getProductsInMyCart();
+    public Response<ServiceCart> getProductsInMyCart(HttpServletRequest request) { //it should return list of strings
+        return getSession(request).getProductsInMyCart();
     }
 
-    public Response<?> removeProductFromCart(int productId, int storeId){
-        return service.removeProductFromCart(productId, storeId);
+    public Response<?> removeProductFromCart(HttpServletRequest request,int productId, int storeId){
+        return getSession(request).removeProductFromCart(productId, storeId);
     }
 
-    public Response<?> changeCartProductQuantity(int productId, int storeId, int newAmount){
-        return service.changeCartProductQuantity(productId, storeId, newAmount);
+    public Response<?> changeCartProductQuantity(HttpServletRequest request,int productId, int storeId, int newAmount){
+        return getSession(request).changeCartProductQuantity(productId, storeId, newAmount);
     }
 
-    public Response<Integer> AddProduct(int storeID, String productName, double price, String category, int quantity, String description) {
-        return service.AddProduct(storeID, productName, price, category, quantity,description);
-    }
-
-
-    public Response<?> RemoveProduct(int productID, int storeID) {
-        return service.RemoveProduct(productID,storeID);
+    public Response<Integer> AddProduct(HttpServletRequest request,int storeID, String productName, double price, String category, int quantity, String description) {
+        return getSession(request).AddProduct(storeID, productName, price, category, quantity,description);
     }
 
 
-    public Response<?> UpdateProductName(int productID, int storeID, String productName) {
-        return service.UpdateProductName(productID, storeID, productName);
-    }
-
-    public Response<?> UpdateProductPrice(int productID, int storeID, double price) {
-        return service.UpdateProductPrice(productID, storeID, price);
-    }
-
-    public Response<?> UpdateProductQuantity(int productID, int storeID, int quantity) {
-        return service.UpdateProductQuantity(productID, storeID, quantity);
-    }
-
-    public Response<?> UpdateProductCategory(int productID, int storeID, String category) {
-        return service.UpdateProductCategory(productID, storeID, category);
-    }
-
-    public Response<?> UpdateProductDescription(int productID, int storeID, String description) {
-        return service.UpdateProductDescription(productID, storeID, description);
+    public Response<?> RemoveProduct(HttpServletRequest request,int productID, int storeID) {
+        return getSession(request).RemoveProduct(productID,storeID);
     }
 
 
-    public Response<List<String>> GetStoreHistoryPurchase(int storeID) {
-        return service.GetStoreHistoryPurchase(storeID);
+    public Response<?> UpdateProductName(HttpServletRequest request,int productID, int storeID, String productName) {
+        return getSession(request).UpdateProductName(productID, storeID, productName);
     }
 
-    public Response<?> CloseStore(int storeID) {
-        return service.CloseStore(storeID);
+    public Response<?> UpdateProductPrice(HttpServletRequest request,int productID, int storeID, double price) {
+        return getSession(request).UpdateProductPrice(productID, storeID, price);
     }
 
-    public Response<?> appointNewStoreOwner(String ownerName, int storeID) {
-        return service.appointNewStoreOwner(ownerName, storeID);
+    public Response<?> UpdateProductQuantity(HttpServletRequest request,int productID, int storeID, int quantity) {
+        return getSession(request).UpdateProductQuantity(productID, storeID, quantity);
     }
 
-    public Response<?> appointNewStoreManager(String managerName, int storeID) {
-        return service.appointNewStoreManager(managerName, storeID);
+    public Response<?> UpdateProductCategory(HttpServletRequest request,int productID, int storeID, String category) {
+        return getSession(request).UpdateProductCategory(productID, storeID, category);
     }
 
-    public Response<?> changeStoreManagerPermission(String managerName, int storeID, List<Permission> permissions) {
-        return service.changeStoreManagerPermission(managerName, storeID, permissions);
+    public Response<?> UpdateProductDescription(HttpServletRequest request,int productID, int storeID, String description) {
+        return getSession(request).UpdateProductDescription(productID, storeID, description);
     }
 
-    public Response<List<ServiceStore>> FilterProductSearch(List<ProductFilter> productFilter, List<StoreFilter> storeFilter) {
-        return service.FilterProductSearch(productFilter, storeFilter);
+
+    public Response<List<String>> GetStoreHistoryPurchase(HttpServletRequest request,int storeID) {
+        return getSession(request).GetStoreHistoryPurchase(storeID);
     }
 
-    public Response<?> addProductToCart(int productId, int storeId, int quantity) { //update - quantity
-        return service.addProductToCart(productId, storeId, quantity);
+    public Response<?> CloseStore(HttpServletRequest request,int storeID) {
+        return getSession(request).CloseStore(storeID);
     }
 
-    public Response<?> getStoresName() {
-        return service.getStoresName();
+    public Response<?> appointNewStoreOwner(HttpServletRequest request,String ownerName, int storeID) {
+        return getSession(request).appointNewStoreOwner(ownerName, storeID);
     }
 
-    public Response<?> addStoreRateAndComment(int storeID, int rating, String comment) {
-        return service.addStoreRateAndComment(storeID, rating, comment);
+    public Response<?> appointNewStoreManager(HttpServletRequest request,String managerName, int storeID) {
+        return getSession(request).appointNewStoreManager(managerName, storeID);
     }
 
-    public Response<?> addProductRateAndComment(int productId, int storeId, int rate, String comment){
-        return service.addProductRateAndComment(productId, storeId, rate, comment);
+    public Response<?> changeStoreManagerPermission(HttpServletRequest request,String managerName, int storeID, List<Permission> permissions) {
+        return getSession(request).changeStoreManagerPermission(managerName, storeID, permissions);
     }
 
-    public Response<?> GetInformation(int StoreId){
-        return service.GetInformation(StoreId);
+    public Response<List<ServiceStore>> FilterProductSearch(HttpServletRequest request,List<ProductFilter> productFilter, List<StoreFilter> storeFilter) {
+        return getSession(request).FilterProductSearch(productFilter, storeFilter);
     }
 
-    public Response<Boolean> isAdmin(){
-        return service.isAdmin();
+    public Response<?> addProductToCart(HttpServletRequest request,int productId, int storeId, int quantity) { //update - quantity
+        return getSession(request).addProductToCart(productId, storeId, quantity);
     }
 
-    public Response<?> getRolesData(int storeId){
-        return service.getRolesData(storeId);
+    public Response<?> getStoresName(HttpServletRequest request) {
+        return getSession(request).getStoresName();
     }
 
-    public Response<?> getProductRatingList(int storeID, int productID) {
-        return service.getProductRatingList(storeID, productID);
+    public Response<?> addStoreRateAndComment(HttpServletRequest request,int storeID, int rating, String comment) {
+        return getSession(request).addStoreRateAndComment(storeID, rating, comment);
     }
 
-    public Response<?> GetStoreRate(int storeID){
-        return service.GetStoreRate(storeID);
+    public Response<?> addProductRateAndComment(HttpServletRequest request,int productId, int storeId, int rate, String comment){
+        return getSession(request).addProductRateAndComment(productId, storeId, rate, comment);
     }
 
-    public Response<?> deleteUser(String userName){
-        return service.deleteUser(userName);
+    public Response<?> GetInformation(HttpServletRequest request,int StoreId){
+        return getSession(request).GetInformation(StoreId);
     }
 
-    public Response<List<ServiceUser>> getRegisteredUsersInfo(){
-        return service.getRegisteredUsersInfo();
+    public Response<Boolean> isAdmin(HttpServletRequest request){
+        return getSession(request).isAdmin();
     }
 
-    public Response<?> removeEmployee(int storeId,String userName){
-        return service.removeEmployee(storeId, userName);
+    public Response<?> getRolesData(HttpServletRequest request,int storeId){
+        return getSession(request).getRolesData(storeId);
     }
 
-    public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
-        return service.getBagDiscountInfo(storeId);
+    public Response<?> getProductRatingList(HttpServletRequest request,int storeID, int productID) {
+        return getSession(request).getProductRatingList(storeID, productID);
     }
 
-    public Response<List<ServiceUser>> getOnlineUsers(){
-        return service.getOnlineUsers();
+    public Response<?> GetStoreRate(HttpServletRequest request,int storeID){
+        return getSession(request).GetStoreRate(storeID);
     }
 
-    public Response<List<ServiceUser>> getOfflineUsers(){
-        return service.getOfflineUsers();
+    public Response<?> deleteUser(HttpServletRequest request,String userName){
+        return getSession(request).deleteUser(userName);
     }
 
-    public Response<Collection<ServiceDiscountInfo>> getStoreDiscountInfo(int storeId){
-        return service.getStoreDiscountInfo(storeId);
+    public Response<List<ServiceUser>> getRegisteredUsersInfo(HttpServletRequest request){
+        return getSession(request).getRegisteredUsersInfo();
     }
 
-    public Response<Collection<ServiceStore>> getStoresByUserName(){
-        return service.getStoresByUserName(this.username);
+    public Response<?> removeEmployee(HttpServletRequest request,int storeId,String userName){
+        return getSession(request).removeEmployee(storeId, userName);
     }
 
-    public Response<List<String>> PurchaseCart(int visitorCard, String address){
-        return service.PurchaseCart(visitorCard, address);
+    public Response<ServiceAppliedDiscount> getBagDiscountInfo(HttpServletRequest request,int storeId){
+        return getSession(request).getBagDiscountInfo(storeId);
     }
 
-    public Response<LinkedList<String>> getNewMessages() throws Exception {
-        return service.getNewMessages(this.username);
+    public Response<List<ServiceUser>> getOnlineUsers(HttpServletRequest request){
+        return getSession(request).getOnlineUsers();
     }
 
-    public Response<Boolean> checkForNewMessages() throws Exception {
-        return service.checkForNewMessages(this.username);
+    public Response<List<ServiceUser>> getOfflineUsers(HttpServletRequest request){
+        return getSession(request).getOfflineUsers();
     }
 
-    public Response<Double> getTotalPrice(){
-        return service.getTotalPrice();
+    public Response<Collection<ServiceDiscountInfo>> getStoreDiscountInfo(HttpServletRequest request,int storeId){
+        return getSession(request).getStoreDiscountInfo(storeId);
     }
+
+    public Response<Collection<ServiceStore>> getStoresByUserName(HttpServletRequest request){
+        return getSession(request).getStoresByUserName(this.username);
+    }
+
+    public Response<List<String>> PurchaseCart(HttpServletRequest request,int visitorCard, String address){
+        return getSession(request).PurchaseCart(visitorCard, address);
+    }
+
+    public Response<LinkedList<String>> getNewMessages(HttpServletRequest request) throws Exception {
+        return getSession(request).getNewMessages(this.username);
+    }
+
+    public Response<Boolean> checkForNewMessages(HttpServletRequest request) throws Exception {
+        return getSession(request).checkForNewMessages(this.username);
+    }
+
+    public Response<Double> getTotalPrice(HttpServletRequest request){
+        return getSession(request).getTotalPrice();
+    }
+
+
 }
 
