@@ -13,7 +13,10 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,7 +40,7 @@ public class Server {
         logged = status;
     }
     private static Server server = null;
-    private Service service;
+    private final Service service;
 
     public static Server getInstance(){
         if (server == null){

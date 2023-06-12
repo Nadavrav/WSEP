@@ -4,6 +4,7 @@ import DomainLayer.Response;
 
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.thymeleaf.model.IModel;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.net.InetAddress;
+
 
 @Controller
 public class MainPageController{
@@ -19,10 +25,13 @@ public class MainPageController{
     private final Server server = Server.getInstance();
     private static boolean isInitialized = false;
     Model m;
-
+    @Resource
+    private HttpServletRequest request;
     @GetMapping("/")
     public String mainPage(Model model) throws Exception {
         if (!isInitialized){
+            HttpSession session = request.getSession();
+            String sessionId = session.getId();
             Response<?> response = server.loadData();
             System.out.println("Loading Data ... ");
             if (response.isError()){
