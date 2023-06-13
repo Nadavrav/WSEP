@@ -12,11 +12,11 @@
 //
 //    @Override
 //    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-//        registry.addHandler(myWebSocketHandler(), "/websocket").setAllowedOrigins("*");
+//        registry.addHandler(myWebSocketHandler(),"/ws").setAllowedOrigins("*");
 //    }
 //
 //    @Bean
-//    public WebSocketHandler myWebSocketHandler() {
-//        return MyWebSocketHandler.getInstance();
+//    public WebSocketHandler myWebSocketHandler(){
+//        return myWebSocketHandler.getInstance();
 //    }
 //}

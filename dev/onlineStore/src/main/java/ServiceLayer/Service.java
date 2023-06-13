@@ -19,15 +19,13 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
-
-import ServiceLayer.ServiceObjects.ServicePolicy;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
 import ServiceLayer.ServiceObjects.ServiceCart;
 
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 
-
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
 import ServiceLayer.ServiceObjects.ServiceUser;
@@ -75,7 +73,7 @@ public class Service {
 
     }
 
-    public Response<?> loadData() throws Exception {
+    public Response<?> loadData() {
         try{
             facade.loadData();
 
@@ -84,7 +82,15 @@ public class Service {
         }
         return new Response<>("Success");
     }
+    public Response<?> reset() {
+        try{
+            facade.resetData();
 
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+        return new Response<>("Success");
+    }
 
 
     public Response<?> Register( String userName, String password) {//1.3
@@ -558,7 +564,7 @@ public class Service {
            Collection<Policy> storePolicies=facade.getStorePolicies(visitorId,storeId);
            HashSet<ServicePolicy> servicePolicies=new HashSet<>();
            for(Policy policy:storePolicies){
-               servicePolicies.add(new ServicePolicy(policy));
+               servicePolicies.add(new ServicePolicyInfo(policy));
            }
            return new Response<>(servicePolicies);
         }
@@ -566,20 +572,62 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+    public Response<ServicePolicyInfo> addPolicy(ServicePolicy servicePolicy,int storeId){
+        try {
+            return new Response<>(new ServicePolicyInfo(facade.AddStorePolicy(visitorId,storeId,servicePolicy)));
 
-    public Response<Collection<ServiceDiscount>> getStoreDiscountInfo(int storeId){
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<ServicePolicyInfo> removePolicy(int storeId,int policyId){
+        try {
+            return new Response<>(new ServicePolicyInfo(facade.removeStorePolicy(visitorId,storeId,policyId)));
+
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<Collection<ServiceDiscountInfo>> getStoreDiscountInfo(int storeId){
 
         try {
-            HashSet<ServiceDiscount> discounts=new HashSet<>();
+            HashSet<ServiceDiscountInfo> discounts=new HashSet<>();
             for(Discount discount:facade.getStoreDiscounts(storeId)){
-                discounts.add(new ServiceDiscount(discount.getDescription(), discount.getId()));
-
+                discounts.add(new ServiceDiscountInfo(discount));
             }
             return new Response<>(discounts);
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
+    }
+    public Response<ServiceDiscountInfo> addDiscount(ServiceDiscount serviceDiscount,int storeId){
+        try {
+           return new Response<>(new ServiceDiscountInfo(facade.addDiscount(serviceDiscount,storeId)));
+
+        }
+        catch (StackOverflowError e){
+            return new Response<>("CODE ERROR: STACK OVERFLOW. PROBABLE CAUSE: DISCOUNT ADDITION TYPE UNDEFINED { addDiscount( [Discount type] ,...) } FOR RECEIVED DISCOUNT",true);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    public Response<ServiceDiscountInfo> removeDiscount(int discountId,int storeId){
+        try {
+            return new Response<>(new ServiceDiscountInfo(facade.removeDiscount(discountId,storeId)));
+        }
+        catch (StackOverflowError e){
+            return new Response<>("CODE ERROR: STACK OVERFLOW. PROBABLE CAUSE: DISCOUNT ADDITION TYPE UNDEFINED { addDiscount( [Discount type] ,...) } FOR RECEIVED DISCOUNT",true);
+        }
+        catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+
     }
     public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
         try {
@@ -667,6 +715,7 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
+
 
 
 }
