@@ -1,7 +1,6 @@
 package com.okayjava.html.controller;
 
 import DomainLayer.Response;
-import ServiceLayer.*;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.*;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.NameStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.RatingStoreFilter;
@@ -10,36 +9,33 @@ import ServiceLayer.ServiceObjects.ServiceStore;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class SearchResultsController {
-    @Autowired
-    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
-    private Server server = Server.getInstance();
-
+//    private Server server = Server.getInstance();
+    Server server = new Server();
     @GetMapping("/SearchResults")
     public String searchResult(Model model) {
+        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("Admin", server.isAdmin().getValue());
         model.addAttribute("alert", alert.copy());
         alert.reset();
         return "SearchResults";
     }
 
-    @PostMapping("/SearchResults")
-    public String resultPage(Model model){
-        model.addAttribute("alert", alert.copy());
-        alert.reset();
-        return "SearchResults";
-    }
+//    @PostMapping("/SearchResults")
+//    public String resultPage(Model model){
+//        model.addAttribute("alert", alert.copy());
+//        alert.reset();
+//        return "SearchResults";
+//    }
 
     @RequestMapping(value = "/show-result", method = RequestMethod.POST)
     public String userSearch(@RequestParam(value = "filter-keyword" , defaultValue = "") String keywordStr,
@@ -77,7 +73,7 @@ public class SearchResultsController {
         List<StoreFilter> storeFilter = new ArrayList<>();
         storeFilter.add(new NameStoreFilter(storeName));
         storeFilter.add(new RatingStoreFilter(storeRate));
-        Response<List<ServiceStore>> response = server.FilterProductSearch(request,productFilter, storeFilter);
+        Response<List<ServiceStore>> response = server.FilterProductSearch(productFilter, storeFilter);
 
         if (response.isError()){
             alert.setFail(true);
@@ -119,7 +115,7 @@ public class SearchResultsController {
                             @RequestParam("quantity") int quantity,
                             Model model) {
 
-        Response<?> response = server.addProductToCart(request,productId, storeId, quantity);
+        Response<?> response = server.addProductToCart(productId, storeId, quantity);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());

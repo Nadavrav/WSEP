@@ -1,36 +1,25 @@
 package DomainLayer.Stores.Policies;
 
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NoCondition;
-//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
+import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Users.Bag;
 
 public class Policy {
-    private Condition condition;
-    private final String description;
-    private final int id;
-    public Policy(String description,int id, Condition condition){
+    protected BooleanCondition condition;
+    protected final String description;
+    public Policy(String description,BooleanCondition condition){
         this.condition=condition;
         this.description=description;
-        this.id=id;
     }
-    public Policy(String description,int id){
+    public Policy(String description){
         this.description=description;
         this.condition=new NoCondition();
-        this.id=id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getDescription() {
         return description;
-    }
-
-    public Condition getCondition() {
-        return condition;
     }
 
     public void SetCondition(BooleanCondition condition){

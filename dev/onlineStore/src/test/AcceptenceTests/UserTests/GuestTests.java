@@ -127,5 +127,45 @@ public class GuestTests {
         bridge.ExitMarket();
     }
 
+    //TODO might need to remove
+    /*@Test
+    public void GetEmployeeInfo_Success()
+    { //
+        bridge.EnterMarket();
 
+        String [] WorkerInfo = {StoreFounder,"Etc",};
+        Response<String[]> r = bridge.GetEmployeeInfo(StoreFounder,storeId);
+        assertFalse(r.isError());
+        assertEquals(WorkerInfo, r.getValue());
+
+        bridge.ExitMarket();
+    }
+    @Test
+    public void GetEmployeeInfo_Success_MultipleTimes()
+    {//
+        bridge.EnterMarket();
+
+        String [] OwnerInfo = {StoreFounder,"Etc",};
+        String [] WorkerInfo = {StoreManagerName,"Etc"};
+        Response<String[]> r = bridge.GetEmployeeInfo(StoreFounder,storeId);
+        assertFalse(r.isError());
+        Response<String[]> r1 = bridge.GetEmployeeInfo(StoreManagerName,storeId);
+        assertFalse(r1.isError());
+        assertEquals(OwnerInfo, r.getValue());
+        assertEquals(WorkerInfo, r1.getValue());
+
+        bridge.ExitMarket();
+    }
+    @Test
+    public void GetEmployeeInfo_Fail_EmployeeDoesntExist()
+    {//
+        bridge.EnterMarket();
+
+        Response<String[]> r = bridge.GetEmployeeInfo(StoreFounder,storeId);
+        assertFalse(r.isError());
+        Response<String[]> r1 = bridge.GetEmployeeInfo(BasicWorkerName,storeId);
+        assertTrue(r1.isError());
+
+        bridge.ExitMarket();
+    }*/
 }

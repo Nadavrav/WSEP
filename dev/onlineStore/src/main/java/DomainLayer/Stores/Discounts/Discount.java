@@ -22,7 +22,7 @@ public abstract class Discount {
 
     /**
      * calculates the total amount saves by the discount on a product list, for products who pass the condition list
-     * intuitions: run this on all discounts for a bag, and remove the sum of all discounts from total price
+     * intuitions: run this on all discount for a bag, and remove sum of all discount from total price
      * @param bag bag to calculate discount to
      * @return total saved by discounts
      */

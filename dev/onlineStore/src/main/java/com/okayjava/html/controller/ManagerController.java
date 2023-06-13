@@ -4,26 +4,24 @@ import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Controller
 public class ManagerController {
-    @Autowired
-    private HttpServletRequest request;
-    Alert alert = Alert.getInstance();
-    private Server server = Server.getInstance();
 
+    Alert alert = Alert.getInstance();
+//    private Server server = Server.getInstance();
+    Server server = new Server();
     @GetMapping("/Manager")
     public String menu(Model model) {
-        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("Admin", server.isAdmin().getValue());
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<Collection<ServiceStore>> response = server.getStoresByUserName(request);
+        Response<Collection<ServiceStore>> response = server.getStoresByUserName();
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -63,7 +61,7 @@ public class ManagerController {
     public String openStore(@RequestParam("store-name") String storeName,
                             Model model) {
 
-        Response<Integer> response = server.OpenStore(request,storeName);
+        Response<Integer> response = server.OpenStore(storeName);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -76,13 +74,13 @@ public class ManagerController {
             System.out.println("Store Opened with ID: " + response.getValue());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
-    @RequestMapping(value = "/permissions", method = RequestMethod.POST)
-    public String permissions(Model model) {
-        return "Manager";
-    }
+//    @RequestMapping(value = "/permissions", method = RequestMethod.POST)
+//    public String permissions(Model model) {
+//        return "Manager";
+//    }
 
     @RequestMapping(value = "/add-product", method = RequestMethod.POST)
     public String addProduct(@RequestParam("storeID-add") int storeID,
@@ -93,7 +91,7 @@ public class ManagerController {
                              @RequestParam("product-desc") String description,
                              Model model) {
 
-        Response<Integer> response = server.AddProduct(request,storeID, productName, price, category, quantity, description);
+        Response<Integer> response = server.AddProduct(storeID, productName, price, category, quantity, description);
 
         if (response.isError()) {
             alert.setFail(true);
@@ -107,7 +105,7 @@ public class ManagerController {
             System.out.println(productName + " was added successfully to storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/remove-product", method = RequestMethod.POST)
@@ -115,7 +113,7 @@ public class ManagerController {
                                 @RequestParam("productID-remove") int productID,
                                 Model model) {
 
-        Response<?> response = server.RemoveProduct(request,productID, storeID);
+        Response<?> response = server.RemoveProduct(productID, storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -127,7 +125,7 @@ public class ManagerController {
             System.out.println("product with id: " + productID + " was removed successfully from storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/update-product", method = RequestMethod.POST)
@@ -141,7 +139,7 @@ public class ManagerController {
                                 Model model) {
 
         if (productName != null) {
-            Response<?> response = server.UpdateProductName(request,productID, storeID, productName);
+            Response<?> response = server.UpdateProductName(productID, storeID, productName);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -156,7 +154,7 @@ public class ManagerController {
             }
         }
         if (price > 0) {
-            Response<?> response = server.UpdateProductPrice(request,productID, storeID, price);
+            Response<?> response = server.UpdateProductPrice(productID, storeID, price);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -171,7 +169,7 @@ public class ManagerController {
             }
         }
         if (quantity > 0) {
-            Response<?> response = server.UpdateProductQuantity(request,productID, storeID, quantity);
+            Response<?> response = server.UpdateProductQuantity(productID, storeID, quantity);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -186,7 +184,7 @@ public class ManagerController {
             }
         }
         if (category != null) {
-            Response<?> response = server.UpdateProductCategory(request,productID, storeID, category);
+            Response<?> response = server.UpdateProductCategory(productID, storeID, category);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -201,7 +199,7 @@ public class ManagerController {
             }
         }
         if (description != null) {
-            Response<?> response = server.UpdateProductDescription(request,productID, storeID, description);
+            Response<?> response = server.UpdateProductDescription(productID, storeID, description);
             if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
@@ -219,14 +217,14 @@ public class ManagerController {
         alert.setMessage("Product Updated Successfully");
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
     public String purchaseHistory(@RequestParam("storeID-purchase") int storeID,
                                   Model model) {
 
-        Response<List<String>> response = server.GetStoreHistoryPurchase(request,storeID);
+        Response<List<String>> response = server.GetStoreHistoryPurchase(storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -239,14 +237,14 @@ public class ManagerController {
             model.addAttribute("purchaseHistory", response.getValue()); //List<String>
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
     public String closeStore(@RequestParam("storeID-close") int storeID,
                              Model model) {
 
-        Response<?> response = server.CloseStore(request,storeID);
+        Response<?> response = server.CloseStore(storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -258,14 +256,14 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/employee-info", method = RequestMethod.POST)
     public String employeeInfo(@RequestParam("storeID-employee") int storeID,
                                Model model) {
 
-        Response<?> response = server.getRolesData(request,storeID);
+        Response<?> response = server.getRolesData(storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -277,7 +275,7 @@ public class ManagerController {
             model.addAttribute("employeeInfo", response.getValue()); //String
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/remove-employee", method = RequestMethod.POST)
@@ -285,7 +283,7 @@ public class ManagerController {
                                  @RequestParam("username-remove-emp") String userName,
                                  Model model) {
 
-        Response<?> response = server.removeEmployee(request,storeID, userName);
+        Response<?> response = server.removeEmployee(storeID, userName);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -297,7 +295,7 @@ public class ManagerController {
             System.out.println(userName + " was removed successfully from storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/appoint-store-owner", method = RequestMethod.POST)
@@ -305,7 +303,7 @@ public class ManagerController {
                                     @RequestParam("owner-name-add") String ownerName,
                                     Model model) {
 
-        Response<?> response = server.appointNewStoreOwner(request,ownerName, storeID);
+        Response<?> response = server.appointNewStoreOwner(ownerName, storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -316,7 +314,7 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/appoint-store-manager", method = RequestMethod.POST)
@@ -324,7 +322,7 @@ public class ManagerController {
                                       @RequestParam("manager-name-add") String managerName,
                                       Model model) {
 
-        Response<?> response = server.appointNewStoreManager(request,managerName, StoreID);
+        Response<?> response = server.appointNewStoreManager(managerName, StoreID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -335,7 +333,7 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/change-permission", method = RequestMethod.POST)
@@ -344,7 +342,7 @@ public class ManagerController {
                                    @RequestParam("permission") List<Permission> permissions,
                                    Model model) {
 
-        Response<?> response = server.changeStoreManagerPermission(request,managerName, storeID, permissions);
+        Response<?> response = server.changeStoreManagerPermission(managerName, storeID, permissions);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -355,6 +353,6 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 }

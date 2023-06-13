@@ -1,13 +1,10 @@
 package UnitTests;
 
 import DomainLayer.Facade;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.BetweenDatesCondition;
+import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.DateCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinTotalProductAmountCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
-//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.AndCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CheckForCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CheckIfCondition;
+import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
@@ -65,8 +62,8 @@ public class PolicyTests {
     @Test
     public void DatePolicyTest(){
         try {
-            BetweenDatesCondition condition=new BetweenDatesCondition(18,2,2030,18,2,2030);
-            facade.AddStorePolicy(visitorId,storeId,new Policy("All products can only be bought on the 18.2.2030",1,condition));
+            DateCondition condition=new DateCondition(18,2,2030);
+            facade.AddStorePolicy(visitorId,storeId,new Policy("All products can only be bought on the 18.2.2030",condition));
             facade.purchaseCart(visitorId, 4444, "Space");
             fail();
         }
@@ -76,9 +73,9 @@ public class PolicyTests {
     //policy to have at least 5 dairy products to buy a cart
     @Test
     public void MinProductAmountTest(){
-            CheckForCondition condition=new CheckForCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(5));
+            BooleanAfterFilterCondition condition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(5));
         try {
-            facade.AddStorePolicy(visitorId,storeId,new Policy("Cart must have at least 5 dairy products to make a purchase",1,condition));
+            facade.AddStorePolicy(visitorId,storeId,new Policy("Cart must have at least 5 dairy products to make a purchase",condition));
             facade.purchaseCart(visitorId, 4444, "Space");
             fail();
         }

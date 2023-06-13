@@ -33,7 +33,7 @@ public class MinSelectiveDiscount extends ManyDiscounts {
             double currentSum = 0;
             for (double saving : currentMap.values())
                 currentSum += saving;
-            if (currentSum < min || min==0) {
+            if (currentSum < min) {
                 min = currentSum;
                 currentBest = currentMap;
             }
