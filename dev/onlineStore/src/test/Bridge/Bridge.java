@@ -3,18 +3,18 @@ package Bridge;
 import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
-import ServiceLayer.ServiceObjects.PurchaseRecord;
 import ServiceLayer.ServiceObjects.ServiceCart;
-import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
+import java.util.Collection;
 import java.util.List;
-//TODO: FIX THE DAMN DOCS
 public interface Bridge {
-    /**
-     *
-     * @return return corresponding response
-     */
+    boolean reset();
     boolean initialize();
     /**
      * A function to enter the market
@@ -62,7 +62,9 @@ public interface Bridge {
      * @return true if done successfully, false otherwise
      */
 
-    Integer AddProduct(int storeId, String productName, String description, int price, int amount);
+    Integer AddProduct(int storeId, String productName, String description, double price, int amount);
+    Integer AddProduct(int storeId, String productName, String description,String category, double price, int amount);
+
 
     /**
      *
@@ -230,4 +232,12 @@ public interface Bridge {
     boolean RateAndCommentOnProduct(int productId, int storeId, String comment, int rating);
     boolean RateStore(int storeId,int rating);
     boolean RateAndCommentOnStore(int storeId,String comment,int rating);
+    Response<ServiceDiscountInfo> addDiscount(ServiceDiscount serviceDiscount, int storeId);
+    Response<ServiceDiscountInfo> removeDiscount(int id, int storeId);
+    Response<ServicePolicyInfo> addPolicy(ServicePolicy conditionRecord, int storeId);
+    Response<ServicePolicyInfo> removePolicy(int id, int storeId);
+    Response<Collection<ServiceDiscountInfo>> getDiscountInfo(int storeId);
+    public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId);
+
+
 }

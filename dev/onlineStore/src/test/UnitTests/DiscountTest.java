@@ -4,12 +4,10 @@ import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MaxBagPri
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinBagPriceCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinTotalProductAmountCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.*;
-import DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions.AndCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions.OrCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions.XorCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
+import DomainLayer.Stores.Conditions.ComplexConditions.*;
+//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
+//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
+//import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
 import DomainLayer.Stores.Discounts.AdditiveDiscount;
 import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
@@ -112,9 +110,9 @@ public class DiscountTest {
     public void SpecificProductAmountDiscountTest(){
         NameCondition nameCondition=new NameCondition("Steak");
         MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
-        MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
-        nameAndMinQuantityCondition.addCondition(nameCondition);
-        nameAndMinQuantityCondition.addCondition(minQuantityCondition);
+        AndCondition nameAndMinQuantityCondition=new AndCondition(nameCondition,minQuantityCondition);
+        //nameAndMinQuantityCondition.addCondition(nameCondition);
+        //nameAndMinQuantityCondition.addCondition(minQuantityCondition);
         BasicDiscount basicDiscount =new BasicDiscount("50% basicDiscount on steaks if you buy 2",1,50,nameAndMinQuantityCondition);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
@@ -127,12 +125,12 @@ public class DiscountTest {
 //There is a 50% meat discount only if the bag contains at least 5 breads and also at least 6 dairy products
     @Test
     public void ComplexAndDiscount(){
-        BooleanAfterFilterCondition breadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-        BooleanAfterFilterCondition dairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-        AndCondition andCondition=new AndCondition(breadCondition,dairyCondition);
-        MultiAndCondition multiAndCondition=new MultiAndCondition();
-        multiAndCondition.addCondition(andCondition);
-        multiAndCondition.addCondition(new CategoryCondition("Meat"));
+        CheckForCondition breadCondition=new CheckForCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+        CheckForCondition dairyCondition=new CheckForCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+        CheckIfCondition andCondition=new CheckIfCondition(breadCondition,dairyCondition);
+        CheckIfCondition multiAndCondition=new CheckIfCondition(andCondition,new CategoryCondition("Meat"));
+        //multiAndCondition.addCondition(andCondition);
+        //multiAndCondition.addCondition(new CategoryCondition("Meat"));
         BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads and also at least 6 dairy products",1,50,multiAndCondition);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
@@ -152,12 +150,12 @@ public class DiscountTest {
 
     @Test
     public void ComplexOrDiscount(){
-        BooleanAfterFilterCondition breadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-        BooleanAfterFilterCondition dairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+        CheckForCondition breadCondition=new CheckForCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+        CheckForCondition dairyCondition=new CheckForCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
         OrCondition orCondition=new OrCondition(breadCondition,dairyCondition);
-        MultiAndCondition multiAndCondition=new MultiAndCondition();
-        multiAndCondition.addCondition(orCondition);
-        multiAndCondition.addCondition(new CategoryCondition("Meat"));
+        CheckIfCondition multiAndCondition=new CheckIfCondition(orCondition,new CategoryCondition("Meat"));
+       // multiAndCondition.addCondition(orCondition);
+       // multiAndCondition.addCondition(new CategoryCondition("Meat"));
         BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,multiAndCondition);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
@@ -177,12 +175,12 @@ public class DiscountTest {
     //There is a 50% meat discount only if the bag contains at least 5 breads or at least 6 dairy products, but not both
     @Test
     public void ComplexXorDiscount(){
-        BooleanAfterFilterCondition breadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-        BooleanAfterFilterCondition dairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+        CheckForCondition breadCondition=new CheckForCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+        CheckForCondition dairyCondition=new CheckForCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
         XorCondition xorCondition=new XorCondition(breadCondition,dairyCondition);
-        MultiAndCondition multiAndCondition=new MultiAndCondition();
-        multiAndCondition.addCondition(xorCondition);
-        multiAndCondition.addCondition(new CategoryCondition("Meat"));
+        CheckIfCondition multiAndCondition=new CheckIfCondition(xorCondition,new CategoryCondition("Meat"));
+        //multiAndCondition.addCondition(xorCondition);
+        //multiAndCondition.addCondition(new CategoryCondition("Meat"));
         BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,multiAndCondition);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);
@@ -201,10 +199,10 @@ public class DiscountTest {
     //If the value of the basket is higher than NIS 200 and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products.
     @Test
     public void ComplexDiscount(){
-        BooleanAfterFilterCondition minYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
+        CheckForCondition minYogurtAmount=new CheckForCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
         MinBagPriceCondition minBagPriceCondition=new MinBagPriceCondition(200);
         AndCondition andCondition=new AndCondition(minBagPriceCondition,minYogurtAmount);
-        FilterOnlyIfCondition dairyDiscount=new FilterOnlyIfCondition(andCondition,new CategoryCondition("Dairy"));
+        CheckIfCondition dairyDiscount=new CheckIfCondition(andCondition,new CategoryCondition("Dairy"));
         BasicDiscount basicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200 and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,dairyDiscount);
         double noDiscount= basicDiscount.calcDiscountAmount(fullBag);
         Assertions.assertEquals(0,noDiscount);

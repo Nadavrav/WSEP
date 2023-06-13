@@ -1,6 +1,5 @@
 package DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions;
 
-import DomainLayer.Stores.Conditions.ComplexConditions.BooleanLogicConditions.LogicCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.BooleanCondition;
 import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
 import DomainLayer.Stores.Conditions.ConditionTypes.FilterCondition;

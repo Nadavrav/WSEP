@@ -3,32 +3,23 @@ package com.okayjava.html.controller;
 import DomainLayer.Response;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 public class BuyController {
+    @Autowired
+    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
-//    Server server = new Server();
     @GetMapping("/Buy")
     public String purchase(Model model) {
-        model.addAttribute("logged", server.isLogged());
-        model.addAttribute("Admin", server.isAdmin().getValue());
         model.addAttribute("alert", alert.copy());
-        Response<Double> responseT = server.getTotalPrice();
-        if (responseT.isError()){
-            alert.setFail(true);
-            alert.setMessage(responseT.getMessage());
-            model.addAttribute("alert", alert.copy());
-        }
-        else{
-            model.addAttribute("totalAmount", responseT.getValue());
-            model.addAttribute("alert", alert.copy());
-        }
         alert.reset();
         return "Buy";
     }
@@ -42,10 +33,9 @@ public class BuyController {
 //                           @RequestParam("cvv") String cvv,
                            Model model) {
 
-
-//        model.addAttribute("alert", alert.copy());
+        model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<List<String>> response = server.PurchaseCart(cardNumber, address);
+        Response<List<String>> response = server.PurchaseCart(request,cardNumber, address);
         if (response.isError()){
             System.out.println("error in buying: " + response.getMessage());
             alert.setFail(true);
