@@ -716,6 +716,50 @@ public class Service {
         }
     }
 
+    // TODO: implement
+    public Response<?> addNewBid(int productId, int storeId,int amount,int newPrice) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> acceptBid(int productId,int storeId,String userName) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> declineBid(int productId,int storeId,String userName) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> updateBid(int productId,int storeId,int newPrice) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> getDailyIncome() {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> getDailyIncomeByStore(int storeId) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> acceptAppointment(int storeId,String AppointedUserName,String AppointerUserName) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> declineAppointment(int storeId,String AppointedUserName,String AppointerUserName) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> getPermissions(int storeId,String AppointedUserName) {
+        return null;
+    }
 
 
 }
