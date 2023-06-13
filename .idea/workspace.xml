@@ -4,46 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="79c5539a-730e-477f-b48c-2ad593b64242" name="Changes" comment="updated majd&amp;natalie">
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/CommunicateToServer/MyWebSocketHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/config/WebSocketConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MyStoreController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/models/GeneralModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/models/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/MyStore.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="ab96e744-fe32-4832-8ad6-9ee851b347fb" name="Changes" comment="fixup! updated policy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Policies/Policy.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Policies/Policy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/DomainLayer/Stores/Store.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/CommunicateToServer/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/CommunicateToServer/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/BagController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/BagController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/BuyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/BuyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/MainPageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/ManagerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/ManagerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/Messages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/ProductRatingsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/ProductRatingsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/SearchResultsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/SearchResultsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/StoresController.java" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/java/com/okayjava/html/controller/StoresController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Bag.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Bag.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Buy.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Buy.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/MainPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/MainPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Messages.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Messages.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/ProductRatings.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/ProductRatings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/SearchResults.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/SearchResults.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Stores.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/src/main/resources/templates/Stores.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Admin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Bag.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Bag.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Buy.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Buy.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/MainPage.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/MainPage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Manager.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Manager.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Messages.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Messages.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/ProductRatings.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/ProductRatings.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/SearchResults.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/SearchResults.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Stores.html" beforeDir="false" afterPath="$PROJECT_DIR$/dev/onlineStore/target/classes/templates/Stores.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,20 +15,21 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "extract.method.default.visibility": "private",
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Spring Boot.SpringbootHtmlApplication">
     <configuration name="All in springboot-html" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="springboot-html" />
@@ -102,6 +66,17 @@
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="merge bugs" />
