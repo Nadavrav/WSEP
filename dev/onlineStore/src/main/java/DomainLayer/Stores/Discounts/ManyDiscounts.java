@@ -14,11 +14,6 @@ public abstract class ManyDiscounts extends Discount{
         super(description,id);
         discounts=new HashSet<>();
     }
-
-    public Set<Discount> getDiscounts() {
-        return discounts;
-    }
-
     public void addDiscount(Discount discount){
         discounts.add(discount);
     }

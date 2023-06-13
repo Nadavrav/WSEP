@@ -6,29 +6,17 @@ import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceCart;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
-import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
-import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import org.opentest4j.TestSkippedException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class RealBridge implements Bridge {
     Service service=new Service();
     @Override
     public boolean initialize() {
-        service.loadData();
-        return true;
-    }
-    @Override
-    public boolean reset() {
-        service.reset();
-        return true;
+        return false;
     }
 
     @Override
@@ -65,20 +53,12 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Integer AddProduct(int storeId, String productName, String description, double price, int amount) {
+    public Integer AddProduct(int storeId, String productName, String description, int price, int amount) {
         Response<Integer> r= service.AddProduct(storeId,productName,price,"test",amount,description);
         if(!r.isError())
             return r.getValue();
         return -1;
     }
-    @Override
-    public Integer AddProduct(int storeId, String productName, String description,String category, double price, int amount){
-        Response<Integer> r= service.AddProduct(storeId,productName,price,category,amount,description);
-        if(!r.isError())
-            return r.getValue();
-        return -1;
-    }
-
 
     @Override
     public boolean AppointOwner(String username, int storeId) {
@@ -259,31 +239,6 @@ public class RealBridge implements Bridge {
     public boolean RateAndCommentOnStore(int storeId,String comment, int rating) {
         return !service.addStoreRateAndComment(storeId,rating,comment).isError();
     }
-    @Override
-    public Response<ServiceDiscountInfo> addDiscount(ServiceDiscount serviceDiscount, int storeId){
-        return service.addDiscount(serviceDiscount,storeId);
-    }
-    @Override
-    public Response<ServiceDiscountInfo> removeDiscount(int discountId, int storeId){
-        return service.removeDiscount(discountId,storeId);
-    }
-    @Override
-    public Response<ServicePolicyInfo> addPolicy(ServicePolicy servicePolicy, int storeId){
-        return service.addPolicy(servicePolicy,storeId);
-    }
-    @Override
-    public Response<ServicePolicyInfo> removePolicy(int policyId, int storeId){
-        return service.removePolicy(storeId,policyId);
-    }
-    @Override
-    public Response<Collection<ServiceDiscountInfo>> getDiscountInfo(int storeId){
-        return service.getStoreDiscountInfo(storeId);
-    }
-    @Override
-    public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId){
-        return service.getBagDiscountInfo(storeId);
-    }
-
 
 
 }

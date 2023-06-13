@@ -4,27 +4,25 @@ import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.ServiceUser;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 public class AdminController {
-    @Autowired
-    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
     private final Server server = Server.getInstance();
-
+//    Server server = new Server();
     @GetMapping("Admin")
     public String adminPage(Model model) {
+        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("Admin", server.isAdmin().getValue());
         model.addAttribute("alert", alert.copy());
         alert.reset();
 
-        Response<List<ServiceUser>> response = server.getOnlineUsers(request);
+        Response<List<ServiceUser>> response = server.getOnlineUsers();
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -35,7 +33,7 @@ public class AdminController {
             model.addAttribute("onlineUsersInfo", response.getValue());
         }
 
-        Response<List<ServiceUser>> responseOff = server.getOfflineUsers(request);
+        Response<List<ServiceUser>> responseOff = server.getOfflineUsers();
         if (responseOff.isError()) {
             alert.setFail(true);
             alert.setMessage(responseOff.getMessage());
@@ -53,7 +51,7 @@ public class AdminController {
     public String deleteUser(@RequestParam("usernameToDelete") String username,
                              Model model) {
 
-        Response<?> response = server.deleteUser(request,username);
+        Response<?> response = server.deleteUser(username);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
