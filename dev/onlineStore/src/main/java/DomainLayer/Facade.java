@@ -88,6 +88,12 @@ public class Facade {
      */
     public void resetData()
     {
+        if(!storesList.isEmpty()){
+            for(Store store:storesList.values()){
+                store.resetCounters();
+                break;
+            }
+        }
         onlineList = new HashMap<>();
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
@@ -1391,7 +1397,9 @@ public class Facade {
 
     public void UpdateProductName(int visitorId, int productId,int storeId,String Name) throws Exception{
         logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", name: " + Name);
-
+        if(Name== null){
+            throw new NullPointerException("Null name while updating product name");
+        }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store == null)
@@ -1425,7 +1433,9 @@ public class Facade {
 
     public void UpdateProductCategory(int visitorId, int productId,int storeId,String category) throws Exception{
         logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
-
+        if(category==null){
+            throw new NullPointerException("Null category while updating product category");
+        }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store == null)
@@ -1440,6 +1450,9 @@ public class Facade {
 
     public void UpdateProductDescription(int visitorId, int productId,int storeId,String description) throws Exception{
         logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
+        if(description==null){
+            throw new NullPointerException("null description in UpdateProductDescription");
+        }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store != null) {
