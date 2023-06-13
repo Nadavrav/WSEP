@@ -55,7 +55,7 @@ class StoreTest {
         Integer pid1 = s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
         Integer pid2 = s1.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
         StoreProduct actual1 = s.getProducts().get(pid1);
-        StoreProduct actual2 = s.getProducts().get(pid2);
+        StoreProduct actual2 = s1.getProducts().get(pid2);
         Assertions.assertNotNull(actual1);
         assertEquals(p1.getName(),actual1.getName());
         assertEquals(p1.getPrice(),actual1.getPrice());
@@ -63,11 +63,11 @@ class StoreTest {
         assertEquals(p1.getQuantity(),actual1.getQuantity());
         assertEquals(p1.getDescription(),actual1.getDescription());
         Assertions.assertNotNull(actual2);
-        assertEquals(p1.getName(),actual2.getName());
-        assertEquals(p1.getPrice(),actual2.getPrice());
-        assertEquals(p1.getCategory(),actual2.getCategory());
-        assertEquals(p1.getQuantity(),actual2.getQuantity());
-        assertEquals(p1.getDescription(),actual2.getDescription());
+        assertEquals(p2.getName(),actual2.getName());
+        assertEquals(p2.getPrice(),actual2.getPrice());
+        assertEquals(p2.getCategory(),actual2.getCategory());
+        assertEquals(p2.getQuantity(),actual2.getQuantity());
+        assertEquals(p2.getDescription(),actual2.getDescription());
     }
 
     @Test

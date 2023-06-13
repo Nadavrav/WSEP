@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 public class Store {
     private static final AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
-    private final AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
+    private static final AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
     private final ConditionFactory conditionFactory=new ConditionFactory();
 
     private int Id;
@@ -427,5 +427,11 @@ public class Store {
         if(!storePolicies.containsKey(policyId))
             throw new RuntimeException("Id error: invalid policy id while trying to remove policy");
         return storePolicies.remove(policyId);
+    }
+
+    public void resetCounters() {
+        StoreID_GENERATOR.getAndSet(0);
+        ProductID_GENERATOR.getAndSet(0);
+
     }
 }
