@@ -7,10 +7,9 @@ import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
 public class MyStoreController {
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
-
+//    Server server = new Server();
     @GetMapping("/MyStore/{storeId}")
     public String myStoreMenu(Model model,
                               @PathVariable("storeId") int storeId,
@@ -59,6 +58,36 @@ public class MyStoreController {
 //        }
 
         alert.reset();
+        return "MyStore";
+    }
+
+    @RequestMapping(value = "/discount_option", method = RequestMethod.POST)
+    public String handleSelectedOptions(HttpServletRequest request) {
+        String[] selectedOptions = request.getParameterValues("discountOption");
+
+        if (selectedOptions != null) {
+            for (String option : selectedOptions) {
+                switch (option) {
+                    case "option1":
+//                        server.
+                        break;
+                    case "option2":
+//                        server.
+                        break;
+                    case "option3":
+//                        server.
+                        break;
+                    case "option4":
+//                        server.
+                        break;
+                    case "option5":
+//                        server.
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         return "MyStore";
     }
 

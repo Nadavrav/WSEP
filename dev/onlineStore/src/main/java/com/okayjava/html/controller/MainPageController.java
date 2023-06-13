@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 public class MainPageController{
     Alert alert = Alert.getInstance();
     private final Server server = Server.getInstance();
+//    Server server = new Server();
     private static boolean isInitialized = false;
 
     @GetMapping("/")

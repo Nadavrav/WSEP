@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductRatingsController {
     private Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
+//    Server server = new Server();
     private int storeID;
     private int productID;
 

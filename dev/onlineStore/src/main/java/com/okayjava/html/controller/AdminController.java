@@ -14,7 +14,7 @@ import java.util.List;
 public class AdminController {
     Alert alert = Alert.getInstance();
     private final Server server = Server.getInstance();
-
+//    Server server = new Server();
     @GetMapping("Admin")
     public String adminPage(Model model) {
         model.addAttribute("logged", server.isLogged());

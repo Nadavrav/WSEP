@@ -20,7 +20,7 @@ import java.util.List;
 public class SearchResultsController {
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
-
+//    Server server = new Server();
     @GetMapping("/SearchResults")
     public String searchResult(Model model) {
         model.addAttribute("logged", server.isLogged());
@@ -29,13 +29,6 @@ public class SearchResultsController {
         alert.reset();
         return "SearchResults";
     }
-
-//    @PostMapping("/SearchResults")
-//    public String resultPage(Model model){
-//        model.addAttribute("alert", alert.copy());
-//        alert.reset();
-//        return "SearchResults";
-//    }
 
     @RequestMapping(value = "/show-result", method = RequestMethod.POST)
     public String userSearch(@RequestParam(value = "filter-keyword" , defaultValue = "") String keywordStr,

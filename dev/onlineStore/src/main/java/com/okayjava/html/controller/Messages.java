@@ -14,7 +14,7 @@ public class Messages {
 
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
-
+//    Server server = new Server();
     @GetMapping("/Messages")
     public String messages(Model model) throws Exception {
         model.addAttribute("logged", server.isLogged());
