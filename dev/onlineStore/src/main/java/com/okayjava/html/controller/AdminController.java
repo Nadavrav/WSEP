@@ -13,8 +13,8 @@ import java.util.List;
 @Controller
 public class AdminController {
     Alert alert = Alert.getInstance();
-    private final Server server = Server.getInstance();
-
+//    private final Server server = Server.getInstance();
+    Server server = new Server();
     @GetMapping("Admin")
     public String adminPage(Model model) {
         model.addAttribute("logged", server.isLogged());

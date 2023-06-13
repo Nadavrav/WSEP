@@ -19,8 +19,8 @@ import java.util.Set;
 @Controller
 public class BagController {
     Alert alert = Alert.getInstance();
-    private Server server = Server.getInstance();
-
+//    private Server server = Server.getInstance();
+    Server server = new Server();
     @GetMapping("/Bag")
     public String Bag(HttpServletRequest request, Model model) {
         model.addAttribute("logged", server.isLogged());

@@ -193,7 +193,7 @@ crossorigin="anonymous"></script>
         <h4>
             <a th:href="@{/MyStore/{storeId}(storeId=${myStore.getStoreId()}, storeName=${myStore.getStoreName()})}">
 <!--            <a th:href="@{'/MyStore/' + ${myStore.getStoreId()} + ${myStore.getStoreName()}}">-->
-                <span th:text="'Store Name: ' + ${myStore.getStoreName()} + '  / ID: ' + ${myStore.getStoreId()}"></span>
+                <span style="color: white;" th:text="'Store Name: ' + ${myStore.getStoreName()} + '  / ID: ' + ${myStore.getStoreId()}"></span>
             </a>
         </h4>
     </div>

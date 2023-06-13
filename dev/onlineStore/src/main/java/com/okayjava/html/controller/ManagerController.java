@@ -13,8 +13,8 @@ import java.util.*;
 public class ManagerController {
 
     Alert alert = Alert.getInstance();
-    private Server server = Server.getInstance();
-
+//    private Server server = Server.getInstance();
+    Server server = new Server();
     @GetMapping("/Manager")
     public String menu(Model model) {
         model.addAttribute("logged", server.isLogged());

@@ -19,8 +19,8 @@ import java.util.List;
 @Controller
 public class SearchResultsController {
     Alert alert = Alert.getInstance();
-    private Server server = Server.getInstance();
-
+//    private Server server = Server.getInstance();
+    Server server = new Server();
     @GetMapping("/SearchResults")
     public String searchResult(Model model) {
         model.addAttribute("logged", server.isLogged());

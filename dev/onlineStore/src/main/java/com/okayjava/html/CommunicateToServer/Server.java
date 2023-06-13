@@ -1,7 +1,6 @@
 package com.okayjava.html.CommunicateToServer;
 
 import DomainLayer.Response;
-import DomainLayer.Stores.Store;
 import DomainLayer.Users.Permission;
 import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
@@ -12,6 +11,7 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicy;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
+//import com.okayjava.html.controller.MyWebSocketHandler;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +22,9 @@ import java.util.List;
 public class Server {
     private boolean logged = false;
     private String username = "";
-
+    private Server server;
+    private Service service;
+    //    private MyWebSocketHandler socket;
     public String getUsername() {
         return username;
     }
@@ -38,18 +40,15 @@ public class Server {
     public void setLogged(boolean status){
         logged = status;
     }
-    private static Server server = null;
-    private Service service;
 
-    private MyWebSocketHandler socket;
-    public static Server getInstance(){
-        if (server == null){
-            server = new Server();
-        }
-        return server;
-    }
+//    public static Server getInstance(){
+//        if (server == null){
+//            server = new Server();
+//        }
+//        return server;
+//    }
 
-    private Server(){
+    public Server(){
         service = new Service();
 //        socket = MyWebSocketHandler.getInstance();
     }
@@ -242,6 +241,19 @@ public class Server {
 
 //    public Response addDiscount(){
 //        return service.addDiscount();
+//    }
+
+    //websocket
+//    public void sendMessage(String message) throws IOException {
+//        socket.sendMessage(username, message);
+//    }
+//
+//    public Response<Boolean> checkForAppendingMessages() throws Exception {
+//        return service.checkForNewMessages(username);
+//    }
+//
+//    public List<String> getLiveMessages(String memberName) throws Exception {
+//        return service.getLiveMessages(memberName);
 //    }
 }
 

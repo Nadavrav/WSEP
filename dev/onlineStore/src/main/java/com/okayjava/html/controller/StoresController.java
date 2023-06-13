@@ -16,8 +16,8 @@ import java.util.HashSet;
 @Controller
 public class StoresController {
     Alert alert = Alert.getInstance();
-    private Server server = Server.getInstance();
-
+//    private Server server = Server.getInstance();
+    Server server = new Server();
     @GetMapping("/Stores")
     public String getStoreAndProductsNames(Model model) {
         model.addAttribute("logged", server.isLogged());
