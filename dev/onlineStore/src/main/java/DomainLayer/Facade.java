@@ -913,7 +913,7 @@ public class Facade {
                                 for (CartProduct p : b.getProducts()) {
                                     s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
                                 }
-                                InstantPurchase p = new InstantPurchase(visitor, productsId, amount);
+                                InstantPurchase p = new InstantPurchase(visitor, b, amount);
                                 if (visitor instanceof RegisteredUser) {
                                     ((RegisteredUser) visitor).addPurchaseToHistory(p);
                                     storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
@@ -921,7 +921,7 @@ public class Facade {
                                 else{
                                     storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
                                 }
-                                storesList.get(b.getStoreID()).addToStoreHistory(b);
+                                storesList.get(b.getStoreID()).addToStoreHistory(p);
                                 visitor.removeBag(b.getStoreID());
                             }
                         }
@@ -1805,6 +1805,51 @@ public class Facade {
         return totalPrice;
     }
 
+    public Integer getDailyIncome(int day,int month,int year, int visitorId) throws Exception {
 
+        //Check if VisitorID is admin
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+        if(!(visitor instanceof Admin)){
+            throw new Exception("Current user is not admin");
+        }
+        int totalAmount = 0;
+        //Get all incomes
+        for (Store s:storesList.values())
+        {
+            totalAmount += s.getDailyIncome(day, month, year);
+        }
+        return totalAmount;
+    }
+
+    public Integer getDailyIncomeByStore(int day,int month,int year,int storeId, int visitorId) throws Exception {
+
+        //Check if VisitorID is admin
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store s = storesList.get(storeId);
+        if(s == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+
+        RegisteredUser user = (RegisteredUser)visitor;
+        Employment e = employmentList.get(user.getUserName()).get(storeId);
+        if(e == null){
+            throw new Exception("This user has no store with this store ID");
+        }
+
+        return s.getDailyIncome(day,month,year);
+    }
 
 }

@@ -736,14 +736,24 @@ public class Service {
         return null;
     }
 
-    // TODO: implement
-    public Response<?> getDailyIncome() {
-        return null;
+    public Response<Integer> getDailyIncome(int day,int month,int year) {
+        try{
+            return new Response<>(facade.getDailyIncome(day,month,year,visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
-
-    // TODO: implement
-    public Response<?> getDailyIncomeByStore(int storeId) {
-        return null;
+    
+    public Response<Integer> getDailyIncomeByStore(int day,int month,int year,int storeId) {
+        try{
+            return new Response<>(facade.getDailyIncomeByStore(day,month,year,storeId,visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     // TODO: implement
