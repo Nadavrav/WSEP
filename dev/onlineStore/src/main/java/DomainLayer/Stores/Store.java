@@ -440,9 +440,6 @@ public class Store {
 
     }
 
-    public boolean compareToStoreOwnersList(LinkedList<RegisteredUser> list){
-        return true;
-    }
 
 
 

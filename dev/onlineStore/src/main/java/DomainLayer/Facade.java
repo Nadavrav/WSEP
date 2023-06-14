@@ -597,7 +597,10 @@ public class Facade {
             throw  new Exception("appointedUserName is already Owner of store Id");
         }
         //add appointedUserName as store owner
-
+          if(appointmentsRequests.get(storeId) == null){
+              appointmentsRequests.put(storeId,new HashMap<>());
+          }
+          appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
 
         //catch
         //release lock appointer
@@ -1873,7 +1876,7 @@ public class Facade {
         //If all store owners accepted, create new employment
         Store store = storesList.get(storeID);
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
-        if(storesList.get(storeID).compareToStoreOwnersList(appointmentsRequests.get(storeID).get(appointedUserName))){
+        if(checkIfAllOwnersAgreedOnEmploymentRequest(storeID,appointedUserName)){
             Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
             if (employmentList.get(appointedUserName) == null) {
                 Map<Integer, Employment> newEmploymentMap = new HashMap<>();
@@ -1882,8 +1885,43 @@ public class Facade {
             employmentList.get(appointedUserName).put(storeID, appointedEmployment);
             store.addNewListener(appointed);
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
-            registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
+            registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeID).getName()+"'");
         }
+    }
+
+    private boolean checkIfAllOwnersAgreedOnEmploymentRequest(int storeID,String userName){
+        LinkedList<RegisteredUser> storeOwners = new LinkedList<>();
+        for (Map.Entry<String, Map<Integer, Employment>> e : employmentList.entrySet()){
+            if(e.getValue().get(storeID).checkIfOwner()){
+                storeOwners.add(registeredUserList.get(e.getKey()));
+            }
+        }
+
+        return areListsIdentical(storeOwners,appointmentsRequests.get(storeID).get(userName));
+
+
+    }
+
+    private <T> boolean areListsIdentical(LinkedList<T> list1, LinkedList<T> list2) {
+        if (list1 == null || list2 == null) {
+            return false;
+        }
+
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+
+        // Create a copy of list2
+        LinkedList<T> tempList = new LinkedList<>(list2);
+
+        // Iterate over list1 and remove elements from tempList
+        for (T element : list1) {
+            if (!tempList.remove(element)) {
+                return false; // If an element is not present in tempList, lists are not identical
+            }
+        }
+
+        return tempList.isEmpty(); // If tempList is empty, lists are identical
     }
 
     public void declineEmploymentRequest(int visitorID,int storeID,String appointedUserName) throws Exception {
