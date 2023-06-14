@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Shop Store Main Page</title>
+    <meta charset="ISO-8859-1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!--	<link rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">-->
+    <style>
+        body {
+            /*background-image: url("https://media.istockphoto.com/id/1334591689/photo/woman-hold-digital-tablet-online-shopping-to-digital-cart-with-global-network-connection.jpg?s=612x612&w=0&k=20&c=CYZS8pVk7f4hn8NXZ6tGWbANMxkOZ79d3UVR8vixDzo=");*/
+            background-image: url("https://media.istockphoto.com/id/1394514694/photo/online-shopping-global-business-e-commerce-digital-marketing-concept.jpg?s=612x612&w=0&k=20&c=voM0MGy3brDDIMUcPTgUBDPoqPjtzt3PNtvSw2LeNiw=");
+            /*background-image: url("https://media.istockphoto.com/id/638603478/photo/online-shopping-concept.jpg?s=612x612&w=0&k=20&c=KdpP-9TrjpXl6VMgq1UnaDcRfZ6SveMmWjhoIsOEHMA=");*/
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            /*display: flex;*/
+        }
+
+        header {
+            /*display: flex;*/
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            /*font-size: 24px;*/
+            margin-left: 60px;
+            color: #d2d3d5;
+            /*font-family: monospace;*/
+        }
+
+        .home-button {
+            background-color: rgba(0, 0, 0, 0.1);
+            /*color: rgba(255, 255, 255, 0.3);*/
+            color: #d2d3d5;
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 0;
+            border: none;
+            font-size: 18px;
+            /*font-family: Arial, sans-serif;*/
+            /*transition: color 0.1s ease;*/
+            margin: 0 auto;
+        }
+
+        .home-button:hover {
+            /*color: #999999;*/
+        }
+
+        .menu-button {
+            background-color: transparent;
+            /*color: #fff;*/
+            /*padding: 5px;*/
+            margin-bottom: 6px;
+            margin-right: 10px;
+            position: relative;
+            /*top: 0.6%;*/
+            border: none;
+            /*border-radius: 5px;*/
+            /*font-size: 18px;*/
+            /*font-family: Arial, sans-serif;*/
+            /*text-transform: uppercase;*/
+            /*transition: background-color 0.4s ease;*/
+        }
+
+        .menu-button:hover {
+            background-color: transparent;
+            /*cursor: pointer;*/
+        }
+
+        /* Modal */
+        .modal {
+            /*background-color: rgba(255,255,255,0.1);*/
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            z-index: 1;
+            /*left: 0;*/
+            /*top: 0;*/
+            /*border-radius: 13px;*/
+            width: 100%;
+            height: 100%;
+            /*position: absolute;*/
+            top: 48%;
+            left: 18%;
+            transform: translate(-50%, -50%);
+        }
+
+        .modal-title {
+            color: #d2d3d5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .modal-form,
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 300px;
+            background-color: transparent;
+            border: none;
+        }
+
+        .modal-form label {
+            font-size: 16px;
+            color: #ffffff;
+            /*font-weight: bold;*/
+            display: inline-flex;
+            align-items: center;
+            /*margin-bottom: 7px;*/
+        }
+
+        .modal-form input[type="number"],
+        .modal-form input[type="password"],
+        .modal-form input[type="text"] {
+            margin: 10px;
+            width: 200px;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: inline-block;
+            border: none;
+            color: #333333;
+            border-bottom: 1px solid #555555;
+            /*padding: 5px;*/
+        }
+
+        .modal-form button[type="submit"] {
+            background-color: #444444;
+            color: #d2d3d5;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .modal-form button[type="submit"]:hover {
+            background-color: #999999;
+            /*padding: 20px;*/
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon input {
+            padding-left: 20px;
+        }
+
+        .input-icon i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .input-icon input:required {
+            padding-left: 25px;
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="fragments/alert :: alert(${alert})"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
+<!--// ------------------------------------ Head Buttons --------------------------------------//-->
+<div class="home-button">
+    <div class="menu-button">
+    <span th:if="${logged}">
+		<button style="color: white;background-color: transparent;border: none" onclick="location.href='/logout'">
+    		<svg width="25" height="20" fill="currentColor" class="bi bi-power" viewBox="0 0 10 15">
+				<path d="M7.5 1v7h1V1h-1z"/>
+  				<path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+    		</svg>
+		</button>
+
+		<button style="color: white;background-color: transparent;border: none;" onclick="openModalProfile()"> <!-- profile model-->
+			<svg width="30" height="20" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 10 15">
+  				<path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
+			</svg>
+		</button>
+
+		<button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Manager';">
+			<svg width="30" height="20" fill="currentColor" class="bi bi-person" viewBox="0 0 10 15">
+  				<path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+			</svg>
+		</button>
+
+        <button style="color: white;background-color: transparent;border: none;" onclick="openModalComplaints()"> <!-- Complaint-->
+			<svg width="30" height="20" fill="currentColor" class="bi bi-chat-right-text-fill" viewBox="0 0 10 16">
+  				<path d="M16 2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h9.586a1 1 0 0 1 .707.293l2.853 2.853a.5.5 0 0 0 .854-.353V2zM3.5 3h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1zm0 2.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1 0-1zm0 2.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1z"/>
+			</svg>
+		</button>
+
+		<button style="color: white;background-color: transparent;border: none;" onclick="location.href='Messages';">
+			<svg width="30" height="20" fill="currentColor" class="bi bi-envelope" viewBox="0 0 10 15">
+				<path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+			</svg>
+		</button>
+
+		<span th:if="${Admin}">
+			<button style="color: white;background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
+		</span>
+
+		<button style="color: white;background-color: transparent;border: none;" onclick="openModalOpenStore()">NEW STORE</button>
+    </span>
+        <span th:if="!${logged}">
+        <button style="color: white;background-color: transparent;border: none;" onclick="openModalLogin()">SIGN IN</button>
+        <button style="color: white;background-color: transparent;border: none;" onclick="openModalRegister()">SIGN UP</button>
+    </span>
+
+        <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
+
+        <button style="color: white;background-color: transparent;border: none;position: fixed;right: 3%;"
+                onclick="window.location.href='SearchResults';">
+            <svg width="35" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 10 15">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+        </button>
+
+        <button style="background-color: transparent; color: white; border: none; position: fixed; right: 0%;">
+            <svg onclick="window.location.href='Bag';" width="30" height="20" fill="currentColor" class="bi bi-cart3"
+                 viewBox="0 0 13 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            </svg>
+        </button>
+    </div>
+</div>
+<!--// ------------------------------------ Login Modal --------------------------------------//-->
+<div class="modal" id="modalLogin">
+    <div class="modal-content">
+        <form action="/signin" method="post" class="modal-form">
+
+            <label for="username">USERNAME:</label>
+            <div class="input-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="username" name="username" required>
+            </div>
+
+            <label for="password">PASSWORD:</label>
+            <div class="input-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit">LOGIN</button>
+        </form>
+    </div>
+</div>
+<!--// ------------------------------------ Register Modal --------------------------------------//-->
+<div class="modal" id="modalRegister">
+    <div class="modal-content">
+        <form action="/register" method="post" class="modal-form">
+            <label for="register-name">Enter Your Name:</label>
+            <div class="input-icon">
+                <i class="fas fa-user"></i>
+                <input type="text" id="register-name" name="register-name" required>
+            </div>
+
+            <label for="register-password">Password:</label>
+            <div class="input-icon">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="register-password" name="register-password" required>
+            </div>
+
+            <label style="font-size: 16px;" for="agree">
+                <input type="checkbox" name="agree" id="agree" required>
+                Agree to Terms & Conditions
+            </label>
+
+            <button type="submit">Get Started!</button>
+        </form>
+    </div>
+</div>
+<!--// ------------------------------------ Profile Modal --------------------------------------//-->
+<div class="modal" id="modalProfile">
+    <div class="modal-content">
+        <form action="/update-info" method="post" class="modal-form">
+            <label for="new-name">Set New Name:</label>
+            <div class="input-icon">
+                <i class="fas fa-user"></i>
+                <input style="padding-left: 27px;" type="text" id="new-name" name="new-name">
+            </div>
+
+            <label for="new-password">Change Password:</label>
+            <div class="input-icon">
+                <i class="fas fa-key"></i>
+                <input style="padding-left: 27px;" type="password" id="new-password" name="new-password">
+            </div>
+
+            <label for="verify-password">Verify Password:</label>
+            <div class="input-icon">
+                <i class="fas fa-lock"></i>
+                <input style="padding-left: 26px;" type="password" id="verify-password" name="verify-password">
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit">Save Changes!</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--// ------------------------------------ Complaint Modal --------------------------------------//-->
+<div class="modal" id="modalComplaint">
+    <div class="modal-content">
+        <form action="/complaints" method="post" class="modal-form">
+            <textarea style="width: 300px;height: 150px;background-color: rgba(255,255,255,0.5);" id="complaints"
+                      name="complaints" placeholder="Enter your complaint here..."></textarea>
+            <button type="submit">Add Complaint!</button>
+        </form>
+    </div>
+</div>
+<!--// ------------------------------------ OpenStore Modal --------------------------------------//-->
+<div class="modal" id="modalOpenStore">
+    <div class="modal-content">
+        <form action="/open-store" method="post" class="modal-form">
+            <label for="store-name">Store Name:</label>
+            <input type="text" id="store-name" name="store-name" required>
+            <button type="submit">Open Store</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    var activeModal = null;
+
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        if (activeModal) {
+            activeModal.style.display = "none";
+        }
+        modal.style.display = "flex";
+        activeModal = modal;
+    }
+
+    function closeModal() {
+        if (activeModal) {
+            activeModal.style.display = "none";
+            activeModal = null;
+        }
+    }
+
+    function openModalLogin() {
+        openModal("modalLogin");
+    }
+
+    function openModalRegister() {
+        openModal("modalRegister");
+    }
+
+    function openModalProfile() {
+        openModal("modalProfile");
+    }
+
+    function openModalComplaints() {
+        openModal("modalComplaint");
+    }
+
+    function openModalOpenStore() {
+        openModal("modalOpenStore");
+    }
+
+    var alertElement = document.getElementById("alert");
+
+    // Set the timeout to close the alert after 4 seconds (4000 milliseconds)
+    setTimeout(function() {
+        alertElement.style.display = "none";
+    }, 2500);
+
+    function showErrorModal(errorMessage) {
+        var errorModal = document.getElementById("modalError");
+        var errorText = errorModal.querySelector("#error");
+        errorText.textContent = errorMessage;
+        openModal("modalError");
+    }
+
+    // Example usage: Call this function when you want to display an error message
+    function handleResponseError() {
+        var errorMessage = "Error message from the response"; // Replace with the actual error message
+        showErrorModal(errorMessage);
+    }
+
+    window.onclick = function (event) {
+        if (event.target.classList.contains("modal")) {
+            closeModal();
+        }
+    };
+</script>
+
+</body>
+</html>
