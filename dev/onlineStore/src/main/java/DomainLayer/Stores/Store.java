@@ -472,10 +472,22 @@ public class Store {
     public void acceptBid(int productId, RegisteredUser user) {
         for (Bid bid : pendingBids) {
             if (bid.getProductId() == productId && bid.getUserId() == user.getVisitorId()) {
-                user.addBidProduct(bid, products.get(productId));
+                user.addBidProduct(Id,bid, products.get(productId),generateStoreCallback());
                 break;
             }
         }
+    }
+    public Bid rejectBid(int productId, RegisteredUser user) throws Exception{
+        if(!products.containsKey(productId)){
+            throw new Exception("Invalid product id "+productId);
+        }
+        for (Bid bid : pendingBids) {
+            if (bid.getProductId() == productId && bid.getUserId() == user.getVisitorId()) {
+                pendingBids.remove(bid);
+                return bid;
+            }
+        }
+        throw new Exception("Bid for" +products.get(productId).getName()+" from "+user.getUserName()+" does not exist");
     }
 
     public StoreCallbacks generateStoreCallback() {

@@ -3,10 +3,7 @@ package DomainLayer.Users;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Discounts.Discount;
-import DomainLayer.Stores.Products.BasicCartProduct;
-import DomainLayer.Stores.Products.CartProduct;
-import DomainLayer.Stores.Products.Product;
-import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Stores.Products.*;
 
 import java.util.*;
 import java.util.logging.*;
@@ -94,6 +91,13 @@ public class Bag {
         productList.put(product,product);
         logger.info("Add product Succeeded");
     }
+    public void addBid(StoreProduct product, int amount, double newPrice) {
+        logger.info("Starting add bid");
+        if(productList.get(product)!=null)
+            throw new RuntimeException("Cart already contains "+product.getName());
+        productList.put(product,new BidProduct(product,amount,newPrice));
+        logger.info("Add bid Succeeded");
+    }
     public void removeProduct(StoreProduct product) {
         if(product==null)
             throw new NullPointerException("attempted to remove null product");
@@ -137,4 +141,6 @@ public class Bag {
         }
         return s.toString();
     }
+
+
 }

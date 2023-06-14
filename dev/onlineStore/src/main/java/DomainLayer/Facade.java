@@ -1838,7 +1838,6 @@ public class Facade {
     }
 
     public Bid addBid(int visitorId, int productId, int storeId, int amount, int newPrice) throws Exception {
-        //Check if VisitorID is admin
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){
             throw new Exception("Wrong visitorId");
@@ -1857,4 +1856,30 @@ public class Facade {
         return store.addBid(productId,amount,newPrice,user.getUserName(), user.getVisitorId());
 
     }
+    public Bid counterOfferBid(int visitorId, int productId, int storeId, String userName,String message) throws Exception{
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        RegisteredUser user=registeredUserList.get(userName);
+        Bid bid=store.rejectBid(productId,user);
+        registeredUserList.get(userName).update(message);
+        return bid;
+    }
+
+    public StoreProduct getProduct(int storeId, int productId) {
+        return storesList.get(storeId).getProducts().get(productId);
+    }
+
+
 }

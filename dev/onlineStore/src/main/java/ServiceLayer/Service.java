@@ -3,6 +3,7 @@ package ServiceLayer;
 import DomainLayer.Facade;
 import DomainLayer.Response;
 
+import DomainLayer.Stores.Bid;
 import DomainLayer.Stores.Policies.Policy;
 
 import DomainLayer.Stores.Discounts.Discount;
@@ -19,6 +20,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
+import ServiceLayer.ServiceObjects.ServiceBid;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.AndConditionRecord;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
@@ -27,6 +29,7 @@ import ServiceLayer.ServiceObjects.ServiceCart;
 
 
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
 import ServiceLayer.ServiceObjects.ServiceUser;
@@ -716,7 +719,15 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-
+    public Response<ServiceStoreProduct> getProduct(int storeId,int productId){
+        try{
+            return new Response<>(new ServiceStoreProduct(facade.getProduct(storeId,productId)));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
 
     /**
      * add new bid
@@ -727,10 +738,18 @@ public class Service {
      *                 obviously it has to be smaller than the original price
      * @return TODO
      */
-    public Response<?> addNewBid(int productId, int storeId,int amount,int newPrice)  {
-        try{
-            return new Response<>(facade.addBid(visitorId,productId,storeId,amount,newPrice));
-
+    public Response<ServiceBid> addNewBid(int productId, int storeId, int amount, int newPrice)  {
+        try {
+            return new Response<>(new ServiceBid(facade.addBid(visitorId,productId,storeId,amount,newPrice),new ServiceStoreProduct(facade.getProduct(storeId,productId))));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<ServiceBid> counterOfferBid(int productId, int storeId,String userName,String message){
+        try {
+            return new Response<>(new ServiceBid(facade.counterOfferBid(visitorId,productId,storeId,userName,message),new ServiceStoreProduct(facade.getProduct(storeId,productId))));
         }
         catch (Exception e)
         {
@@ -740,11 +759,6 @@ public class Service {
 
     // TODO: implement
     public Response<?> voteOnBid(int productId,int storeId,int userId,boolean vote) {
-        return null;
-    }
-
-    // TODO: implement
-    public Response<?> counterBid(int productId,int storeId,int userId,int newPrice) {
         return null;
     }
 
