@@ -68,6 +68,7 @@ public class Facade {
     }
 
     private Map<String, Map<Integer, Employment>> employmentList;
+    private Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
 
@@ -78,6 +79,7 @@ public class Facade {
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
         employmentList = new HashMap<>();
+        appointmentsRequests = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
         registerInitialAdmin();
@@ -603,9 +605,9 @@ public class Facade {
         employmentList.get(appointedUserName).put(storeId, appointedEmployment);
         store.addNewListener(appointed);
         logger.fine("new store owner with name" + appointedUserName +" added successfully");
-          registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
+        registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
 
-          //catch
+        //catch
         //release lock appointer
         //release lockappointed if locked
         //throw e
@@ -1850,6 +1852,46 @@ public class Facade {
         }
 
         return s.getDailyIncome(day,month,year);
+    }
+
+    public void acceptEmploymentRequest(int visitorID,int storeID,String appointedUserName){
+
+        //Add current user to list of accepted store owners
+
+
+        //If all store owners accepted, create new employment
+
+    }
+
+    public void declineEmploymentRequest(int visitorID,int storeID,String appointedUserName) throws Exception {
+
+        SiteVisitor visitor = onlineList.get(visitorID);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("This user is not registered");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+
+        Employment em;
+        try {
+            em = employmentList.get(user.getUserName()).get(storeID);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e);
+        }
+        if(em == null || !em.checkIfOwner()){
+            throw new Exception("This user is not owner of this store");
+        }
+        try{
+            appointmentsRequests.get(storeID).remove(appointedUserName);
+        }
+        catch (Exception e){
+            throw new Exception("Something went wrong upon trying to decline employment request.");
+        }
+
     }
 
 }

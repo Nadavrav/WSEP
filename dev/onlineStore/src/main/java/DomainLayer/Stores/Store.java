@@ -39,11 +39,10 @@ public class Store {
      */
     private final HashMap<Integer,Policy> storePolicies;
     private final HashMap<Integer,Discount> storeDiscounts;
-
     private Double Rate=0.0;
     private static final Logger logger=Logger.getLogger("Store logger");
-
     private final LinkedList<RegisteredUser> listeners;
+
 
     public Store(String name) {
         storeDiscounts=new HashMap<>();
@@ -440,4 +439,8 @@ public class Store {
         return getHistory().getDailyIncome(day, month, year);
 
     }
+
+
+
+
 }
