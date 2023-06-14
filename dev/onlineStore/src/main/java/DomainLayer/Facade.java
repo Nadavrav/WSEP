@@ -68,6 +68,7 @@ public class Facade {
     }
 
     private Map<String, Map<Integer, Employment>> employmentList;
+    private Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
 
@@ -78,6 +79,7 @@ public class Facade {
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
         employmentList = new HashMap<>();
+        appointmentsRequests = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
         registerInitialAdmin();
@@ -595,17 +597,12 @@ public class Facade {
             throw  new Exception("appointedUserName is already Owner of store Id");
         }
         //add appointedUserName as store owner
-        appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
-        if (employmentList.get(appointedUserName) == null) {
-            Map<Integer, Employment> newEmploymentMap = new HashMap<>();
-            employmentList.put(appointedUserName, newEmploymentMap);
-        }
-        employmentList.get(appointedUserName).put(storeId, appointedEmployment);
-        store.addNewListener(appointed);
-        logger.fine("new store owner with name" + appointedUserName +" added successfully");
-          registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
+          if(appointmentsRequests.get(storeId) == null){
+              appointmentsRequests.put(storeId,new HashMap<>());
+          }
+          appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
 
-          //catch
+        //catch
         //release lock appointer
         //release lockappointed if locked
         //throw e
@@ -1850,6 +1847,112 @@ public class Facade {
         }
 
         return s.getDailyIncome(day,month,year);
+    }
+
+    public void acceptEmploymentRequest(int visitorID,int storeID,String appointedUserName) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorID);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("This user is not registered");
+        }
+        RegisteredUser appointer = (RegisteredUser)visitor;
+
+        Employment em;
+        try {
+            em = employmentList.get(appointer.getUserName()).get(storeID);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e);
+        }
+        if(em == null || !em.checkIfOwner()){
+            throw new Exception("This user is not owner of this store");
+        }
+        //Add current user to list of accepted store owners
+        appointmentsRequests.get(storeID).get(appointedUserName).add(registeredUserList.get(visitorID));
+
+        //If all store owners accepted, create new employment
+        Store store = storesList.get(storeID);
+        RegisteredUser appointed = registeredUserList.get(appointedUserName);
+        if(checkIfAllOwnersAgreedOnEmploymentRequest(storeID,appointedUserName)){
+            Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+            if (employmentList.get(appointedUserName) == null) {
+                Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+                employmentList.put(appointedUserName, newEmploymentMap);
+            }
+            employmentList.get(appointedUserName).put(storeID, appointedEmployment);
+            store.addNewListener(appointed);
+            logger.fine("new store owner with name" + appointedUserName +" added successfully");
+            registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeID).getName()+"'");
+        }
+    }
+
+    private boolean checkIfAllOwnersAgreedOnEmploymentRequest(int storeID,String userName){
+        LinkedList<RegisteredUser> storeOwners = new LinkedList<>();
+        for (Map.Entry<String, Map<Integer, Employment>> e : employmentList.entrySet()){
+            if(e.getValue().get(storeID).checkIfOwner()){
+                storeOwners.add(registeredUserList.get(e.getKey()));
+            }
+        }
+
+        return areListsIdentical(storeOwners,appointmentsRequests.get(storeID).get(userName));
+
+
+    }
+
+    private <T> boolean areListsIdentical(LinkedList<T> list1, LinkedList<T> list2) {
+        if (list1 == null || list2 == null) {
+            return false;
+        }
+
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+
+        // Create a copy of list2
+        LinkedList<T> tempList = new LinkedList<>(list2);
+
+        // Iterate over list1 and remove elements from tempList
+        for (T element : list1) {
+            if (!tempList.remove(element)) {
+                return false; // If an element is not present in tempList, lists are not identical
+            }
+        }
+
+        return tempList.isEmpty(); // If tempList is empty, lists are identical
+    }
+
+    public void declineEmploymentRequest(int visitorID,int storeID,String appointedUserName) throws Exception {
+
+        SiteVisitor visitor = onlineList.get(visitorID);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("This user is not registered");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+
+        Employment em;
+        try {
+            em = employmentList.get(user.getUserName()).get(storeID);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e);
+        }
+        if(em == null || !em.checkIfOwner()){
+            throw new Exception("This user is not owner of this store");
+        }
+        try{
+            appointmentsRequests.get(storeID).remove(appointedUserName);
+        }
+        catch (Exception e){
+            throw new Exception("Something went wrong upon trying to decline employment request.");
+        }
+
     }
 
 }
