@@ -25,18 +25,18 @@ public class History {
         return bagsList;
     }
 
-    /*public void AddPurchasedShoppingCart(Cart shoppingCart){
+    public void AddPurchasedShoppingCart(Cart shoppingCart){
         if(shoppingCart == null){
             throw new IllegalArgumentException("ShoppingCart can not be null");
         }
         else{
             Map<Integer,Bag> bags = shoppingCart.getBags();
             for (Bag b: bags.values()) {
-                ShoppingBags.addLast(b);
+                //ShoppingBags.addLast(b);
             }
         }
     }
-    */
+
 
     public void AddPurchasedShoppingBag(InstantPurchase purchase)
     {
