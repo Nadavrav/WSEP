@@ -21,7 +21,9 @@ public class Messages {
 
     @GetMapping("/Messages")
     public String messages(Model model) throws Exception {
-        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<LinkedList<String>> response = server.getNewMessages(request);
         if (response.isError()){
