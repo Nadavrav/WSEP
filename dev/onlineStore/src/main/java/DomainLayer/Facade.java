@@ -913,7 +913,7 @@ public class Facade {
                                 for (CartProduct p : b.getProducts()) {
                                     s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
                                 }
-                                InstantPurchase p = new InstantPurchase(visitor, productsId, amount);
+                                InstantPurchase p = new InstantPurchase(visitor, b, amount);
                                 if (visitor instanceof RegisteredUser) {
                                     ((RegisteredUser) visitor).addPurchaseToHistory(p);
                                     storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
@@ -921,7 +921,7 @@ public class Facade {
                                 else{
                                     storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
                                 }
-                                storesList.get(b.getStoreID()).addToStoreHistory(b);
+                                storesList.get(b.getStoreID()).addToStoreHistory(p);
                                 visitor.removeBag(b.getStoreID());
                             }
                         }

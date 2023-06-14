@@ -7,6 +7,7 @@ import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Stores.Purchases.InstantPurchase;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.RegisteredUser;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
@@ -202,9 +203,9 @@ public class Store {
         Rate = rate;
     }
 
-    public void addToStoreHistory(Bag b)
+    public void addToStoreHistory(InstantPurchase p)
     {
-        History.AddPurchasedShoppingBag(b);
+        History.AddPurchasedShoppingBag(p);
     }
 
     public StoreProduct getProductByID(Integer productId) {
