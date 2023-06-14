@@ -17,6 +17,12 @@ public class BidProduct extends CartProduct{
         return newPrice;
     }
     public Double getOldPrice(){
-        return super.getPrice();
+        return price;
+    }
+
+    @Override
+    public String getDescription() {
+        return description+"\nBid product- product has been had its price lowered from "+price +
+                " to "+newPrice;
     }
 }

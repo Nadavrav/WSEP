@@ -727,22 +727,24 @@ public class Service {
      *                 obviously it has to be smaller than the original price
      * @return TODO
      */
-    public Response<?> addNewBid(int productId, int storeId,int amount,int newPrice) {
-        return facade.addBid(visitorId,productId,storeId,amount,newPrice);
+    public Response<?> addNewBid(int productId, int storeId,int amount,int newPrice)  {
+        try{
+            return new Response<>(facade.addBid(visitorId,productId,storeId,amount,newPrice));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     // TODO: implement
-    public Response<?> acceptBid(int productId,int storeId,String userName) {
+    public Response<?> voteOnBid(int productId,int storeId,int userId,boolean vote) {
         return null;
     }
 
     // TODO: implement
-    public Response<?> declineBid(int productId,int storeId,String userName) {
-        return null;
-    }
-
-    // TODO: implement
-    public Response<?> updateBid(int productId,int storeId,int newPrice) {
+    public Response<?> counterBid(int productId,int storeId,int userId,int newPrice) {
         return null;
     }
 

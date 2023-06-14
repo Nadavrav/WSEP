@@ -443,10 +443,11 @@ public class Store {
 
     }
 
-    public void addBid(int productId, int amount, int newPrice, String userName,int userId) {
+    public Bid addBid(int productId, int amount, int newPrice, String userName,int userId) {
         StoreProduct product=products.get(productId);
         Bid bid=new Bid(productId,newPrice,userName,amount,userId);
         //TODO: SEND MESSAGE TO ALL STORE OWNERS
         pendingBids.add(bid);
+        return bid;
     }
 }
