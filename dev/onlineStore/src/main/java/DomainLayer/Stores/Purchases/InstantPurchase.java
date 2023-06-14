@@ -25,6 +25,13 @@ public class InstantPurchase extends Purchase {
         return productsList;
     }
 
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public Date getPurchaseDate(){
+        return purchaseDate;
+    }
     public String toString()
     {
         String output="Items that were purchased are:\n";

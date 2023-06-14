@@ -3,6 +3,8 @@ import DomainLayer.Stores.Purchases.InstantPurchase;
 import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.Cart;
+
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
 public class History {
@@ -42,6 +44,14 @@ public class History {
     }
 
     public int getDailyIncome(int day, int month, int year) {
-        return 0;
+        int totalAmount = 0;
+        for (InstantPurchase IP : ShoppingBags) {
+            Date purchaseDate = IP.getPurchaseDate();
+            if(purchaseDate.getDay() == day && purchaseDate.getMonth() == month && purchaseDate.getYear() == year)
+            {
+                totalAmount += IP.getTotalAmount();
+            }
+        }
+        return totalAmount;
     }
 }
