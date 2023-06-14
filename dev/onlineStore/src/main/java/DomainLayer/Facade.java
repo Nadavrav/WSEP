@@ -597,15 +597,7 @@ public class Facade {
             throw  new Exception("appointedUserName is already Owner of store Id");
         }
         //add appointedUserName as store owner
-        appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
-        if (employmentList.get(appointedUserName) == null) {
-            Map<Integer, Employment> newEmploymentMap = new HashMap<>();
-            employmentList.put(appointedUserName, newEmploymentMap);
-        }
-        employmentList.get(appointedUserName).put(storeId, appointedEmployment);
-        store.addNewListener(appointed);
-        logger.fine("new store owner with name" + appointedUserName +" added successfully");
-        registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
+
 
         //catch
         //release lock appointer
@@ -1854,13 +1846,44 @@ public class Facade {
         return s.getDailyIncome(day,month,year);
     }
 
-    public void acceptEmploymentRequest(int visitorID,int storeID,String appointedUserName){
+    public void acceptEmploymentRequest(int visitorID,int storeID,String appointedUserName) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorID);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("This user is not registered");
+        }
+        RegisteredUser appointer = (RegisteredUser)visitor;
 
+        Employment em;
+        try {
+            em = employmentList.get(appointer.getUserName()).get(storeID);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(e);
+        }
+        if(em == null || !em.checkIfOwner()){
+            throw new Exception("This user is not owner of this store");
+        }
         //Add current user to list of accepted store owners
-
+        appointmentsRequests.get(storeID).get(appointedUserName).add(registeredUserList.get(visitorID));
 
         //If all store owners accepted, create new employment
-
+        Store store = storesList.get(storeID);
+        RegisteredUser appointed = registeredUserList.get(appointedUserName);
+        if(storesList.get(storeID).compareToStoreOwnersList(appointmentsRequests.get(storeID).get(appointedUserName))){
+            Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+            if (employmentList.get(appointedUserName) == null) {
+                Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+                employmentList.put(appointedUserName, newEmploymentMap);
+            }
+            employmentList.get(appointedUserName).put(storeID, appointedEmployment);
+            store.addNewListener(appointed);
+            logger.fine("new store owner with name" + appointedUserName +" added successfully");
+            registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
+        }
     }
 
     public void declineEmploymentRequest(int visitorID,int storeID,String appointedUserName) throws Exception {
