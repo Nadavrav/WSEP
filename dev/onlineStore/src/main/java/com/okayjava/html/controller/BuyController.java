@@ -3,14 +3,18 @@ package com.okayjava.html.controller;
 import DomainLayer.Response;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 public class BuyController {
+    @Autowired
+    private HttpServletRequest request;
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
     @GetMapping("/Buy")
@@ -31,7 +35,7 @@ public class BuyController {
 
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<List<String>> response = server.PurchaseCart(cardNumber, address);
+        Response<List<String>> response = server.PurchaseCart(request,cardNumber, address);
         if (response.isError()){
             System.out.println("error in buying: " + response.getMessage());
             alert.setFail(true);

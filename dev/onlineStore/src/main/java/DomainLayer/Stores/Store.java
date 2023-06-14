@@ -7,6 +7,7 @@ import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Stores.Purchases.InstantPurchase;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.RegisteredUser;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
@@ -24,7 +25,7 @@ import java.util.logging.Logger;
 
 public class Store {
     private static final AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
-    private final AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
+    private static final AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
     private final ConditionFactory conditionFactory=new ConditionFactory();
 
     private int Id;
@@ -202,9 +203,9 @@ public class Store {
         Rate = rate;
     }
 
-    public void addToStoreHistory(Bag b)
+    public void addToStoreHistory(InstantPurchase p)
     {
-        History.AddPurchasedShoppingBag(b);
+        History.AddPurchasedShoppingBag(p);
     }
 
     public StoreProduct getProductByID(Integer productId) {
@@ -427,5 +428,16 @@ public class Store {
         if(!storePolicies.containsKey(policyId))
             throw new RuntimeException("Id error: invalid policy id while trying to remove policy");
         return storePolicies.remove(policyId);
+    }
+
+    public void resetCounters() {
+        StoreID_GENERATOR.getAndSet(0);
+        ProductID_GENERATOR.getAndSet(0);
+
+    }
+
+    public int getDailyIncome(int day, int month, int year) {
+        return getHistory().getDailyIncome(day, month, year);
+
     }
 }

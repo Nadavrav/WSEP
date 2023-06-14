@@ -88,6 +88,12 @@ public class Facade {
      */
     public void resetData()
     {
+        if(!storesList.isEmpty()){
+            for(Store store:storesList.values()){
+                store.resetCounters();
+                break;
+            }
+        }
         onlineList = new HashMap<>();
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
@@ -907,7 +913,7 @@ public class Facade {
                                 for (CartProduct p : b.getProducts()) {
                                     s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
                                 }
-                                InstantPurchase p = new InstantPurchase(visitor, productsId, amount);
+                                InstantPurchase p = new InstantPurchase(visitor, b, amount);
                                 if (visitor instanceof RegisteredUser) {
                                     ((RegisteredUser) visitor).addPurchaseToHistory(p);
                                     storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
@@ -915,7 +921,7 @@ public class Facade {
                                 else{
                                     storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
                                 }
-                                storesList.get(b.getStoreID()).addToStoreHistory(b);
+                                storesList.get(b.getStoreID()).addToStoreHistory(p);
                                 visitor.removeBag(b.getStoreID());
                             }
                         }
@@ -1391,7 +1397,9 @@ public class Facade {
 
     public void UpdateProductName(int visitorId, int productId,int storeId,String Name) throws Exception{
         logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", name: " + Name);
-
+        if(Name== null){
+            throw new NullPointerException("Null name while updating product name");
+        }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store == null)
@@ -1425,7 +1433,9 @@ public class Facade {
 
     public void UpdateProductCategory(int visitorId, int productId,int storeId,String category) throws Exception{
         logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
-
+        if(category==null){
+            throw new NullPointerException("Null category while updating product category");
+        }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store == null)
@@ -1440,6 +1450,9 @@ public class Facade {
 
     public void UpdateProductDescription(int visitorId, int productId,int storeId,String description) throws Exception{
         logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", description: " + description);
+        if(description==null){
+            throw new NullPointerException("null description in UpdateProductDescription");
+        }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
         if(store != null) {
@@ -1792,6 +1805,51 @@ public class Facade {
         return totalPrice;
     }
 
+    public Integer getDailyIncome(int day,int month,int year, int visitorId) throws Exception {
 
+        //Check if VisitorID is admin
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+        if(!(visitor instanceof Admin)){
+            throw new Exception("Current user is not admin");
+        }
+        int totalAmount = 0;
+        //Get all incomes
+        for (Store s:storesList.values())
+        {
+            totalAmount += s.getDailyIncome(day, month, year);
+        }
+        return totalAmount;
+    }
+
+    public Integer getDailyIncomeByStore(int day,int month,int year,int storeId, int visitorId) throws Exception {
+
+        //Check if VisitorID is admin
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store s = storesList.get(storeId);
+        if(s == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+
+        RegisteredUser user = (RegisteredUser)visitor;
+        Employment e = employmentList.get(user.getUserName()).get(storeId);
+        if(e == null){
+            throw new Exception("This user has no store with this store ID");
+        }
+
+        return s.getDailyIncome(day,month,year);
+    }
 
 }

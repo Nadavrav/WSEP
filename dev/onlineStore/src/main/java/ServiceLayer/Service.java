@@ -615,7 +615,6 @@ public class Service {
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
-
     }
 
     public Response<ServiceDiscountInfo> removeDiscount(int discountId,int storeId){
@@ -717,6 +716,60 @@ public class Service {
         }
     }
 
+    // TODO: implement
+    public Response<?> addNewBid(int productId, int storeId,int amount,int newPrice) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> acceptBid(int productId,int storeId,String userName) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> declineBid(int productId,int storeId,String userName) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> updateBid(int productId,int storeId,int newPrice) {
+        return null;
+    }
+
+    public Response<Integer> getDailyIncome(int day,int month,int year) {
+        try{
+            return new Response<>(facade.getDailyIncome(day,month,year,visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    
+    public Response<Integer> getDailyIncomeByStore(int day,int month,int year,int storeId) {
+        try{
+            return new Response<>(facade.getDailyIncomeByStore(day,month,year,storeId,visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    // TODO: implement
+    public Response<?> acceptAppointment(int storeId,String AppointedUserName,String AppointerUserName) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> declineAppointment(int storeId,String AppointedUserName,String AppointerUserName) {
+        return null;
+    }
+
+    // TODO: implement
+    public Response<?> getPermissions(int storeId,String AppointedUserName) {
+        return null;
+    }
 
 
 }
