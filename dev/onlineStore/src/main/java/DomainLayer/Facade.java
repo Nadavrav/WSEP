@@ -31,9 +31,23 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceMultiDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
+import java.net.MalformedURLException;
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.ResponseBody;
+import java.io.IOException;
+
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.simple.JSONObject;
+
 public class Facade {
     private static Facade instanceFacade = null;
     private  static final Logger logger = Logger.getLogger("Facade Logger");
@@ -108,6 +122,67 @@ public class Facade {
             instanceFacade = new Facade();
         }
         return instanceFacade;
+    }
+    private static final String BASE_URL = "https://api.metamug.com";
+    OkHttpClient client = new OkHttpClient();
+
+    public void connectToExternalServices() throws IOException {
+        String url = "https://php-server-try.000webhostapp.com/action_type=handshake";
+        URL obj = new URL(url);
+        Map params = new LinkedHashMap<>();
+        params.put("name", "Jinu Jawad");
+        params.put("email", "helloworld@gmail.com");
+        params.put("CODE", 1111);
+        params.put("message", "Hello Post Test success");
+
+        for (Map.Entry param : params.entrySet()) {
+            if (postData.length() != 0) postData.append('&');
+            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+            postData.append('=');
+            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+        }
+
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        // optional default is GET
+        con.setRequestMethod("GET");
+        //add request header
+//        con.setRequestProperty("action_type", "handshake");
+//        con.setRequestProperty("action_type", "pay");
+//        con.setRequestProperty("card_number", "2222333344445555");
+//        con.setRequestProperty("month", "4");
+//        con.setRequestProperty("year", "2021");
+//        con.setRequestProperty("holder", "Israel Israelovice");
+//        con.setRequestProperty("ccv", "262");
+//        con.setRequestProperty("id", "20444444");
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        //print in String
+        System.out.println(response.toString());
+        //Read JSON response and print
+        JSONObject myResponse = new JSONObject();
+//        System.out.println("result after Reading JSON Response");
+//        System.out.println("statusCode- "+myResponse.getString("statusCode"));
+//        System.out.println("statusMessage- "+myResponse.getString("statusMessage"));
+//        System.out.println("ipAddress- "+myResponse.getString("ipAddress"));
+//        System.out.println("countryCode- "+myResponse.getString("countryCode"));
+//        System.out.println("countryName- "+myResponse.getString("countryName"));
+//        System.out.println("regionName- "+myResponse.getString("regionName"));
+//        System.out.println("cityName- "+myResponse.getString("cityName"));
+//        System.out.println("zipCode- "+myResponse.getString("zipCode"));
+//        System.out.println("latitude- "+myResponse.getString("latitude"));
+//        System.out.println("longitude- "+myResponse.getString("longitude"));
+//        System.out.println("timeZone- "+myResponse.getString("timeZone"));
+        System.out.println("DONE");
+
     }
 
     public void loadData() throws Exception {

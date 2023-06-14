@@ -1,0 +1,4 @@
+יוני 14, 2023 5:28:42 אחה״צ DomainLayer.Facade registerInitialAdmin
+INFO: Starting initial admin registration
+יוני 14, 2023 5:28:43 אחה״צ DomainLayer.Facade registerInitialAdmin
+INFO: Starting initial admin registration

@@ -50,6 +50,11 @@ class FacadeTest {
     }
 
     @Test
+    void connectToExternalServices() throws Exception {
+        f.connectToExternalServices();
+    }
+
+    @Test
     void enterNewSiteVisitorTwice() {
         try {
             int visitorId = f.EnterNewSiteVisitor();
