@@ -3,6 +3,7 @@ package DomainLayer.Users;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Discounts.Discount;
+import DomainLayer.Stores.Products.BasicCartProduct;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
@@ -83,7 +84,7 @@ public class Bag {
         logger.info("Starting add product");
         if(productList.get(product)!=null)
             throw new RuntimeException("Cart already contains "+product.getName());
-        productList.put(product,new CartProduct(product,amount));
+        productList.put(product,new BasicCartProduct(product,amount));
         logger.info("Add product Succeeded");
     }
     public void addProduct(CartProduct product) {

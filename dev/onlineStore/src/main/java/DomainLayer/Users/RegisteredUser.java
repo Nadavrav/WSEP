@@ -1,5 +1,7 @@
 package DomainLayer.Users;
 
+import DomainLayer.Stores.Bid;
+import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Logging.UniversalHandler;
 
@@ -159,4 +161,6 @@ public class RegisteredUser extends SiteVisitor{
     public boolean isLoggedIn() {
         return loggedIn;
     }
+
+
 }

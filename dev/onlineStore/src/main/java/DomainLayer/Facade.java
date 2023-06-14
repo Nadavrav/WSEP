@@ -442,7 +442,7 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
-            user.addProductToCart(storeId, product,amount, generateStoreCallback(store));
+            user.addProductToCart(storeId, product,amount, store.generateStoreCallback());
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
         catch (Exception e){
@@ -1705,22 +1705,6 @@ public class Facade {
     }
     public HashMap<CartProduct,Double> getCartDiscountInfo(int visitorId,int storeId) throws Exception{
         return getUserBag(visitorId,storeId).getSavingsPerProducts();
-    }
-    private StoreCallbacks generateStoreCallback(Store store){
-        return new StoreCallbacks() {
-            @Override
-            public boolean checkStorePolicies(Bag bag) {
-                return store.passesPolicies(bag);
-            }
-            @Override
-            public double getDiscountAmount(Bag bag) {
-                return store.calcSaved(bag);
-            }
-            @Override
-            public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag) {
-                return store.getDiscountPerProduct(bag);
-            }
-        };
     }
 
     /**

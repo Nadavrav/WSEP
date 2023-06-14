@@ -15,6 +15,10 @@ public class Bid {
         this.amount=amount;
     }
 
+    public int getUserId() {
+        return userId;
+    }
+
     public int getAmount() {
         return amount;
     }
@@ -29,5 +33,13 @@ public class Bid {
 
     public int getProductId() {
         return productId;
+    }
+    @Override
+    public boolean equals(Object obj){
+        if(obj==this)
+            return true;
+        else if(obj instanceof Bid b)
+            return b.userId==userId && b.productId==productId && b.newPrice==newPrice && b.amount==amount;
+        else return false;
     }
 }

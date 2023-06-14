@@ -2,6 +2,7 @@ package DomainLayer.Stores;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 
+import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Conditions.ConditionFactory;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
 public class Store {
     private static final AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
     private static final AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
-    private final ConditionFactory conditionFactory=new ConditionFactory();
+    private final ConditionFactory conditionFactory = new ConditionFactory();
 
     private int Id;
     private String Name;
@@ -38,19 +39,19 @@ public class Store {
     /**
      * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
      */
-    private final HashMap<Integer,Policy> storePolicies;
-    private final HashMap<Integer,Discount> storeDiscounts;
+    private final HashMap<Integer, Policy> storePolicies;
+    private final HashMap<Integer, Discount> storeDiscounts;
 
-    private Double Rate=0.0;
-    private static final Logger logger=Logger.getLogger("Store logger");
+    private Double Rate = 0.0;
+    private static final Logger logger = Logger.getLogger("Store logger");
 
     private final LinkedList<RegisteredUser> listeners;
 
     public Store(String name) {
-        storeDiscounts=new HashMap<>();
-        storePolicies=new HashMap<>();
-        rateMapForStore=new HashMap<>();
-        pendingBids=new HashSet<>();
+        storeDiscounts = new HashMap<>();
+        storePolicies = new HashMap<>();
+        rateMapForStore = new HashMap<>();
+        pendingBids = new HashSet<>();
         conditionFactory.setStore(this);
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
@@ -60,10 +61,10 @@ public class Store {
         products = new ConcurrentHashMap<>();
         listeners = new LinkedList<>();
 
-        this.Active=true;
+        this.Active = true;
     }
 
-    public void addNewListener(RegisteredUser storeowner){
+    public void addNewListener(RegisteredUser storeowner) {
         listeners.add(storeowner);
     }
 
@@ -76,20 +77,21 @@ public class Store {
      */
     private void updateAvgRating() {
         double sum = 0;
-        for (Rating rating:rateMapForStore.values()) {
-            sum+=rating.getRating();
+        for (Rating rating : rateMapForStore.values()) {
+            sum += rating.getRating();
         }
         Rate = sum / rateMapForStore.size();
     }
-    public double getRate(){
+
+    public double getRate() {
         return Rate;
     }
 
 
     //2.1
-   public String getInfo() throws Exception {
+    public String getInfo() throws Exception {
 
-        if(!getActive()){
+        if (!getActive()) {
             logger.warning("Store is closed: " + this.Name);
             throw new Exception(" this store is closed");
         }
@@ -99,29 +101,32 @@ public class Store {
         }
         return s.toString();
     }
-    public void addPolicy(Policy policy){
-        storePolicies.put(policy.getId(),policy);
+
+    public void addPolicy(Policy policy) {
+        storePolicies.put(policy.getId(), policy);
     }
+
     public Policy addPolicy(ServicePolicy policy) {
-        Policy createdPolicy=conditionFactory.addPolicy(policy);
-        storePolicies.put(createdPolicy.getId(),createdPolicy);
+        Policy createdPolicy = conditionFactory.addPolicy(policy);
+        storePolicies.put(createdPolicy.getId(), createdPolicy);
         return createdPolicy;
     }
+
     public void CloseStore() {
         Active = false;
-        NotifyOwners("The store "+Name+" is closed now.");
+        NotifyOwners("The store " + Name + " is closed now.");
     }
 
     public void OpenStore() {
         Active = true;
-        NotifyOwners("The store "+Name+" is open now.");
+        NotifyOwners("The store " + Name + " is open now.");
     }
 
-    public void NewBuyNotification(String name){
-        NotifyOwners(Name+" just bought from your shop ("+name+").");
+    public void NewBuyNotification(String name) {
+        NotifyOwners(Name + " just bought from your shop (" + name + ").");
     }
 
-    private void NotifyOwners(String message){
+    private void NotifyOwners(String message) {
         for (RegisteredUser listener : listeners) {
             listener.update(message);
         }
@@ -133,17 +138,17 @@ public class Store {
     }
 
 
-
-    public StoreProduct getProduct(CartProduct product){
-        for(StoreProduct storeProduct:getProducts().values()){
-            if(storeProduct.getName().equals(product.getName()) || storeProduct.getDescription().equals(product.getDescription())){
+    public StoreProduct getProduct(CartProduct product) {
+        for (StoreProduct storeProduct : getProducts().values()) {
+            if (storeProduct.getName().equals(product.getName()) || storeProduct.getDescription().equals(product.getDescription())) {
                 return storeProduct;
             }
         }
         return null;
     }
-    public Integer AddNewProduct( String productName, Double price, int Quantity, String category,String desc) {
-        StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity,desc);
+
+    public Integer AddNewProduct(String productName, Double price, int Quantity, String category, String desc) {
+        StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity, desc);
         products.put(storeProduct.getProductId(), storeProduct);
         logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
         return storeProduct.getProductId();
@@ -151,20 +156,21 @@ public class Store {
 
     /**
      * for tests
+     *
      * @param storeProduct --
      * @return --
      */
-    public Integer AddNewProduct(StoreProduct storeProduct){
+    public Integer AddNewProduct(StoreProduct storeProduct) {
         products.put(storeProduct.getProductId(), storeProduct);
         logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
         return storeProduct.getProductId();
     }
 
-     public Response<?> RemoveProduct(Integer productID) {
+    public Response<?> RemoveProduct(Integer productID) {
         if (!products.containsKey(productID)) {
             logger.warning("Product not found in store. Product ID: " + productID);
             throw new IllegalArgumentException("There is no product in our products with this ID");
-           // return new Response<>("There is no product in our products with this ID", true);
+            // return new Response<>("There is no product in our products with this ID", true);
         }
         products.get(productID).notifyRemoval();
         products.remove(productID);
@@ -173,11 +179,11 @@ public class Store {
     }
 
     //2.2
-   public LinkedList<StoreProduct> SearchProductByName(String Name) throws Exception {
+    public LinkedList<StoreProduct> SearchProductByName(String Name) throws Exception {
         LinkedList<StoreProduct> searchResults = new LinkedList<>();
         if (getActive()) {
             for (StoreProduct product : this.products.values()) {
-                if (product.getName().equals (Name)) {
+                if (product.getName().equals(Name)) {
                     if (isInStock(product)) {
                         logger.info("New product added to store");
                         searchResults.add(product);
@@ -185,7 +191,7 @@ public class Store {
                 }
             }
 
-        }  else {
+        } else {
             logger.warning("Search operation not allowed on an inactive store");
             throw new Exception("This store is closed");
         }
@@ -193,6 +199,7 @@ public class Store {
 
         return searchResults;
     }
+
     public void ReduceProductQuantity(Integer productId, int quantity) {
         products.get(productId).ReduceQuantity(quantity);
     }
@@ -205,8 +212,7 @@ public class Store {
         Rate = rate;
     }
 
-    public void addToStoreHistory(InstantPurchase p)
-    {
+    public void addToStoreHistory(InstantPurchase p) {
         History.AddPurchasedShoppingBag(p);
     }
 
@@ -221,6 +227,7 @@ public class Store {
     public Integer getID() {
         return Id;
     }
+
     public int getId() {
         return Id;
     }
@@ -248,12 +255,15 @@ public class Store {
     public void setHistory(DomainLayer.Stores.History history) {
         History = history;
     }
+
     public ConcurrentHashMap<Integer, StoreProduct> getProducts() {
         return products;
     }
+
     public void UpdateProductQuantity(Integer productId, int quantity) {
         products.get(productId).UpdateQuantity(quantity);
     }
+
     public void IncreaseProductQuantity(Integer productId, int quantity) {
         products.get(productId).IncreaseQuantity(quantity);
     }
@@ -273,14 +283,14 @@ public class Store {
     public void UpdateProductDescription(Integer productId, String description) {
         products.get(productId).setDescription(description);
     }
+
     /**
-     *
      * @param productFilters filters who the returned products have to pass
      * @return product list of all products who passed the filter in the store
      */
-    public List<StoreProduct> filterProducts(List<ProductFilter> productFilters){
-        ArrayList<StoreProduct> filteredProducts=new ArrayList<>();
-        for (StoreProduct product: products.values()) { //for each product in store
+    public List<StoreProduct> filterProducts(List<ProductFilter> productFilters) {
+        ArrayList<StoreProduct> filteredProducts = new ArrayList<>();
+        for (StoreProduct product : products.values()) { //for each product in store
             boolean passedFilter = true;
             for (ProductFilter productFilter : productFilters) { //for each productFilter
                 if (!productFilter.PassFilter(product)) { //product has to pass all productFilters
@@ -297,28 +307,31 @@ public class Store {
     /**
      * determines if a bag passes all store policies.
      * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
+     *
      * @param bag the bag we check
      * @return true if it passes, false otherwise.
      */
-    public boolean passesPolicies(Bag bag){
-        for(Policy policy:storePolicies.values())
-            if(!policy.passesPolicy(bag))
+    public boolean passesPolicies(Bag bag) {
+        for (Policy policy : storePolicies.values())
+            if (!policy.passesPolicy(bag))
                 return false;
         return true;
     }
-   public void addRating(String userName ,double rate) {
-        if(!rateMapForStore.containsKey(userName)){
-            rateMapForStore.put(userName,new Rating(rate));
-        }else{
+
+    public void addRating(String userName, double rate) {
+        if (!rateMapForStore.containsKey(userName)) {
+            rateMapForStore.put(userName, new Rating(rate));
+        } else {
             rateMapForStore.get(userName).setRating(rate);
         }
         updateAvgRating();
         logger.info("Rating added for user: " + userName + ", Rate: " + rate + ", Current store rate: " + this.Rate);
     }
-    public void addRatingAndComment(String userName ,int rate,String comment) {
-        if(!rateMapForStore.containsKey(userName)){
-            rateMapForStore.put(userName,new Rating(rate,comment));
-        }else {
+
+    public void addRatingAndComment(String userName, int rate, String comment) {
+        if (!rateMapForStore.containsKey(userName)) {
+            rateMapForStore.put(userName, new Rating(rate, comment));
+        } else {
             rateMapForStore.get(userName).setRating(rate);
             rateMapForStore.get(userName).addComment(comment);
         }
@@ -328,8 +341,8 @@ public class Store {
 
     public LinkedList<Integer> getProductsID() {
         LinkedList<Integer> productsId = new LinkedList<>();
-        for(StoreProduct product : products.values()){
-            if(product.getQuantity()>0){
+        for (StoreProduct product : products.values()) {
+            if (product.getQuantity() > 0) {
                 productsId.add(product.getProductId());
             }
         }
@@ -337,9 +350,9 @@ public class Store {
     }
 
     public HashMap<String, Double> getRatingList() {
-        HashMap<String,Double> rates = new HashMap<>();
-        for (String userName : rateMapForStore.keySet()){
-            rates.put(userName,rateMapForStore.get(userName).getRating());
+        HashMap<String, Double> rates = new HashMap<>();
+        for (String userName : rateMapForStore.keySet()) {
+            rates.put(userName, rateMapForStore.get(userName).getRating());
         }
         return rates;
     }
@@ -347,46 +360,53 @@ public class Store {
     public HashMap<String, String> getProductRatingList(int productId) {
         return products.get(productId).getProductRatingList();
     }
-    public void addDiscount(Discount discount){
+
+    public void addDiscount(Discount discount) {
         storeDiscounts.put(discount.getId(), discount);
     }
-    public Discount addDiscount(ServiceDiscount serviceDiscount){
-        Discount discount= conditionFactory.addDiscount(serviceDiscount);
-        storeDiscounts.put(discount.getId(),discount);
+
+    public Discount addDiscount(ServiceDiscount serviceDiscount) {
+        Discount discount = conditionFactory.addDiscount(serviceDiscount);
+        storeDiscounts.put(discount.getId(), discount);
         return discount;
     }
-//    public Discount addDiscount(ServiceMultiDiscount serviceDiscount){
+
+    //    public Discount addDiscount(ServiceMultiDiscount serviceDiscount){
 //        conditionFactory.addDiscount(serviceDiscount.getDiscountType(),serviceDiscount.getDiscounts(),serviceDiscount.description, serviceDiscount.id);
 //        Discount discount= conditionFactory.addDiscount(serviceDiscount.conditionRecord,serviceDiscount.description,serviceDiscount.discountAmount);
 //        storeDiscounts.put(discount.getId(),discount);
 //        return discount;
 //    }
-    public boolean containsDiscount(int id){
+    public boolean containsDiscount(int id) {
         return storeDiscounts.containsKey(id);
     }
-    public Discount getDiscount(int id){
+
+    public Discount getDiscount(int id) {
         return storeDiscounts.get(id);
     }
-    public Discount removeDiscount(int id){
+
+    public Discount removeDiscount(int id) {
         return storeDiscounts.remove(id);
     }
 
-    public Discount removeDiscount(Discount discount){
+    public Discount removeDiscount(Discount discount) {
         return storeDiscounts.remove(discount.getId());
     }
-    public double calcSaved(Bag bag){
-        double totalSaved=0;
-        for(Discount discount:storeDiscounts.values()){
-            totalSaved+=discount.calcDiscountAmount(bag);
+
+    public double calcSaved(Bag bag) {
+        double totalSaved = 0;
+        for (Discount discount : storeDiscounts.values()) {
+            totalSaved += discount.calcDiscountAmount(bag);
         }
         return totalSaved;
     }
-    public HashMap<Discount,HashSet<CartProduct>> getValidProducts(Bag bag){
-        HashMap<Discount,HashSet<CartProduct>> discounts=new HashMap<>();
-        for(Discount discount:storeDiscounts.values()){
-            HashSet<CartProduct> validProducts=discount.getValidProducts(bag);
-            if(!validProducts.isEmpty())
-                discounts.put(discount,validProducts);
+
+    public HashMap<Discount, HashSet<CartProduct>> getValidProducts(Bag bag) {
+        HashMap<Discount, HashSet<CartProduct>> discounts = new HashMap<>();
+        for (Discount discount : storeDiscounts.values()) {
+            HashSet<CartProduct> validProducts = discount.getValidProducts(bag);
+            if (!validProducts.isEmpty())
+                discounts.put(discount, validProducts);
         }
         return discounts;
     }
@@ -400,17 +420,16 @@ public class Store {
         return storeDiscounts.values();
     }
 
-    public HashMap<CartProduct,Double> getDiscountPerProduct(Bag bag) {
+    public HashMap<CartProduct, Double> getDiscountPerProduct(Bag bag) {
         if (bag == null)
             throw new NullPointerException("Null bag in discount calculation");
-        HashMap<CartProduct,Double> totalMap = new HashMap<>();
+        HashMap<CartProduct, Double> totalMap = new HashMap<>();
         for (Discount discount : storeDiscounts.values()) {
-            HashMap<CartProduct,Double> currentMap = discount.calcDiscountPerProduct(bag);
-            for(CartProduct cartProduct:currentMap.keySet()){
-                if(totalMap.get(cartProduct)!=null){
-                    totalMap.put(cartProduct,totalMap.get(cartProduct)+currentMap.get(cartProduct));
-                }
-                else totalMap.put(cartProduct,currentMap.get(cartProduct));
+            HashMap<CartProduct, Double> currentMap = discount.calcDiscountPerProduct(bag);
+            for (CartProduct cartProduct : currentMap.keySet()) {
+                if (totalMap.get(cartProduct) != null) {
+                    totalMap.put(cartProduct, totalMap.get(cartProduct) + currentMap.get(cartProduct));
+                } else totalMap.put(cartProduct, currentMap.get(cartProduct));
             }
         }
         return totalMap;
@@ -427,7 +446,7 @@ public class Store {
 
 
     public Policy removePolicy(int policyId) {
-        if(!storePolicies.containsKey(policyId))
+        if (!storePolicies.containsKey(policyId))
             throw new RuntimeException("Id error: invalid policy id while trying to remove policy");
         return storePolicies.remove(policyId);
     }
@@ -443,11 +462,38 @@ public class Store {
 
     }
 
-    public Bid addBid(int productId, int amount, int newPrice, String userName,int userId) {
-        StoreProduct product=products.get(productId);
-        Bid bid=new Bid(productId,newPrice,userName,amount,userId);
-        //TODO: SEND MESSAGE TO ALL STORE OWNERS
+    public Bid addBid(int productId, int amount, int newPrice, String userName, int userId) {
+        Bid bid = new Bid(productId, newPrice, userName, amount, userId);
+        NotifyOwners(userName + " has submitted a new bid!");
         pendingBids.add(bid);
         return bid;
+    }
+
+    public void acceptBid(int productId, RegisteredUser user) {
+        for (Bid bid : pendingBids) {
+            if (bid.getProductId() == productId && bid.getUserId() == user.getVisitorId()) {
+                user.addBidProduct(bid, products.get(productId));
+                break;
+            }
+        }
+    }
+
+    public StoreCallbacks generateStoreCallback() {
+        return new StoreCallbacks() {
+            @Override
+            public boolean checkStorePolicies(Bag bag) {
+                return passesPolicies(bag);
+            }
+
+            @Override
+            public double getDiscountAmount(Bag bag) {
+                return calcSaved(bag);
+            }
+
+            @Override
+            public HashMap<CartProduct, Double> getSavingsPerProduct(Bag bag) {
+                return getDiscountPerProduct(bag);
+            }
+        };
     }
 }
