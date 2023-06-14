@@ -19,6 +19,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
+import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.AndConditionRecord;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
@@ -716,9 +717,18 @@ public class Service {
         }
     }
 
-    // TODO: implement
+
+    /**
+     * add new bid
+     * @param productId product id to add bid to
+     * @param storeId store to add bid in
+     * @param amount amount of product the user wants to buy
+     * @param newPrice the price PER PRODUCT the user has bid,
+     *                 obviously it has to be smaller than the original price
+     * @return TODO
+     */
     public Response<?> addNewBid(int productId, int storeId,int amount,int newPrice) {
-        return null;
+        return facade.addBid(visitorId,productId,storeId,amount,newPrice);
     }
 
     // TODO: implement

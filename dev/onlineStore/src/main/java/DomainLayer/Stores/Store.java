@@ -34,6 +34,7 @@ public class Store {
     private History History;
     private final HashMap<String, Rating> rateMapForStore;
     private final ConcurrentHashMap<Integer, StoreProduct> products;
+    private final HashSet<Bid> pendingBids;
     /**
      * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
      */
@@ -49,6 +50,7 @@ public class Store {
         storeDiscounts=new HashMap<>();
         storePolicies=new HashMap<>();
         rateMapForStore=new HashMap<>();
+        pendingBids=new HashSet<>();
         conditionFactory.setStore(this);
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
@@ -439,5 +441,12 @@ public class Store {
     public int getDailyIncome(int day, int month, int year) {
         return getHistory().getDailyIncome(day, month, year);
 
+    }
+
+    public void addBid(int productId, int amount, int newPrice, String userName,int userId) {
+        StoreProduct product=products.get(productId);
+        Bid bid=new Bid(productId,newPrice,userName,amount,userId);
+        //TODO: SEND MESSAGE TO ALL STORE OWNERS
+        pendingBids.add(bid);
     }
 }

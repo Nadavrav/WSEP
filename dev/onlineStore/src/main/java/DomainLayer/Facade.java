@@ -1852,4 +1852,24 @@ public class Facade {
         return s.getDailyIncome(day,month,year);
     }
 
+    public Response<?> addBid(int visitorId, int productId, int storeId, int amount, int newPrice) throws Exception {
+        //Check if VisitorID is admin
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+        store.addBid(productId,amount,newPrice,user.getUserName(), user.getVisitorId());
+
+    }
 }
