@@ -756,14 +756,27 @@ public class Service {
         }
     }
 
-    // TODO: implement
-    public Response<?> acceptAppointment(int storeId,String AppointedUserName,String AppointerUserName) {
-        return null;
-    }
 
-    // TODO: implement
-    public Response<?> declineAppointment(int storeId,String AppointedUserName,String AppointerUserName) {
-        return null;
+    public Response<?> acceptAppointment(int storeId,String appointedUserName) {
+        try{
+            facade.acceptEmploymentRequest(visitorId,storeId,appointedUserName);
+            return new Response<>("Success");
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    
+    public Response<?> declineAppointment(int storeId,String appointedUserName) {
+        try{
+           facade.declineEmploymentRequest(visitorId,storeId,appointedUserName);
+            return new Response<>("Success");
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     // TODO: implement
