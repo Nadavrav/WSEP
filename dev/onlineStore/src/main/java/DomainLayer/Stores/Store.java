@@ -434,4 +434,9 @@ public class Store {
         ProductID_GENERATOR.getAndSet(0);
 
     }
+
+    public int getDailyIncome(int day, int month, int year) {
+        return getHistory().getDailyIncome(day, month, year);
+
+    }
 }

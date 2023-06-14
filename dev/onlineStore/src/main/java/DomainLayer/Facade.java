@@ -1805,6 +1805,23 @@ public class Facade {
         return totalPrice;
     }
 
+    public Integer getDailyIncome(int day,int month,int year, int visitorId) throws Exception {
 
+        //Check if VisitorID is admin
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+        if(!(visitor instanceof Admin)){
+            throw new Exception("Current user is not admin");
+        }
+        int totalAmount = 0;
+        //Get all incomes
+        for (Store s:storesList.values())
+        {
+            totalAmount += s.getDailyIncome(day, month, year);
+        }
+        return totalAmount;
+    }
 
 }

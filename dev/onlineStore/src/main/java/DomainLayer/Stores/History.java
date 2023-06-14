@@ -4,9 +4,6 @@ import DomainLayer.Users.Cart;
 import java.util.LinkedList;
 import java.util.Map;
 public class History {
-    public LinkedList<Bag> getShoppingBags() {
-        return ShoppingBags;
-    }
 
     private LinkedList<Bag> ShoppingBags ;
 
@@ -14,6 +11,11 @@ public class History {
     {
         ShoppingBags = new LinkedList<Bag>();
     }
+
+    public LinkedList<Bag> getShoppingBags() {
+        return ShoppingBags;
+    }
+
     public void AddPurchasedShoppingCart(Cart shoppingCart){
         if(shoppingCart == null){
             throw new IllegalArgumentException("ShoppingCart can not be null");
@@ -29,5 +31,9 @@ public class History {
     public void AddPurchasedShoppingBag(Bag shoppingBag)
     {
         ShoppingBags.addLast(shoppingBag);
+    }
+
+    public int getDailyIncome(int day, int month, int year) {
+        return 0;
     }
 }
