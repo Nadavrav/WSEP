@@ -1824,4 +1824,32 @@ public class Facade {
         return totalAmount;
     }
 
+    public Integer getDailyIncomeByStore(int day,int month,int year,int storeId, int visitorId) throws Exception {
+
+        //Check if VisitorID is admin
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store s = storesList.get(storeId);
+        if(s == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+
+        RegisteredUser user = (RegisteredUser)visitor;
+        Employment e = employmentList.get(user.getUserName()).get(storeId);
+        if(e == null){
+            throw new Exception("This user has no store with this store ID");
+        }
+
+        return s.getDailyIncome(day,month,year);
+    }
+
 }
