@@ -784,6 +784,25 @@ public class Service {
         return null;
     }
 
+    public Response<?> getVisitorsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        return null;
+    }
+
+    public Response<?> getUsersWithoutStoresAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        return null;
+    }
+
+    public Response<?> getStoreManagersOnlyAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        return null;
+    }
+
+    public Response<?> getStoreOwnersAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        return null;
+    }
+
+    public Response<?> getAdminsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        return null;
+    }
 
 }
 
