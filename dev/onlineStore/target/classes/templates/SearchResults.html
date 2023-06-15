@@ -7,9 +7,11 @@
     <title>Product Search</title>
     <style>
         body {
+
             background-image: url("https://media.istockphoto.com/id/1474799029/photo/businessman-use-laptop-and-mobile-phone-shopping-cart-icon-above-laptop-shopping-online.jpg?s=612x612&w=0&k=20&c=K6tTxjl-aeo_eWavgcDOFXrQ2IGuERxnHB86JzjfjvU=");
             background-repeat: no-repeat;
             background-size: cover;
+
         }
 
         .container {
@@ -23,8 +25,10 @@
             text-align: center;
             position: fixed;
             left: 0;
+
             top: 40px;
             bottom: 40px;
+
             width: 200px;
             padding: 10px;
             /*margin: auto;*/
@@ -38,10 +42,12 @@
         .filter-container input[type="text"],
         .filter-container input[type="number"],
         .filter-container input[type="range"] {
+
             width: 100%;
             /*padding: 4px;*/
             margin: auto;
             /*border: 1px solid #ccc;*/
+
             /*border-radius: 1px;*/
             background-color: rgba(255, 255, 255, 0.3);
         }
@@ -50,13 +56,16 @@
             background-color: #5555;
             color: #333333;
             border: none;
+
                 /*padding: 4px 10px;*/
+
             border-radius: 4px;
             cursor: pointer;
         }
 
         .product-container {
             position: fixed;
+
             left: 0;
             right: 0;
             top: 10px;
@@ -65,12 +74,15 @@
             /*height: 400px;*/
             padding: 20px;
             margin: auto;
+
             overflow-y: auto;
         }
 
         .product {
+
             /*flex: 0 0 calc(33.33% - 30px); !* Adjust the width as desired *!*/
             margin: 5px;
+
             padding: 5px;
             background-color: rgba(255, 255, 255, 0.19);
             border: 2px solid #ccc;
@@ -115,6 +127,7 @@
 </head>
 
 <body>
+
 <div th:replace="fragments/alert :: alert(${alert})"></div>
 <header>
     <div class="home-button">
@@ -220,8 +233,10 @@
 <!--// ------------------------------------ searchList --------------------------------------//-->
 <div class="container">
     <div class="product-container">
+
 <!--        <div class="product-details">-->
             <div class="search-results">
+
                 <div class="product" th:each="serviceStore : ${searchList}">
                     <!--<h1 style="position:fixed; top:78px;">Product Search Results</h1>-->
                     <div th:each="product : ${serviceStore.getProductList()}">
@@ -275,7 +290,9 @@
                         </div>
                     </div>
                 </div>
+
 <!--            </div>-->
+
         </div>
     </div>
 </div>

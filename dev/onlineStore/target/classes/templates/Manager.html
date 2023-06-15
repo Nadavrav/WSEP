@@ -104,6 +104,7 @@
 crossorigin="anonymous"></script>
 
 <header>
+
     <div class="home-button">
         <div class="menu-button">
             <button style="background-color: transparent; color: white; border: none;">
@@ -152,6 +153,7 @@ crossorigin="anonymous"></script>
             </button>
         </div>
     </div>
+
 </header>
 
 <div class="container">
@@ -190,6 +192,7 @@ crossorigin="anonymous"></script>
     <a class="close-button" onclick="closeModal('my-stores-modal')">&#x2613;</a>
     <h2>My Stores</h2>
     <div th:each="myStore : ${myStoresList}">
+
         <h4>
             <a th:href="@{/MyStore/{storeId}(storeId=${myStore.getStoreId()}, storeName=${myStore.getStoreName()})}">
 <!--            <a th:href="@{'/MyStore/' + ${myStore.getStoreId()} + ${myStore.getStoreName()}}">-->
@@ -198,10 +201,12 @@ crossorigin="anonymous"></script>
         </h4>
     </div>
 </div>
+
 <!------------------------------ Permissions Modal ------------------------------>
 <div id="permissions-modal" class="modal">
     <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613</a>
     <!--    <h2>Permissions</h2>-->
+
     <button class="permissions-button" onclick="openModal('add-product-modal')">Add Product</button>
     <button class="permissions-button" onclick="openModal('remove-product-modal')">Remove Product</button>
     <button class="permissions-button" onclick="openModal('update-product-modal')">Update Product</button>
@@ -353,7 +358,9 @@ crossorigin="anonymous"></script>
         <input type="text" id="storeID-employee" name="storeID-employee" required>
         <br><br>
         <button type="submit" onclick="openModal('show-employee-info-modal')">SHOW INFO</button>
+
         <article th:text="${employeeInfo}"></article>
+
     </form>
 </div>
 

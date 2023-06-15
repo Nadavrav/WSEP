@@ -736,29 +736,55 @@ public class Service {
         return null;
     }
 
-    // TODO: implement
-    public Response<?> getDailyIncome() {
-        return null;
+    public Response<Integer> getDailyIncome(int day,int month,int year) {
+        try{
+            return new Response<>(facade.getDailyIncome(day,month,year,visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    
+    public Response<Integer> getDailyIncomeByStore(int day,int month,int year,int storeId) {
+        try{
+            return new Response<>(facade.getDailyIncomeByStore(day,month,year,storeId,visitorId));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
-    // TODO: implement
-    public Response<?> getDailyIncomeByStore(int storeId) {
-        return null;
-    }
 
-    // TODO: implement
-    public Response<?> acceptAppointment(int storeId,String AppointedUserName,String AppointerUserName) {
-        return null;
+    public Response<?> acceptAppointment(int storeId,String appointedUserName) {
+        try{
+            facade.acceptEmploymentRequest(visitorId,storeId,appointedUserName);
+            return new Response<>("Success");
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
-
-    // TODO: implement
-    public Response<?> declineAppointment(int storeId,String AppointedUserName,String AppointerUserName) {
-        return null;
+    
+    public Response<?> declineAppointment(int storeId,String appointedUserName) {
+        try{
+           facade.declineEmploymentRequest(visitorId,storeId,appointedUserName);
+            return new Response<>("Success");
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
-
-    // TODO: implement
-    public Response<?> getPermissions(int storeId,String AppointedUserName) {
-        return null;
+    
+    public Response<LinkedList<Permission>> getPermissions(int storeId,String appointedUserName) {
+        try {
+            return new Response<>(facade.getPermissions(visitorId, storeId, appointedUserName));
+        } catch (Exception e) {
+            return new Response<>(e.getMessage(), true);
+        }
     }
 
 
