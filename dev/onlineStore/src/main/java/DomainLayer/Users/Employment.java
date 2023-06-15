@@ -164,4 +164,8 @@ public class Employment {
             return true;
         return false;
     }
+
+    public LinkedList<Permission> getPermisssions() {
+         return permissions;
+    }
 }

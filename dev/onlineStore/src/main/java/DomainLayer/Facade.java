@@ -1955,4 +1955,29 @@ public class Facade {
 
     }
 
+    public LinkedList<Permission> getPermissions(int visitorId, int storeId, String appointedUserName) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("This user is not registered");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+        Store s = storesList.get(storeId);
+        if(s == null){
+            throw new Exception("Invalid storeID");
+        }
+        Employment em;
+        try {
+            em = employmentList.get(user.getUserName()).get(storeId);
+        }
+        catch (Exception e){
+            throw new Exception(e);
+        }
+        if(em == null){
+            throw new Exception("This user has no employments in this store");
+        }
+        return new LinkedList<>(em.getPermisssions());
+    }
 }

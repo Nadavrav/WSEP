@@ -778,10 +778,13 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-
-    // TODO: implement
-    public Response<?> getPermissions(int storeId,String AppointedUserName) {
-        return null;
+    
+    public Response<LinkedList<Permission>> getPermissions(int storeId,String appointedUserName) {
+        try {
+            return new Response<>(facade.getPermissions(visitorId, storeId, appointedUserName));
+        } catch (Exception e) {
+            return new Response<>(e.getMessage(), true);
+        }
     }
 
 
