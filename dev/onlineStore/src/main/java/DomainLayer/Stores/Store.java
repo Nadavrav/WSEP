@@ -7,6 +7,7 @@ import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
+import DomainLayer.Stores.Purchases.InstantPurchase;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.RegisteredUser;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
@@ -38,11 +39,10 @@ public class Store {
      */
     private final HashMap<Integer,Policy> storePolicies;
     private final HashMap<Integer,Discount> storeDiscounts;
-
     private Double Rate=0.0;
     private static final Logger logger=Logger.getLogger("Store logger");
-
     private final LinkedList<RegisteredUser> listeners;
+
 
     public Store(String name) {
         storeDiscounts=new HashMap<>();
@@ -202,9 +202,9 @@ public class Store {
         Rate = rate;
     }
 
-    public void addToStoreHistory(Bag b)
+    public void addToStoreHistory(InstantPurchase p)
     {
-        History.AddPurchasedShoppingBag(b);
+        History.AddPurchasedShoppingBag(p);
     }
 
     public StoreProduct getProductByID(Integer productId) {
@@ -434,4 +434,14 @@ public class Store {
         ProductID_GENERATOR.getAndSet(0);
 
     }
+
+    public int getDailyIncome(int day, int month, int year) {
+        return getHistory().getDailyIncome(day, month, year);
+
+    }
+
+
+
+
+
 }

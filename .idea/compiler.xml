@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="WSEP" target="20" />
+      <module name="springboot-html" target="16" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
