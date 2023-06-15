@@ -784,22 +784,27 @@ public class Service {
         return null;
     }
 
+    // TODO: implement
     public Response<?> getVisitorsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
         return null;
     }
 
+    // TODO: implement
     public Response<?> getUsersWithoutStoresAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
         return null;
     }
 
+    // TODO: implement
     public Response<?> getStoreManagersOnlyAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
         return null;
     }
 
+    // TODO: implement
     public Response<?> getStoreOwnersAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
         return null;
     }
 
+    // TODO: implement
     public Response<?> getAdminsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
         return null;
     }
