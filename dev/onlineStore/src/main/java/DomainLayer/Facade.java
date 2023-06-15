@@ -72,6 +72,8 @@ public class Facade {
     private Supplier supplier;
     private PaymentProvider paymentProvider;
 
+    private Map<Date,Map<Integer,Integer>> entriesManager; // Probably need to change types, the secondary map might be <Enum,Integer>
+
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
