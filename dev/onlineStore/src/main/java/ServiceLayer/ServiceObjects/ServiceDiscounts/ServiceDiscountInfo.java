@@ -20,4 +20,7 @@ public class ServiceDiscountInfo extends ServiceDiscount{
     public Discount accept(ConditionFactory conditionFactory) {
         throw new IllegalArgumentException("Illegal call to addDiscount with DiscountInfo");
     }
+    public String discountDescription(){
+        return this.description;
+    }
 }
