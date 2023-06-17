@@ -11,17 +11,12 @@
             background-size: cover;
             background-repeat: no-repeat;
             height: 100vh;
-            /*font-family: Arial, sans-serif;*/
-            /*transition: filter 0.5s;*/
         }
 
         .store-list {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            /*list-style: none;*/
-            /*padding: 0;*/
-            /*margin: 0;*/
             overflow-y: auto;
         }
 
@@ -143,7 +138,7 @@
 
     <script>
         function displayStoreComments(name, storeID, info, discount, policy) {
-            // console.log(name);
+        // console.log(name);
             // console.log(storeID);
             // console.log(info);
             // console.log(discount);
@@ -187,7 +182,6 @@
             var discountTitle = document.createElement("h4");
             discountTitle.textContent = "Discounts:";
             modalContent.appendChild(discountTitle);
-
             var discountList = document.createElement("p");
             var disc = discount.split(",");
 
