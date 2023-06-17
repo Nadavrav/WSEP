@@ -75,9 +75,10 @@ public class AdminController {
                                   Model model) {
 
         String[] dateParts = dateString.split("-");
-        int month = Integer.parseInt(dateParts[0]);
-        int day = Integer.parseInt(dateParts[1]);
-        int year = Integer.parseInt(dateParts[2]);
+        int year = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]);
+        int day = Integer.parseInt(dateParts[2]);
+        System.out.println(month + "/"+ day +"/"+ year);
         Response<Integer> response = server.getDailyIncome(request, day, month, year);
         if (response.isError()) {
             alert.setFail(true);
@@ -87,11 +88,11 @@ public class AdminController {
             alert.setSuccess(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
-            System.out.println(response.getValue() + "admin - show income");
+            System.out.println("System Income: " + response.getValue());
             model.addAttribute("dailyIncome", response.getValue());
         }
         alert.reset();
-        return "redirect:/Admin";
+        return "Admin";
     }
 
     @RequestMapping(value="/daily-store-income", method = RequestMethod.POST)
@@ -100,11 +101,13 @@ public class AdminController {
                                           Model model) {
 
         String[] dateParts = dateString.split("-");
-        int month = Integer.parseInt(dateParts[0]);
-        int day = Integer.parseInt(dateParts[1]);
-        int year = Integer.parseInt(dateParts[2]);
+        int year = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]);
+        int day = Integer.parseInt(dateParts[2]);
+        System.out.println(month + "/"+ day +"/"+ year);
         Response<Integer> response = server.getDailyIncomeByStore(request, day, month, year, storeId);
         if (response.isError()) {
+            System.out.println("error message: " + response.getMessage());
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
@@ -112,11 +115,11 @@ public class AdminController {
             alert.setSuccess(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
-            System.out.println(response.getValue() + "admin - show income");
+            System.out.println("Income for store " + storeId + " :" + response.getValue());
             model.addAttribute("dailyStoreIncome", response.getValue());
         }
         alert.reset();
-        return "redirect:/Admin";
+        return "Admin";
     }
 
     @RequestMapping(value = "/notification-history", method = RequestMethod.POST)

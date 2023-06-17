@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -234,14 +234,14 @@
 <div id="daily-income-modal" class="modal">
     <a class="close-button" onclick="closeModal('daily-income-modal')">&#x2613</a>
     <form action="/daily-income" method="post">
-        <label for="date">Date: </label>
+        <label for="date">Date:</label>
         <input type="date" id="date" name="date" required>
         <br><br>
         <button type="submit">SHOW</button>
     </form>
     <br><br>
     <div>
-        <h3>System Daily Income: </h3>
+        <h3>System Daily Income:</h3>
         <p th:text="${dailyIncome}">No income data available</p>
     </div>
 </div>
@@ -261,7 +261,7 @@
     <br><br>
     <div>
         <h3>Daily Income for the chosen store: </h3>
-        <p th:text="${dailyStoreIncome}">No income data available</p>
+        <p> <span th:text="${dailyStoreIncome}">No income data available</span></p>
     </div>
 </div>
 

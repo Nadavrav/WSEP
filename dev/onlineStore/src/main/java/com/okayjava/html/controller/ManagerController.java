@@ -236,7 +236,8 @@ public class ManagerController {
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
         } else {
-            System.out.println("Purchase History should be displayed!");
+            System.out.println("Purchase History should be displayed! " + response.getValue());
+
             alert.setSuccess(true);
             alert.setMessage("Purchase History for store with ID: " + storeID);
             model.addAttribute("alert", alert.copy());
