@@ -2005,4 +2005,31 @@ public class Facade {
         }
         return new LinkedList<>(em.getPermisssions());
     }
+
+    public Map<Integer,String> getAppointmentRequests(int visitorId) throws Exception {
+
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("Current user is not registered");
+        }
+        RegisteredUser user = (RegisteredUser) visitor;
+        String userName = user.getUserName();
+        //Check nulls ^ D
+        Map<Integer,String> outputMap = new HashMap<Integer,String>();
+        for (Integer storeId :appointmentsRequests.keySet()) { // For each store that has requests
+            if(employmentList.get(userName) != null && employmentList.get(userName).get(storeId) != null && employmentList.get(userName).get(storeId).checkIfOwner()){ // Check if the username is owner of that store
+                for (RegisteredUser appointed : appointmentsRequests.get(storeId).keySet()){ // If so, for each user that is waiting to be accepted to that store
+                    if(appointmentsRequests.get(storeId) != null && appointmentsRequests.get(storeId).get(appointed) != null && !appointmentsRequests.get(storeId).get(appointed).contains(user)){ // Check if we already accepted or not
+                        outputMap.put(storeId,appointed.getUserName());
+                    }
+                }
+            }
+        }
+
+        return outputMap;
+
+    }
 }
