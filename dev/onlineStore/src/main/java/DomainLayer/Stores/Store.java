@@ -36,6 +36,8 @@ public class Store {
     private final HashMap<String, Rating> rateMapForStore;
     private final ConcurrentHashMap<Integer, StoreProduct> products;
     private final HashSet<Bid> pendingBids;
+    private int ownersCount;
+    private final HashMap<Bid,Integer> votingCounter;
     /**
      * note: be default all policies must pass for the bag to be valid, any other logic must be made in a policy with an OR/XOR/WRAP logic condition
      */
@@ -47,6 +49,7 @@ public class Store {
 
 
     public Store(String name) {
+        votingCounter=new HashMap<>();
         storeDiscounts = new HashMap<>();
         storePolicies = new HashMap<>();
         rateMapForStore = new HashMap<>();
@@ -59,12 +62,13 @@ public class Store {
         History = new History();
         products = new ConcurrentHashMap<>();
         listeners = new LinkedList<>();
-
+        ownersCount=0;
         this.Active = true;
     }
 
     public void addNewListener(RegisteredUser storeowner) {
         listeners.add(storeowner);
+        ownersCount++;
     }
 
     private Integer getNewProductId() {
@@ -467,7 +471,25 @@ public class Store {
         pendingBids.add(bid);
         return bid;
     }
-
+    public Bid voteOnBid(int productId,RegisteredUser user,boolean vote) throws Exception{
+        for(Bid bid:pendingBids) {
+            if (bid.getProductId() == productId && bid.getUserName().equals(user.getUserName())) {
+                if (vote) {
+                    votingCounter.replace(bid,votingCounter.get(bid)+1);
+                    if(votingCounter.get(bid)==ownersCount){
+                        votingCounter.remove(bid);
+                        acceptBid(bid,user);
+                    }
+                }
+                else{
+                    return rejectBid(bid,user,"your bid for "+products.get(bid.getProductId()).getName()+" failed to pass the vote between all store owners," +
+                            "and was rejected");
+                }
+                return bid;
+            }
+        }
+        throw new Exception("Bid for" +products.get(productId).getName()+" from "+user.getUserName()+" does not exist");
+    }
     public void acceptBid(int productId, RegisteredUser user) {
         for (Bid bid : pendingBids) {
             if (bid.getProductId() == productId && bid.getUserId() == user.getVisitorId()) {
@@ -476,17 +498,26 @@ public class Store {
             }
         }
     }
-    public Bid rejectBid(int productId, RegisteredUser user) throws Exception{
+    public void acceptBid(Bid bid,RegisteredUser user) {
+        user.addBidProduct(Id,bid, products.get(bid.getProductId()),generateStoreCallback());
+    }
+    public Bid rejectBid(int productId, RegisteredUser user,String message) throws Exception{
         if(!products.containsKey(productId)){
             throw new Exception("Invalid product id "+productId);
         }
         for (Bid bid : pendingBids) {
             if (bid.getProductId() == productId && bid.getUserId() == user.getVisitorId()) {
                 pendingBids.remove(bid);
+                user.update(message);
                 return bid;
             }
         }
         throw new Exception("Bid for" +products.get(productId).getName()+" from "+user.getUserName()+" does not exist");
+    }
+    public Bid rejectBid(Bid bid, RegisteredUser user,String message){
+                pendingBids.remove(bid);
+                user.update(message);
+                return bid;
     }
 
     public StoreCallbacks generateStoreCallback() {

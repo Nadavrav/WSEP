@@ -447,38 +447,6 @@
 </div>
 
 <script>
-    function toggleDiscountSelection(discountBox) {
-        discountBox.classList.toggle('selected');
-    }
-
-    function toggleDiscountChecklist() {
-        const discountChecklist = document.querySelectorAll('.discount-checklist');
-        discountChecklist.forEach((checklist) => {
-            checklist.style.display = checklist.style.display === 'none' ? 'block' : 'none';
-        });
-
-        const policyChecklist = document.querySelectorAll('.policy-checklist');
-        policyChecklist.forEach((checklist) => {
-            checklist.style.display = 'none';
-        });
-    }
-
-    function togglePolicyChecklist() {
-        const policyChecklist = document.querySelectorAll('.policy-checklist');
-        policyChecklist.forEach((checklist) => {
-            checklist.style.display = checklist.style.display === 'none' ? 'block' : 'none';
-        });
-
-        const discountChecklist = document.querySelectorAll('.discount-checklist');
-        discountChecklist.forEach((checklist) => {
-            checklist.style.display = 'none';
-        });
-    }
-
-    function toggleDiscountSelection(discountBox) {
-        discountBox.classList.toggle('selected');
-    }
-
     function toggleDiscountChecklist() {
         const discountChecklist = document.querySelectorAll('.discount-checklist');
         discountChecklist.forEach((checklist) => {

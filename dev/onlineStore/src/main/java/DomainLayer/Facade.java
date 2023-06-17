@@ -2000,8 +2000,8 @@ public class Facade {
             throw new Exception("Current user is not registered to system");
         }
         RegisteredUser user=registeredUserList.get(userName);
-        Bid bid=store.rejectBid(productId,user);
-        registeredUserList.get(userName).update(message);
+        Bid bid=store.rejectBid(productId,user,message);
+        //registeredUserList.get(userName).update(message);
         return bid;
     }
 
