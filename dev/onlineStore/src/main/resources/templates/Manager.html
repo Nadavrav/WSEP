@@ -213,26 +213,6 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
 
-<script>
-    var currentModal = null;
-
-    function openModal(modalId) {
-        if (currentModal !== null) {
-            closeModal(currentModal);
-        }
-
-        var modal = document.getElementById(modalId);
-        modal.classList.add('open');
-        currentModal = modalId;
-    }
-
-    function closeModal(modalId) {
-        var modal = document.getElementById(modalId);
-        modal.classList.remove('open');
-        currentModal = null;
-    }
-</script>
-
 <!------------------------------ MyStores Modal ------------------------------>
 <div id="my-stores-modal" class="modal">
     <a class="close-button" onclick="closeModal('my-stores-modal')">&#x2613;</a>
@@ -420,26 +400,22 @@
 
 <!------------------------------ Employee Info Modal ------------------------------>
 <div id="employee-info-modal" class="modal">
-    <a class="close-button" onclick="closeModal('employee-info-modal')">&#x2613</a>
+    <a class="close-button" onclick="closeModal('employee-info-modal')">&#x2613;</a>
     <h2>Employee Info:</h2>
     <form id="employee-info-form" action="/employee-info" method="post">
         <label for="storeID-employee">Store ID:</label>
         <br>
         <input type="text" id="storeID-employee" name="storeID-employee" required>
         <br><br>
-        <button type="submit" onclick="openModal('show-employee-info-modal')">SHOW INFO</button>
-        <article th:text="${employeeInfo}"></article>
+        <button type="submit" onclick="openModal('show-employee-info-modal');">SHOW INFO</button>
     </form>
+    <article th:text="${employeeInfo}"></article>
 </div>
 
-<div id="show-employee-info-modal" class="modal" th:if="${employeeInfo}">
-  <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613</a>
-  <h2>Employee Info:</h2>
-  <p th:text="${employeeInfo}"></p>
-
-<!--  <div th:if="${alert}" th:class="${alert.isSuccess() ? 'success' : 'error'}">-->
-<!--    <p th:text="${alert.getMessage()}"></p>-->
-<!--  </div>-->
+<div id="show-employee-info-modal" class="modal">
+    <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613;</a>
+    <h2>Employee Info:</h2>
+    <p th:text="${employeeInfo}"></p>
 </div>
 
 <!------------------------------ Remove Employee Modal ------------------------------>
@@ -540,6 +516,26 @@
     setTimeout(function () {
         alertElement.style.display = "none";
     }, 2500);
+</script>
+
+<script>
+    var currentModal = null;
+
+    function openModal(modalId) {
+        if (currentModal !== null) {
+            closeModal(currentModal);
+        }
+
+        var modal = document.getElementById(modalId);
+        modal.classList.add('open');
+        currentModal = modalId;
+    }
+
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.classList.remove('open');
+        currentModal = null;
+    }
 </script>
 
 <script th:inline="javascript">

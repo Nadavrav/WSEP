@@ -67,7 +67,7 @@ public class AdminController {
             model.addAttribute("alert", alert.copy());
         }
 
-        return "Admin";
+        return "redirect:/Admin";
     }
 
     @RequestMapping(value="/daily-income", method = RequestMethod.POST)
@@ -91,7 +91,7 @@ public class AdminController {
             model.addAttribute("dailyIncome", response.getValue());
         }
         alert.reset();
-        return "Admin";
+        return "redirect:/Admin";
     }
 
     @RequestMapping(value="/daily-store-income", method = RequestMethod.POST)
@@ -116,12 +116,12 @@ public class AdminController {
             model.addAttribute("dailyStoreIncome", response.getValue());
         }
         alert.reset();
-        return "Admin";
+        return "redirect:/Admin";
     }
 
     @RequestMapping(value = "/notification-history", method = RequestMethod.POST)
     public String showNotifications(Model model) {
         alert.reset();
-        return "/Admin";
+        return "redirect:/Admin";
     }
 }

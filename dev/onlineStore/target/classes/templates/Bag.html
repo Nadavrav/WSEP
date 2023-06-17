@@ -7,10 +7,15 @@
     <title>Shopping Cart</title>
     <style>
         body {
+            /*font-family: Arial, sans-serif;*/
             background-image: url("https://media.istockphoto.com/id/1297721828/photo/business-holding-virtual-shopping-cart-trolley-with-blue-bokeh-online-shopping-concept.jpg?s=612x612&w=0&k=20&c=0z2gs_-XrqPHHjnRzAJ6aoKV7PK0lUCGDT4iPtJTrc0=");
             background-size: cover;
             background-repeat: no-repeat;
         }
+
+        /*header {*/
+        /*    color: #fff;text-align: center;padding: 20px;*/
+        /*}*/
 
         main {
             display: flex;
@@ -228,14 +233,10 @@
                                 <span>Description:</span>
                                 <span th:text="${product.getDescription()}"></span>
                             </p>
-<!--                            <p>-->
-<!--                                <span>Amount:</span>-->
-<!--                                <input type="number" th:value="${product.getAmount()}" min="1"-->
-<!--                                       th:attr="onchange='updateAmount(' + ${product.getId()} + ', \'' + ${bag.getStoreId()} + '\', this.value)'"/>-->
-<!--                            </p>-->
                             <p>
                                 <span>Amount:</span>
-                                <input type="number" th:value="${product.getAmount()}" min="1" th:attr="onchange='updateAmount(' + ${product.getId()} + ', \'' + ${bag.getStoreId()} + '\', this.value)'"/>
+                                <input type="number" th:value="${product.getAmount()}" min="1"
+                                       th:attr="onchange='updateAmount(' + ${product.getId()} + ', \'' + ${bag.getStoreId()} + '\', this.value)'"/>
                             </p>
 
                             <form action="/removeFromCart" method="post">
@@ -298,27 +299,6 @@
             dropdown.removeChild(listItem);
         }
     </script>
-<!--        <script>-->
-<!--            function updateAmount(productId, storeId, amount) {-->
-
-<!--                axios.post('/updateAmount', null, {-->
-<!--                    params: {-->
-<!--                        productId: productId,-->
-<!--                        storeId: storeId,-->
-<!--                        amount: amount-->
-<!--                    }-->
-<!--                })-->
-<!--                    .then(function (response) {-->
-<!--                        console.log(response.data);-->
-<!--                        console.log({ productId: productId, storeId: storeId, amount: amount });-->
-
-<!--                    })-->
-<!--                    .catch(function (error) {-->
-<!--                        console.error(error);-->
-<!--                    });-->
-<!--            }-->
-
-<!--        </script>-->
 </main>
 </body>
 </html>

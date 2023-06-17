@@ -279,6 +279,7 @@ public class ManagerController {
             alert.setMessage("Employee Info for StoreId: " + storeID);
             model.addAttribute("alert", alert.copy());
             model.addAttribute("employeeInfo", response.getValue()); //String
+            System.out.println("success - " + response.getValue());
         }
         alert.reset();
         return "redirect:/Manager";
@@ -316,23 +317,23 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         } else {
             // check if there are existing store owners
-            List<String> existingOwners = server.getExistingStoreOwners(storeID);
-            if (existingOwners.isEmpty()) {
-                // if no existing owners, directly appoint the new owner
-                alert.setSuccess(true);
-                alert.setMessage(newOwnerName + " is now an OWNER for storeID: " + storeID);
-                model.addAttribute("alert", alert.copy());
-            } else {
-                // Send appointment requests to existing owners
-                for (String existingOwner : existingOwners) {
-                    server.sendAppointmentRequest(request, storeID, newOwnerName, existingOwner);
-                }
+//            List<String> existingOwners = server.getExistingStoreOwners(storeID);
+//            if (existingOwners.isEmpty()) {
+//                // if no existing owners, directly appoint the new owner
+//                alert.setSuccess(true);
+//                alert.setMessage(newOwnerName + " is now an OWNER for storeID: " + storeID);
+//                model.addAttribute("alert", alert.copy());
+//            } else {
+//                // Send appointment requests to existing owners
+//                for (String existingOwner : existingOwners) {
+//                    server.sendAppointmentRequest(request, storeID, newOwnerName, existingOwner);
+//                }
                 // Display a message indicating that appointment requests have been sent
                 alert.setSuccess(true);
                 alert.setMessage("Appointment requests have been sent to existing owners for storeID: " + storeID);
                 model.addAttribute("alert", alert.copy());
             }
-        }
+//        }
         alert.reset();
         return "redirect:/Manager";
     }
