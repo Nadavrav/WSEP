@@ -125,7 +125,7 @@ public class RegisteredUser extends SiteVisitor{
         return userName;
     }
 
-    public void login(String password, int visitorId) throws Exception {//1.4
+    public  void login(String password, int visitorId) throws Exception {//1.4
         logger.info("Attempting login for visitor with ID: " + visitorId);
 
         // Check password
