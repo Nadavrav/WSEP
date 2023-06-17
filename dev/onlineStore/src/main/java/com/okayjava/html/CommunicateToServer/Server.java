@@ -7,15 +7,14 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Server {
 
@@ -38,7 +37,6 @@ public class Server {
         logged = status;
     }
     private static Server server = null;
-    //private Service service;
     private final HashMap<String,Service> activeSessions;
 
     public static Server getInstance(){
@@ -237,6 +235,13 @@ public class Server {
         return getSession(request).getTotalPrice();
     }
 
+    public Response<HashSet<ServicePolicy>> getStorePolicy(HttpServletRequest request, int storeId){
+        return getSession(request).getStorePolicy(storeId);
+    }
+
+    public Response<ServiceDiscountInfo> addDiscount(HttpServletRequest request, ServiceDiscount serviceDiscount, int storeId){
+        return getSession(request).addDiscount(serviceDiscount, storeId);
+    }
 
 }
 

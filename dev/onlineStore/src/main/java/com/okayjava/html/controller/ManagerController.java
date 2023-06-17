@@ -21,7 +21,9 @@ public class ManagerController {
 
     @GetMapping("/Manager")
     public String menu(Model model) {
-        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<Collection<ServiceStore>> response = server.getStoresByUserName(request);
         if (response.isError()){
@@ -76,13 +78,13 @@ public class ManagerController {
             System.out.println("Store Opened with ID: " + response.getValue());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
-    @RequestMapping(value = "/permissions", method = RequestMethod.POST)
-    public String permissions(Model model) {
-        return "Manager";
-    }
+//    @RequestMapping(value = "/permissions", method = RequestMethod.POST)
+//    public String permissions(Model model) {
+//        return "Manager";
+//    }
 
     @RequestMapping(value = "/add-product", method = RequestMethod.POST)
     public String addProduct(@RequestParam("storeID-add") int storeID,
@@ -107,7 +109,7 @@ public class ManagerController {
             System.out.println(productName + " was added successfully to storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/remove-product", method = RequestMethod.POST)
@@ -127,7 +129,7 @@ public class ManagerController {
             System.out.println("product with id: " + productID + " was removed successfully from storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/update-product", method = RequestMethod.POST)
@@ -219,7 +221,7 @@ public class ManagerController {
         alert.setMessage("Product Updated Successfully");
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
@@ -239,7 +241,7 @@ public class ManagerController {
             model.addAttribute("purchaseHistory", response.getValue()); //List<String>
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
@@ -258,7 +260,7 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/employee-info", method = RequestMethod.POST)
@@ -277,7 +279,7 @@ public class ManagerController {
             model.addAttribute("employeeInfo", response.getValue()); //String
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/remove-employee", method = RequestMethod.POST)
@@ -297,7 +299,7 @@ public class ManagerController {
             System.out.println(userName + " was removed successfully from storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/appoint-store-owner", method = RequestMethod.POST)
@@ -316,7 +318,7 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/appoint-store-manager", method = RequestMethod.POST)
@@ -335,7 +337,7 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/change-permission", method = RequestMethod.POST)
@@ -355,6 +357,6 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 }

@@ -77,7 +77,7 @@ public class Employment {
         return (getRole()== Role.StoreFounder);
     }
     public boolean checkIfOwner() {
-        return (getRole()==Role.StoreOwner);
+        return (getRole()==Role.StoreOwner || getRole()==Role.StoreFounder);
     }
 
     public boolean checkIfManager() {
@@ -163,5 +163,9 @@ public class Employment {
         if(getRole()==Role.StoreOwner || getRole()==Role.StoreFounder || permissions.contains(Permission.CanSeePurchaseHistory))
             return true;
         return false;
+    }
+
+    public LinkedList<Permission> getPermisssions() {
+         return permissions;
     }
 }
