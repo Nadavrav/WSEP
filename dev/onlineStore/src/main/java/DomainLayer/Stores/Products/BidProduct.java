@@ -22,7 +22,8 @@ public class BidProduct extends CartProduct{
 
     @Override
     public String getDescription() {
-        return description+"\nBid product- product has been had its price negotiated from "+price +
+        return description+"\nBid product- product has had its price negotiated from "+price +
                 " to "+newPrice;
     }
+
 }

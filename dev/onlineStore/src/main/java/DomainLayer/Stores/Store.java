@@ -46,9 +46,16 @@ public class Store {
     private Double Rate = 0.0;
     private static final Logger logger = Logger.getLogger("Store logger");
     private final LinkedList<RegisteredUser> listeners;
+    private final LinkedList<RegisteredUser> ownerlisteners;
+
+    private final HashSet<Integer> ownerIdSet;
+    private final HashMap<Integer,Map<Bid,Boolean>> votingTracker;
 
 
     public Store(String name) {
+        ownerlisteners=new LinkedList<>();
+        votingTracker=new HashMap<>();
+        ownerIdSet=new HashSet<>();
         votingCounter=new HashMap<>();
         storeDiscounts = new HashMap<>();
         storePolicies = new HashMap<>();
@@ -66,11 +73,19 @@ public class Store {
         this.Active = true;
     }
 
-    public void addNewListener(RegisteredUser storeowner) {
-        listeners.add(storeowner);
-        ownersCount++;
+    public void addNewListener(RegisteredUser storeWorker) {
+        listeners.add(storeWorker);
     }
+    public void addNewOwnerListener(RegisteredUser storeOwner){
+        ownerlisteners.add(storeOwner);
+        ownersCount++;
 
+    }
+    public void documentOwner(Integer userId){
+        ownerIdSet.add(userId);
+        votingTracker.put(userId,new HashMap<>());
+
+    }
     private Integer getNewProductId() {
         return ProductID_GENERATOR.getAndIncrement();
     }
@@ -117,19 +132,24 @@ public class Store {
 
     public void CloseStore() {
         Active = false;
-        NotifyOwners("The store " + Name + " is closed now.");
+        NotifyWorkers("The store " + Name + " is closed now.");
     }
 
     public void OpenStore() {
         Active = true;
-        NotifyOwners("The store " + Name + " is open now.");
+        NotifyWorkers("The store " + Name + " is open now.");
     }
 
     public void NewBuyNotification(String name) {
-        NotifyOwners(Name + " just bought from your shop (" + name + ").");
+        NotifyWorkers(Name + " just bought from your shop (" + name + ").");
     }
 
     private void NotifyOwners(String message) {
+        for (RegisteredUser listener : ownerlisteners) {
+            listener.update(message);
+        }
+    }
+    private void NotifyWorkers(String message) {
         for (RegisteredUser listener : listeners) {
             listener.update(message);
         }
@@ -469,15 +489,24 @@ public class Store {
         Bid bid = new Bid(productId, newPrice, userName, amount, userId);
         NotifyOwners(userName + " has submitted a new bid!");
         pendingBids.add(bid);
+        votingCounter.put(bid,0);
+        for(Integer ownerId:ownerIdSet){
+            votingTracker.get(ownerId).put(bid,false);
+        }
         return bid;
     }
-    public Bid voteOnBid(int productId,RegisteredUser user,boolean vote) throws Exception{
+    public Bid voteOnBid(int ownerId,int productId,RegisteredUser user,boolean vote) throws Exception{
         for(Bid bid:pendingBids) {
             if (bid.getProductId() == productId && bid.getUserName().equals(user.getUserName())) {
+                if (!votingTracker.containsKey(ownerId) || !votingTracker.get(ownerId).containsKey(bid))
+                    throw new RuntimeException("Invalid owner id or bid while voting on bid");
+                if(votingTracker.get(ownerId).get(bid))
+                    throw new Exception("User has already voted on bid and cannot vote again");
                 if (vote) {
                     votingCounter.replace(bid,votingCounter.get(bid)+1);
                     if(votingCounter.get(bid)==ownersCount){
                         votingCounter.remove(bid);
+                        votingTracker.get(ownerId).remove(bid);
                         acceptBid(bid,user);
                     }
                 }

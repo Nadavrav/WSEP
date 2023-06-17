@@ -70,12 +70,14 @@ public class Facade {
 
     private Map<String, Map<Integer, Employment>> employmentList;
     private Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
+    private Map<Integer,Map<Bid,HashSet<Integer>>> bidVoters;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
 
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
+        bidVoters=new HashMap<>();
         onlineList = new HashMap<>();
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
@@ -1025,6 +1027,8 @@ public class Facade {
         //open new store ()
         Store store = new Store(storeName);
         store.addNewListener((RegisteredUser)User);
+        store.addNewOwnerListener((RegisteredUser)User);
+        store.documentOwner(User.getVisitorId());
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
@@ -1869,6 +1873,8 @@ public class Facade {
             }
             employmentList.get(appointedUserName).put(storeID, appointedEmployment);
             store.addNewListener(appointed);
+            store.addNewOwnerListener(appointed);
+            store.documentOwner(appointed.getVisitorId());
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
             registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeID).getName()+"'");
         }
@@ -1982,6 +1988,24 @@ public class Facade {
         }
         RegisteredUser user = (RegisteredUser)visitor;
         return store.addBid(productId,amount,newPrice,user.getUserName(), user.getVisitorId());
+    }
+    public Bid voteOnBid(int visitorId, int productId,String userName, int storeId, boolean vote) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+        return store.voteOnBid(user.getVisitorId(),productId,registeredUserList.get(userName),vote);
 
     }
     public Bid counterOfferBid(int visitorId, int productId, int storeId, String userName,String message) throws Exception{
