@@ -787,7 +787,7 @@ public class Service {
         }
     }
 
-    public Response<Map<Integer,String>> getAppointmentRequests(){
+    public Response<Map<Integer,List<String>>> getAppointmentRequests(){
         try {
             return new Response<>(facade.getAppointmentRequests(visitorId));
         } catch (Exception e) {
