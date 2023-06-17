@@ -30,10 +30,13 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceMultiDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.MultiValueMapAdapter;
 
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
 public class Facade {
     private static Facade instanceFacade = null;
     private  static final Logger logger = Logger.getLogger("Facade Logger");
@@ -2004,5 +2007,36 @@ public class Facade {
             throw new Exception("This user has no employments in this store");
         }
         return new LinkedList<>(em.getPermisssions());
+    }
+
+    public Map<Integer,List<String>> getAppointmentRequests(int visitorId) throws Exception {
+
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("Current user is not registered");
+        }
+        RegisteredUser user = (RegisteredUser) visitor;
+        String userName = user.getUserName();
+        Map<Integer,List<String>> outputMap = new HashMap<>();
+        for (Integer storeId :appointmentsRequests.keySet()) { // For each store that has requests
+            if(employmentList.get(userName) != null && employmentList.get(userName).get(storeId) != null && employmentList.get(userName).get(storeId).checkIfOwner()){ // Check if the username is owner of that store
+                for (RegisteredUser appointed : appointmentsRequests.get(storeId).keySet()){ // If so, for each user that is waiting to be accepted to that store
+                    if(appointmentsRequests.get(storeId) != null && appointmentsRequests.get(storeId).get(appointed) != null && !appointmentsRequests.get(storeId).get(appointed).contains(user)){ // Check if we already accepted or not
+
+                        if(!outputMap.containsKey(storeId)){
+                            outputMap.put(storeId,new LinkedList<String>());
+                        }
+                        outputMap.get(storeId).add(appointed.getUserName());
+
+                    }
+                }
+            }
+        }
+
+        return outputMap;
+
     }
 }
