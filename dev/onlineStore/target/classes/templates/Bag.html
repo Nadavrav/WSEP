@@ -2,7 +2,8 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <title>Shopping Cart</title>
     <style>
         body {
@@ -92,6 +93,30 @@
                 transform: scale(1);
             }
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            color: black;
+            display: none;
+            position: absolute;
+            width: max-content;
+            padding: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -101,7 +126,8 @@
     <div class="home-button">
         <div class="menu-button">
             <button style="background-color: transparent; color: white; border: none;">
-                <svg onclick="window.location.href='MainPage';" width="25" height="20" fill="currentColor" class="bi bi-house" viewBox="0 0 10 15">
+                <svg onclick="window.location.href='MainPage';" width="25" height="20" fill="currentColor"
+                     class="bi bi-house" viewBox="0 0 10 15">
                     <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
                 </svg>
             </button>
@@ -114,33 +140,63 @@
                     </svg>
                 </button>
 
-                <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Manager';">
+                <button style="color: white;background-color: transparent;border: none;"
+                        onclick="location.href='/Manager';">
 			        <svg width="30" height="20" fill="currentColor" class="bi bi-person" viewBox="0 0 10 15">
   				        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
 			        </svg>
 		        </button>
 
-		        <button style="color: white;background-color: transparent;border: none;" onclick="location.href='Messages';">
+		        <button style="color: white;background-color: transparent;border: none;"
+                        onclick="location.href='Messages';">
 			        <svg width="30" height="20" fill="currentColor" class="bi bi-envelope" viewBox="0 0 10 15">
 				        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
 			        </svg>
 		        </button>
 
 		        <span th:if="${Admin}">
-			        <button style="color: white;background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
+			        <button style="color: white;background-color: transparent;border: none;"
+                            onclick="location.href='Admin';">ADMIN</button>
 		        </span>
+
+                <!-- Appointment Requests dropdown -->
+                <span class="dropdown">
+                    <button style="color: white;background-color: transparent;border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <div class="dropdown-content" id="appointment-requests">
+                        <ul>
+<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
+                            <!--                                No appointment requests-->
+                            <!--                            </p>-->
+                            <li th:each="request : ${appointmentRequests}">
+                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
+                                <button th:if="${request.status == 'PENDING'}"
+                                        th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Accept
+                                </button>
+                                <button th:if="${request.status == 'PENDING'}"
+                                        th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Decline
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
             </span>
 
-            <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
+            <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">
+                STORES
+            </button>
 
-            <button style="color: white;background-color: transparent;border: none;position: fixed;right: 3%;" onclick="window.location.href='SearchResults';">
+            <button style="color: white;background-color: transparent;border: none;position: fixed;right: 3%;"
+                    onclick="window.location.href='SearchResults';">
                 <svg width="35" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 10 15">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                 </svg>
             </button>
 
             <button style="background-color: transparent; color: white; border: none; position: fixed; right: 0%;">
-                <svg onclick="window.location.href='Bag';" width="30" height="20" fill="currentColor" class="bi bi-cart3" viewBox="0 0 13 16">
+                <svg onclick="window.location.href='Bag';" width="30" height="20" fill="currentColor"
+                     class="bi bi-cart3" viewBox="0 0 13 16">
                     <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                 </svg>
             </button>
@@ -149,7 +205,9 @@
 </header>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
 
 <header style="color: #fff;text-align: center;padding: 20px;">
     <h1>My Shopping Cart</h1>
@@ -176,18 +234,22 @@
                                 <span th:text="${product.getDescription()}"></span>
                             </p>
                             <p>
-                            <span>Amount:</span>
-                                <input type="number" th:value="${product.getAmount()}" min="1" th:attr="onchange='updateAmount(' + ${product.getId()} + ', \'' + ${bag.getStoreId()} + '\', this.value)'"/>
-                                </p>
+                                <span>Amount:</span>
+                                <input type="number" th:value="${product.getAmount()}" min="1"
+                                       th:attr="onchange='updateAmount(' + ${product.getId()} + ', \'' + ${bag.getStoreId()} + '\', this.value)'"/>
+                            </p>
 
                             <form action="/removeFromCart" method="post">
                                 <input type="hidden" name="storeId" th:value="${bag.getStoreId()}"/>
                                 <input type="hidden" name="productId" th:value="${product.getId()}"/>
-<!--                                <span>Quantity: </span>-->
-<!--                                <input style="width: 20px;" type="number" name="quantity" value="1" min="1" required/>-->
-                                <button class="remove-button" style="background-color: transparent;border: none;" type="submit">
-                                    <svg width="16" height="16" fill="white" class="bi bi-bag-dash-fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM6 9.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z"/>
+                                <!--                                <span>Quantity: </span>-->
+                                <!--                                <input style="width: 20px;" type="number" name="quantity" value="1" min="1" required/>-->
+                                <button class="remove-button" style="background-color: transparent;border: none;"
+                                        type="submit">
+                                    <svg width="16" height="16" fill="white" class="bi bi-bag-dash-fill"
+                                         viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                              d="M10.5 3.5a2.5 2.5 0 0 0-5 0V4h5v-.5zm1 0V4H15v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V4h3.5v-.5a3.5 3.5 0 1 1 7 0zM6 9.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1H6z"/>
                                     </svg>
                                 </button>
                             </form>
@@ -197,34 +259,46 @@
             </div>
         </div>
 
-                <div class="total-amount" style="color: #d2d3d5">
-                    <h3 style="color: #d2d3d5">Total Amount:</h3>
-                    <p th:text="'$' + ${totalAmount}"></p>
-                </div>
+        <div class="total-amount" style="color: #d2d3d5">
+            <h3 style="color: #d2d3d5">Total Amount:</h3>
+            <p th:text="'$' + ${totalAmount}"></p>
+        </div>
         <div class="buy-button">
             <button onclick="window.location.href='Buy';">BUY</button>
         </div>
     </section>
 
-        <script>
-            function updateAmount(productId, storeId, amount) {
-                axios.post('/updateAmount', null, {
-                    params: {
-                        productId: productId,
-                        storeId: storeId,
-                        amount: amount
-                    }
+    <script>
+        function updateAmount(productId, storeId, amount) {
+            axios.post('/updateAmount', null, {
+                params: {
+                    productId: productId,
+                    storeId: storeId,
+                    amount: amount
+                }
+            })
+                .then(function (response) {
+                    console.log(response.data);
+                    console.log({productId: productId, storeId: storeId, amount: amount});
                 })
-                    .then(function (response) {
-                        console.log(response.data);
-                        console.log({ productId: productId, storeId: storeId, amount: amount });
-                    })
-                    .catch(function (error) {
-                        console.error(error);
-                    });
-            }
+                .catch(function (error) {
+                    console.error(error);
+                });
+        }
 
-        </script>
+    </script>
+    <script th:inline="javascript">
+        function toggleDropdown() {
+            var dropdownContent = document.getElementById("appointment-requests");
+            dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+        }
+
+        function updateDropdown(element) {
+            var listItem = element.parentNode;
+            var dropdown = document.getElementById("appointment-requests");
+            dropdown.removeChild(listItem);
+        }
+    </script>
 </main>
 </body>
 </html>

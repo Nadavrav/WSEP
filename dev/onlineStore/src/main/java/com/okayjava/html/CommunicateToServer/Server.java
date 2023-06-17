@@ -243,5 +243,30 @@ public class Server {
         return getSession(request).addDiscount(serviceDiscount, storeId);
     }
 
+    public Response<LinkedList<Permission>> getPermissions(HttpServletRequest request, int storeId, String appointedUserName){
+        return getSession(request).getPermissions(storeId, appointedUserName);
+    }
+
+    public Response<?> declineAppointment(HttpServletRequest request, int storeId, String appointedUserName) {
+        return getSession(request).declineAppointment(storeId, appointedUserName);
+    }
+
+    public Response<?> acceptAppointment(HttpServletRequest request, int storeId, String appointedUserName){
+        return getSession(request).acceptAppointment(storeId, appointedUserName);
+    }
+
+    public Response<Integer> getDailyIncomeByStore(HttpServletRequest request, int day,int month,int year,int storeId){
+        return getSession(request).getDailyIncomeByStore(day, month, year, storeId);
+    }
+
+    public Response<Integer> getDailyIncome(HttpServletRequest request, int day,int month,int year){
+        return getSession(request).getDailyIncome(day, month, year);
+    }
+
+    public Response<?> sendAppointmentRequest(HttpServletRequest request, int storeId, String ownerName, String existingOwnerName) {
+        return getSession(request).sendAppointmentRequest(storeId, ownerName, existingOwnerName);
+    }
+
+
 }
 

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -66,6 +67,55 @@ public class AdminController {
             model.addAttribute("alert", alert.copy());
         }
 
+        return "Admin";
+    }
+
+    @RequestMapping(value="/daily-income", method = RequestMethod.POST)
+    public String showDailyIncome(@RequestParam("date") String dateString,
+                                  Model model) {
+
+        String[] dateParts = dateString.split("-");
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        Response<Integer> response = server.getDailyIncome(request, day, month, year);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            System.out.println(response.getValue() + "admin - show income");
+            model.addAttribute("dailyIncome", response.getValue());
+        }
+        alert.reset();
+        return "Admin";
+    }
+
+    @RequestMapping(value="/daily-store-income", method = RequestMethod.POST)
+    public String showDailyIncomeForStore(@RequestParam("storeId") int storeId,
+                                          @RequestParam("date") String dateString,
+                                          Model model) {
+
+        String[] dateParts = dateString.split("-");
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        Response<Integer> response = server.getDailyIncomeByStore(request, day, month, year, storeId);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            System.out.println(response.getValue() + "admin - show income");
+            model.addAttribute("dailyStoreIncome", response.getValue());
+        }
+        alert.reset();
         return "Admin";
     }
 

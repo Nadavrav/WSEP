@@ -103,10 +103,10 @@ public class MyStoreController {
                 server.addDiscount(request, serviceMultiDiscount, storeID);
             }
         }
-        return "redirect:/MyStore";
+        return "redirect:/MyStore/";
     }
 
-    @RequestMapping(value = "/add_discount", method = RequestMethod.POST)
+    @PostMapping("/add_discount")
     public String addNewDiscount(@RequestParam("conditionSelect") String condition,
                                  @RequestParam(value = "startDate", required = false) String startDate,
                                  @RequestParam(value = "endDate", required = false) String endDate,
@@ -174,7 +174,6 @@ public class MyStoreController {
                 break;
             case "NameCondition":
                 if (name != null) {
-                    System.out.println("here baby" + name);
                     NameConditionRecord nameConditionRecord = new NameConditionRecord(name);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, nameConditionRecord);
                     server.addDiscount(request, serviceBasicDiscount, storeID);
@@ -217,4 +216,27 @@ public class MyStoreController {
         return "redirect:/MyStore/";
     }
 
+    @RequestMapping(value="/dailyStoreIncome", method = RequestMethod.POST)
+    public String showDailyIncomeToStore(@RequestParam("date") String dateString,
+                                         Model model) {
+
+        String[] dateParts = dateString.split("-");
+        int month = Integer.parseInt(dateParts[0]);
+        int day = Integer.parseInt(dateParts[1]);
+        int year = Integer.parseInt(dateParts[2]);
+        Response<Integer> response = server.getDailyIncomeByStore(request, day, month, year, storeID);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            System.out.println("income for storeId " + storeID + " : " + response.getValue());
+            model.addAttribute("dailyIncome", response.getValue());
+        }
+        alert.reset();
+        return "redirect:/MyStore/";
+    }
 }

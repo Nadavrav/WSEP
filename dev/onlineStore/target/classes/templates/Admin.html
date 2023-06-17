@@ -46,13 +46,14 @@
 
         /* Modal Styles */
         .modal {
-            position: fixed;
+            /*position: fixed;*/
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
@@ -101,6 +102,30 @@
         th {
             text-align: center;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            color: black;
+            display: none;
+            position: absolute;
+            width: max-content;
+            padding: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -134,6 +159,26 @@
 			        <button style="background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
 		        </span>
 
+                <!-- Appointment Requests dropdown -->
+                <span class="dropdown">
+                    <button style="background-color: transparent;border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <div class="dropdown-content" id="appointment-requests">
+                        <ul>
+<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
+                            <!--                                No appointment requests-->
+                            <!--                            </p>-->
+                            <li th:each="request : ${appointmentRequests}">
+                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Accept
+                                </button>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Decline
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
             </span>
 
             <button style="background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
@@ -157,15 +202,13 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
 
-
 <div class="container">
     <h1>Welcome to Admin Page</h1>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('delete-user-modal')">Delete
-        User</a>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('online-users-modal')">Online
-        Users</a>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('offline-users-modal')">Offline
-        Users</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('delete-user-modal')">Delete User</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('online-users-modal')">Online Users</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('offline-users-modal')">Offline Users</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('daily-income-modal')">Daily Income</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('daily-income-store-modal')">Daily Income For Store</a>s
 </div>
 
 <script>
@@ -187,15 +230,50 @@
         currentModal = null;
     }
 </script>
+<!--// ------------------------------------ DailyIncome Modal --------------------------------------//-->
+<div id="daily-income-modal" class="modal">
+    <a class="close-button" onclick="closeModal('daily-income-modal')">&#x2613</a>
+    <form action="/daily-income" method="post">
+        <label for="date">Date: </label>
+        <input type="date" id="date" name="date" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>System Daily Income: </h3>
+        <p th:text="${dailyIncome}">No income data available</p>
+    </div>
+</div>
+
+<!--// ------------------------------------ DailyStoreIncome Modal --------------------------------------//-->
+<div id="daily-income-store-modal" class="modal">
+    <a class="close-button" onclick="closeModal('daily-income-store-modal')">&#x2613</a>
+    <form action="/daily-store-income" method="post">
+        <label for="storeId">Store ID: </label>
+        <input type="number" id="storeId" name="storeId" required>
+        <br><br>
+        <label for="date">Date: </label>
+        <input type="date" id="dateStore" name="date" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>Daily Income for the chosen store: </h3>
+        <p th:text="${dailyStoreIncome}">No income data available</p>
+    </div>
+</div>
+
 <!--// ------------------------------------ DeleteUser Modal --------------------------------------//-->
 <div id="delete-user-modal" class="modal">
     <a class="close-button" onclick="closeModal('delete-user-modal')">&#x2613</a>
     <form action="/delete" method="post">
 
-        <label for="usernameToDelete">USERNAME:</label>
+<!--        <label for="usernameToDelete">USERNAME:</label>-->
         <div class="input-icon">
             <i class="fas fa-user"></i>
-            <input type="text" id="usernameToDelete" name="usernameToDelete" required>
+            <input type="text" id="usernameToDelete" name="usernameToDelete" placeholder="enter username to delete" required>
         </div>
         <br>
         <button type="submit">DELETE USER</button>
@@ -253,6 +331,18 @@
     setTimeout(function () {
         alertElement.style.display = "none";
     }, 2500);
+</script>
+<script th:inline="javascript">
+    function toggleDropdown() {
+        var dropdownContent = document.getElementById("appointment-requests");
+        dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+    }
+
+    function updateDropdown(element) {
+        var listItem = element.parentNode;
+        var dropdown = document.getElementById("appointment-requests");
+        dropdown.removeChild(listItem);
+    }
 </script>
 </body>
 </html>

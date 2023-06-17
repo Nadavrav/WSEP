@@ -602,6 +602,7 @@ public class Facade {
           }
           appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
 
+          System.out.println(appointmentsRequests.values());
         //catch
         //release lock appointer
         //release lockappointed if locked
