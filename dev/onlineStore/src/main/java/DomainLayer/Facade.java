@@ -261,8 +261,9 @@ public class Facade {
             //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
             //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
             //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
-//
-//
+            appointNewStoreOwner(nadavID,"Denis",0);
+            appointNewStoreOwner(1,"Nadia",0);
+            acceptEmploymentRequest(denisID,0,"Nadia");
             //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
             //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
             //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
@@ -601,6 +602,23 @@ public class Facade {
               appointmentsRequests.put(storeId,new HashMap<>());
           }
           appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
+          appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
+
+
+          if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
+              appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+              if (employmentList.get(appointedUserName) == null) {
+                  Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+                  employmentList.put(appointedUserName, newEmploymentMap);
+              }
+              employmentList.get(appointedUserName).put(storeId, appointedEmployment);
+              store.addNewListener(appointed);
+
+              appointmentsRequests.get(storeId).remove(appointed);
+
+              logger.fine("new store owner with name" + appointedUserName +" added successfully");
+              registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
+          }
 
         //catch
         //release lock appointer
@@ -1871,11 +1889,15 @@ public class Facade {
             throw new Exception("This user is not owner of this store");
         }
         //Add current user to list of accepted store owners
-        appointmentsRequests.get(storeID).get(appointedUserName).add(registeredUserList.get(visitorID));
+        RegisteredUser appointed = registeredUserList.get(appointedUserName);
+        if(appointed == null){
+            throw new Exception("Cannot find any user with the name "+appointedUserName);
+        }
 
+        LinkedList<RegisteredUser> list1 = appointmentsRequests.get(storeID).get(appointed);
+        list1.add(appointer);
         //If all store owners accepted, create new employment
         Store store = storesList.get(storeID);
-        RegisteredUser appointed = registeredUserList.get(appointedUserName);
         if(checkIfAllOwnersAgreedOnEmploymentRequest(storeID,appointedUserName)){
             Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
             if (employmentList.get(appointedUserName) == null) {
@@ -1884,6 +1906,9 @@ public class Facade {
             }
             employmentList.get(appointedUserName).put(storeID, appointedEmployment);
             store.addNewListener(appointed);
+
+            appointmentsRequests.get(storeID).remove(appointed);
+
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
             registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeID).getName()+"'");
         }
@@ -1892,12 +1917,12 @@ public class Facade {
     private boolean checkIfAllOwnersAgreedOnEmploymentRequest(int storeID,String userName){
         LinkedList<RegisteredUser> storeOwners = new LinkedList<>();
         for (Map.Entry<String, Map<Integer, Employment>> e : employmentList.entrySet()){
-            if(e.getValue().get(storeID).checkIfOwner()){
+            if(e.getValue() != null && e.getValue().get(storeID) != null && e.getValue().get(storeID).checkIfOwner()){
                 storeOwners.add(registeredUserList.get(e.getKey()));
             }
         }
 
-        return areListsIdentical(storeOwners,appointmentsRequests.get(storeID).get(userName));
+        return areListsIdentical(storeOwners,appointmentsRequests.get(storeID).get(registeredUserList.get(userName)));
 
 
     }
