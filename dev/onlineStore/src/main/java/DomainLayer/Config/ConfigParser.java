@@ -19,8 +19,13 @@ public class ConfigParser {
         UniversalHandler.GetInstance().HandleInfo(logger);
         ObjectMapper objectMapper = new ObjectMapper();
         String projectRootPath = System.getProperty("user.dir");
-        String directoryPath = projectRootPath + File.separator + "config";
-        List<File> jsonFiles = findJsonFiles(directoryPath);
+        if(projectRootPath.endsWith("WSEP")){
+             projectRootPath = projectRootPath+ File.separator + "dev"+ File.separator + "onlineStore" + File.separator + "config";
+        }
+        else {
+            projectRootPath = projectRootPath + File.separator + "config";
+        }
+        List<File> jsonFiles = findJsonFiles(projectRootPath);
         boolean loadedAdmin=false;
         for (File file : jsonFiles) {
             try {
