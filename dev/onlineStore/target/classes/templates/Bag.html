@@ -239,10 +239,6 @@
                                        th:attr="onchange='updateAmount(' + ${product.getId()} + ', \'' + ${bag.getStoreId()} + '\', this.value)'"/>
                             </p>
 
-<!--                            <span>Amount:</span>-->
-<!--                                <input type="number" th:value="${product.getAmount()}" min="1" th:attr="onchange='updateAmount(' + ${product.getId()} + ', \'' + ${bag.getStoreId()} + '\', this.value)'"/>-->
-<!--                                </p>-->
-\
                             <form action="/removeFromCart" method="post">
                                 <input type="hidden" name="storeId" th:value="${bag.getStoreId()}"/>
                                 <input type="hidden" name="productId" th:value="${product.getId()}"/>
@@ -272,7 +268,6 @@
         </div>
     </section>
 
-
     <script>
         function updateAmount(productId, storeId, amount) {
             axios.post('/updateAmount', null, {
@@ -297,6 +292,7 @@
             var dropdownContent = document.getElementById("appointment-requests");
             dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
         }
+
         function updateDropdown(element) {
             var listItem = element.parentNode;
             var dropdown = document.getElementById("appointment-requests");

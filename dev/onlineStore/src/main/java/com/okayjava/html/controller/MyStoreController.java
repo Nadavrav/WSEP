@@ -221,9 +221,10 @@ public class MyStoreController {
                                          Model model) {
 
         String[] dateParts = dateString.split("-");
-        int month = Integer.parseInt(dateParts[0]);
-        int day = Integer.parseInt(dateParts[1]);
-        int year = Integer.parseInt(dateParts[2]);
+        int year = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]);
+        int day = Integer.parseInt(dateParts[2]);
+        System.out.println(month + "/"+ day +"/"+ year);
         Response<Integer> response = server.getDailyIncomeByStore(request, day, month, year, storeID);
         if (response.isError()) {
             alert.setFail(true);
@@ -237,6 +238,6 @@ public class MyStoreController {
             model.addAttribute("dailyIncome", response.getValue());
         }
         alert.reset();
-        return "redirect:/MyStore/";
+        return "MyStore";
     }
 }
