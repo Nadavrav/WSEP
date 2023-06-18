@@ -1,7 +1,7 @@
 package DomainLayer;
 
 
-
+import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.*;
@@ -32,10 +32,13 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceMultiDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.MultiValueMapAdapter;
 
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
 public class Facade {
     private static Facade instanceFacade = null;
     private  static final Logger logger = Logger.getLogger("Facade Logger");
@@ -74,7 +77,7 @@ public class Facade {
     private Map<Integer,Map<Bid,HashSet<Integer>>> bidVoters;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
-
+    private boolean dataLoaded=false;
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
@@ -86,7 +89,9 @@ public class Facade {
         appointmentsRequests = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
-        registerInitialAdmin();
+        if(!ConfigParser.parse(this))
+            registerInitialAdmin("admin","admin12345");
+
     }
 
     /**
@@ -106,7 +111,8 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
-        registerInitialAdmin();
+        dataLoaded=false;
+        //ConfigParser.parse(this);
 
     }
     public static synchronized Facade getInstance() {
@@ -117,7 +123,11 @@ public class Facade {
     }
 
     public void loadData() throws Exception {
-        resetData();
+        if(dataLoaded)
+            return;
+       // resetData();
+        if(!ConfigParser.parse(this))
+            registerInitialAdmin("admin","admin12345");
         try{
             //New users
             int nadavID = EnterNewSiteVisitor();
@@ -265,8 +275,9 @@ public class Facade {
             //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
             //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
             //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
-//
-//
+        //    appointNewStoreOwner(nadavID,"Denis",0);
+        //    appointNewStoreOwner(1,"Nadia",0);
+        //    acceptEmploymentRequest(denisID,0,"Nadia");
             //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
             //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
             //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
@@ -286,7 +297,7 @@ public class Facade {
             logout(majdID);
             logout(denisID);
             logout(nikitaID);
-
+            dataLoaded=true;
 
         }
         catch(Exception e){
@@ -339,22 +350,18 @@ public class Facade {
         return onlineList.get(visitorID) instanceof Admin;
     }
 
-    private void registerInitialAdmin() {
+    public void registerInitialAdmin(String userName,String password) {
         logger.info("Starting initial admin registration");
-        if(registeredUserList.containsKey("admin")) {
+        if(registeredUserList.containsKey(userName)) {
             logger.severe("Failed initial admin registration: username already exists." +
-                    "should no happen");
+                    "should not happen");
             throw new RuntimeException("Username " + "admin" + " already exists");
         }
         else{
             try {
 
-                Admin admin = new Admin("admin", "admin1234");
-                if(registeredUserList.containsKey("admin"))
-                    registeredUserList.replace("admin",admin);
-                else
-                    registeredUserList.put("admin",admin);
-
+                Admin admin = new Admin(userName, password);
+                registeredUserList.put(userName,admin);
             }
             catch (Exception e) {
                 logger.severe("Unexpected error during initial admin registration");
@@ -605,7 +612,25 @@ public class Facade {
               appointmentsRequests.put(storeId,new HashMap<>());
           }
           appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
+          appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
 
+
+          if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
+              appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+              if (employmentList.get(appointedUserName) == null) {
+                  Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+                  employmentList.put(appointedUserName, newEmploymentMap);
+              }
+              employmentList.get(appointedUserName).put(storeId, appointedEmployment);
+              store.addNewListener(appointed);
+
+              appointmentsRequests.get(storeId).remove(appointed);
+
+              logger.fine("new store owner with name" + appointedUserName +" added successfully");
+              registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
+          }
+
+          System.out.println(appointmentsRequests.values());
         //catch
         //release lock appointer
         //release lockappointed if locked
@@ -1831,9 +1856,10 @@ public class Facade {
         }
 
         RegisteredUser user = (RegisteredUser)visitor;
-        Employment e = employmentList.get(user.getUserName()).get(storeId);
-        if(e == null){
-            throw new Exception("This user has no store with this store ID");
+        if(employmentList.get(user.getUserName()) == null || employmentList.get(user.getUserName()).get(storeId) == null){
+            if(!(user instanceof Admin)){
+                throw new Exception("This user has no store with this store ID");
+            }
         }
 
         return s.getDailyIncome(day,month,year);
@@ -1861,11 +1887,15 @@ public class Facade {
             throw new Exception("This user is not owner of this store");
         }
         //Add current user to list of accepted store owners
-        appointmentsRequests.get(storeID).get(appointedUserName).add(registeredUserList.get(visitorID));
+        RegisteredUser appointed = registeredUserList.get(appointedUserName);
+        if(appointed == null){
+            throw new Exception("Cannot find any user with the name "+appointedUserName);
+        }
 
+        LinkedList<RegisteredUser> list1 = appointmentsRequests.get(storeID).get(appointed);
+        list1.add(appointer);
         //If all store owners accepted, create new employment
         Store store = storesList.get(storeID);
-        RegisteredUser appointed = registeredUserList.get(appointedUserName);
         if(checkIfAllOwnersAgreedOnEmploymentRequest(storeID,appointedUserName)){
             Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
             if (employmentList.get(appointedUserName) == null) {
@@ -1876,6 +1906,7 @@ public class Facade {
             store.addNewListener(appointed);
             store.addNewOwnerListener(appointed);
             store.documentOwner(appointed.getVisitorId());
+            appointmentsRequests.get(storeID).remove(appointed);
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
             registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeID).getName()+"'");
         }
@@ -1884,12 +1915,12 @@ public class Facade {
     private boolean checkIfAllOwnersAgreedOnEmploymentRequest(int storeID,String userName){
         LinkedList<RegisteredUser> storeOwners = new LinkedList<>();
         for (Map.Entry<String, Map<Integer, Employment>> e : employmentList.entrySet()){
-            if(e.getValue().get(storeID).checkIfOwner()){
+            if(e.getValue() != null && e.getValue().get(storeID) != null && e.getValue().get(storeID).checkIfOwner()){
                 storeOwners.add(registeredUserList.get(e.getKey()));
             }
         }
 
-        return areListsIdentical(storeOwners,appointmentsRequests.get(storeID).get(userName));
+        return areListsIdentical(storeOwners,appointmentsRequests.get(storeID).get(registeredUserList.get(userName)));
 
 
     }
@@ -1971,6 +2002,37 @@ public class Facade {
             throw new Exception("This user has no employments in this store");
         }
         return new LinkedList<>(em.getPermisssions());
+    }
+
+    public Map<Integer,List<String>> getAppointmentRequests(int visitorId) throws Exception {
+
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("Current user is not registered");
+        }
+        RegisteredUser user = (RegisteredUser) visitor;
+        String userName = user.getUserName();
+        Map<Integer,List<String>> outputMap = new HashMap<>();
+        for (Integer storeId :appointmentsRequests.keySet()) { // For each store that has requests
+            if(employmentList.get(userName) != null && employmentList.get(userName).get(storeId) != null && employmentList.get(userName).get(storeId).checkIfOwner()){ // Check if the username is owner of that store
+                for (RegisteredUser appointed : appointmentsRequests.get(storeId).keySet()){ // If so, for each user that is waiting to be accepted to that store
+                    if(appointmentsRequests.get(storeId) != null && appointmentsRequests.get(storeId).get(appointed) != null && !appointmentsRequests.get(storeId).get(appointed).contains(user)){ // Check if we already accepted or not
+
+                        if(!outputMap.containsKey(storeId)){
+                            outputMap.put(storeId,new LinkedList<String>());
+                        }
+                        outputMap.get(storeId).add(appointed.getUserName());
+
+                    }
+                }
+            }
+        }
+
+        return outputMap;
+
     }
     public Map<Product,Bid> getUserBids(int visitorId) throws Exception{
 

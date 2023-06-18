@@ -869,6 +869,13 @@ public class Service {
         }
     }
 
+    public Response<Map<Integer,List<String>>> getAppointmentRequests(){
+        try {
+            return new Response<>(facade.getAppointmentRequests(visitorId));
+        } catch (Exception e) {
+            return new Response<>(e.getMessage(), true);
+        }
+    }
 
 }
 

@@ -32,8 +32,10 @@ public class Employment {
             this.role=role;
             permissions = new LinkedList<>();
 
-            if(role == Role.StoreOwner){
-
+            if(role == Role.StoreOwner || role == Role.StoreFounder){
+                for (Permission p:Permission.values()) {
+                    permissions.add(p);
+                }
             }
             else if(role == Role.StoreManager){
                 permissions.add(Permission.CanSeeCommentsAndRating);
@@ -77,7 +79,7 @@ public class Employment {
         return (getRole()== Role.StoreFounder);
     }
     public boolean checkIfOwner() {
-        return (getRole()==Role.StoreOwner);
+        return (getRole()==Role.StoreOwner || getRole()==Role.StoreFounder);
     }
 
     public boolean checkIfManager() {

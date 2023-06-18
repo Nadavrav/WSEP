@@ -7,15 +7,9 @@ import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.thymeleaf.model.IModel;
+import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 
 @Controller
@@ -54,6 +48,10 @@ public class MainPageController{
         if (server.isAdmin(request).getValue()) {
             model.addAttribute("Admin", true);
         }
+
+//        List<AppointmentRequest> appointmentRequests = server.getAppointmentRequests();
+//        model.addAttribute("appointmentRequests", appointmentRequests);
+
         alert.reset();
         return "MainPage";
     }
@@ -62,9 +60,8 @@ public class MainPageController{
     public String signIn(@RequestParam("username") String username,
                          @RequestParam("password") String password,
                          Model model) throws Exception {
-        System.out.println(username);
+
         Response<?> response = server.login(request,username, password);
-        System.out.println(response.getMessage());
         if (response.isError()) {
             model.addAttribute("logged", server.isLogged());
             alert.setFail(true);
@@ -138,7 +135,7 @@ public class MainPageController{
     public String openStore(@RequestParam("store-name") String storeName,
                             Model model) {
 
-        model.addAttribute("alert", alert.copy());
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<Integer> response = server.OpenStore(request,storeName);
         if (response.isError()) {
@@ -155,6 +152,38 @@ public class MainPageController{
         alert.reset();
         return "MainPage";
     }
+
+//    @PostMapping("/acceptRequest/{id}")
+//    public String acceptRequest(@PathVariable("id") int id, Model model) {
+//        Response<?> response = server.acceptAppointment(request, id, appointedUserName);
+//        if (response.isError()) {
+//            alert.setFail(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//        } else {
+//            alert.setSuccess(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//        }
+//        alert.reset();
+//        return "redirect:/MainPage";
+//    }
+
+//    @PostMapping("/declineRequest/{id}")
+//    public String declineRequest(@PathVariable("id") String id, Model model) {
+//        Response<?> response = server.declineAppointment(request, storeId, appointedUserName);
+//        if (response.isError()) {
+//            alert.setFail(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//        } else {
+//            alert.setSuccess(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//        }
+//        alert.reset();
+//        return "redirect:/MainPage";
+//    }
 
     @GetMapping("/error")
     public String error(Model model) {
