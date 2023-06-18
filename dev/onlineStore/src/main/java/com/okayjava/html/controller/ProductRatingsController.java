@@ -24,7 +24,7 @@ public class ProductRatingsController {
 
     @GetMapping("/ProductRatings")
     public String productsPage(Model model) {
-//        model.addAttribute("logged", server.isLogged());
+//        model.addAttribute("logged", server.isLogged(request));
 //        model.addAttribute("Admin", server.isAdmin(request).getValue());
         Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
         if (!responseRequest.isError()) {
@@ -52,7 +52,7 @@ public class ProductRatingsController {
                                      @RequestParam("productId") int productId,
                                      Model model) {
 
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
 //        model.addAttribute("alert", alert.copy());
         alert.reset();

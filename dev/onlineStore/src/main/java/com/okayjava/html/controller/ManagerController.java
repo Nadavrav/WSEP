@@ -23,10 +23,10 @@ public class ManagerController {
     @GetMapping("/Manager")
     public String menu(Model model) {
 //        model.addAttribute("alert", alert.copy());
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
         alert.reset();
-        Response<Collection<ServiceStore>> response = server.getStoresByUserName(request);
+        Response<Collection<ServiceStore>> response = server.getMyStores(request);
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());

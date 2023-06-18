@@ -2,7 +2,7 @@ package DomainLayer.Stores.Products;
 
 import DomainLayer.Users.Cart;
 
-public class CartProduct extends Product{
+public abstract class CartProduct extends Product{
     private int amount;
     private final int id;
     //public CartProduct(String name, double price, String category, String desc) {
@@ -57,4 +57,8 @@ public class CartProduct extends Product{
         }
         return false;
     }
+    @Override
+    public abstract String getDescription();
+    @Override
+    public abstract Double getPrice();
 }
