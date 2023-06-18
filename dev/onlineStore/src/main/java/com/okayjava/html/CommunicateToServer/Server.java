@@ -18,24 +18,10 @@ import java.util.*;
 
 public class Server {
 
-    private boolean logged = false;
-    private String username = "";
+    //private boolean logged = false;
+    //private String username = "";
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public boolean isLogged(){
-        return logged;
-    }
-
-    public void setLogged(boolean status){
-        logged = status;
-    }
     private static Server server = null;
     private final HashMap<String,Service> activeSessions;
 
@@ -57,12 +43,24 @@ public class Server {
             activeSessions.put(sessionId,new Service());
         return activeSessions.get(sessionId);
     }
+    public boolean isLogged(HttpServletRequest request){
+        Response<Boolean> r= getSession(request).isLoggedIn();
+        if(r.isError())
+            return false;
+        return r.getValue();
+    }
+
+    public String getUsername(HttpServletRequest request){
+        Response<String> r= getSession(request).getUserName();
+        if(r.isError())
+            return "SYSTEM ERROR";
+        return r.getValue();
+    }
     public Response<Integer> EnterNewSiteVisitor(HttpServletRequest request) {
         return getSession(request).EnterNewSiteVisitor();
     }
 
     public Response<?> login(HttpServletRequest request,String username, String password) {
-        this.username = username;
         return getSession(request).login(username, password);
     }
 
@@ -72,7 +70,6 @@ public class Server {
     }
 
     public Response<?> logout(HttpServletRequest request) {
-        logged = false;
         return getSession(request).logout();
     }
 
@@ -215,8 +212,8 @@ public class Server {
         return getSession(request).getStoreDiscountInfo(storeId);
     }
 
-    public Response<Collection<ServiceStore>> getStoresByUserName(HttpServletRequest request){
-        return getSession(request).getStoresByUserName(this.username);
+    public Response<Collection<ServiceStore>> getMyStores(HttpServletRequest request){
+        return getSession(request).getStoresByUserName();
     }
 
     public Response<List<String>> PurchaseCart(HttpServletRequest request,int visitorCard, String address){
@@ -224,11 +221,11 @@ public class Server {
     }
 
     public Response<LinkedList<String>> getNewMessages(HttpServletRequest request) throws Exception {
-        return getSession(request).getNewMessages(this.username);
+        return getSession(request).getNewMessages();
     }
 
     public Response<Boolean> checkForNewMessages(HttpServletRequest request) throws Exception {
-        return getSession(request).checkForNewMessages(this.username);
+        return getSession(request).checkForNewMessages();
     }
 
     public Response<Double> getTotalPrice(HttpServletRequest request){

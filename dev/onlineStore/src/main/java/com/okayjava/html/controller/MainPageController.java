@@ -49,8 +49,8 @@ public class MainPageController{
     @GetMapping("MainPage")
     public String reMainPage(Model model) {
         model.addAttribute("alert", alert.copy());
-        model.addAttribute("logged", server.isLogged());
-        model.addAttribute("name", server.getUsername());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("name", server.getUsername(request));
         if (server.isAdmin(request).getValue()) {
             model.addAttribute("Admin", true);
         }
@@ -66,15 +66,14 @@ public class MainPageController{
         Response<?> response = server.login(request,username, password);
         System.out.println(response.getMessage());
         if (response.isError()) {
-            model.addAttribute("logged", server.isLogged());
+            model.addAttribute("logged", server.isLogged(request));
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
         } else {
-            server.setLogged(true);
             alert.setSuccess(true);
 
-            model.addAttribute("logged", server.isLogged());
+            model.addAttribute("logged", server.isLogged(request));
             model.addAttribute("name", username);
             if (server.isAdmin(request).getValue()) {
                 model.addAttribute("Admin", true);
@@ -122,7 +121,7 @@ public class MainPageController{
             alert.setMessage("Logging out..");
             model.addAttribute("alert", alert.copy());
         }
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         alert.reset();
         return "MainPage";
     }
@@ -151,7 +150,7 @@ public class MainPageController{
             model.addAttribute("alert", alert.copy());
             System.out.println("Store is opened successfully with id: " + response.getValue());
         }
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         alert.reset();
         return "MainPage";
     }

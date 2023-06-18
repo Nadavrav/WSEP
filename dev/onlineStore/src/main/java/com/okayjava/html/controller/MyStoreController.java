@@ -34,7 +34,7 @@ public class MyStoreController {
                               @PathVariable("storeId") int storeId,
                               @RequestParam("storeName") String storeName) {
 
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
         model.addAttribute("storeName", storeName);
         Response<Collection<ServiceDiscountInfo>> responseDiscount = server.getStoreDiscountInfo(request, storeId);
