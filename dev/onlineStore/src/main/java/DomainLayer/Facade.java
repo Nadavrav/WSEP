@@ -16,6 +16,7 @@ import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
+import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
@@ -1971,6 +1972,17 @@ public class Facade {
         }
         return new LinkedList<>(em.getPermisssions());
     }
+    public Map<Product,Bid> getUserBids(int visitorId) throws Exception{
+
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("This user is not registered");
+        }
+        return ((RegisteredUser)visitor).getCounterOffers();
+    }
     public Collection<Bid> getStoreBids(int storeId) throws Exception{
 
         Store store = storesList.get(storeId);
@@ -2035,7 +2047,7 @@ public class Facade {
         RegisteredUser user=registeredUserList.get(userName);
         Bid bid=store.rejectBid(productId,user,message);
         bid.setNewPrice(newPrice);
-        user.addCounterOffer(bid);
+        user.addCounterOffer(bid,store.getProducts().get(productId));
         return bid;
     }
     public void acceptCounterOffer(int visitorId, int productId, int storeId) throws Exception{

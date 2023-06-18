@@ -30,6 +30,7 @@ import ServiceLayer.ServiceObjects.ServiceCart;
 
 
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
@@ -802,13 +803,12 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<Collection<ServiceBid>> geUserBids(int storeId) {
+    public Response<Collection<ServiceBid>> getUserBids() {
         try {
-            Collection<Bid> storeBids=facade.getStoreBids(storeId);
-            Map<Integer, StoreProduct> products =facade.getStoresList().get(storeId).getProducts();
+            Map<Product,Bid> userBids=facade.getUserBids(visitorId);
             HashSet<ServiceBid> serviceBids=new HashSet<>();
-            for(Bid bid:storeBids){
-                serviceBids.add(new ServiceBid(bid,new ServiceStoreProduct(products.get(bid.getProductId()))));
+            for(Product product:userBids.keySet()){
+                serviceBids.add(new ServiceBid(userBids.get(product),new ServiceProduct(product.getName(),product.getPrice(),product.getCategory(),product.getDescription())));
             }
             return new Response<>(serviceBids);
         }

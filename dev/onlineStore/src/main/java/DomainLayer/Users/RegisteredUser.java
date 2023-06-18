@@ -1,6 +1,7 @@
 package DomainLayer.Users;
 
 import DomainLayer.Stores.Bid;
+import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Purchases.Purchase;
 import DomainLayer.Logging.UniversalHandler;
@@ -9,10 +10,7 @@ import DomainLayer.Stores.Store;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.logging.*;
 
 
@@ -22,7 +20,7 @@ public class RegisteredUser extends SiteVisitor{
 
     byte[] password;
     PurchaseHistory purchaseHistory;
-    private final HashSet<Bid> counterOffers;
+    private final HashMap<Product,Bid> counterOffers;
     private boolean loggedIn;
     //add lock
 
@@ -52,7 +50,7 @@ public class RegisteredUser extends SiteVisitor{
         }
         checkUserName(userName);
         checkPassword(password);
-        counterOffers=new HashSet<>();
+        counterOffers=new HashMap<>();
         this.userName=userName;
         this.password=hashString(password);
         this.purchaseHistory = new PurchaseHistory();
@@ -82,7 +80,7 @@ public class RegisteredUser extends SiteVisitor{
             UniversalHandler.GetInstance().HandleInfo(logger);
             checkUserName(userName);
             checkPassword(password);
-            counterOffers=new HashSet<>();
+            counterOffers=new HashMap<>();
             this.userName=userName;
             this.password=hashString(password);
             this.purchaseHistory = new PurchaseHistory();
@@ -90,7 +88,7 @@ public class RegisteredUser extends SiteVisitor{
                 super.ReplaceCart(visitor.getCart());
             }
     }
-    public Collection<Bid> getCounterOffers(){
+    public Map<Product,Bid> getCounterOffers(){
         return counterOffers;
     }
     private void checkPassword(String password) {
@@ -169,19 +167,18 @@ public class RegisteredUser extends SiteVisitor{
     }
 
 
-    public void addCounterOffer(Bid bid) {
-        counterOffers.add(bid);
+    public void addCounterOffer(Bid bid, Product product) {
+        counterOffers.put(product,bid);
     }
     public void acceptCounterOff(int productId, Store store){
-        for(Bid bid:counterOffers){
-            if(bid.getProductId()==productId){
-                getCart().addBidToCart(store.getId(),store.getProductByID(productId), bid.getAmount(), bid.getNewPrice());
-                break;
-            }
-        }
+        Bid bid=counterOffers.get(store.getProductByID(productId));
+        if(bid==null)
+            throw new RuntimeException("User has no product with id "+productId);
+        getCart().addBidToCart(store.getId(),store.getProductByID(productId), bid.getAmount(), bid.getNewPrice());
+
     }
     public void rejectCounterOffer(int productId){
-        for(Bid bid:counterOffers){
+        for(Bid bid:counterOffers.values()){
             if(bid.getProductId()==productId) {
                 counterOffers.remove(bid);
                 break;
