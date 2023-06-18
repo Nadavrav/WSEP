@@ -26,6 +26,10 @@ public class ServiceBid {
         this.product=product;
     }
 
+    public int getStoreId() {
+        return storeId;
+    }
+
     public double getNewPrice() {
         return newPrice;
     }
