@@ -16,9 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class MyStoreController {
@@ -28,6 +26,7 @@ public class MyStoreController {
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
     private int storeID;
+    private String StoreName;
 
     @GetMapping("/MyStore/{storeId}")
     public String myStoreMenu(Model model,
@@ -60,7 +59,25 @@ public class MyStoreController {
             model.addAttribute("alert", alert.copy());
             model.addAttribute("policyInfo", responsePolicy.getValue());
         }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+
+            // Filter appointment requests based on the logged-in user
+            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                List<String> owners = entry.getValue();
+                if (owners.contains(server.getUsername())) {
+                    filteredAppointmentRequests.put(entry.getKey(), owners);
+                }
+            }
+            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+        }
+
         this.storeID = storeId;
+        this.StoreName = storeName;
         alert.reset();
         return "MyStore";
     }
@@ -213,10 +230,10 @@ public class MyStoreController {
                 break;
         }
 
-        return "redirect:/MyStore/";
+        return "MyStore";
     }
 
-    @RequestMapping(value="/dailyStoreIncome", method = RequestMethod.POST)
+    @RequestMapping(value="/dailyStoreIncome", method = RequestMethod.GET)
     public String showDailyIncomeToStore(@RequestParam("date") String dateString,
                                          Model model) {
 
@@ -236,7 +253,53 @@ public class MyStoreController {
             System.out.println("income for storeId " + storeID + " : " + response.getValue());
             model.addAttribute("dailyIncome", response.getValue());
         }
+
+        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("storeName", StoreName); // Add the store name attribute
+
+        Response<Collection<ServiceDiscountInfo>> responseDiscount = server.getStoreDiscountInfo(request, storeID);
+        if (responseDiscount.isError()) {
+            alert.setFail(true);
+            alert.setMessage(responseDiscount.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(responseDiscount.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("discountInfo", responseDiscount.getValue());
+        }
+
+        Response<HashSet<ServicePolicy>> responsePolicy = server.getStorePolicy(request, storeID);
+        if (responsePolicy.isError()) {
+            alert.setFail(true);
+            alert.setMessage(responsePolicy.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(responsePolicy.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("policyInfo", responsePolicy.getValue());
+        }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+
+            // Filter appointment requests based on the logged-in user
+            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                List<String> owners = entry.getValue();
+                if (owners.contains(server.getUsername())) {
+                    filteredAppointmentRequests.put(entry.getKey(), owners);
+                }
+            }
+            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+        }
+
         alert.reset();
-        return "redirect:/MyStore/";
+//        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName + "&dailyIncome=" + response.getValue();
+        return "MyStore";
     }
 }

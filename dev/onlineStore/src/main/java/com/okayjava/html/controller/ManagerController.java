@@ -37,6 +37,22 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
             model.addAttribute("myStoresList", response.getValue());
         }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+
+            // Filter appointment requests based on the logged-in user
+            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                List<String> owners = entry.getValue();
+                if (owners.contains(server.getUsername())) {
+                    filteredAppointmentRequests.put(entry.getKey(), owners);
+                }
+            }
+            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+        }
         alert.reset();
         return "Manager";
     }
@@ -227,25 +243,26 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
-    public String purchaseHistory(@RequestParam("storeID-purchase") int storeID,
-                                  Model model) {
-
-        Response<List<String>> response = server.GetStoreHistoryPurchase(request,storeID);
+    public String purchaseHistory(@RequestParam("storeID-purchase") int storeID, Model model) {
+        Response<List<String>> response = server.GetStoreHistoryPurchase(request, storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
         } else {
-            System.out.println("Purchase History should be displayed! " + response.getValue());
+            String purchaseHistory = String.join(", ", response.getValue()); // Join the elements of the list
+            System.out.println("Purchase History should be displayed! " + purchaseHistory);
 
             alert.setSuccess(true);
-            alert.setMessage("Purchase History for store with ID: " + storeID);
+            alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
-            model.addAttribute("purchaseHistory", response.getValue()); //List<String>
+            model.addAttribute("purchaseHistory", purchaseHistory); // Pass the joined string as a model attribute
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
+
+
 
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
     public String closeStore(@RequestParam("storeID-close") int storeID,

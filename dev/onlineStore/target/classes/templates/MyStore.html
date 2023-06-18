@@ -170,26 +170,19 @@
 		        </button>
 
 		        <span th:if="${Admin}">
-			        <button style="color: white;background-color: transparent;border: none;"
-                            onclick="location.href='Admin';">ADMIN</button>
+			        <button style="color: white;background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
 		        </span>
 
                 <!-- Appointment Requests dropdown -->
                 <span class="dropdown">
-                    <button style="color: white;background-color: transparent;border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
                     <div class="dropdown-content" id="appointment-requests">
                         <ul>
-<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
-                            <!--                                No appointment requests-->
-                            <!--                            </p>-->
-                            <li th:each="request : ${appointmentRequests}">
-                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
-                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
-                                    Accept
-                                </button>
-                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
-                                    Decline
-                                </button>
+                            <p th:if="${appointmentRequests == null or appointmentRequests.isEmpty()}">No appointment requests</p>
+                            <li th:each="requestEntry : ${appointmentRequests}">
+                                <span th:each="owner : ${requestEntry.value}" th:text="${owner}"></span>
+                                <button th:if="${owner == name && request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${requestEntry.key} + '\'); updateDropdown(this)'">Accept</button>
+                                <button th:if="${owner == name && request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${requestEntry.key} + '\'); updateDropdown(this)'">Decline</button>
                             </li>
                         </ul>
                     </div>
@@ -203,7 +196,7 @@
             <span class="dropdown">
                 <button style="color: white;background-color: transparent;border: none;" onclick="toggleDropdown()">Daily Income</button>
                 <div class="dropdown-content" id="daily-income-dropdown">
-                    <form action="/dailyStoreIncome" method="post">
+                    <form action="/dailyStoreIncome" method="get">
                         <label for="date">Date: </label>
                         <input type="date" id="date" name="date" required>
                         <button type="submit">Show Daily Income</button>
@@ -243,15 +236,12 @@
 <!----------------------------------------- Discounts ----------------------------------------->
 <!------------------- display discounts ------------------->
 <h3>Discounts:</h3>
-<div th:if="${discountInfo.empty}">
-    <p>No discounts available for this store.</p>
+<div th:if="${#lists.isEmpty(discountInfo)}">
+    <p>No discounts available.</p>
 </div>
-
-<div th:each="discount : ${discountInfo}">
-    <div class="discount-box" onclick="toggleDiscountSelection(this)">
-        <p th:text="'Discount Description: ' + ${discount.discountDescription()}"></p>
-        <input type="hidden" class="discount-checkbox" value="${discount.id}">
-    </div>
+<div th:each="discount : ${discountInfo}" class="discount-box" onclick="toggleDiscountSelection(this)">
+    <p th:text="'Discount Description: ' + ${discount.discountDescription()}"></p>
+    <input type="hidden" class="discount-checkbox" value="${discount.id}">
 </div>
 <!------------------- choose condition for 2+ discounts ------------------->
 <form class="discount-checklist" action="/discount_option" method="post">
@@ -449,20 +439,20 @@
     document.getElementById("newDiscountForm").addEventListener("submit", function (event) {
         event.preventDefault();
 
-        // Get selected condition and input value
+        // Get selected condition
         const conditionSelect = document.getElementById("conditionSelect");
-        const inputValue = document.getElementById("inputField").value;
+        const selectedCondition = conditionSelect.value;
 
         // Validate if a condition is selected
-        if (conditionSelect.value === "") {
+        if (selectedCondition === "") {
             alert("Please select a condition");
             return;
         }
 
         // Handle form submission here (e.g., send data to the server)
         const formData = {
-            condition: conditionSelect.value,
-            input: inputValue,
+            condition: selectedCondition,
+            // Add additional form data as needed based on the selected condition
         };
         console.log(formData);
 
@@ -483,22 +473,28 @@
 
 <!----------------------------------------- Policies ----------------------------------------->
 <h3>Policies:</h3>
-<div th:if="${policyInfo.empty}">
-    <p>No policies available for this store.</p>
+<div th:if="${#sets.isEmpty(policyInfo)}">
+    <p>No policies available.</p>
+</div>
+<div th:each="policy : ${policyInfo}">
+    <div>
+        <p th:text="'Policy Name: ' + ${policy.policyName}"></p>
+    </div>
 </div>
 
-<div th:each="policy : ${policyInfo}">
-    <div class="discount-box" onclick="toggleDiscountSelection(this)">
-        <p th:text="'Policy Description: ' + ${policy.getDescription()}"></p>
-        <!-- <input type="checkbox" class="policy-checkbox" value="${policy.getID()}"> -->
-    </div>
-    <form class="policy-checklist" action="/policy_option" method="post">
-        <input type="checkbox" name="discountOption" value="CompositeCondition"> Composite Condition
-        <br><input type="checkbox" name="discountOption" value="OnlyIfCondition"> Only If Condition
-        <br><input type="checkbox" name="discountOption" value="FilterCondition"> Filter Condition
-        <br><input type="submit" value="Submit">
-    </form>
-</div>
+
+<!--<div th:each="policy : ${policyInfo}">-->
+<!--    <div class="discount-box" onclick="toggleDiscountSelection(this)">-->
+<!--        <p th:text="'Policy Description: ' + ${policy.getDescription()}"></p>-->
+<!--        &lt;!&ndash; <input type="checkbox" class="policy-checkbox" value="${policy.getID()}"> &ndash;&gt;-->
+<!--    </div>-->
+<!--    <form class="policy-checklist" action="/policy_option" method="post">-->
+<!--        <input type="checkbox" name="discountOption" value="CompositeCondition"> Composite Condition-->
+<!--        <br><input type="checkbox" name="discountOption" value="OnlyIfCondition"> Only If Condition-->
+<!--        <br><input type="checkbox" name="discountOption" value="FilterCondition"> Filter Condition-->
+<!--        <br><input type="submit" value="Submit">-->
+<!--    </form>-->
+<!--</div>-->
 
 <!----------------------------------------- adding policies and discounts ----------------------------------------->
 <div>

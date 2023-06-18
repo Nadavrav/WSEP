@@ -623,7 +623,7 @@ public class Facade {
               registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
           }
 
-          System.out.println(appointmentsRequests.values());
+//          System.out.println(appointmentsRequests.values());
         //catch
         //release lock appointer
         //release lockappointed if locked

@@ -263,9 +263,9 @@ public class Server {
         return getSession(request).getDailyIncome(day, month, year);
     }
 
-//    public Response<?> sendAppointmentRequest(HttpServletRequest request, int storeId, String ownerName, String existingOwnerName) {
-//        return getSession(request).sendAppointmentRequest(storeId, ownerName, existingOwnerName);
-//    }
+    public Response<Map<Integer, List<String>>> getAppointmentRequests(HttpServletRequest request){
+        return getSession(request).getAppointmentRequests();
+    }
 
 
 }
