@@ -627,6 +627,7 @@ public class Facade {
               registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
           }
 
+          System.out.println(appointmentsRequests.values());
         //catch
         //release lock appointer
         //release lockappointed if locked
@@ -1866,9 +1867,10 @@ public class Facade {
         }
 
         RegisteredUser user = (RegisteredUser)visitor;
-        Employment e = employmentList.get(user.getUserName()).get(storeId);
-        if(e == null){
-            throw new Exception("This user has no store with this store ID");
+        if(employmentList.get(user.getUserName()) == null || employmentList.get(user.getUserName()).get(storeId) == null){
+            if(!(user instanceof Admin)){
+                throw new Exception("This user has no store with this store ID");
+            }
         }
 
         return s.getDailyIncome(day,month,year);
