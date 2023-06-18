@@ -95,16 +95,38 @@
         .permissions-button:hover {
             background-color: #5555;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            color: black;
+            display: none;
+            position: absolute;
+            width: max-content;
+            padding: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-crossorigin="anonymous"></script>
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 
 <header>
-
     <div class="home-button">
         <div class="menu-button">
             <button style="background-color: transparent; color: white; border: none;">
@@ -140,6 +162,27 @@ crossorigin="anonymous"></script>
 
             <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
 
+            <!-- Appointment Requests dropdown -->
+            <span class="dropdown">
+                    <button style="color: white;background-color: transparent;border: none;" onclick="toggleDropdown()">Appointment Requests</button>
+                    <div class="dropdown-content" id="appointment-requests">
+                        <ul>
+<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
+                            <!--                                No appointment requests-->
+                            <!--                            </p>-->
+                            <li th:each="request : ${appointmentRequests}">
+                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Accept
+                                </button>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Decline
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
+
             <button style="color: white;background-color: transparent;border: none;position: fixed;right: 3%;" onclick="window.location.href='SearchResults';">
                 <svg width="35" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 10 15">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -153,7 +196,6 @@ crossorigin="anonymous"></script>
             </button>
         </div>
     </div>
-
 </header>
 
 <div class="container">
@@ -166,33 +208,16 @@ crossorigin="anonymous"></script>
 <div class="container" style="font-size: 24px;">
     <div th:replace="fragments/alert :: alert(${alert})"></div>
 </div>
-
-<script>
-    var currentModal = null;
-
-    function openModal(modalId) {
-        if (currentModal !== null) {
-            closeModal(currentModal);
-        }
-
-        var modal = document.getElementById(modalId);
-        modal.classList.add('open');
-        currentModal = modalId;
-    }
-
-    function closeModal(modalId) {
-        var modal = document.getElementById(modalId);
-        modal.classList.remove('open');
-        currentModal = null;
-    }
-</script>
+<div th:replace="fragments/alert :: alert(${alert})"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
 
 <!------------------------------ MyStores Modal ------------------------------>
 <div id="my-stores-modal" class="modal">
     <a class="close-button" onclick="closeModal('my-stores-modal')">&#x2613;</a>
     <h2>My Stores</h2>
     <div th:each="myStore : ${myStoresList}">
-
         <h4>
             <a th:href="@{/MyStore/{storeId}(storeId=${myStore.getStoreId()}, storeName=${myStore.getStoreName()})}">
 <!--            <a th:href="@{'/MyStore/' + ${myStore.getStoreId()} + ${myStore.getStoreName()}}">-->
@@ -201,12 +226,37 @@ crossorigin="anonymous"></script>
         </h4>
     </div>
 </div>
-
 <!------------------------------ Permissions Modal ------------------------------>
+<!--<div id="permissions-modal" class="modal">-->
+<!--    <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613</a>-->
+<!--    <form id="permissions-form" action="/fetch_permissions" method="post">-->
+<!--        <input type="number" name="storeId" id="storeIdInput" placeholder="Enter Store ID">-->
+<!--        <button class="permissions-button" type="submit">Submit</button>-->
+<!--    </form>-->
+<!--    <ul id="permissions-list">-->
+<!--        &lt;!&ndash; Permissions will be rendered using Thymeleaf &ndash;&gt;-->
+<!--        <li th:each="permission : ${myPermissions}" th:text="${permission}"></li>-->
+<!--    </ul>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    function fetchPermissions() {-->
+<!--        // Prevent the default form submission-->
+<!--        event.preventDefault();-->
+
+<!--        var form = document.getElementById("permissions-form");-->
+<!--        var storeId = document.getElementById("storeIdInput").value;-->
+
+<!--        // Update the form action URL with the storeId value-->
+<!--        form.action = "/fetch_permissions?storeId=" + encodeURIComponent(storeId);-->
+
+<!--        // Submit the form-->
+<!--        form.submit();-->
+<!--    }-->
+<!--</script>-->
 <div id="permissions-modal" class="modal">
     <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613</a>
     <!--    <h2>Permissions</h2>-->
-
     <button class="permissions-button" onclick="openModal('add-product-modal')">Add Product</button>
     <button class="permissions-button" onclick="openModal('remove-product-modal')">Remove Product</button>
     <button class="permissions-button" onclick="openModal('update-product-modal')">Update Product</button>
@@ -350,29 +400,23 @@ crossorigin="anonymous"></script>
 
 <!------------------------------ Employee Info Modal ------------------------------>
 <div id="employee-info-modal" class="modal">
-    <a class="close-button" onclick="closeModal('employee-info-modal')">&#x2613</a>
+    <a class="close-button" onclick="closeModal('employee-info-modal')">&#x2613;</a>
     <h2>Employee Info:</h2>
     <form id="employee-info-form" action="/employee-info" method="post">
         <label for="storeID-employee">Store ID:</label>
         <br>
         <input type="text" id="storeID-employee" name="storeID-employee" required>
         <br><br>
-        <button type="submit" onclick="openModal('show-employee-info-modal')">SHOW INFO</button>
-
-        <article th:text="${employeeInfo}"></article>
-
+        <button type="submit" onclick="openModal('show-employee-info-modal');">SHOW INFO</button>
     </form>
+    <article th:text="${employeeInfo}"></article>
 </div>
 
-<!--<div id="show-employee-info-modal" class="modal" th:if="${showEmployeeInfoModal}">-->
-<!--  <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613</a>-->
-<!--  <h2>Employee Info:</h2>-->
-<!--  <p th:text="${employeeInfo}"></p>-->
-
-<!--&lt;!&ndash;  <div th:if="${alert}" th:class="${alert.isSuccess() ? 'success' : 'error'}">&ndash;&gt;-->
-<!--&lt;!&ndash;    <p th:text="${alert.getMessage()}"></p>&ndash;&gt;-->
-<!--&lt;!&ndash;  </div>&ndash;&gt;-->
-<!--</div>-->
+<div id="show-employee-info-modal" class="modal">
+    <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613;</a>
+    <h2>Employee Info:</h2>
+    <p th:text="${employeeInfo}"></p>
+</div>
 
 <!------------------------------ Remove Employee Modal ------------------------------>
 <div id="remove-employee-modal" class="modal">
@@ -474,5 +518,37 @@ crossorigin="anonymous"></script>
     }, 2500);
 </script>
 
+<script>
+    var currentModal = null;
+
+    function openModal(modalId) {
+        if (currentModal !== null) {
+            closeModal(currentModal);
+        }
+
+        var modal = document.getElementById(modalId);
+        modal.classList.add('open');
+        currentModal = modalId;
+    }
+
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.classList.remove('open');
+        currentModal = null;
+    }
+</script>
+
+<script th:inline="javascript">
+    function toggleDropdown() {
+        var dropdownContent = document.getElementById("appointment-requests");
+        dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+    }
+
+    function updateDropdown(element) {
+        var listItem = element.parentNode;
+        var dropdown = document.getElementById("appointment-requests");
+        dropdown.removeChild(listItem);
+    }
+</script>
 </body>
 </html>

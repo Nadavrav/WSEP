@@ -109,6 +109,30 @@
             color: #888888;
             text-decoration: none;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            color: black;
+            display: none;
+            position: absolute;
+            width: max-content;
+            padding: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -149,11 +173,48 @@
 			        <button style="color: white;background-color: transparent;border: none;"
                             onclick="location.href='Admin';">ADMIN</button>
 		        </span>
+
+                <!-- Appointment Requests dropdown -->
+                <span class="dropdown">
+                    <button style="color: white;background-color: transparent;border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <div class="dropdown-content" id="appointment-requests">
+                        <ul>
+<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
+                            <!--                                No appointment requests-->
+                            <!--                            </p>-->
+                            <li th:each="request : ${appointmentRequests}">
+                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Accept
+                                </button>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Decline
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
             </span>
 
             <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">
                 STORES
             </button>
+
+            <span class="dropdown">
+                <button style="color: white;background-color: transparent;border: none;" onclick="toggleDropdown()">Daily Income</button>
+                <div class="dropdown-content" id="daily-income-dropdown">
+                    <form action="/dailyStoreIncome" method="post">
+                        <label for="date">Date: </label>
+                        <input type="date" id="date" name="date" required>
+                        <button type="submit">Show Daily Income</button>
+                    </form>
+                    <div class="daily-income-result">
+                        <h3>Daily Income:</h3>
+                        <p th:text="${dailyIncome}"></p>
+                    </div>
+                </div>
+            </span>
+
 
             <button style="color: white;background-color: transparent;border: none;position: fixed;right: 3%;"
                     onclick="window.location.href='SearchResults';">
@@ -181,18 +242,18 @@
 
 <!----------------------------------------- Discounts ----------------------------------------->
 <!------------------- display discounts ------------------->
-<h3>Discounts:</h3>
-<div th:if="${discountInfo.empty}">
-    <p>No discounts available for this store.</p>
-</div>
+<!--<h3>Discounts:</h3>-->
+<!--<div th:if="${discountInfo.empty}">-->
+<!--    <p>No discounts available for this store.</p>-->
+<!--</div>-->
 
-<div th:each="discount : ${discountInfo}">
-    <div class="discount-box" onclick="toggleDiscountSelection(this)">
-        <p th:text="'Discount Description: ' + ${discount.discountDescription()}"></p>
-        <input type="hidden" class="discount-checkbox" value="${discount.id}">
-    </div>
-</div>
-<!------------------- choose condition for 2+ discounts ------------------->
+<!--<div th:each="discount : ${discountInfo}">-->
+<!--    <div class="discount-box" onclick="toggleDiscountSelection(this)">-->
+<!--        <p th:text="'Discount Description: ' + ${discount.discountDescription()}"></p>-->
+<!--        <input type="hidden" class="discount-checkbox" value="${discount.id}">-->
+<!--    </div>-->
+<!--</div>-->
+<!--&lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; choose condition for 2+ discounts -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
 <form class="discount-checklist" action="/discount_option" method="post">
     <h4>Select Discounts</h4>
     <div id="selectedDiscounts">
@@ -420,24 +481,24 @@
 <!--        <input type="checkbox" name="discountOption" value="BooleanToFilteredCondition"> Boolean To Filtered Condition-->
 
 
-<!----------------------------------------- Policies ----------------------------------------->
-<h3>Policies:</h3>
-<div th:if="${policyInfo.empty}">
-    <p>No policies available for this store.</p>
-</div>
+<!--&lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Policies -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--<h3>Policies:</h3>-->
+<!--<div th:if="${policyInfo.empty}">-->
+<!--    <p>No policies available for this store.</p>-->
+<!--</div>-->
 
-<div th:each="policy : ${policyInfo}">
-    <div class="discount-box" onclick="toggleDiscountSelection(this)">
-        <p th:text="'Policy Description: ' + ${policy.getDescription()}"></p>
-        <!-- <input type="checkbox" class="policy-checkbox" value="${policy.getID()}"> -->
-    </div>
-    <form class="policy-checklist" action="/policy_option" method="post">
-        <input type="checkbox" name="discountOption" value="CompositeCondition"> Composite Condition
-        <br><input type="checkbox" name="discountOption" value="OnlyIfCondition"> Only If Condition
-        <br><input type="checkbox" name="discountOption" value="FilterCondition"> Filter Condition
-        <br><input type="submit" value="Submit">
-    </form>
-</div>
+<!--<div th:each="policy : ${policyInfo}">-->
+<!--    <div class="discount-box" onclick="toggleDiscountSelection(this)">-->
+<!--        <p th:text="'Policy Description: ' + ${policy.getDescription()}"></p>-->
+<!--        &lt;!&ndash; <input type="checkbox" class="policy-checkbox" value="${policy.getID()}"> &ndash;&gt;-->
+<!--    </div>-->
+<!--    <form class="policy-checklist" action="/policy_option" method="post">-->
+<!--        <input type="checkbox" name="discountOption" value="CompositeCondition"> Composite Condition-->
+<!--        <br><input type="checkbox" name="discountOption" value="OnlyIfCondition"> Only If Condition-->
+<!--        <br><input type="checkbox" name="discountOption" value="FilterCondition"> Filter Condition-->
+<!--        <br><input type="submit" value="Submit">-->
+<!--    </form>-->
+<!--</div>-->
 
 <!----------------------------------------- adding policies and discounts ----------------------------------------->
 <div>
@@ -447,38 +508,6 @@
 </div>
 
 <script>
-    function toggleDiscountSelection(discountBox) {
-        discountBox.classList.toggle('selected');
-    }
-
-    function toggleDiscountChecklist() {
-        const discountChecklist = document.querySelectorAll('.discount-checklist');
-        discountChecklist.forEach((checklist) => {
-            checklist.style.display = checklist.style.display === 'none' ? 'block' : 'none';
-        });
-
-        const policyChecklist = document.querySelectorAll('.policy-checklist');
-        policyChecklist.forEach((checklist) => {
-            checklist.style.display = 'none';
-        });
-    }
-
-    function togglePolicyChecklist() {
-        const policyChecklist = document.querySelectorAll('.policy-checklist');
-        policyChecklist.forEach((checklist) => {
-            checklist.style.display = checklist.style.display === 'none' ? 'block' : 'none';
-        });
-
-        const discountChecklist = document.querySelectorAll('.discount-checklist');
-        discountChecklist.forEach((checklist) => {
-            checklist.style.display = 'none';
-        });
-    }
-
-    function toggleDiscountSelection(discountBox) {
-        discountBox.classList.toggle('selected');
-    }
-
     function toggleDiscountChecklist() {
         const discountChecklist = document.querySelectorAll('.discount-checklist');
         discountChecklist.forEach((checklist) => {
@@ -503,6 +532,17 @@
         });
     }
 </script>
+<script th:inline="javascript">
+    function toggleDropdown() {
+        var dropdownContent = document.getElementById("appointment-requests");
+        dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+    }
 
+    function updateDropdown(element) {
+        var listItem = element.parentNode;
+        var dropdown = document.getElementById("appointment-requests");
+        dropdown.removeChild(listItem);
+    }
+</script>
 </body>
 </html>

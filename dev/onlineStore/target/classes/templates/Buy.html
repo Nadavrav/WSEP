@@ -7,12 +7,10 @@
     <title>Buy with Card</title>
     <style>
         body{
-
             /*background-image: url("https://media.istockphoto.com/id/1464636372/photo/consumers-use-credit-cards-to-conduct-financial-transactions-via-the-internet-payment-concept.jpg?s=612x612&w=0&k=20&c=h0pqY8hX3UxcG8l-wgIWX2QRvj1tL2hekIRbmsm7NMo=");*/
             background-image: url("https://media.istockphoto.com/id/1430367666/photo/woman-using-smartphone-to-shop-online-using-credit-card-delivery-service-virtual-screen.jpg?s=612x612&w=0&k=20&c=faS4CUz5ZEjoOi9VNqpzP8vszRjsbmiPEbUgKEskDYw=");
             background-size: cover;
             background-repeat: no-repeat;
-
         }
 
         .container {
@@ -21,10 +19,8 @@
             align-items: center;
             justify-content: center;
             position: fixed;
-
             top:20% ;left: 35%;
             /*text-align: center;*/
-
             color: #fff;
         }
 
@@ -44,9 +40,7 @@
         input[type="number"],
         select {
             padding: 0.5rem;
-
             width: 250px;
-
             font-size: 1rem;
             border-radius: 5px;
             border: none;
@@ -64,11 +58,34 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            color: black;
+            display: none;
+            position: absolute;
+            width: max-content;
+            padding: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
-
 <header>
     <div class="home-button">
         <div class="menu-button">
@@ -101,6 +118,27 @@
 		        <span th:if="${Admin}">
 			        <button style="color: white;background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
 		        </span>
+
+                <!-- Appointment Requests dropdown -->
+                <span class="dropdown">
+                    <button style="color: white;background-color: transparent;border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <div class="dropdown-content" id="appointment-requests">
+                        <ul>
+<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
+                            <!--                                No appointment requests-->
+                            <!--                            </p>-->
+                            <li th:each="request : ${appointmentRequests}">
+                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Accept
+                                </button>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Decline
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
             </span>
 
             <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
@@ -120,20 +158,16 @@
     </div>
 </header>
 
-
 <div th:replace="fragments/alert :: alert(${alert})"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
 
-
 <div class="container">
 <!--    <h1 style="color: #333333;">Buy with Card</h1>-->
     <form id="paymentForm" action="/done" method="post">
         <input type="text" name="cardholderName" placeholder="Cardholder Name">
-
         <input type="text" name="cardholderID" placeholder="Cardholder ID">
-
         <input type="text" name="cardNumber" placeholder="Card Number" required>
         <div>
             <input style="width: fit-content;" type="number" name="expirationMonth" placeholder="Expiration Month" min="1" max="12">
@@ -141,7 +175,6 @@
         </div>
         <input type="text" name="address" placeholder="Address" required>
         <input type="text" name="cvv" placeholder="CVV">
-
         <input type="submit" value="Buy Now" onclick="showThankYouMessage()">
     </form>
     <div id="thankYouMessage" style="display: none;">
@@ -160,7 +193,6 @@
 </script>
 
 <script>
-
     var alertElement = document.getElementById("alert");
 
     // Set the timeout to close the alert after 4 seconds (4000 milliseconds)
@@ -168,6 +200,17 @@
         alertElement.style.display = "none";
     }, 2500);
 </script>
+<script th:inline="javascript">
+    function toggleDropdown() {
+        var dropdownContent = document.getElementById("appointment-requests");
+        dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+    }
 
+    function updateDropdown(element) {
+        var listItem = element.parentNode;
+        var dropdown = document.getElementById("appointment-requests");
+        dropdown.removeChild(listItem);
+    }
+</script>
 </body>
 </html>
