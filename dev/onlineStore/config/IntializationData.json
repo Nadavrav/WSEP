@@ -1,0 +1,40 @@
+
+  [
+    {
+      "username": "adam_admin",
+      "password": "adamadmin123",
+      "admin": true
+
+    },
+
+    {
+      "username": "bob_jones",
+      "password": "bobjones789",
+      "store": [
+        {
+          "name": "Jones Fruit Store",
+          "products": [
+            {
+              "category": "Fruits",
+              "description": "Certified medical personnel concussion tool",
+              "name": "Apple",
+              "price": 20,
+              "quantity": 10
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "username": "alice_smith",
+      "password": "alicesmith456"
+    },
+    {
+      "username": "john_doe",
+      "password": "johndoe321"
+    },
+    {
+      "username": "sam_brown",
+      "password": "sambrown654"
+    }
+  ]
