@@ -21,7 +21,7 @@ public class Messages {
 
     @GetMapping("/Messages")
     public String messages(Model model) throws Exception {
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
 //        model.addAttribute("alert", alert.copy());
         alert.reset();
