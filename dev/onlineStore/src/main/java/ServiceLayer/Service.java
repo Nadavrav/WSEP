@@ -8,6 +8,7 @@ import DomainLayer.Stores.Policies.Policy;
 
 import DomainLayer.Stores.Discounts.Discount;
 
+import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
@@ -736,7 +737,7 @@ public class Service {
      * @param amount amount of product the user wants to buy
      * @param newPrice the price PER PRODUCT the user has bid,
      *                 obviously it has to be smaller than the original price
-     * @return TODO
+     * @return returns ServiceBid with info about added bid
      */
     public Response<ServiceBid> addNewBid(int productId, int storeId, int amount, int newPrice)  {
         try {
@@ -747,19 +748,74 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<ServiceBid> counterOfferBid(int productId, int storeId,String userName,String message){
+    public Response<ServiceBid> counterOfferBid(int productId, int storeId,String userName,double newPrice,String message){
         try {
-            return new Response<>(new ServiceBid(facade.counterOfferBid(visitorId,productId,storeId,userName,message),new ServiceStoreProduct(facade.getProduct(storeId,productId))));
+            return new Response<>(new ServiceBid(facade.counterOfferBid(visitorId,productId,storeId,userName,newPrice,message),new ServiceStoreProduct(facade.getProduct(storeId,productId))));
         }
         catch (Exception e)
         {
             return new Response<>(e.getMessage(),true);
         }
     }
-
-    // TODO: implement
-    public Response<?> voteOnBid(int productId,int storeId,int userId,boolean vote) {
-        return null;
+    public Response<?> acceptCounterOffer(int productId, int storeId){
+        try {
+            facade.acceptCounterOffer(visitorId,productId,storeId);
+            return new Response<>("Bid accepted",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<?> rejectCounterOffer(int productId){
+        try {
+            facade.rejectCounterOffer(visitorId,productId);
+            return new Response<>("Bid rejected",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<?> voteOnBid(int productId,int storeId,String userName,boolean vote) {
+        try {
+            facade.voteOnBid(visitorId,productId,userName,storeId,vote);
+            return new Response<>("Bid rejected",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<Collection<ServiceBid>> geStoreBids(int storeId) {
+        try {
+            Collection<Bid> storeBids=facade.getStoreBids(storeId);
+            Map<Integer, StoreProduct> products =facade.getStoresList().get(storeId).getProducts();
+            HashSet<ServiceBid> serviceBids=new HashSet<>();
+            for(Bid bid:storeBids){
+                serviceBids.add(new ServiceBid(bid,new ServiceStoreProduct(products.get(bid.getProductId()))));
+            }
+            return new Response<>(serviceBids);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<Collection<ServiceBid>> geUserBids(int storeId) {
+        try {
+            Collection<Bid> storeBids=facade.getStoreBids(storeId);
+            Map<Integer, StoreProduct> products =facade.getStoresList().get(storeId).getProducts();
+            HashSet<ServiceBid> serviceBids=new HashSet<>();
+            for(Bid bid:storeBids){
+                serviceBids.add(new ServiceBid(bid,new ServiceStoreProduct(products.get(bid.getProductId()))));
+            }
+            return new Response<>(serviceBids);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     public Response<Integer> getDailyIncome(int day,int month,int year) {

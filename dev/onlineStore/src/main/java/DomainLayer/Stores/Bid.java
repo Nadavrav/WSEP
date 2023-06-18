@@ -2,17 +2,22 @@ package DomainLayer.Stores;
 
 public class Bid {
     private final int productId;
-    private final double newPrice;
+    private  double newPrice;
     private final String userName;
     private final int userId;
     private final int amount;
-
-    public Bid(int productId, double newPrice, String userName,int amount, int userId) {
+    private final int storeId;
+    public Bid(int productId, double newPrice, String userName,int amount, int userId,int storeId) {
         this.productId = productId;
         this.newPrice = newPrice;
         this.userName = userName;
         this.userId = userId;
         this.amount=amount;
+        this.storeId=storeId;
+    }
+
+    public int getStoreId() {
+        return storeId;
     }
 
     public int getUserId() {
@@ -34,6 +39,11 @@ public class Bid {
     public int getProductId() {
         return productId;
     }
+
+    public void setNewPrice(double newPrice) {
+        this.newPrice = newPrice;
+    }
+
     @Override
     public boolean equals(Object obj){
         if(obj==this)

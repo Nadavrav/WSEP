@@ -1,6 +1,8 @@
 package ServiceLayer.ServiceObjects;
 
 import DomainLayer.Stores.Bid;
+import DomainLayer.Stores.Products.Product;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
 import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
 
 public class ServiceBid {
@@ -8,18 +10,20 @@ public class ServiceBid {
     private final int productId;
     private final int userId;
     private final double newPrice;
-    private final ServiceStoreProduct product;
+    private final ServiceProduct product;
+    private final int storeId;
     /**
      * user sending the bid
      */
     private final String userName;
-    public ServiceBid(Bid bid,ServiceStoreProduct serviceStoreProduct){
+    public ServiceBid(Bid bid, ServiceProduct product){
         amount= bid.getAmount();
         productId= bid.getProductId();
         newPrice= bid.getNewPrice();
         userId=bid.getUserId();
         userName= bid.getUserName();
-        this.product=serviceStoreProduct;
+        storeId=bid.getStoreId();
+        this.product=product;
     }
 
     public double getNewPrice() {
@@ -34,7 +38,7 @@ public class ServiceBid {
         return productId;
     }
 
-    public ServiceStoreProduct getProduct() {
+    public ServiceProduct getProduct() {
         return product;
     }
 

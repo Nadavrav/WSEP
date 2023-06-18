@@ -484,9 +484,11 @@ public class Store {
         return getHistory().getDailyIncome(day, month, year);
 
     }
-
+    public Collection<Bid> getPendingBids(){
+        return pendingBids;
+    }
     public Bid addBid(int productId, int amount, int newPrice, String userName, int userId) {
-        Bid bid = new Bid(productId, newPrice, userName, amount, userId);
+        Bid bid = new Bid(productId, newPrice, userName, amount, userId,Id);
         NotifyOwners(userName + " has submitted a new bid!");
         pendingBids.add(bid);
         votingCounter.put(bid,0);

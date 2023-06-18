@@ -1971,6 +1971,15 @@ public class Facade {
         }
         return new LinkedList<>(em.getPermisssions());
     }
+    public Collection<Bid> getStoreBids(int storeId) throws Exception{
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        return store.getPendingBids();
+    }
     public Bid addBid(int visitorId, int productId, int storeId, int amount, int newPrice) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){
@@ -2008,7 +2017,7 @@ public class Facade {
         return store.voteOnBid(user.getVisitorId(),productId,registeredUserList.get(userName),vote);
 
     }
-    public Bid counterOfferBid(int visitorId, int productId, int storeId, String userName,String message) throws Exception{
+    public Bid counterOfferBid(int visitorId, int productId, int storeId, String userName,double newPrice,String message) throws Exception{
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){
             throw new Exception("Wrong visitorId");
@@ -2025,13 +2034,43 @@ public class Facade {
         }
         RegisteredUser user=registeredUserList.get(userName);
         Bid bid=store.rejectBid(productId,user,message);
-        //registeredUserList.get(userName).update(message);
+        bid.setNewPrice(newPrice);
+        user.addCounterOffer(bid);
         return bid;
+    }
+    public void acceptCounterOffer(int visitorId, int productId, int storeId) throws Exception{
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        ((RegisteredUser)visitor).acceptCounterOff(productId,store);
+    }
+    public void rejectCounterOffer(int visitorId, int productId) throws Exception{
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        ((RegisteredUser)visitor).rejectCounterOffer(productId);
     }
 
     public StoreProduct getProduct(int storeId, int productId) {
         return storesList.get(storeId).getProducts().get(productId);
     }
+
 
 
 }
