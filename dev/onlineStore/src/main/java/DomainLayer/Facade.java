@@ -75,7 +75,7 @@ public class Facade {
     private Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
-
+    private boolean dataLoaded=false;
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
@@ -108,6 +108,7 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
+        dataLoaded=false;
         //ConfigParser.parse(this);
 
     }
@@ -119,7 +120,9 @@ public class Facade {
     }
 
     public void loadData() throws Exception {
-        resetData();
+        if(dataLoaded)
+            return;
+       // resetData();
         if(!ConfigParser.parse(this))
             registerInitialAdmin("admin","admin12345");
         try{
@@ -269,9 +272,9 @@ public class Facade {
             //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
             //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
             //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
-            appointNewStoreOwner(nadavID,"Denis",0);
-            appointNewStoreOwner(1,"Nadia",0);
-            acceptEmploymentRequest(denisID,0,"Nadia");
+        //    appointNewStoreOwner(nadavID,"Denis",0);
+        //    appointNewStoreOwner(1,"Nadia",0);
+        //    acceptEmploymentRequest(denisID,0,"Nadia");
             //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
             //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
             //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
@@ -291,7 +294,7 @@ public class Facade {
             logout(majdID);
             logout(denisID);
             logout(nikitaID);
-
+            dataLoaded=true;
 
         }
         catch(Exception e){
