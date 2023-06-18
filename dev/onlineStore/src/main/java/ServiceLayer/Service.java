@@ -56,6 +56,22 @@ public class Service {
         }
         return new Response<>(visitorId);
     }
+    public Response<Boolean> isLoggedIn() {//1.1
+        try{
+            return new Response<>(facade.isLoggedIn(visitorId));
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<String> getUserName() {//1.1
+        try{
+            return new Response<>(facade.getUserName(visitorId));
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
 
     public Response<Boolean> isAdmin(){
         Boolean isAdmin;
@@ -551,10 +567,10 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<Collection<ServiceStore>> getStoresByUserName(String userName) {
+    public Response<Collection<ServiceStore>> getStoresByUserName() {
         try {
             ArrayList<ServiceStore> serviceStores = new ArrayList<>();
-            List <Store> stores = facade.getStoresByUserName(visitorId,userName);
+            List <Store> stores = facade.getStoresByUserName(visitorId);
             for(Store s : stores) {
                 serviceStores.add(new ServiceStore(s));
             }
@@ -693,18 +709,18 @@ public class Service {
         }
     }
 
-    public Response<Boolean> checkForNewMessages(String userName) {
+    public Response<Boolean> checkForNewMessages() {
         try{
-            return new Response<>(facade.checkForNewMessages(userName));
+            return new Response<>(facade.checkForNewMessages(visitorId));
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
     }
 
-    public Response<LinkedList<String>> getNewMessages(String userName) {
+    public Response<LinkedList<String>> getNewMessages() {
         try{
-            return new Response<>(facade.getNewMessages(userName));
+            return new Response<>(facade.getNewMessages(visitorId));
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);

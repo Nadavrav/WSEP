@@ -313,7 +313,18 @@ public class Facade {
         logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
         return visitor.getVisitorId();
     }
-
+    public boolean isLoggedIn(int visitorid) {
+        return onlineList.containsKey(visitorid);
+    }
+    public String getUserName(int visitorId) {
+        if(!onlineList.containsKey(visitorId)){
+            logger.severe("Error: get username called for not logged in user or logged in user not in online list");
+            throw new RuntimeException("System Error: check error log");
+        }
+        else{
+            return ((RegisteredUser)onlineList.get(visitorId)).getUserName();
+        }
+    }
     public void ExitSiteVisitor(int id) throws Exception {//1.2
         if(onlineList.containsKey(id)) {
             SiteVisitor st = onlineList.get(id);
@@ -1686,16 +1697,13 @@ public class Facade {
     public Collection<Discount> getStoreDiscounts(int storeId){
         return storesList.get(storeId).getDiscounts();
     }
-    public List<Store> getStoresByUserName(int visitorId,String userName) throws Exception {
+    public List<Store> getStoresByUserName(int visitorId) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
         if(! (visitor instanceof RegisteredUser user)){
             throw new Exception("invalid visitor Id");
         }
-        if(!user.getUserName().equals(userName)){
-            throw new Exception("This is not your userName");
-        }
         List<Integer> storesID = new LinkedList<>();
-        Map<Integer,Employment> employmentMap = employmentList.get(userName);
+        Map<Integer,Employment> employmentMap = employmentList.get(((RegisteredUser)visitor).getUserName());
         LinkedList<Store> stores = new LinkedList<>();
         for(Integer i :employmentMap.keySet()){
             stores.add(storesList.get(i));
@@ -1774,21 +1782,37 @@ public class Facade {
         return offlineUsersList;
     }
 
-    public boolean checkForNewMessages(String userName) throws Exception {
+    public boolean checkForNewMessages(int visitorId) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        RegisteredUser user=(RegisteredUser) visitor;
         try{
-            Boolean hasNewMessages = registeredUserList.get(userName).hasNewMessage();
-
-            return hasNewMessages;
+             return registeredUserList.get(user.getUserName()).hasNewMessage();
         }
         catch (Exception e){
             throw new Exception(e);
         }
     }
 
-    public LinkedList<String> getNewMessages(String userName) throws Exception {
+    public LinkedList<String> getNewMessages(int visitorId) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        RegisteredUser user=(RegisteredUser) visitor;
         try{
-            registeredUserList.get(userName).setHasNewMessage(false);
-            return registeredUserList.get(userName).getWaitingMessages();
+            registeredUserList.get(user.getUserName()).setHasNewMessage(false);
+            return registeredUserList.get(user.getUserName()).getWaitingMessages();
         }
         catch (Exception e){
             throw new Exception(e);
