@@ -1864,9 +1864,10 @@ public class Facade {
         }
 
         RegisteredUser user = (RegisteredUser)visitor;
-        Employment e = employmentList.get(user.getUserName()).get(storeId);
-        if(e == null){
-            throw new Exception("This user has no store with this store ID");
+        if(employmentList.get(user.getUserName()) == null || employmentList.get(user.getUserName()).get(storeId) == null){
+            if(!(user instanceof Admin)){
+                throw new Exception("This user has no store with this store ID");
+            }
         }
 
         return s.getDailyIncome(day,month,year);
