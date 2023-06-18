@@ -6,24 +6,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
     <style>
         body {
             background-image: url("https://media.istockphoto.com/id/1394514694/photo/online-shopping-global-business-e-commerce-digital-marketing-concept.jpg?s=612x612&w=0&k=20&c=voM0MGy3brDDIMUcPTgUBDPoqPjtzt3PNtvSw2LeNiw=");
             background-repeat: no-repeat;
             background-size: cover;
-
         }
 
         .home-button {
             background-color: rgba(0, 0, 0, 0.1);
-
             color: #d2d3d5;
             position: fixed;
             /*font-size: 18px;*/
             /*margin: 0 auto;*/
         }
-
 
         .modal {
             /*background-color: rgba(255,255,255,0.1);*/
@@ -32,10 +28,8 @@
             justify-content: center;
             position: fixed;
             z-index: 1;
-
             width: 100%;
             height: 100%;
-
             top: 48%;
             left: 18%;
             transform: translate(-50%, -50%);
@@ -61,10 +55,8 @@
         .modal-form label {
             font-size: 16px;
             color: #ffffff;
-
             display: inline-flex;
             align-items: center;
-
         }
 
         .modal-form input[type="number"],
@@ -77,7 +69,6 @@
             border: none;
             color: #333333;
             border-bottom: 1px solid #555555;
-
         }
 
         .modal-form button[type="submit"] {
@@ -92,7 +83,6 @@
 
         .modal-form button[type="submit"]:hover {
             background-color: #999999;
-
         }
 
         .input-icon {
@@ -118,7 +108,6 @@
 </head>
 
 <body>
-
 <header>
     <div class="home-button">
         <div class="menu-button">
@@ -185,7 +174,6 @@
         </div>
     </div>
 </header>
-
 
 <div th:replace="fragments/alert :: alert(${alert})"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
