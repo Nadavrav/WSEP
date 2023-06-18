@@ -203,7 +203,7 @@
                     </form>
                     <div class="daily-income-result">
                         <h3>Daily Income:</h3>
-                        <p th:text="${dailyIncome != null ? dailyIncome : 'No income data available'}"></p>
+                        <p th:text="${dailyIncome}"></p>
                     </div>
                 </div>
             </span>
@@ -244,6 +244,18 @@
     <input type="hidden" class="discount-checkbox" value="${discount.id}">
 </div>
 <!------------------- choose condition for 2+ discounts ------------------->
+<!--<h3>Discounts:</h3>-->
+<!--<div th:if="${discountInfo.empty}">-->
+<!--    <p>No discounts available for this store.</p>-->
+<!--</div>-->
+
+<!--<div th:each="discount : ${discountInfo}">-->
+<!--    <div class="discount-box" onclick="toggleDiscountSelection(this)">-->
+<!--        <p th:text="'Discount Description: ' + ${discount.discountDescription()}"></p>-->
+<!--        <input type="hidden" class="discount-checkbox" value="${discount.id}">-->
+<!--    </div>-->
+<!--</div>-->
+<!--&lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; choose condition for 2+ discounts -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
 <form class="discount-checklist" action="/discount_option" method="post">
     <h4>Select Discounts</h4>
     <div id="selectedDiscounts">
@@ -482,6 +494,12 @@
     </div>
 </div>
 
+
+<!--&lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; Policies -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
+<!--<h3>Policies:</h3>-->
+<!--<div th:if="${policyInfo.empty}">-->
+<!--    <p>No policies available for this store.</p>-->
+<!--</div>-->
 
 <!--<div th:each="policy : ${policyInfo}">-->
 <!--    <div class="discount-box" onclick="toggleDiscountSelection(this)">-->
