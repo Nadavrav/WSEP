@@ -5,12 +5,14 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.Service;
 import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceBid;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import org.opentest4j.TestSkippedException;
 
@@ -284,6 +286,44 @@ public class RealBridge implements Bridge {
         return service.getBagDiscountInfo(storeId);
     }
 
+    @Override
+    public Response<ServiceBid> addNewBid(int productId, int storeId, int amount, int newPrice) {
+        return service.addNewBid(productId,storeId,amount,newPrice);
+    }
+
+    @Override
+    public Response<ServiceBid> counterOfferBid(int productId, int storeId, String userName, double newPrice, String message) {
+        return service.counterOfferBid(productId,storeId,userName,newPrice,message);
+    }
+
+    @Override
+    public Response<?> acceptCounterOffer(int productId, int storeId) {
+        return service.acceptCounterOffer(productId,storeId);
+    }
+
+    @Override
+    public Response<?> rejectCounterOffer(int productId) {
+        return service.rejectCounterOffer(productId);
+    }
+
+    @Override
+    public Response<?> voteOnBid(int productId, int storeId, String userName, boolean vote) {
+        return service.voteOnBid(productId,storeId,userName,vote);
+    }
+
+    @Override
+    public Response<Collection<ServiceBid>> geStoreBids(int storeId) {
+        return service.geStoreBids(storeId);
+    }
+
+    @Override
+    public Response<Collection<ServiceBid>> getUserBids() {
+        return service.getUserBids();
+    }
+    @Override
+    public Response<ServiceCart> getCartProducts(){
+        return service.getProductsInMyCart();
+    }
 
 
 }

@@ -1,8 +1,8 @@
 package DomainLayer;
 
 
-
 import DomainLayer.Config.ConfigParser;
+import DomainLayer.Stores.Bid;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.*;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
@@ -16,6 +16,7 @@ import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
+import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
@@ -73,12 +74,14 @@ public class Facade {
 
     private Map<String, Map<Integer, Employment>> employmentList;
     private Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
+    private Map<Integer,Map<Bid,HashSet<Integer>>> bidVoters;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
     private boolean dataLoaded=false;
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
+        bidVoters=new HashMap<>();
         onlineList = new HashMap<>();
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
@@ -462,7 +465,7 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
-            user.addProductToCart(storeId, product,amount, generateStoreCallback(store));
+            user.addProductToCart(storeId, product,amount, store.generateStoreCallback());
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
         catch (Exception e){
@@ -1061,6 +1064,8 @@ public class Facade {
         //open new store ()
         Store store = new Store(storeName);
         store.addNewListener((RegisteredUser)User);
+        store.addNewOwnerListener((RegisteredUser)User);
+        store.documentOwner(User.getVisitorId());
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
@@ -1736,22 +1741,6 @@ public class Facade {
     public HashMap<CartProduct,Double> getCartDiscountInfo(int visitorId,int storeId) throws Exception{
         return getUserBag(visitorId,storeId).getSavingsPerProducts();
     }
-    private StoreCallbacks generateStoreCallback(Store store){
-        return new StoreCallbacks() {
-            @Override
-            public boolean checkStorePolicies(Bag bag) {
-                return store.passesPolicies(bag);
-            }
-            @Override
-            public double getDiscountAmount(Bag bag) {
-                return store.calcSaved(bag);
-            }
-            @Override
-            public HashMap<CartProduct,Double> getSavingsPerProduct(Bag bag) {
-                return store.getDiscountPerProduct(bag);
-            }
-        };
-    }
 
     /**
      * A function to get the quantity of a product
@@ -1939,9 +1928,9 @@ public class Facade {
             }
             employmentList.get(appointedUserName).put(storeID, appointedEmployment);
             store.addNewListener(appointed);
-
+            store.addNewOwnerListener(appointed);
+            store.documentOwner(appointed.getVisitorId());
             appointmentsRequests.get(storeID).remove(appointed);
-
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
             registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeID).getName()+"'");
         }
@@ -2068,6 +2057,116 @@ public class Facade {
 
         return outputMap;
 
+    }
+    public Map<Product,Bid> getUserBids(int visitorId) throws Exception{
+
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Invalid visitorID");
+        }
+        if(!(visitor instanceof RegisteredUser)){
+            throw new Exception("This user is not registered");
+        }
+        return ((RegisteredUser)visitor).getCounterOffers();
+    }
+    public Collection<Bid> getStoreBids(int storeId) throws Exception{
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        return store.getPendingBids();
+    }
+    public Bid addBid(int visitorId, int productId, int storeId, int amount, int newPrice) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+        return store.addBid(productId,amount,newPrice,user.getUserName(), user.getVisitorId());
+    }
+    public Bid voteOnBid(int visitorId, int productId,String userName, int storeId, boolean vote) throws Exception {
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        RegisteredUser user = (RegisteredUser)visitor;
+        return store.voteOnBid(user.getVisitorId(),productId,registeredUserList.get(userName),vote);
+
+    }
+    public Bid counterOfferBid(int visitorId, int productId, int storeId, String userName,double newPrice,String message) throws Exception{
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        RegisteredUser user=registeredUserList.get(userName);
+        Bid bid=store.rejectBid(productId,user,message);
+        bid.setNewPrice(newPrice);
+        user.addCounterOffer(bid,store.getProducts().get(productId));
+        return bid;
+    }
+    public void acceptCounterOffer(int visitorId, int productId, int storeId) throws Exception{
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+
+        Store store = storesList.get(storeId);
+        if(store == null)
+        {
+            throw new Exception("No store found with this store ID");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        ((RegisteredUser)visitor).acceptCounterOff(productId,store);
+    }
+    public void rejectCounterOffer(int visitorId, int productId) throws Exception{
+        SiteVisitor visitor = onlineList.get(visitorId);
+        if(visitor == null){
+            throw new Exception("Wrong visitorId");
+        }
+        if(!(visitor instanceof RegisteredUser))
+        {
+            throw new Exception("Current user is not registered to system");
+        }
+        ((RegisteredUser)visitor).rejectCounterOffer(productId);
+    }
+
+    public StoreProduct getProduct(int storeId, int productId) {
+        return storesList.get(storeId).getProducts().get(productId);
     }
 
 

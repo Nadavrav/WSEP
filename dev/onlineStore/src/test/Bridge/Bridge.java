@@ -1,18 +1,28 @@
 package Bridge;
 
 import DomainLayer.Response;
+import DomainLayer.Stores.Bid;
+import DomainLayer.Stores.Products.Product;
+import DomainLayer.Stores.Products.StoreProduct;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceBid;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+
 public interface Bridge {
     boolean reset();
     boolean initialize();
@@ -237,7 +247,16 @@ public interface Bridge {
     Response<ServicePolicyInfo> addPolicy(ServicePolicy conditionRecord, int storeId);
     Response<ServicePolicyInfo> removePolicy(int id, int storeId);
     Response<Collection<ServiceDiscountInfo>> getDiscountInfo(int storeId);
-    public Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId);
+    Response<ServiceAppliedDiscount> getBagDiscountInfo(int storeId);
+    Response<ServiceBid> addNewBid(int productId, int storeId, int amount, int newPrice);
+    Response<ServiceBid> counterOfferBid(int productId, int storeId,String userName,double newPrice,String message);
+    Response<?> acceptCounterOffer(int productId, int storeId);
+    Response<?> rejectCounterOffer(int productId);
+    Response<?> voteOnBid(int productId,int storeId,String userName,boolean vote);
+    Response<Collection<ServiceBid>> geStoreBids(int storeId);
+    Response<Collection<ServiceBid>> getUserBids();
+    Response<ServiceCart> getCartProducts();
+
 
 
 }

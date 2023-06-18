@@ -3,10 +3,12 @@ package ServiceLayer;
 import DomainLayer.Facade;
 import DomainLayer.Response;
 
+import DomainLayer.Stores.Bid;
 import DomainLayer.Stores.Policies.Policy;
 
 import DomainLayer.Stores.Discounts.Discount;
 
+import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
@@ -19,6 +21,8 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
+import ServiceLayer.ServiceObjects.ServiceBid;
+import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.AndConditionRecord;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
@@ -26,6 +30,8 @@ import ServiceLayer.ServiceObjects.ServiceCart;
 
 
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
 import ServiceLayer.ServiceObjects.ServiceUser;
@@ -731,25 +737,101 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-
-    // TODO: implement
-    public Response<?> addNewBid(int productId, int storeId,int amount,int newPrice) {
-        return null;
+    public Response<ServiceStoreProduct> getProduct(int storeId,int productId){
+        try{
+            return new Response<>(new ServiceStoreProduct(facade.getProduct(storeId,productId)));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
-    // TODO: implement
-    public Response<?> acceptBid(int productId,int storeId,String userName) {
-        return null;
+    /**
+     * add new bid
+     * @param productId product id to add bid to
+     * @param storeId store to add bid in
+     * @param amount amount of product the user wants to buy
+     * @param newPrice the price PER PRODUCT the user has bid,
+     *                 obviously it has to be smaller than the original price
+     * @return returns ServiceBid with info about added bid
+     */
+    public Response<ServiceBid> addNewBid(int productId, int storeId, int amount, int newPrice)  {
+        try {
+            return new Response<>(new ServiceBid(facade.addBid(visitorId,productId,storeId,amount,newPrice),new ServiceStoreProduct(facade.getProduct(storeId,productId))));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
-
-    // TODO: implement
-    public Response<?> declineBid(int productId,int storeId,String userName) {
-        return null;
+    public Response<ServiceBid> counterOfferBid(int productId, int storeId,String userName,double newPrice,String message){
+        try {
+            return new Response<>(new ServiceBid(facade.counterOfferBid(visitorId,productId,storeId,userName,newPrice,message),new ServiceStoreProduct(facade.getProduct(storeId,productId))));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
-
-    // TODO: implement
-    public Response<?> updateBid(int productId,int storeId,int newPrice) {
-        return null;
+    public Response<?> acceptCounterOffer(int productId, int storeId){
+        try {
+            facade.acceptCounterOffer(visitorId,productId,storeId);
+            return new Response<>("Bid accepted",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<?> rejectCounterOffer(int productId){
+        try {
+            facade.rejectCounterOffer(visitorId,productId);
+            return new Response<>("Bid rejected",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<?> voteOnBid(int productId,int storeId,String userName,boolean vote) {
+        try {
+            facade.voteOnBid(visitorId,productId,userName,storeId,vote);
+            return new Response<>("Bid rejected",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<Collection<ServiceBid>> geStoreBids(int storeId) {
+        try {
+            Collection<Bid> storeBids=facade.getStoreBids(storeId);
+            Map<Integer, StoreProduct> products =facade.getStoresList().get(storeId).getProducts();
+            HashSet<ServiceBid> serviceBids=new HashSet<>();
+            for(Bid bid:storeBids){
+                serviceBids.add(new ServiceBid(bid,new ServiceStoreProduct(products.get(bid.getProductId()))));
+            }
+            return new Response<>(serviceBids);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<Collection<ServiceBid>> getUserBids() {
+        try {
+            Map<Product,Bid> userBids=facade.getUserBids(visitorId);
+            HashSet<ServiceBid> serviceBids=new HashSet<>();
+            for(Product product:userBids.keySet()){
+                serviceBids.add(new ServiceBid(userBids.get(product),new ServiceProduct(product.getName(),product.getPrice(),product.getCategory(),product.getDescription())));
+            }
+            return new Response<>(serviceBids);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     public Response<Integer> getDailyIncome(int day,int month,int year) {
