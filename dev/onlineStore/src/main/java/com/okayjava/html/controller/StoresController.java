@@ -24,7 +24,7 @@ public class StoresController {
     public String getStoreAndProductsNames(Model model) {
         model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
-//        model.addAttribute("alert", alert.copy());
+        model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<?> response = server.getStoresName(request); //linkedlist stores
         if (response.isError()){
@@ -34,7 +34,7 @@ public class StoresController {
         } else {
             alert.setSuccess(true);
             alert.setMessage(response.getMessage());
-            model.addAttribute("alert", alert.copy());
+//            model.addAttribute("alert", alert.copy());
             model.addAttribute("stores", response.getValue());
         }
         alert.reset();

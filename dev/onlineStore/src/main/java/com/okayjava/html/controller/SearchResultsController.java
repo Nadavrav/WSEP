@@ -31,17 +31,10 @@ public class SearchResultsController {
     public String searchResult(Model model) {
         model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
-//        model.addAttribute("alert", alert.copy());
+        model.addAttribute("alert", alert.copy());
         alert.reset();
         return "SearchResults";
     }
-
-//    @PostMapping("/SearchResults")
-//    public String resultPage(Model model){
-//        model.addAttribute("alert", alert.copy());
-//        alert.reset();
-//        return "SearchResults";
-//    }
 
     @RequestMapping(value = "/show-result", method = RequestMethod.POST)
     public String userSearch(@RequestParam(value = "filter-keyword" , defaultValue = "") String keywordStr,
