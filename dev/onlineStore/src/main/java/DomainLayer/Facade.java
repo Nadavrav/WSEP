@@ -2,6 +2,7 @@ package DomainLayer;
 
 
 
+import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.*;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
@@ -85,7 +86,9 @@ public class Facade {
         appointmentsRequests = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
-        registerInitialAdmin();
+        if(!ConfigParser.parse(this))
+            registerInitialAdmin("admin","admin12345");
+
     }
 
     /**
@@ -105,7 +108,7 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
-        registerInitialAdmin();
+        //ConfigParser.parse(this);
 
     }
     public static synchronized Facade getInstance() {
@@ -117,6 +120,8 @@ public class Facade {
 
     public void loadData() throws Exception {
         resetData();
+        if(!ConfigParser.parse(this))
+            registerInitialAdmin("admin","admin12345");
         try{
             //New users
             int nadavID = EnterNewSiteVisitor();
@@ -339,22 +344,18 @@ public class Facade {
         return onlineList.get(visitorID) instanceof Admin;
     }
 
-    private void registerInitialAdmin() {
+    public void registerInitialAdmin(String userName,String password) {
         logger.info("Starting initial admin registration");
-        if(registeredUserList.containsKey("admin")) {
+        if(registeredUserList.containsKey(userName)) {
             logger.severe("Failed initial admin registration: username already exists." +
-                    "should no happen");
+                    "should not happen");
             throw new RuntimeException("Username " + "admin" + " already exists");
         }
         else{
             try {
 
-                Admin admin = new Admin("admin", "admin1234");
-                if(registeredUserList.containsKey("admin"))
-                    registeredUserList.replace("admin",admin);
-                else
-                    registeredUserList.put("admin",admin);
-
+                Admin admin = new Admin(userName, password);
+                registeredUserList.put(userName,admin);
             }
             catch (Exception e) {
                 logger.severe("Unexpected error during initial admin registration");
