@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ProductRatingsController {
@@ -24,6 +26,22 @@ public class ProductRatingsController {
     public String productsPage(Model model) {
 //        model.addAttribute("logged", server.isLogged(request));
 //        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+
+            // Filter appointment requests based on the logged-in user
+            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                List<String> owners = entry.getValue();
+                if (owners.contains(server.getUsername(request))) {
+                    filteredAppointmentRequests.put(entry.getKey(), owners);
+                }
+            }
+            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+        }
+
         model.addAttribute("alert", alert.copy());
         alert.reset();
         return "CommentsAndRatings";

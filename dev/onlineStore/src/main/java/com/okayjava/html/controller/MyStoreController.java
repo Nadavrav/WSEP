@@ -2,23 +2,29 @@ package com.okayjava.html.controller;
 
 import DomainLayer.Response;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
+import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
+import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
+import DomainLayer.Stores.Conditions.ConditionTypes.FilterCondition;
 import DomainLayer.Stores.Discounts.AdditiveDiscount;
 import DomainLayer.Stores.Discounts.BasicDiscount;
+import DomainLayer.Stores.Policies.Policy;
+import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.MinPriceProductFilter;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.*;
+import ServiceLayer.ServiceObjects.ServiceConditions.ConditionTypes;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServiceBasicPolicy;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.CompositeMessageCondition;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class MyStoreController {
@@ -28,6 +34,7 @@ public class MyStoreController {
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
     private int storeID;
+    private String StoreName;
 
     @GetMapping("/MyStore/{storeId}")
     public String myStoreMenu(Model model,
@@ -47,6 +54,7 @@ public class MyStoreController {
             alert.setMessage(responseDiscount.getMessage());
             model.addAttribute("alert", alert.copy());
             model.addAttribute("discountInfo", responseDiscount.getValue());
+            System.out.println("discounts: " + responseDiscount.getValue());
         }
 
         Response<HashSet<ServicePolicy>> responsePolicy = server.getStorePolicy(request, storeId);
@@ -60,24 +68,51 @@ public class MyStoreController {
             model.addAttribute("alert", alert.copy());
             model.addAttribute("policyInfo", responsePolicy.getValue());
         }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+
+            // Filter appointment requests based on the logged-in user
+            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                List<String> owners = entry.getValue();
+                if (owners.contains(server.getUsername(request))) {
+                    filteredAppointmentRequests.put(entry.getKey(), owners);
+                }
+            }
+            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+        }
+
         this.storeID = storeId;
+        this.StoreName = storeName;
         alert.reset();
         return "MyStore";
     }
 
+    @GetMapping("/MyStore")
+    public String myStoreMenu(Model model){
+
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        return "MyStore";
+    }
+
     @PostMapping("/discount_option")
-    public String processDiscountOption(@RequestParam("discountId") List<Integer> discountIds,
+    public String processDiscountOption(@RequestParam("discountId") Integer[] discountIds,
                                         @RequestParam("description") String description,
                                         @RequestParam("amount") Integer amount,
-                                        @RequestParam("condition") String condition) {
+                                        @RequestParam("condition") String condition,
+                                        Model model) {
 
-        Integer id1 = discountIds.get(0); //first selected discount
-        Integer id2 = discountIds.get(1); // second selected discount
+        Integer id1 = discountIds[0]; //first selected discount
+        Integer id2 = discountIds[1]; // second selected discount
 
         ServiceMultiDiscount serviceMultiDiscount;
         ServiceBasicDiscount serviceBasicDiscount;
 
-        if (discountIds.size() == 2){
+        if (discountIds.length == 2){
             if (condition.equals("AndCondition")) {
                 AndConditionRecord andConditionRecord = new AndConditionRecord(id1, id2);
                 serviceBasicDiscount = new ServiceBasicDiscount(description, amount, andConditionRecord);
@@ -91,26 +126,70 @@ public class MyStoreController {
                 serviceBasicDiscount = new ServiceBasicDiscount(description, amount, xorConditionRecord);
                 server.addDiscount(request, serviceBasicDiscount, storeID);
             }
-        } else if (discountIds.size() > 2) {
+        } else if (discountIds.length > 2) {
             if (condition.equals("MinBetween")) {
-                serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.MinBetweenDiscount, description, discountIds);
+                serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.MinBetweenDiscount, description, Arrays.asList(discountIds));
                 server.addDiscount(request, serviceMultiDiscount, storeID);
             } else if (condition.equals("Additive")) {
-                serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.AdditiveDiscount, description, discountIds);
+                serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.AdditiveDiscount, description, Arrays.asList(discountIds));
                 server.addDiscount(request, serviceMultiDiscount, storeID);
             } else if (condition.equals("MaxBetween")) {
-                serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.MaxBetweenDiscounts, description, discountIds);
+                serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.MaxBetweenDiscounts, description, Arrays.asList(discountIds));
                 server.addDiscount(request, serviceMultiDiscount, storeID);
             }
         }
-        return "redirect:/MyStore/";
+
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+
+        Response<Collection<ServiceDiscountInfo>> responseDiscount = server.getStoreDiscountInfo(request, storeID);
+        if (responseDiscount.isError()) {
+            alert.setFail(true);
+            alert.setMessage(responseDiscount.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(responseDiscount.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("discountInfo", responseDiscount.getValue());
+        }
+
+        Response<HashSet<ServicePolicy>> responsePolicy = server.getStorePolicy(request, storeID);
+        if (responsePolicy.isError()) {
+            alert.setFail(true);
+            alert.setMessage(responsePolicy.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(responsePolicy.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("policyInfo", responsePolicy.getValue());
+        }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+
+            // Filter appointment requests based on the logged-in user
+            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                List<String> owners = entry.getValue();
+                if (owners.contains(server.getUsername(request))) {
+                    filteredAppointmentRequests.put(entry.getKey(), owners);
+                }
+            }
+            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+        }
+//        return "MyStore";
+        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
+
     }
 
     @PostMapping("/add_discount")
     public String addNewDiscount(@RequestParam("conditionSelect") String condition,
                                  @RequestParam(value = "startDate", required = false) String startDate,
                                  @RequestParam(value = "endDate", required = false) String endDate,
-                                 @RequestParam(value = "date", required = false) String date,
                                  @RequestParam(value = "startHour", required = false) String startHour,
                                  @RequestParam(value = "endHour", required = false) String endHour,
                                  @RequestParam(value = "category", required = false) String category,
@@ -120,10 +199,14 @@ public class MyStoreController {
                                  @RequestParam(value = "maxTotalProductAmount", required = false) Double maxTotalProductAmount,
                                  @RequestParam(value = "minTotalProductAmount", required = false) Integer minTotalProductAmount,
                                  @RequestParam("description") String description,
-                                 @RequestParam("amount") Integer amount) {
-        System.out.println("1");
+                                 @RequestParam("amount") Integer amount,
+                                 Model model) {
+
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("storeName", StoreName);
         switch (condition) {
-            case "BetweenDatesCondition":
+            case "BetweenDatesCondition" -> {
                 if (startDate != null && endDate != null) {
                     String[] startDateParts = startDate.split("-");
                     String[] endDateParts = endDate.split("-");
@@ -141,13 +224,8 @@ public class MyStoreController {
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, betweenDatesConditionRecord);
                     server.addDiscount(request, serviceBasicDiscount, storeID);
                 }
-                break;
-            case "DateCondition":
-                if (date != null) {
-                    // Handle DateCondition
-                }
-                break;
-            case "LocalHourRangeCondition":
+            }
+            case "LocalHourRangeCondition" -> {
                 if (startHour != null && endHour != null) {
                     String[] startHourParts = startHour.split(":");
                     String[] endHourParts = endHour.split(":");
@@ -164,59 +242,92 @@ public class MyStoreController {
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, localHourRangeConditionRecord);
                     server.addDiscount(request, serviceBasicDiscount, storeID);
                 }
-                break;
-            case "CategoryCondition":
+            }
+            case "CategoryCondition" -> {
                 if (category != null) {
                     CategoryConditionRecord categoryConditionRecord = new CategoryConditionRecord(category);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, categoryConditionRecord);
                     server.addDiscount(request, serviceBasicDiscount, storeID);
                 }
-                break;
-            case "NameCondition":
+            }
+            case "NameCondition" -> {
                 if (name != null) {
+                    System.out.println("in name condition: " + name);
                     NameConditionRecord nameConditionRecord = new NameConditionRecord(name);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, nameConditionRecord);
-                    server.addDiscount(request, serviceBasicDiscount, storeID);
+//                    server.addDiscount(request, serviceBasicDiscount, storeID);
+                    System.out.println("after adding disocunt: " + server.addDiscount(request, serviceBasicDiscount, storeID).getValue());
                 }
-                break;
-            case "MaxBagPriceCondition":
+            }
+            case "MaxBagPriceCondition" -> {
                 if (maxBagPrice != null) {
                     MaxBagPriceConditionRecord maxBagPriceConditionRecord = new MaxBagPriceConditionRecord(maxBagPrice);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, maxBagPriceConditionRecord);
                     server.addDiscount(request, serviceBasicDiscount, storeID);
                 }
-                break;
-            case "MinBagPriceCondition":
+            }
+            case "MinBagPriceCondition" -> {
                 if (minBagPrice != null) {
                     MinBagPriceConditionRecord minBagPriceConditionRecord = new MinBagPriceConditionRecord(minBagPrice);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, minBagPriceConditionRecord);
                     server.addDiscount(request, serviceBasicDiscount, storeID);
                 }
-                break;
-            case "MaxTotalProductAmountCondition":
+            }
+            case "MaxTotalProductAmountCondition" -> {
                 if (maxTotalProductAmount != null) {
                     MaxTotalProductAmountConditionRecord maxTotalProductAmountConditionRecord =
                             new MaxTotalProductAmountConditionRecord(maxTotalProductAmount);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, maxTotalProductAmountConditionRecord);
                     server.addDiscount(request, serviceBasicDiscount, storeID);
                 }
-                break;
-            case "MinTotalProductAmountCondition":
+            }
+            case "MinTotalProductAmountCondition" -> {
                 if (minTotalProductAmount != null) {
                     MinTotalProductAmountConditionRecord minTotalProductAmountConditionRecord =
                             new MinTotalProductAmountConditionRecord(minTotalProductAmount);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, minTotalProductAmountConditionRecord);
                     server.addDiscount(request, serviceBasicDiscount, storeID);
                 }
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
-
-        return "redirect:/MyStore/";
+//        alert.setSuccess(true);
+//        alert.setMessage("Discount was added to store " + StoreName);
+//        model.addAttribute("alert", alert.copy());
+        alert.reset();
+        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
+//        return "MyStore";
     }
 
-    @RequestMapping(value="/dailyStoreIncome", method = RequestMethod.POST)
+//    @PostMapping ("policy_option")
+//    public String addNewPolicy(@RequestParam("policyConditionSelect") String condition,
+//                               @RequestParam("policyDescription") String description,
+//                               @RequestParam(value = "message", required = false) String message,
+//                               Model model){
+
+//        switch (condition) {
+//            case "CompositeCondition" -> {
+//                if (message != null) {
+//                    ConditionRecord conditionRecord = new CompositeMessageCondition();
+//                    ServicePolicy servicePolicy = new ServiceBasicPolicy(description, conditionRecord);
+//                    server.addPolicy(request, servicePolicy, storeID);
+//                }
+//            }
+//            case "OnlyIfCondition" -> {
+//                    FilterOnlyIfCondition filterOnlyIfCondition = new FilterOnlyIfCondition()
+//            }
+//            case "FilterCondition" -> {
+//
+//            }
+//            default -> {
+//            }
+//        }
+//        alert.reset();
+//        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
+//    }
+
+    @RequestMapping(value="/dailyStoreIncome", method = RequestMethod.GET)
     public String showDailyIncomeToStore(@RequestParam("date") String dateString,
                                          Model model) {
 
@@ -237,6 +348,51 @@ public class MyStoreController {
             System.out.println("income for storeId " + storeID + " : " + response.getValue());
             model.addAttribute("dailyIncome", response.getValue());
         }
+
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("storeName", StoreName); // Add the store name attribute
+
+        Response<Collection<ServiceDiscountInfo>> responseDiscount = server.getStoreDiscountInfo(request, storeID);
+        if (responseDiscount.isError()) {
+            alert.setFail(true);
+            alert.setMessage(responseDiscount.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(responseDiscount.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("discountInfo", responseDiscount.getValue());
+        }
+
+        Response<HashSet<ServicePolicy>> responsePolicy = server.getStorePolicy(request, storeID);
+        if (responsePolicy.isError()) {
+            alert.setFail(true);
+            alert.setMessage(responsePolicy.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(responsePolicy.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("policyInfo", responsePolicy.getValue());
+        }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+
+            // Filter appointment requests based on the logged-in user
+            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                List<String> owners = entry.getValue();
+                if (owners.contains(server.getUsername(request))) {
+                    filteredAppointmentRequests.put(entry.getKey(), owners);
+                }
+            }
+            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+        }
+
         alert.reset();
         return "MyStore";
     }

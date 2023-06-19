@@ -10,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -40,21 +43,42 @@ public class MainPageController{
         return "MainPage";
     }
 
-    @GetMapping("MainPage")
-    public String reMainPage(Model model) {
-        model.addAttribute("alert", alert.copy());
-        model.addAttribute("logged", server.isLogged(request));
-        model.addAttribute("name", server.getUsername(request));
-        if (server.isAdmin(request).getValue()) {
-            model.addAttribute("Admin", true);
+        @GetMapping("MainPage")
+        public String reMainPage(Model model) {
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("logged", server.isLogged(request));
+            model.addAttribute("name", server.getUsername(request));
+            if (server.isAdmin(request).getValue()) {
+                model.addAttribute("Admin", true);
+            }
+
+            Response<Map<Integer, List<String>>> response = server.getAppointmentRequests(request);
+            if (!response.isError()) {
+                Map<Integer, List<String>> appointmentRequests = response.getValue();
+
+                // Filter appointment requests based on the logged-in user
+                Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+                for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                    List<String> owners = entry.getValue();
+                    if (owners.contains(server.getUsername(request))) {
+                        filteredAppointmentRequests.put(entry.getKey(), owners);
+                    }
+                }
+                model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+                System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+            }
+
+            alert.reset();
+            return "MainPage";
         }
-
-//        List<AppointmentRequest> appointmentRequests = server.getAppointmentRequests();
-//        model.addAttribute("appointmentRequests", appointmentRequests);
-
-        alert.reset();
-        return "MainPage";
-    }
+//    @GetMapping("MainPage")
+//    public String reMainPage(Model model) {
+//        model.addAttribute("alert", alert.copy());
+//        model.addAttribute("logged", server.isLogged(request));
+//        model.addAttribute("name", server.getUsername(request));
+//        if (server.isAdmin(request).getValue()) {
+//            model.addAttribute("Admin", true);
+//             }
 
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public String signIn(@RequestParam("username") String username,
@@ -117,8 +141,10 @@ public class MainPageController{
             alert.setSuccess(true);
             alert.setMessage("Logging out..");
             model.addAttribute("alert", alert.copy());
+            System.out.println("logged success");
         }
         model.addAttribute("logged", server.isLogged(request));
+        System.out.println("logged valus is: " + server.isLogged(request));
         alert.reset();
         return "MainPage";
     }

@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class StoresController {
@@ -36,6 +39,22 @@ public class StoresController {
             alert.setMessage(response.getMessage());
 //            model.addAttribute("alert", alert.copy());
             model.addAttribute("stores", response.getValue());
+        }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+
+            // Filter appointment requests based on the logged-in user
+            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
+            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
+                List<String> owners = entry.getValue();
+                if (owners.contains(server.getUsername(request))) {
+                    filteredAppointmentRequests.put(entry.getKey(), owners);
+                }
+            }
+            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
+            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
         }
         alert.reset();
         return "Stores";

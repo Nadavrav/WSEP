@@ -153,20 +153,14 @@
 
                 <!-- Appointment Requests dropdown -->
                 <span class="dropdown">
-                    <button style="color: white;background-color: transparent;border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
                     <div class="dropdown-content" id="appointment-requests">
                         <ul>
-<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
-                            <!--                                No appointment requests-->
-                            <!--                            </p>-->
-                            <li th:each="request : ${appointmentRequests}">
-                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
-                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
-                                    Accept
-                                </button>
-                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
-                                    Decline
-                                </button>
+                            <p th:if="${appointmentRequests == null or appointmentRequests.isEmpty()}">No appointment requests</p>
+                            <li th:each="requestEntry : ${appointmentRequests}">
+                                <span th:each="owner : ${requestEntry.value}" th:text="${owner}"></span>
+                                <button th:if="${owner == name && request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${requestEntry.key} + '\'); updateDropdown(this)'">Accept</button>
+                                <button th:if="${owner == name && request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${requestEntry.key} + '\'); updateDropdown(this)'">Decline</button>
                             </li>
                         </ul>
                     </div>
@@ -198,7 +192,6 @@ crossorigin="anonymous"></script>
 
 <div>
     <h1>Comments and Ratings</h1>
-    <div th:replace="fragments/alert :: alert(${alert})"></div>
     <!-- Display product ratings -->
     <div class="ratings-container" style="position:fixed; right: 90px">
         <h2>Store Rate: <span th:text="${StoreRate}"></span></h2>
