@@ -227,7 +227,36 @@
     </form>
     <ul id="permissions-list">
         <!-- Permissions will be rendered using Thymeleaf -->
-        <li th:each="permission : ${myPermissions}" th:text="${permission}"></li>
+        <li th:each="permission : ${myPermissions}">
+            <span th:text="${permission}"></span>
+            <!-- Check if the permission allows managing stock -->
+            <span th:if="${permission == 'CanManageStock'}">
+                <button onclick="openModal('add-product-modal')">Add Product</button>
+                <button onclick="openModal('remove-product-modal')">Remove Product</button>
+                <button onclick="openModal('update-product-modal')">Update Product</button>
+            </span>
+            <span th:if="${permission == 'CanSeePurchaseHistory'}">
+                <button onclick="openModal('purchase-history-modal')">Purchase History</button>
+            </span>
+<!--            <span th:if="${permission == '??'}">-->
+<!--                <button onclick="openModal('close-store-modal')">Close Store</button>-->
+<!--            </span>-->
+            <span th:if="${permission == 'CanSeeStaffAndPermissions'}">
+                <button onclick="openModal('employee-info-modal')">Employee Information</button>
+            </span>
+            <span th:if="${permission == 'CanRemoveStoreManager'}">
+                <button onclick="openModal('remove-employee-modal')">Remove Employee</button>
+            </span>
+            <span th:if="${permission == 'CanAppointStoreOwner'}">
+                <button onclick="openModal('appoint-storeOwner-modal')">Appoint Store Owner</button>
+            </span>
+            <span th:if="${permission == 'CanAppointStoreManager'}">
+                <button onclick="openModal('appoint-storeManager-modal')">Appoint Store Manager</button>
+            </span>
+            <span th:if="${permission == 'CanChangePermissionsForStoreManager'}">
+                <button onclick="openModal('change-permissions-modal')">Change Permissions For Manager</button>
+            </span>
+        </li>
     </ul>
 </div>
 
