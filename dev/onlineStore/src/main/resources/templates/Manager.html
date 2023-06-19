@@ -220,78 +220,54 @@
 </div>
 <!------------------------------ Permissions Modal ------------------------------>
 <div id="permissions-modal" class="modal">
-    <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613</a>
+    <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613;</a>
     <form id="permissions-form" action="/fetch_permissions" method="post">
         <input type="number" name="storeId" id="storeIdInput" placeholder="Enter Store ID">
         <button class="permissions-button" type="submit">Submit</button>
     </form>
 </div>
 
-<!-- Modal to display permissions -->
-<div id="permissions-display-modal" class="modal">
-    <a class="close-button" onclick="closeModal('permissions-display-modal')">&#x2613</a>
-    <ul id="permissions-list">
-        <!-- Permissions will be rendered using Thymeleaf -->
-        <li th:each="permission : ${myPermissions}">
-            <span th:text="${permission}"></span>
-            <!-- Check if the permission allows managing stock -->
-            <span th:if="${permission == 'CanManageStock'}">
+<!-- Iterate over the list of permissions -->
+<div th:each="permission : ${myPermissions}">
+    <!-- Check if the permission is one of the permissions in the enum -->
+    <div th:if="${T(DomainLayer.Users.Permission).valueOf(permission.toString()) != null}">
+        <!-- Display the button based on the permission -->
+        <div th:switch="${permission.toString()}">
+            <div th:case="CanManageStock">
                 <button onclick="openModal('add-product-modal')">Add Product</button>
                 <button onclick="openModal('remove-product-modal')">Remove Product</button>
                 <button onclick="openModal('update-product-modal')">Update Product</button>
-            </span>
-            <span th:if="${permission == 'CanSeePurchaseHistory'}">
+            </div>
+            <div th:case="CanSeePurchaseHistory">
                 <button onclick="openModal('purchase-history-modal')">Purchase History</button>
-            </span>
-            <!--            <span th:if="${permission == '??'}">-->
-            <!--                <button onclick="openModal('close-store-modal')">Close Store</button>-->
-            <!--            </span>-->
-            <span th:if="${permission == 'CanSeeStaffAndPermissions'}">
+            </div>
+            <div th:case="CanSeeStaffAndPermissions">
                 <button onclick="openModal('employee-info-modal')">Employee Information</button>
-            </span>
-            <span th:if="${permission == 'CanRemoveStoreManager'}">
+            </div>
+            <div th:case="CanRemoveStoreManager">
                 <button onclick="openModal('remove-employee-modal')">Remove Employee</button>
-            </span>
-            <span th:if="${permission == 'CanAppointStoreOwner'}">
+            </div>
+            <div th:case="CanAppointStoreOwner">
                 <button onclick="openModal('appoint-storeOwner-modal')">Appoint Store Owner</button>
-            </span>
-            <span th:if="${permission == 'CanAppointStoreManager'}">
+            </div>
+            <div th:case="CanAppointStoreManager">
                 <button onclick="openModal('appoint-storeManager-modal')">Appoint Store Manager</button>
-            </span>
-            <span th:if="${permission == 'CanChangePermissionsForStoreManager'}">
+            </div>
+            <div th:case="CanChangePermissionsForStoreManager">
                 <button onclick="openModal('change-permissions-modal')">Change Permissions For Manager</button>
-            </span>
-        </li>
-    </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Add the close button for the permissions modal -->
 <script>
-    function fetchPermissions() {
-        // Prevent the default form submission
-        event.preventDefault();
-
-        var form = document.getElementById("permissions-form");
-        var storeId = document.getElementById("storeIdInput").value;
-
-        // Update the form action URL with the storeId value
-        form.action = "/fetch_permissions?storeId=" + encodeURIComponent(storeId);
-
-        // Submit the form
-        form.submit();
-    }
-
-    // Function to handle the success response after submitting the form
-    function handlePermissionsResponse() {
-        var permissionsModal = document.getElementById("permissions-modal");
-        var displayModal = document.getElementById("permissions-display-modal");
-
-        // Hide the permissions input modal
-        permissionsModal.style.display = "none";
-
-        // Display the permissions in the new modal
-        displayModal.style.display = "block";
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        modal.style.display = "none";
     }
 </script>
+
 <!--<div id="permissions-modal" class="modal">-->
 <!--    <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613</a>-->
 <!--    &lt;!&ndash;    <h2>Permissions</h2>&ndash;&gt;-->
