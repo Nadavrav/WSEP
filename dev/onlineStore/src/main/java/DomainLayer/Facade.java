@@ -40,48 +40,21 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class Facade {
-    private static Facade instanceFacade = null;
+    private static volatile Facade instanceFacade = null;
     private  static final Logger logger = Logger.getLogger("Facade Logger");
-
-    private Map<Integer, SiteVisitor> onlineList;//online
-
-
-    private Map<String, RegisteredUser> registeredUserList;
-
-
-    private Map<Integer, Store> storesList;
-    //unit tests getters
-    public Map<Integer, SiteVisitor> getOnlineList() {
-        return onlineList;
-    }
-    public Map<String, RegisteredUser> getRegisteredUserList() {
-        return registeredUserList;
-    }
-
-    public Map<String, RegisteredUser> getRegisteredUserList(int visitorId) throws Exception {
-        if(!(onlineList.get(visitorId) instanceof Admin))
-            throw new Exception("Only admin can fetch user list");
-        return registeredUserList;
-    }
-
-    //Getter for tests
-    public Map<Integer, Store> getStoresList() {
-        return storesList;
-    }
-    public Map<String, Map<Integer, Employment>> getEmploymentList() {
-        return employmentList;
-    }
-
-    private Map<String, Map<Integer, Employment>> employmentList;
-    private Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
-    private Map<Integer,Map<Bid,HashSet<Integer>>> bidVoters;
+    private final Map<Integer, SiteVisitor> onlineList;//online
+    private final Map<String, RegisteredUser> registeredUserList;
+    private final Map<Integer, Store> storesList;
+    private final Map<String, Map<Integer, Employment>> employmentList;
+    private final Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
-    private boolean dataLoaded=false;
+    private Boolean dataLoaded=false;
+    private final Object dataSyncObj=new Object();
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
-        bidVoters=new HashMap<>();
+        Map<Integer, Map<Bid, HashSet<Integer>>> bidVoters = new HashMap<>();
         onlineList = new HashMap<>();
         registeredUserList = new HashMap<>();
         storesList = new HashMap<>();
@@ -91,227 +64,254 @@ public class Facade {
         paymentProvider= new PaymentProvider();
         if(!ConfigParser.parse(this))
             registerInitialAdmin("admin","admin12345");
-
     }
-
     /**
-     * Function used by test inorder to reset the data in the facade and make the tests independent of one another.
+     * get instance uses double-checking to prevent synchronization when getting a non-null instance,
+     * improving runtime.
+     * if instance is null, synchronizes and checks again.
+     * (for specific runtime cases when 2 threads passed the 1st if)
+     * @return Facade singleton instance
      */
-    public void resetData()
-    {
-        if(!storesList.isEmpty()){
-            for(Store store:storesList.values()){
-                store.resetCounters();
-                break;
-            }
-        }
-        onlineList = new HashMap<>();
-        registeredUserList = new HashMap<>();
-        storesList = new HashMap<>();
-        employmentList = new HashMap<>();
-        supplier= new Supplier();
-        paymentProvider= new PaymentProvider();
-        dataLoaded=false;
-        //ConfigParser.parse(this);
-
-    }
-    public static synchronized Facade getInstance() {
+    public static Facade getInstance() {
         if (instanceFacade == null) {
-            instanceFacade = new Facade();
+            synchronized (Facade.class) {
+                if(instanceFacade==null)
+                    instanceFacade = new Facade();
+            }
         }
         return instanceFacade;
     }
+    public Map<Integer, SiteVisitor> getOnlineList() {
+        return onlineList;
+    }
+    public Map<String, RegisteredUser> getRegisteredUserList() {
+        return registeredUserList;
+    }
+    public Map<Integer, Store> getStoresList() {
+        return storesList;
+    }
+    public Map<String, Map<Integer, Employment>> getEmploymentList() {
+        return employmentList;
+    }
+    public Map<String, RegisteredUser> getRegisteredUserList(int visitorId) throws Exception {
+        if(!(onlineList.get(visitorId) instanceof Admin))
+            throw new Exception("Only admin can fetch user list");
+        return registeredUserList;
+    }
+    /**
+     * Function used by test inorder to reset the data in the facade and make the tests independent of one another.
+     * Synced on the same object as loadData
+     */
+    public void resetData()
+    {
+        synchronized (dataSyncObj) {
+            Store.resetCounters();
+            onlineList.clear();
+            registeredUserList.clear();
+            storesList.clear();
+            employmentList.clear();
+            supplier = new Supplier();
+            paymentProvider = new PaymentProvider();
+            dataLoaded = false;
+        }
+    }
+
+
+
 
     public void loadData() throws Exception {
-        if(dataLoaded)
-            return;
-       // resetData();
-        if(!ConfigParser.parse(this))
-            registerInitialAdmin("admin","admin12345");
-        try{
-            //New users
-            int nadavID = EnterNewSiteVisitor();
-            int nadiaID = EnterNewSiteVisitor();
-            int natalieID = EnterNewSiteVisitor();
-            int majdID = EnterNewSiteVisitor();
-            int denisID = EnterNewSiteVisitor();
-            int nikitaID = EnterNewSiteVisitor();
+        synchronized (dataSyncObj) {
+            if (dataLoaded)
+                return;
+            // resetData();
+            if (!ConfigParser.parse(this))
+                registerInitialAdmin("admin", "admin12345");
+            try {
+                //New users
+                int nadavID = EnterNewSiteVisitor();
+                int nadiaID = EnterNewSiteVisitor();
+                int natalieID = EnterNewSiteVisitor();
+                int majdID = EnterNewSiteVisitor();
+                int denisID = EnterNewSiteVisitor();
+                int nikitaID = EnterNewSiteVisitor();
 
 
-            Register(nadavID,"Nadav","123456789");
-            Register(nadiaID,"Nadia","123456789");
-            Register(natalieID,"Natalie","123456789");
-            Register(majdID,"Majd","123456789");
-            Register(denisID,"Denis","123456789");
-            Register(nikitaID,"Nikita","123456789");
+                Register(nadavID, "Nadav", "123456789");
+                Register(nadiaID, "Nadia", "123456789");
+                Register(natalieID, "Natalie", "123456789");
+                Register(majdID, "Majd", "123456789");
+                Register(denisID, "Denis", "123456789");
+                Register(nikitaID, "Nikita", "123456789");
 
-            login(nadavID,"Nadav","123456789");
-            login(nadiaID,"Nadia","123456789");
-            login(natalieID,"Natalie","123456789");
-            login(majdID,"Majd","123456789");
-            login(denisID,"Denis","123456789");
-            login(nikitaID,"Nikita","123456789");
+                login(nadavID, "Nadav", "123456789");
+                login(nadiaID, "Nadia", "123456789");
+                login(natalieID, "Natalie", "123456789");
+                login(majdID, "Majd", "123456789");
+                login(denisID, "Denis", "123456789");
+                login(nikitaID, "Nikita", "123456789");
 
-            //New Stores
-            int nadavStoreID = OpenNewStore(nadavID,"NadavStore");
-            int nadiaStoreID = OpenNewStore(nadiaID,"NadiaStore");
-            int natalieStoreID = OpenNewStore(natalieID,"NatalieStore");
-            int majdStoreID = OpenNewStore(majdID,"MajdStore");
-            int denisStoreID = OpenNewStore(denisID,"DenisStore");
-            int nikitaStoreID = OpenNewStore(nikitaID,"NikitaStore");
+                //New Stores
+                int nadavStoreID = OpenNewStore(nadavID, "NadavStore");
+                int nadiaStoreID = OpenNewStore(nadiaID, "NadiaStore");
+                int natalieStoreID = OpenNewStore(natalieID, "NatalieStore");
+                int majdStoreID = OpenNewStore(majdID, "MajdStore");
+                int denisStoreID = OpenNewStore(denisID, "DenisStore");
+                int nikitaStoreID = OpenNewStore(nikitaID, "NikitaStore");
 
-            //New Products
+                //New Products
 
-            //new
-            AddProduct(nadavID,nadavStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(nadavID,nadavStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(nadavID,nadavStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(nadavID,nadavStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(nadavID,nadavStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+                //new
+                AddProduct(nadavID, nadavStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(nadavID, nadavStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(nadavID, nadavStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(nadavID, nadavStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(nadavID, nadavStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
 
-            AddProduct(nadiaID,nadiaStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(nadiaID,nadiaStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(nadiaID,nadiaStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(nadiaID,nadiaStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(nadiaID,nadiaStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+                AddProduct(nadiaID, nadiaStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(nadiaID, nadiaStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(nadiaID, nadiaStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(nadiaID, nadiaStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(nadiaID, nadiaStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
 
-            AddProduct(natalieID,natalieStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(natalieID,natalieStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(natalieID,natalieStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(natalieID,natalieStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(natalieID,natalieStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+                AddProduct(natalieID, natalieStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(natalieID, natalieStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(natalieID, natalieStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(natalieID, natalieStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(natalieID, natalieStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
 
-            AddProduct(majdID,majdStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(majdID,majdStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(majdID,majdStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(majdID,majdStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(majdID,majdStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+                AddProduct(majdID, majdStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(majdID, majdStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(majdID, majdStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(majdID, majdStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(majdID, majdStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
 
-            AddProduct(denisID,denisStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(denisID,denisStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(denisID,denisStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(denisID,denisStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(denisID,denisStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+                AddProduct(denisID, denisStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(denisID, denisStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(denisID, denisStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(denisID, denisStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(denisID, denisStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
 
-            AddProduct(nikitaID,nikitaStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(nikitaID,nikitaStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(nikitaID,nikitaStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(nikitaID,nikitaStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(nikitaID,nikitaStoreID,"Steak",100,"Meat",1,"May contain peanuts");
+                AddProduct(nikitaID, nikitaStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(nikitaID, nikitaStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(nikitaID, nikitaStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(nikitaID, nikitaStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(nikitaID, nikitaStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
 
-            //old
-            AddProduct(nadiaID,nadiaStoreID,"Orange Juice",16,"Juice",90,"Good juice");
-            AddProduct(natalieID,natalieStoreID,"Apples",900,"Fruits",1,"Good apples");
-            AddProduct(majdID,majdStoreID,"Milk",6,"Milk",30,"Good milk");
-            AddProduct(denisID,denisStoreID,"Milk",6,"Milk",30,"Good milk");
-            AddProduct(nikitaID,nikitaStoreID,"Milk",6,"Milk",30,"Good milk");
-            //new Discounts
-            // NadavStore discounts:
-           // addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
-           // MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
-           // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
-           // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
-           // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
-           // AdditiveDiscount nadavAdditiveDiscount=new AdditiveDiscount("10% Discount on steaks and another 50% discount on steaks if you buy 2",1);
-           // nadavAdditiveDiscount.addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")));
-           // nadavAdditiveDiscount.addDiscount(new BasicDiscount("50% Discount on steaks if you buy 2",1,50,nameAndMinQuantityCondition));
-           // addDiscount(nadavAdditiveDiscount,nadavStoreID);
-           // // NadiaStore discounts:
-           // BooleanAfterFilterCondition nadiabreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-           // BooleanAfterFilterCondition nadiadairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-           // AndCondition andCondition=new AndCondition(nadiabreadCondition,nadiadairyCondition);
-           // MultiAndCondition nadiaMultiAndCondition=new MultiAndCondition();
-           // nadiaMultiAndCondition.addCondition(andCondition);
-           // nadiaMultiAndCondition.addCondition(new CategoryCondition("Meat"));
-           // BasicDiscount nadiaDiscount =new BasicDiscount(" 50% discount on all meat products if you buy least 5 bread loafs and also at least 6 dairy products",1,50,nadiaMultiAndCondition);
-           // CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
-           // BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
-           // BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
-           // AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
-           // additiveDiscount.addDiscount(storeDiscount);
-           // additiveDiscount.addDiscount(dairyDiscount);
-           // addDiscount(nadiaDiscount,nadiaStoreID);
-           // addDiscount(additiveDiscount,nadiaStoreID);
-           // // NatalieStore discounts:
-           // BooleanAfterFilterCondition natalieBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-           // BooleanAfterFilterCondition natalieDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-           // OrCondition natalieorCondition=new OrCondition(natalieBreadCondition,natalieDairyCondition);
-           // MultiAndCondition NataliemultiAndCondition=new MultiAndCondition();
-           // NataliemultiAndCondition.addCondition(natalieorCondition);
-           // NataliemultiAndCondition.addCondition(new CategoryCondition("Meat"));
-           // BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,NataliemultiAndCondition);
-           // addDiscount(basicDiscount,natalieStoreID);
+                //old
+                AddProduct(nadiaID, nadiaStoreID, "Orange Juice", 16, "Juice", 90, "Good juice");
+                AddProduct(natalieID, natalieStoreID, "Apples", 900, "Fruits", 1, "Good apples");
+                AddProduct(majdID, majdStoreID, "Milk", 6, "Milk", 30, "Good milk");
+                AddProduct(denisID, denisStoreID, "Milk", 6, "Milk", 30, "Good milk");
+                AddProduct(nikitaID, nikitaStoreID, "Milk", 6, "Milk", 30, "Good milk");
+                //new Discounts
+                // NadavStore discounts:
+                // addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
+                // MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
+                // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
+                // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
+                // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
+                // AdditiveDiscount nadavAdditiveDiscount=new AdditiveDiscount("10% Discount on steaks and another 50% discount on steaks if you buy 2",1);
+                // nadavAdditiveDiscount.addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")));
+                // nadavAdditiveDiscount.addDiscount(new BasicDiscount("50% Discount on steaks if you buy 2",1,50,nameAndMinQuantityCondition));
+                // addDiscount(nadavAdditiveDiscount,nadavStoreID);
+                // // NadiaStore discounts:
+                // BooleanAfterFilterCondition nadiabreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+                // BooleanAfterFilterCondition nadiadairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+                // AndCondition andCondition=new AndCondition(nadiabreadCondition,nadiadairyCondition);
+                // MultiAndCondition nadiaMultiAndCondition=new MultiAndCondition();
+                // nadiaMultiAndCondition.addCondition(andCondition);
+                // nadiaMultiAndCondition.addCondition(new CategoryCondition("Meat"));
+                // BasicDiscount nadiaDiscount =new BasicDiscount(" 50% discount on all meat products if you buy least 5 bread loafs and also at least 6 dairy products",1,50,nadiaMultiAndCondition);
+                // CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
+                // BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
+                // BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
+                // AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
+                // additiveDiscount.addDiscount(storeDiscount);
+                // additiveDiscount.addDiscount(dairyDiscount);
+                // addDiscount(nadiaDiscount,nadiaStoreID);
+                // addDiscount(additiveDiscount,nadiaStoreID);
+                // // NatalieStore discounts:
+                // BooleanAfterFilterCondition natalieBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+                // BooleanAfterFilterCondition natalieDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+                // OrCondition natalieorCondition=new OrCondition(natalieBreadCondition,natalieDairyCondition);
+                // MultiAndCondition NataliemultiAndCondition=new MultiAndCondition();
+                // NataliemultiAndCondition.addCondition(natalieorCondition);
+                // NataliemultiAndCondition.addCondition(new CategoryCondition("Meat"));
+                // BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,NataliemultiAndCondition);
+                // addDiscount(basicDiscount,natalieStoreID);
 //
-           // // MajdStore discounts:
-           // BooleanAfterFilterCondition majdBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-           // BooleanAfterFilterCondition majdDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-           // XorCondition majdXorCondition=new XorCondition(majdBreadCondition,majdDairyCondition);
-           // MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
-           // majdMultiAndCondition.addCondition(majdXorCondition);
-           // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
+                // // MajdStore discounts:
+                // BooleanAfterFilterCondition majdBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+                // BooleanAfterFilterCondition majdDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+                // XorCondition majdXorCondition=new XorCondition(majdBreadCondition,majdDairyCondition);
+                // MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
+                // majdMultiAndCondition.addCondition(majdXorCondition);
+                // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
 //
-           // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
+                // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
 //
-           // addDiscount(majdBasicDiscount,majdStoreID);
-            // DenisStore discounts:
-           // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
-           // MinBagPriceCondition denisMinBagPriceCondition=new MinBagPriceCondition(200);
-           // AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
-           // FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
-           // BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
+                // addDiscount(majdBasicDiscount,majdStoreID);
+                // DenisStore discounts:
+                // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
+                // MinBagPriceCondition denisMinBagPriceCondition=new MinBagPriceCondition(200);
+                // AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
+                // FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
+                // BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
 //
-            //        " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
+                //        " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
 //
-            //addDiscount(denisBasicDiscount,denisStoreID);
-            // NikitaStore discounts:
-            NameCondition milkCondition=new NameCondition("Milk 15%");
-            CategoryCondition meatCategoryCondition=new CategoryCondition("Meat");
-            BasicDiscount meatsDiscount=new BasicDiscount("20% discount on all 15% milk cartons",1,20,milkCondition);
-            BasicDiscount milkDiscount =new BasicDiscount("25% discount on all meat products",2,25,meatCategoryCondition);
-            MaxSelectiveDiscount maxSelectiveDiscount=new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them",3);
-            maxSelectiveDiscount.addDiscount(meatsDiscount);
-            maxSelectiveDiscount.addDiscount(milkDiscount);
-            //add policies
-            //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
-            //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
-            //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
-        //    appointNewStoreOwner(nadavID,"Denis",0);
-        //    appointNewStoreOwner(1,"Nadia",0);
-        //    acceptEmploymentRequest(denisID,0,"Nadia");
-            //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
-            //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
-            //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
-            //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
-            //addPolicy(DairyPolicy,nadavStoreID);
-            //addPolicy(BreadPolicy,nadavStoreID);
-            //addPolicy(Meatpolicy,nadiaStoreID);
-            //addPolicy(BreadPolicy,denisStoreID);
-            //addPolicy(BreadPolicy,nadiaStoreID);
-            //addPolicy(BagPolicy,denisStoreID);
-            //addPolicy(BagPolicy,nadiaStoreID);
-            //addPolicy(BagPolicy,natalieStoreID);
+                //addDiscount(denisBasicDiscount,denisStoreID);
+                // NikitaStore discounts:
+                NameCondition milkCondition = new NameCondition("Milk 15%");
+                CategoryCondition meatCategoryCondition = new CategoryCondition("Meat");
+                BasicDiscount meatsDiscount = new BasicDiscount("20% discount on all 15% milk cartons", 1, 20, milkCondition);
+                BasicDiscount milkDiscount = new BasicDiscount("25% discount on all meat products", 2, 25, meatCategoryCondition);
+                MaxSelectiveDiscount maxSelectiveDiscount = new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them", 3);
+                maxSelectiveDiscount.addDiscount(meatsDiscount);
+                maxSelectiveDiscount.addDiscount(milkDiscount);
+                //add policies
+                //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
+                //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
+                //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
+                //    appointNewStoreOwner(nadavID,"Denis",0);
+                //    appointNewStoreOwner(1,"Nadia",0);
+                //    acceptEmploymentRequest(denisID,0,"Nadia");
+                //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
+                //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
+                //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
+                //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
+                //addPolicy(DairyPolicy,nadavStoreID);
+                //addPolicy(BreadPolicy,nadavStoreID);
+                //addPolicy(Meatpolicy,nadiaStoreID);
+                //addPolicy(BreadPolicy,denisStoreID);
+                //addPolicy(BreadPolicy,nadiaStoreID);
+                //addPolicy(BagPolicy,denisStoreID);
+                //addPolicy(BagPolicy,nadiaStoreID);
+                //addPolicy(BagPolicy,natalieStoreID);
 
-            logout(nadavID);
-            logout(nadiaID);
-            logout(natalieID);
-            logout(majdID);
-            logout(denisID);
-            logout(nikitaID);
-            dataLoaded=true;
+                logout(nadavID);
+                logout(nadiaID);
+                logout(natalieID);
+                logout(majdID);
+                logout(denisID);
+                logout(nikitaID);
+                dataLoaded = true;
 
-        }
-        catch(Exception e){
-            throw new Exception(e);
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
         }
 
     }
 
 //------------UserPackege-----------------------
     public int EnterNewSiteVisitor() throws Exception {//1.1
-        SiteVisitor visitor = new SiteVisitor();
-        onlineList.put(visitor.getVisitorId(), visitor);
-        logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
-        return visitor.getVisitorId();
+        synchronized (onlineList) {
+            SiteVisitor visitor = new SiteVisitor();
+            onlineList.put(visitor.getVisitorId(), visitor);
+            logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
+            return visitor.getVisitorId();
+        }
     }
     public boolean isLoggedIn(int visitorid) {
         return onlineList.containsKey(visitorid);

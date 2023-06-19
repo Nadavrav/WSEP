@@ -474,7 +474,7 @@ public class Store {
         return storePolicies.remove(policyId);
     }
 
-    public void resetCounters() {
+    public static void resetCounters() {
         StoreID_GENERATOR.getAndSet(0);
         ProductID_GENERATOR.getAndSet(0);
 
