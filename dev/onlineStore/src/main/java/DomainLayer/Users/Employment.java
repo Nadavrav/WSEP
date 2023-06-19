@@ -54,7 +54,12 @@ public class Employment {
         this.employee = employee;
         this.store = store;
         this.role = role;
-        permissions = null;
+        permissions = new LinkedList<>();
+
+        for (Permission p:Permission.values()) {
+            permissions.add(p);
+        }
+
     }
 
 
