@@ -46,7 +46,7 @@ public class ManagerController {
             Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
             for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
                 List<String> owners = entry.getValue();
-                if (owners.contains(server.getUsername())) {
+                if (owners.contains(server.getUsername(request))) {
                     filteredAppointmentRequests.put(entry.getKey(), owners);
                 }
             }
@@ -57,26 +57,26 @@ public class ManagerController {
         return "Manager";
     }
 
-//    @RequestMapping(value = "/fetch_permissions", method = RequestMethod.POST)
-//    public String fetchPermissions(@RequestParam("storeId") int storeId, Model model) {
-//        // Retrieve the permissions for the given storeId
-//        System.out.println("in fetch permissions");
-//        Response<LinkedList<Permission>> response = server.getPermissions(request, storeId, server.getUsername());
-//        if (response.isError()){
-//            System.out.println("error");
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//            model.addAttribute("myPermissions", response.getValue());
-//            System.out.println(response.getValue());
-//        }
-//        alert.reset();
-//        return "Manager";
-//    }
+    @RequestMapping(value = "/fetch_permissions", method = RequestMethod.POST)
+    public String fetchPermissions(@RequestParam("storeId") int storeId, Model model) {
+        // Retrieve the permissions for the given storeId
+        System.out.println("in fetch permissions");
+        Response<LinkedList<Permission>> response = server.getPermissions(request, storeId, server.getUsername(request));
+        if (response.isError()){
+            System.out.println("error: " + response.getMessage());
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("myPermissions", response.getValue());
+            System.out.println(response.getValue());
+        }
+        alert.reset();
+        return "Manager";
+    }
 
 
     @RequestMapping(value = "/openStore", method = RequestMethod.POST)
@@ -395,26 +395,4 @@ public class ManagerController {
         alert.reset();
         return "redirect:/Manager";
     }
-
-    //    @RequestMapping(value = "/add-store-discount" , method = RequestMethod.POST)
-//    public String storeDiscount(@RequestParam("cond-desc") String discount,
-//                                @RequestParam("storeID-add-desc") int storeID,
-//                                Model model){
-//
-////        Response<?> response = server.addDiscount(storeID, discount);
-////        if (response.isError()){
-////            alert.setFail(true);
-////            alert.setMessage(response.getMessage());
-////            model.addAttribute("alert", alert.copy());
-////            System.out.println("error");
-////        } else {
-////            alert.setSuccess(true);
-////            alert.setMessage(response.getMessage());
-//////            model.addAttribute("alert", alert.copy());
-////            System.out.println("adding discount: " + discount + " to storeid: " + storeID);
-////        }
-////        alert.reset();
-//        return "Manager";
-//    }
-
 }

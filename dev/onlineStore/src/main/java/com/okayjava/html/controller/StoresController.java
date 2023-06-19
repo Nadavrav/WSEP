@@ -49,7 +49,7 @@ public class StoresController {
             Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
             for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
                 List<String> owners = entry.getValue();
-                if (owners.contains(server.getUsername())) {
+                if (owners.contains(server.getUsername(request))) {
                     filteredAppointmentRequests.put(entry.getKey(), owners);
                 }
             }

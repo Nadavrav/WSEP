@@ -207,8 +207,10 @@ public class Facade {
             AddProduct(nikitaID,nikitaStoreID,"Milk",6,"Milk",30,"Good milk");
             //new Discounts
             // NadavStore discounts:
-           // addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
-           // MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
+            addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
+            addDiscount(new BasicDiscount("5% Discount on milk!",2,10,new NameCondition("Milk")),nadavStoreID);
+
+            // MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
            // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
            // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
            // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
@@ -1277,45 +1279,45 @@ public class Facade {
         //release productlock if locked
         //throw e
     }
-
-    public void AddStorePolicy(int visitorId, int storeId, Policy policy) throws Exception {
-        SiteVisitor User = onlineList.get(visitorId);
-        //lock user
-        //try
-        if(! (User instanceof RegisteredUser)){
-            logger.severe("Invalid visitor Id: " + visitorId);
-            throw  new Exception("invalid visitor Id");
-        }
-        Store store = storesList.get(storeId);
-        if(store==null){
-            logger.warning(" store is null");
-            throw  new Exception("there is no store with this id ");
-        }
-        Employment employment = null;
-        try{
-            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
-        }catch (Exception e){
-            logger.warning("user with no store");
-            throw  new Exception("this user dont have any store");
-        }
-        if (employment == null){
-            logger.warning("employment is null");
-            throw  new Exception("there is no employee with this id ");
-        }
-        if (!employment.CanChangePolicyAndDiscounts()) {
-            logger.warning("user are not allowed to add products");
-            throw  new Exception("you are not allowed to add policies to this store");
-        }
-        if(store.getActive())
-            store.addPolicy(policy);
-        else {
-            logger.warning("Store is closed, store id :"+storeId);
-            throw new Exception("Store is closed");
-        }
-        //catch
-        //release lock user
-        //throw e
-    }
+//
+//    public void AddStorePolicy(int visitorId, int storeId, Policy policy) throws Exception {
+//        SiteVisitor User = onlineList.get(visitorId);
+//        //lock user
+//        //try
+//        if(! (User instanceof RegisteredUser)){
+//            logger.severe("Invalid visitor Id: " + visitorId);
+//            throw  new Exception("invalid visitor Id");
+//        }
+//        Store store = storesList.get(storeId);
+//        if(store==null){
+//            logger.warning(" store is null");
+//            throw  new Exception("there is no store with this id ");
+//        }
+//        Employment employment = null;
+//        try{
+//            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
+//        }catch (Exception e){
+//            logger.warning("user with no store");
+//            throw  new Exception("this user dont have any store");
+//        }
+//        if (employment == null){
+//            logger.warning("employment is null");
+//            throw  new Exception("there is no employee with this id ");
+//        }
+//        if (!employment.CanChangePolicyAndDiscounts()) {
+//            logger.warning("user are not allowed to add products");
+//            throw  new Exception("you are not allowed to add policies to this store");
+//        }
+//        if(store.getActive())
+//            store.addPolicy(policy);
+//        else {
+//            logger.warning("Store is closed, store id :"+storeId);
+//            throw new Exception("Store is closed");
+//        }
+//        //catch
+//        //release lock user
+//        //throw e
+//    }
     public Policy AddStorePolicy(int visitorId, int storeId, ServicePolicy policy) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         //lock user

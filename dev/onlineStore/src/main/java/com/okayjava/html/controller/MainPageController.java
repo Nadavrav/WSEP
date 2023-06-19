@@ -46,8 +46,8 @@ public class MainPageController{
         @GetMapping("MainPage")
         public String reMainPage(Model model) {
             model.addAttribute("alert", alert.copy());
-            model.addAttribute("logged", server.isLogged());
-            model.addAttribute("name", server.getUsername());
+            model.addAttribute("logged", server.isLogged(request));
+            model.addAttribute("name", server.getUsername(request));
             if (server.isAdmin(request).getValue()) {
                 model.addAttribute("Admin", true);
             }
@@ -60,7 +60,7 @@ public class MainPageController{
                 Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
                 for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
                     List<String> owners = entry.getValue();
-                    if (owners.contains(server.getUsername())) {
+                    if (owners.contains(server.getUsername(request))) {
                         filteredAppointmentRequests.put(entry.getKey(), owners);
                     }
                 }
@@ -141,8 +141,10 @@ public class MainPageController{
             alert.setSuccess(true);
             alert.setMessage("Logging out..");
             model.addAttribute("alert", alert.copy());
+            System.out.println("logged success");
         }
         model.addAttribute("logged", server.isLogged(request));
+        System.out.println("logged valus is: " + server.isLogged(request));
         alert.reset();
         return "MainPage";
     }
