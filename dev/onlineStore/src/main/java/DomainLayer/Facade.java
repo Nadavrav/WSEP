@@ -335,8 +335,13 @@ public class Facade {
         logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
         return visitor.getVisitorId();
     }
-    public boolean isLoggedIn(int visitorid) {
-        return onlineList.containsKey(visitorid);
+    public boolean isLoggedIn(int visitorId) {
+        SiteVisitor siteVisitor= onlineList.get(visitorId);
+        if(siteVisitor==null){
+            logger.severe("ID ERROR IN isLoggedIn- visitorId not online");
+            throw new RuntimeException("User is not online");
+        }
+        return siteVisitor instanceof RegisteredUser;
     }
     public String getUserName(int visitorId) {
         if(!onlineList.containsKey(visitorId)){
