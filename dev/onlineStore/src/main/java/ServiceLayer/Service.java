@@ -877,9 +877,9 @@ public class Service {
         }
     }
     
-    public Response<LinkedList<Permission>> getPermissions(int storeId,String appointedUserName) {
+    public Response<LinkedList<Permission>> getPermissions(int storeId) {
         try {
-            return new Response<>(facade.getPermissions(visitorId, storeId, appointedUserName));
+            return new Response<>(facade.getPermissions(visitorId, storeId));
         } catch (Exception e) {
             return new Response<>(e.getMessage(), true);
         }

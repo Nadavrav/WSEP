@@ -240,8 +240,9 @@ public class Server {
         return getSession(request).addPolicy(servicePolicy, storeId);
     }
 
-    public Response<LinkedList<Permission>> getPermissions(HttpServletRequest request, int storeId, String appointedUserName){
-        return getSession(request).getPermissions(storeId, appointedUserName);
+
+    public Response<LinkedList<Permission>> getPermissions(HttpServletRequest request, int storeId){
+        return getSession(request).getPermissions(storeId);
     }
 
     public Response<?> declineAppointment(HttpServletRequest request, int storeId, String appointedUserName) {
