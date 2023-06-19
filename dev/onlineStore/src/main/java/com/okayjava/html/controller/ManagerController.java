@@ -61,7 +61,7 @@ public class ManagerController {
     public String fetchPermissions(@RequestParam("storeId") int storeId, Model model) {
         // Retrieve the permissions for the given storeId
         System.out.println("in fetch permissions");
-        Response<LinkedList<Permission>> response = server.getPermissions(request, storeId, server.getUsername(request));
+        Response<LinkedList<Permission>> response = server.getPermissions(request, storeId);
         if (response.isError()){
             System.out.println("error: " + response.getMessage());
             alert.setFail(true);

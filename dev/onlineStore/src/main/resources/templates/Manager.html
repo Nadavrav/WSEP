@@ -225,6 +225,11 @@
         <input type="number" name="storeId" id="storeIdInput" placeholder="Enter Store ID">
         <button class="permissions-button" type="submit">Submit</button>
     </form>
+</div>
+
+<!-- Modal to display permissions -->
+<div id="permissions-display-modal" class="modal">
+    <a class="close-button" onclick="closeModal('permissions-display-modal')">&#x2613</a>
     <ul id="permissions-list">
         <!-- Permissions will be rendered using Thymeleaf -->
         <li th:each="permission : ${myPermissions}">
@@ -238,9 +243,9 @@
             <span th:if="${permission == 'CanSeePurchaseHistory'}">
                 <button onclick="openModal('purchase-history-modal')">Purchase History</button>
             </span>
-<!--            <span th:if="${permission == '??'}">-->
-<!--                <button onclick="openModal('close-store-modal')">Close Store</button>-->
-<!--            </span>-->
+            <!--            <span th:if="${permission == '??'}">-->
+            <!--                <button onclick="openModal('close-store-modal')">Close Store</button>-->
+            <!--            </span>-->
             <span th:if="${permission == 'CanSeeStaffAndPermissions'}">
                 <button onclick="openModal('employee-info-modal')">Employee Information</button>
             </span>
@@ -273,6 +278,18 @@
 
         // Submit the form
         form.submit();
+    }
+
+    // Function to handle the success response after submitting the form
+    function handlePermissionsResponse() {
+        var permissionsModal = document.getElementById("permissions-modal");
+        var displayModal = document.getElementById("permissions-display-modal");
+
+        // Hide the permissions input modal
+        permissionsModal.style.display = "none";
+
+        // Display the permissions in the new modal
+        displayModal.style.display = "block";
     }
 </script>
 <!--<div id="permissions-modal" class="modal">-->

@@ -225,13 +225,48 @@
         <input type="number" name="storeId" id="storeIdInput" placeholder="Enter Store ID">
         <button class="permissions-button" type="submit">Submit</button>
     </form>
+</div>
+
+<!-- Modal to display permissions -->
+<div id="permissions-display-modal" class="modal">
+    <a class="close-button" onclick="closeModal('permissions-display-modal')">&#x2613</a>
     <ul id="permissions-list">
         <!-- Permissions will be rendered using Thymeleaf -->
-        <li th:each="permission : ${myPermissions}" th:text="${permission}"></li>
+        <li th:each="permission : ${myPermissions}">
+            <span th:text="${permission}"></span>
+            <!-- Check if the permission allows managing stock -->
+            <span th:if="${permission == 'CanManageStock'}">
+                <button onclick="openModal('add-product-modal')">Add Product</button>
+                <button onclick="openModal('remove-product-modal')">Remove Product</button>
+                <button onclick="openModal('update-product-modal')">Update Product</button>
+            </span>
+            <span th:if="${permission == 'CanSeePurchaseHistory'}">
+                <button onclick="openModal('purchase-history-modal')">Purchase History</button>
+            </span>
+            <!--            <span th:if="${permission == '??'}">-->
+            <!--                <button onclick="openModal('close-store-modal')">Close Store</button>-->
+            <!--            </span>-->
+            <span th:if="${permission == 'CanSeeStaffAndPermissions'}">
+                <button onclick="openModal('employee-info-modal')">Employee Information</button>
+            </span>
+            <span th:if="${permission == 'CanRemoveStoreManager'}">
+                <button onclick="openModal('remove-employee-modal')">Remove Employee</button>
+            </span>
+            <span th:if="${permission == 'CanAppointStoreOwner'}">
+                <button onclick="openModal('appoint-storeOwner-modal')">Appoint Store Owner</button>
+            </span>
+            <span th:if="${permission == 'CanAppointStoreManager'}">
+                <button onclick="openModal('appoint-storeManager-modal')">Appoint Store Manager</button>
+            </span>
+            <span th:if="${permission == 'CanChangePermissionsForStoreManager'}">
+                <button onclick="openModal('change-permissions-modal')">Change Permissions For Manager</button>
+            </span>
+        </li>
     </ul>
 </div>
 
 <script>
+
     function fetchPermissions() {
         // Prevent the default form submission
         event.preventDefault();
@@ -244,6 +279,23 @@
 
         // Submit the form
         form.submit();
+    }
+
+    // Function to handle the success response after submitting the form
+    function handlePermissionsResponse() {
+        var permissionsModal = document.getElementById("permissions-modal");
+        var displayModal = document.getElementById("permissions-display-modal");
+
+        // Hide the permissions input modal
+        permissionsModal.style.display = "none";
+
+        // Display the permissions in the new modal
+        displayModal.style.display = "block";
+
+        // Update the Thymeleaf expressions in the displayed modal
+        var modalContent = displayModal.innerHTML;
+        var renderedContent = thymeleaf.render(modalContent, {myPermissions: ${myPermissions}});
+        displayModal.innerHTML = renderedContent;
     }
 </script>
 <!--<div id="permissions-modal" class="modal">-->
