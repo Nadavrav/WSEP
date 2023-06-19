@@ -269,7 +269,8 @@ public class Facade {
            // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
 //
            // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
-//
+
+
            // addDiscount(majdBasicDiscount,majdStoreID);
             // DenisStore discounts:
            // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
@@ -2129,7 +2130,7 @@ public class Facade {
         }
     }
 
-    public LinkedList<Permission> getPermissions(int visitorId, int storeId, String appointedUserName) throws Exception {
+    public LinkedList<Permission> getPermissions(int visitorId, int storeId) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){
             throw new Exception("Invalid visitorID");
