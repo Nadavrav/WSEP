@@ -29,13 +29,8 @@ public class SearchResultsController {
 
     @GetMapping("/SearchResults")
     public String searchResult(Model model) {
-        model.addAttribute("alert", alert.copy());
-        alert.reset();
-        return "SearchResults";
-    }
-
-    @PostMapping("/SearchResults")
-    public String resultPage(Model model){
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
         model.addAttribute("alert", alert.copy());
         alert.reset();
         return "SearchResults";

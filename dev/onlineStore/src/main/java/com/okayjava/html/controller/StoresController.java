@@ -22,6 +22,8 @@ public class StoresController {
 
     @GetMapping("/Stores")
     public String getStoreAndProductsNames(Model model) {
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
         model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<?> response = server.getStoresName(request); //linkedlist stores
@@ -30,9 +32,9 @@ public class StoresController {
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
         } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-            model.addAttribute("alert", alert.copy());
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
             model.addAttribute("stores", response.getValue());
         }
         alert.reset();
@@ -45,7 +47,7 @@ public class StoresController {
                                       @RequestParam("storeID") int storeID,
                                       Model model){
 
-        model.addAttribute("alert", alert.copy());
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<?> response = server.addStoreRateAndComment(request,storeID, rating, comment);
         if (response.isError()){

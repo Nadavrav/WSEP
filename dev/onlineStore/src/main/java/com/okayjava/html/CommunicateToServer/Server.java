@@ -7,38 +7,22 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
+import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Server {
 
-    private boolean logged = false;
-    private String username = "";
+    //private boolean logged = false;
+    //private String username = "";
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public boolean isLogged(){
-        return logged;
-    }
-
-    public void setLogged(boolean status){
-        logged = status;
-    }
     private static Server server = null;
-    //private Service service;
     private final HashMap<String,Service> activeSessions;
 
     public static Server getInstance(){
@@ -59,12 +43,24 @@ public class Server {
             activeSessions.put(sessionId,new Service());
         return activeSessions.get(sessionId);
     }
+    public boolean isLogged(HttpServletRequest request){
+        Response<Boolean> r= getSession(request).isLoggedIn();
+        if(r.isError())
+            return false;
+        return r.getValue();
+    }
+
+    public String getUsername(HttpServletRequest request){
+        Response<String> r= getSession(request).getUserName();
+        if(r.isError())
+            return "SYSTEM ERROR";
+        return r.getValue();
+    }
     public Response<Integer> EnterNewSiteVisitor(HttpServletRequest request) {
         return getSession(request).EnterNewSiteVisitor();
     }
 
     public Response<?> login(HttpServletRequest request,String username, String password) {
-        this.username = username;
         return getSession(request).login(username, password);
     }
 
@@ -74,7 +70,6 @@ public class Server {
     }
 
     public Response<?> logout(HttpServletRequest request) {
-        logged = false;
         return getSession(request).logout();
     }
 
@@ -217,8 +212,8 @@ public class Server {
         return getSession(request).getStoreDiscountInfo(storeId);
     }
 
-    public Response<Collection<ServiceStore>> getStoresByUserName(HttpServletRequest request){
-        return getSession(request).getStoresByUserName(this.username);
+    public Response<Collection<ServiceStore>> getMyStores(HttpServletRequest request){
+        return getSession(request).getStoresByUserName();
     }
 
     public Response<List<String>> PurchaseCart(HttpServletRequest request,int visitorCard, String address){
@@ -226,16 +221,48 @@ public class Server {
     }
 
     public Response<LinkedList<String>> getNewMessages(HttpServletRequest request) throws Exception {
-        return getSession(request).getNewMessages(this.username);
+        return getSession(request).getNewMessages();
     }
 
     public Response<Boolean> checkForNewMessages(HttpServletRequest request) throws Exception {
-        return getSession(request).checkForNewMessages(this.username);
+        return getSession(request).checkForNewMessages();
     }
 
     public Response<Double> getTotalPrice(HttpServletRequest request){
         return getSession(request).getTotalPrice();
     }
+
+    public Response<HashSet<ServicePolicy>> getStorePolicy(HttpServletRequest request, int storeId){
+        return getSession(request).getStorePolicy(storeId);
+    }
+
+    public Response<ServiceDiscountInfo> addDiscount(HttpServletRequest request, ServiceDiscount serviceDiscount, int storeId){
+        return getSession(request).addDiscount(serviceDiscount, storeId);
+    }
+
+    public Response<LinkedList<Permission>> getPermissions(HttpServletRequest request, int storeId, String appointedUserName){
+        return getSession(request).getPermissions(storeId, appointedUserName);
+    }
+
+    public Response<?> declineAppointment(HttpServletRequest request, int storeId, String appointedUserName) {
+        return getSession(request).declineAppointment(storeId, appointedUserName);
+    }
+
+    public Response<?> acceptAppointment(HttpServletRequest request, int storeId, String appointedUserName){
+        return getSession(request).acceptAppointment(storeId, appointedUserName);
+    }
+
+    public Response<Integer> getDailyIncomeByStore(HttpServletRequest request, int day,int month,int year,int storeId){
+        return getSession(request).getDailyIncomeByStore(day, month, year, storeId);
+    }
+
+    public Response<Integer> getDailyIncome(HttpServletRequest request, int day,int month,int year){
+        return getSession(request).getDailyIncome(day, month, year);
+    }
+
+//    public Response<?> sendAppointmentRequest(HttpServletRequest request, int storeId, String ownerName, String existingOwnerName) {
+//        return getSession(request).sendAppointmentRequest(storeId, ownerName, existingOwnerName);
+//    }
 
 
 }

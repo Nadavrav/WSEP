@@ -20,6 +20,18 @@ public class BuyController {
     @GetMapping("/Buy")
     public String purchase(Model model) {
         model.addAttribute("alert", alert.copy());
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+//        model.addAttribute("alert", alert.copy());
+        Response<Double> responseT = server.getTotalPrice(request);
+        if (responseT.isError()){
+            alert.setFail(true);
+            alert.setMessage(responseT.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        else{
+            model.addAttribute("totalAmount", responseT.getValue());
+            model.addAttribute("alert", alert.copy());
+        }
         alert.reset();
         return "Buy";
     }
@@ -33,7 +45,7 @@ public class BuyController {
 //                           @RequestParam("cvv") String cvv,
                            Model model) {
 
-        model.addAttribute("alert", alert.copy());
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<List<String>> response = server.PurchaseCart(request,cardNumber, address);
         if (response.isError()){
@@ -47,6 +59,7 @@ public class BuyController {
             alert.setMessage("Thank You ;)");
             model.addAttribute("buy", response.getValue()); //List<String>
             model.addAttribute("alert", alert.copy());
+            System.out.println("successful buy");
         }
         alert.reset();
         return "Buy";

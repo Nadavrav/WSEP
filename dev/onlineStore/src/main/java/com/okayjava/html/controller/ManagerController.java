@@ -1,5 +1,6 @@
 package com.okayjava.html.controller;
 import DomainLayer.Response;
+import DomainLayer.Stores.Store;
 import DomainLayer.Users.Permission;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import com.okayjava.html.CommunicateToServer.Alert;
@@ -21,9 +22,11 @@ public class ManagerController {
 
     @GetMapping("/Manager")
     public String menu(Model model) {
-        model.addAttribute("alert", alert.copy());
+//        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
         alert.reset();
-        Response<Collection<ServiceStore>> response = server.getStoresByUserName(request);
+        Response<Collection<ServiceStore>> response = server.getMyStores(request);
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -38,26 +41,27 @@ public class ManagerController {
         return "Manager";
     }
 
-    @RequestMapping(value = "/add-store-discount" , method = RequestMethod.POST)
-    public String storeDiscount(@RequestParam("cond-desc") String discount,
-                                @RequestParam("storeID-add-desc") int storeID,
-                                Model model){
-
-//        Response<?> response = server.addDiscount(storeID, discount);
+//    @RequestMapping(value = "/fetch_permissions", method = RequestMethod.POST)
+//    public String fetchPermissions(@RequestParam("storeId") int storeId, Model model) {
+//        // Retrieve the permissions for the given storeId
+//        System.out.println("in fetch permissions");
+//        Response<LinkedList<Permission>> response = server.getPermissions(request, storeId, server.getUsername());
 //        if (response.isError()){
+//            System.out.println("error");
 //            alert.setFail(true);
 //            alert.setMessage(response.getMessage());
 //            model.addAttribute("alert", alert.copy());
-//            System.out.println("error");
 //        } else {
 //            alert.setSuccess(true);
 //            alert.setMessage(response.getMessage());
-////            model.addAttribute("alert", alert.copy());
-//            System.out.println("adding discount: " + discount + " to storeid: " + storeID);
+//            model.addAttribute("alert", alert.copy());
+//            model.addAttribute("myPermissions", response.getValue());
+//            System.out.println(response.getValue());
 //        }
 //        alert.reset();
-        return "Manager";
-    }
+//        return "Manager";
+//    }
+
 
     @RequestMapping(value = "/openStore", method = RequestMethod.POST)
     public String openStore(@RequestParam("store-name") String storeName,
@@ -76,13 +80,13 @@ public class ManagerController {
             System.out.println("Store Opened with ID: " + response.getValue());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
-    @RequestMapping(value = "/permissions", method = RequestMethod.POST)
-    public String permissions(Model model) {
-        return "Manager";
-    }
+//    @RequestMapping(value = "/permissions", method = RequestMethod.POST)
+//    public String permissions(Model model) {
+//        return "Manager";
+//    }
 
     @RequestMapping(value = "/add-product", method = RequestMethod.POST)
     public String addProduct(@RequestParam("storeID-add") int storeID,
@@ -107,7 +111,7 @@ public class ManagerController {
             System.out.println(productName + " was added successfully to storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/remove-product", method = RequestMethod.POST)
@@ -127,7 +131,7 @@ public class ManagerController {
             System.out.println("product with id: " + productID + " was removed successfully from storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/update-product", method = RequestMethod.POST)
@@ -146,8 +150,8 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
-//                alert.reset();
-//                return "redirect:/Manager";
+                alert.reset();
+                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
@@ -161,8 +165,8 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
-//                alert.reset();
-//                return "redirect:/Manager";
+                alert.reset();
+                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
@@ -176,8 +180,8 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
-//                alert.reset();
-//                return "redirect:/Manager";
+                alert.reset();
+                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
@@ -191,8 +195,8 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", response.getMessage());
-//                alert.reset();
-//                return "redirect:/Manager";
+                alert.reset();
+                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
@@ -206,8 +210,8 @@ public class ManagerController {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
-//                alert.reset();
-//                return "redirect:/Manager";
+                alert.reset();
+                return "redirect:/Manager";
             }
             else{
                 alert.setSuccess(true);
@@ -219,7 +223,7 @@ public class ManagerController {
         alert.setMessage("Product Updated Successfully");
         model.addAttribute("alert", alert.copy());
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
@@ -232,14 +236,15 @@ public class ManagerController {
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
         } else {
-            System.out.println("Purchase History should be displayed!");
+            System.out.println("Purchase History should be displayed! " + response.getValue());
+
             alert.setSuccess(true);
             alert.setMessage("Purchase History for store with ID: " + storeID);
             model.addAttribute("alert", alert.copy());
             model.addAttribute("purchaseHistory", response.getValue()); //List<String>
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
@@ -258,7 +263,7 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/employee-info", method = RequestMethod.POST)
@@ -275,9 +280,10 @@ public class ManagerController {
             alert.setMessage("Employee Info for StoreId: " + storeID);
             model.addAttribute("alert", alert.copy());
             model.addAttribute("employeeInfo", response.getValue()); //String
+            System.out.println("success - " + response.getValue());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/remove-employee", method = RequestMethod.POST)
@@ -297,27 +303,42 @@ public class ManagerController {
             System.out.println(userName + " was removed successfully from storeId: " + storeID);
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/appoint-store-owner", method = RequestMethod.POST)
     public String appointStoreOwner(@RequestParam("storeID-add-owner") int storeID,
-                                    @RequestParam("owner-name-add") String ownerName,
+                                    @RequestParam("owner-name-add") String newOwnerName,
                                     Model model) {
 
-        Response<?> response = server.appointNewStoreOwner(request,ownerName, storeID);
+        Response<?> response = server.appointNewStoreOwner(request, newOwnerName, storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
-        } else{
-            alert.setSuccess(true);
-            alert.setMessage(ownerName + " is OWNER for storeID: " + storeID);
-            model.addAttribute("alert", alert.copy());
-        }
+        } else {
+            // check if there are existing store owners
+//            List<String> existingOwners = server.getExistingStoreOwners(storeID);
+//            if (existingOwners.isEmpty()) {
+//                // if no existing owners, directly appoint the new owner
+//                alert.setSuccess(true);
+//                alert.setMessage(newOwnerName + " is now an OWNER for storeID: " + storeID);
+//                model.addAttribute("alert", alert.copy());
+//            } else {
+//                // Send appointment requests to existing owners
+//                for (String existingOwner : existingOwners) {
+//                    server.sendAppointmentRequest(request, storeID, newOwnerName, existingOwner);
+//                }
+                // Display a message indicating that appointment requests have been sent
+                alert.setSuccess(true);
+                alert.setMessage("Appointment requests have been sent to existing owners for storeID: " + storeID);
+                model.addAttribute("alert", alert.copy());
+            }
+//        }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
+
 
     @RequestMapping(value = "/appoint-store-manager", method = RequestMethod.POST)
     public String appointStoreManager(@RequestParam("storeID-add-manager") int StoreID,
@@ -335,7 +356,7 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
 
     @RequestMapping(value = "/change-permission", method = RequestMethod.POST)
@@ -355,6 +376,28 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager";
     }
+
+    //    @RequestMapping(value = "/add-store-discount" , method = RequestMethod.POST)
+//    public String storeDiscount(@RequestParam("cond-desc") String discount,
+//                                @RequestParam("storeID-add-desc") int storeID,
+//                                Model model){
+//
+////        Response<?> response = server.addDiscount(storeID, discount);
+////        if (response.isError()){
+////            alert.setFail(true);
+////            alert.setMessage(response.getMessage());
+////            model.addAttribute("alert", alert.copy());
+////            System.out.println("error");
+////        } else {
+////            alert.setSuccess(true);
+////            alert.setMessage(response.getMessage());
+//////            model.addAttribute("alert", alert.copy());
+////            System.out.println("adding discount: " + discount + " to storeid: " + storeID);
+////        }
+////        alert.reset();
+//        return "Manager";
+//    }
+
 }

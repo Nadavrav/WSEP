@@ -22,6 +22,8 @@ public class ProductRatingsController {
 
     @GetMapping("/ProductRatings")
     public String productsPage(Model model) {
+//        model.addAttribute("logged", server.isLogged(request));
+//        model.addAttribute("Admin", server.isAdmin(request).getValue());
         model.addAttribute("alert", alert.copy());
         alert.reset();
         return "CommentsAndRatings";
@@ -32,7 +34,9 @@ public class ProductRatingsController {
                                      @RequestParam("productId") int productId,
                                      Model model) {
 
-        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+//        model.addAttribute("alert", alert.copy());
         alert.reset();
 
         Response<?> response = server.getProductRatingList(request,storeId, productId);

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -7,7 +7,6 @@
     <title>Admin Page</title>
     <style>
         body {
-            /*background-image: url("https://media.istockphoto.com/id/1438337441/photo/business-management-concept-development-and-management-executives-looking-virtual-screens.jpg?s=612x612&w=0&k=20&c=F2-E8sUkjY8p5y_FfHRSYcLfrt9zdjdEjzWyCoy4p1c=");*/
             background-image: url("https://media.istockphoto.com/id/935649114/photo/human-resources.jpg?s=612x612&w=0&k=20&c=k4dzDq-G3XjSv38_GRbwVhkgGfgh0YXpCfPNgjlFN2w=");
             background-repeat: no-repeat;
             background-size: cover;
@@ -47,13 +46,14 @@
 
         /* Modal Styles */
         .modal {
-            position: fixed;
+            /*position: fixed;*/
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
@@ -102,37 +102,113 @@
         th {
             text-align: center;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            color: black;
+            display: none;
+            position: absolute;
+            width: max-content;
+            padding: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
-<button style="background-color: transparent; color: #444444; border: none;position: fixed; right: 0.6%;top: 0">
-    <svg onclick="window.location.href='MainPage';" width="30" height="35" fill="currentColor" class="bi bi-house"
-         viewBox="0 0 21 8">
-        <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
-    </svg>
-</button>
-<button style="background-color: transparent; color: #444444; border: none; position: fixed; right: 3%;top: 0">
-    <svg onclick="window.location.href='Bag';" width="28" height="35" fill="currentColor" class="bi bi-cart3"
-         viewBox="0 0 21 8">
-        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-    </svg>
-</button>
-
 <div th:replace="fragments/alert :: alert(${alert})"></div>
+<header>
+    <div class="home-button">
+        <div class="menu-button" style="color: black;">
+            <span th:if="${logged}">
+		        <button style="background-color: transparent;border: none"
+                        onclick="location.href='/logout'">
+    		        <svg width="25" height="20" fill="currentColor" class="bi bi-power" viewBox="0 0 10 15">
+				        <path d="M7.5 1v7h1V1h-1z"/>
+  				        <path d="M3 8.812a4.999 4.999 0 0 1 2.578-4.375l-.485-.874A6 6 0 1 0 11 3.616l-.501.865A5 5 0 1 1 3 8.812z"/>
+                    </svg>
+                </button>
+
+                <button style="background-color: transparent;border: none;" onclick="location.href='/Manager';">
+			        <svg width="30" height="20" fill="currentColor" class="bi bi-person" viewBox="0 0 10 15">
+  				        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
+			        </svg>
+		        </button>
+
+		        <button style="background-color: transparent;border: none;" onclick="location.href='Messages';">
+			        <svg width="30" height="20" fill="currentColor" class="bi bi-envelope" viewBox="0 0 10 15">
+				        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+			        </svg>
+		        </button>
+
+		        <span th:if="${Admin}">
+			        <button style="background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
+		        </span>
+
+                <!-- Appointment Requests dropdown -->
+                <span class="dropdown">
+                    <button style="background-color: transparent;border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <div class="dropdown-content" id="appointment-requests">
+                        <ul>
+<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
+                            <!--                                No appointment requests-->
+                            <!--                            </p>-->
+                            <li th:each="request : ${appointmentRequests}">
+                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Accept
+                                </button>
+                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
+                                    Decline
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
+            </span>
+
+            <button style="background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
+
+            <button style="background-color: transparent;border: none;position: fixed;right: 3%;" onclick="window.location.href='SearchResults';">
+                <svg width="35" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 10 15">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </button>
+
+            <button style="background-color: transparent;border: none; position: fixed; right: 0%;">
+                <svg onclick="window.location.href='Bag';" width="30" height="20" fill="currentColor" class="bi bi-cart3" viewBox="0 0 13 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+</header>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
 
-
 <div class="container">
     <h1>Welcome to Admin Page</h1>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('delete-user-modal')">Delete
-        User</a>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('online-users-modal')">Online
-        Users</a>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('offline-users-modal')">Offline
-        Users</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('delete-user-modal')">Delete User</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('online-users-modal')">Online Users</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('offline-users-modal')">Offline Users</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('daily-income-modal')">Daily Income</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('daily-income-store-modal')">Daily Income For Store</a>s
 </div>
 
 <script>
@@ -154,15 +230,50 @@
         currentModal = null;
     }
 </script>
+<!--// ------------------------------------ DailyIncome Modal --------------------------------------//-->
+<div id="daily-income-modal" class="modal">
+    <a class="close-button" onclick="closeModal('daily-income-modal')">&#x2613</a>
+    <form action="/daily-income" method="post">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>System Daily Income:</h3>
+        <p th:text="${dailyIncome}">No income data available</p>
+    </div>
+</div>
+
+<!--// ------------------------------------ DailyStoreIncome Modal --------------------------------------//-->
+<div id="daily-income-store-modal" class="modal">
+    <a class="close-button" onclick="closeModal('daily-income-store-modal')">&#x2613</a>
+    <form action="/daily-store-income" method="post">
+        <label for="storeId">Store ID: </label>
+        <input type="number" id="storeId" name="storeId" required>
+        <br><br>
+        <label for="date">Date: </label>
+        <input type="date" id="dateStore" name="date" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>Daily Income for the chosen store: </h3>
+        <p> <span th:text="${dailyStoreIncome}">No income data available</span></p>
+    </div>
+</div>
+
 <!--// ------------------------------------ DeleteUser Modal --------------------------------------//-->
 <div id="delete-user-modal" class="modal">
     <a class="close-button" onclick="closeModal('delete-user-modal')">&#x2613</a>
     <form action="/delete" method="post">
 
-        <label for="usernameToDelete">USERNAME:</label>
+<!--        <label for="usernameToDelete">USERNAME:</label>-->
         <div class="input-icon">
             <i class="fas fa-user"></i>
-            <input type="text" id="usernameToDelete" name="usernameToDelete" required>
+            <input type="text" id="usernameToDelete" name="usernameToDelete" placeholder="enter username to delete" required>
         </div>
         <br>
         <button type="submit">DELETE USER</button>
@@ -220,6 +331,18 @@
     setTimeout(function () {
         alertElement.style.display = "none";
     }, 2500);
+</script>
+<script th:inline="javascript">
+    function toggleDropdown() {
+        var dropdownContent = document.getElementById("appointment-requests");
+        dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+    }
+
+    function updateDropdown(element) {
+        var listItem = element.parentNode;
+        var dropdown = document.getElementById("appointment-requests");
+        dropdown.removeChild(listItem);
+    }
 </script>
 </body>
 </html>
