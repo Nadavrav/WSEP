@@ -3,11 +3,8 @@ package DomainLayer;
 
 import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
-import DomainLayer.Stores.CallBacks.StoreCallbacks;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.*;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.AndCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
@@ -28,12 +25,8 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceMultiDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.MultiValueMapAdapter;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -115,10 +108,6 @@ public class Facade {
             dataLoaded = false;
         }
     }
-
-
-
-
     public void loadData() throws Exception {
         synchronized (dataSyncObj) {
             if (dataLoaded)
@@ -128,20 +117,20 @@ public class Facade {
                 registerInitialAdmin("admin", "admin12345");
             try {
                 //New users
-                int nadavID = EnterNewSiteVisitor();
-                int nadiaID = EnterNewSiteVisitor();
-                int natalieID = EnterNewSiteVisitor();
-                int majdID = EnterNewSiteVisitor();
-                int denisID = EnterNewSiteVisitor();
-                int nikitaID = EnterNewSiteVisitor();
+                int nadavID = enterNewSiteVisitor();
+                int nadiaID = enterNewSiteVisitor();
+                int natalieID = enterNewSiteVisitor();
+                int majdID = enterNewSiteVisitor();
+                int denisID = enterNewSiteVisitor();
+                int nikitaID = enterNewSiteVisitor();
 
 
-                Register(nadavID, "Nadav", "123456789");
-                Register(nadiaID, "Nadia", "123456789");
-                Register(natalieID, "Natalie", "123456789");
-                Register(majdID, "Majd", "123456789");
-                Register(denisID, "Denis", "123456789");
-                Register(nikitaID, "Nikita", "123456789");
+                register(nadavID, "Nadav", "123456789");
+                register(nadiaID, "Nadia", "123456789");
+                register(natalieID, "Natalie", "123456789");
+                register(majdID, "Majd", "123456789");
+                register(denisID, "Denis", "123456789");
+                register(nikitaID, "Nikita", "123456789");
 
                 login(nadavID, "Nadav", "123456789");
                 login(nadiaID, "Nadia", "123456789");
@@ -305,7 +294,7 @@ public class Facade {
     }
 
 //------------UserPackege-----------------------
-    public int EnterNewSiteVisitor() throws Exception {//1.1
+    public int enterNewSiteVisitor() throws Exception {//1.1
         synchronized (onlineList) {
             SiteVisitor visitor = new SiteVisitor();
             onlineList.put(visitor.getVisitorId(), visitor);
@@ -325,7 +314,7 @@ public class Facade {
             return ((RegisteredUser)onlineList.get(visitorId)).getUserName();
         }
     }
-    public void ExitSiteVisitor(int id) throws Exception {//1.2
+    public void exitSiteVisitor(int id) throws Exception {//1.2
         if(onlineList.containsKey(id)) {
             SiteVisitor st = onlineList.get(id);
             if(!(st instanceof RegisteredUser))
@@ -382,46 +371,52 @@ public class Facade {
         }
 
     }
-    public synchronized void Register(int visitorId, String userName, String password) throws Exception {//1.3
+    public void register(int visitorId, String userName, String password) throws Exception {//1.3
         //Valid visitorID
         if (!SiteVisitor.checkVisitorId(visitorId)) {
             logger.warning("maybe we have a null visitor!");
            throw  new Exception("Invalid Visitor ID");
         }
-        //unique userName
-        if (registeredUserList.get(userName) != null) {
-            throw  new Exception("This userName already taken");
+        synchronized (registeredUserList) {
+            //unique userName
+            if (registeredUserList.get(userName) != null) {
+                throw new Exception("This userName already taken");
+            }
+
+
+            //get site visitor object
+            //SiteVisitor visitor = onlineList.get(visitorId);
+            // visitor =new RegisteredUser(visitor, userName, password);
+            //onlineList.put(visitorId,visitor);
+            // create new register user
+            logger.info("new visitor has register");
+            RegisteredUser r = new RegisteredUser(userName, password);
+            //onlineList.replace(visitorId,r);
+            registeredUserList.put(userName, r);
+            registeredUserList.get(userName).update("Registered to Site");
         }
-
-
-        //get site visitor object
-        //SiteVisitor visitor = onlineList.get(visitorId);
-       // visitor =new RegisteredUser(visitor, userName, password);
-        //onlineList.put(visitorId,visitor);
-        // create new register user
-        logger.info("new visitor has register");
-        RegisteredUser r = new RegisteredUser(userName, password);
-        //onlineList.replace(visitorId,r);
-        registeredUserList.put(userName, r);
-        registeredUserList.get(userName).update("Registered to Site");
     }
 
-    public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
+    public void login(int visitorId, String userName, String password) throws Exception {//1.4
         //
-        RegisteredUser user = registeredUserList.get(userName);
-        boolean b = registeredUserList.get("admin")!=null;
-        if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
-            logger.warning("User IS NOT Entered in the system");
-            throw  new Exception("Invalid Visitor ID");
+        RegisteredUser user;
+        synchronized (registeredUserList) {
+             user = registeredUserList.get(userName);
+            boolean b = registeredUserList.get("admin") != null;
+            if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
+                logger.warning("User IS NOT Entered in the system");
+                throw new Exception("Invalid Visitor ID");
+            }
+            if (user == null) {//check if he has account
+                logger.warning("User is already have an account");
+                throw new Exception("UserName not Found");
+            }
+            logger.info("User log in successfully");
+            user.login(password, visitorId);
         }
-        if (user == null) {//check if he has account
-            logger.warning("User is already have an account");
-            throw  new Exception("UserName not Found");
+        synchronized (onlineList) {
+            onlineList.replace(visitorId, user);
         }
-        logger.info("User log in successfully");
-         user.login(password,visitorId);
-
-        onlineList.replace(visitorId, user);
     }
 
     public synchronized int logout(int visitorId) throws Exception {//3.1

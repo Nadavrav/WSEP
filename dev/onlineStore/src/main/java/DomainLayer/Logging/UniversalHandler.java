@@ -15,51 +15,55 @@ import java.util.Date;
 import java.util.logging.*;
 
 public class UniversalHandler {
-    private static UniversalHandler handler = null;
-    private FileHandler errorHandler;
-    private static FileHandler infoHandler;
+    private static volatile UniversalHandler handler = null;
+    private static volatile FileHandler errorHandler;
+    private static volatile FileHandler infoHandler;
 
     private UniversalHandler(){
 
     }
-    public static synchronized UniversalHandler GetInstance(){
-
+    public static UniversalHandler GetInstance(){
+    if(handler==null)
+        synchronized (UniversalHandler.class) {
             if (handler == null) {
                 handler = new UniversalHandler();
             }
-            return handler;
+        }
+    return handler;
     }
     public void HandleInfo(Logger logger){
         if(infoHandler==null){
-            try {
-                PrepareFolder();
-                String s="dev/logs/"+DateTimeFormatter.ofPattern("yy-MM-dd HH-mm-ss").format(LocalDateTime.now())+" Info Log.txt";
-                infoHandler = new FileHandler(s);
-                infoHandler.setFormatter(new SimpleFormatter());
-                infoHandler.setLevel(Level.ALL);
-                logger.setUseParentHandlers(false);
-            }
-            catch (Exception e){
-                System.out.println(e.getMessage());
+            synchronized (UniversalHandler.class) {
+                if(infoHandler==null)
+                    try {
+                        PrepareFolder();
+                        String s = "dev/logs/" + DateTimeFormatter.ofPattern("yy-MM-dd HH-mm-ss").format(LocalDateTime.now()) + " Info Log.txt";
+                        infoHandler = new FileHandler(s);
+                        infoHandler.setFormatter(new SimpleFormatter());
+                        infoHandler.setLevel(Level.ALL);
+                        logger.setUseParentHandlers(false);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
             }
         }
         logger.addHandler(infoHandler);
     }
     public void HandleError(Logger logger){
-
         if(errorHandler==null){
-            try {
-                PrepareFolder();
-                String s="dev/logs/"+DateTimeFormatter.ofPattern("yy-MM-dd HH-mm-ss").format(LocalDateTime.now())+" Error Log.txt";
-                errorHandler = new FileHandler(s);
-                errorHandler.setFormatter(new SimpleFormatter());
-                errorHandler.setLevel(Level.SEVERE);
-                logger.setUseParentHandlers(false);
+            synchronized (Logger.class) {
+                if(errorHandler==null)
+                    try {
+                        PrepareFolder();
+                        String s = "dev/logs/" + DateTimeFormatter.ofPattern("yy-MM-dd HH-mm-ss").format(LocalDateTime.now()) + " Error Log.txt";
+                        errorHandler = new FileHandler(s);
+                        errorHandler.setFormatter(new SimpleFormatter());
+                        errorHandler.setLevel(Level.SEVERE);
+                        logger.setUseParentHandlers(false);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
             }
-            catch (Exception e){
-                System.out.println(e.getMessage());
-            }
-
         }
         logger.addHandler(errorHandler);
     }

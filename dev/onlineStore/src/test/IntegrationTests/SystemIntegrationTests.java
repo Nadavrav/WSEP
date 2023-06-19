@@ -44,9 +44,9 @@ public class SystemIntegrationTests {
     void integrationTest1() {
         //This tests enter register login logout login openStore logout log in addItem logout exit, all should succeed
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -73,7 +73,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -85,13 +85,13 @@ public class SystemIntegrationTests {
         //This tests enter login logout register login getCart logout exit, first login and logout should fail the rest should succeed
         try {
 
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
             Assertions.assertThrows(Exception.class, () -> f.login(visitorId, Username1, password1));
 
             Assertions.assertThrows(Exception.class, () -> f.logout(visitorId));
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -104,7 +104,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -115,13 +115,13 @@ public class SystemIntegrationTests {
         //This tests enter register logout login login getCart logout login openStore logout login addItems logout, first logout and second login should fail the rest should succeed
         try {
 
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
             Assertions.assertThrows(Exception.class, () -> f.login(visitorId, Username1, password1));
 
             Assertions.assertThrows(Exception.class, () -> f.logout(visitorId));
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -134,7 +134,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -144,9 +144,9 @@ public class SystemIntegrationTests {
     void integrationTest4() {
         //This tests enter register logout login addItemsToStore OpenStore addItemsToStore logout exit, first logout and first addItemsToStore should fail the rest should succeed
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             Assertions.assertThrows(Exception.class, () -> f.logout(visitorId));
@@ -165,7 +165,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -176,9 +176,9 @@ public class SystemIntegrationTests {
         //This tests enter register loginOK logout loginOK logout LoginNullPass logout loginFakeUsername loginIncorrectPassword loginNullUsername loginOk logoutOk exit, all the logins that dont say Ok should fail the rest
         //should succeed
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -216,7 +216,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -226,9 +226,9 @@ public class SystemIntegrationTests {
     void integrationTest6() {
         //This tests enter register login openStore logout login addItem logout login addItem logout exit, all should succeed
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -261,7 +261,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -272,9 +272,9 @@ public class SystemIntegrationTests {
     void integrationTest7() {
         //This tests enter register login openStore addItem logout addItemToCart logout exit, all should succeed
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -297,7 +297,7 @@ public class SystemIntegrationTests {
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
             Assertions.assertTrue(actual.contains(ExpectedproductsInCartStr));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -308,9 +308,9 @@ public class SystemIntegrationTests {
     void integrationTest8() {
         //This tests enter register login openStore addItem logout addItemToCart exit enter checkIfCartIsEmpty, all should succeed
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -333,14 +333,14 @@ public class SystemIntegrationTests {
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
             Assertions.assertTrue(actual.contains(ExpectedproductsInCartStr));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
 
-            int newSiteVisitor = f.EnterNewSiteVisitor();
+            int newSiteVisitor = f.enterNewSiteVisitor();
             String actualCart = f.getProductsInMyCart(newSiteVisitor).cartToString();
             String expectedCart = "";
             Assertions.assertEquals(actualCart,expectedCart);
 
-            f.ExitSiteVisitor(newSiteVisitor);
+            f.exitSiteVisitor(newSiteVisitor);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -351,9 +351,9 @@ public class SystemIntegrationTests {
     void integrationTest9() {
         //This tests enter register login openStore addItem logout addItemToCart purchaseCart exit, all should succeed
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -380,7 +380,7 @@ public class SystemIntegrationTests {
             List<String> expectedPurchase = new LinkedList<>();
             Assertions.assertEquals(expectedPurchase,actualPurchase);
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -391,9 +391,9 @@ public class SystemIntegrationTests {
     void integrationTest10() {
         //This tests enter register login openStore addItem logout addItemToCart changeItemAmountInCartToExceedActualAmount purchaseCart exit, all should succeed except purchaseCart
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -428,7 +428,7 @@ public class SystemIntegrationTests {
             expectedPurchase.add(String.valueOf(storeId));
             Assertions.assertEquals(expectedPurchase,actualPurchase);
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -440,9 +440,9 @@ public class SystemIntegrationTests {
         //This tests enter register login openStore addItem logout login CloseStore ChangeAmountInStore addItem2 addItemToCart logout exit,
         // all should succeed except hangeAmountInStore addItem addItemToCart
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -474,7 +474,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -488,9 +488,9 @@ public class SystemIntegrationTests {
         // all should succeed loginFake logout after loginFake addStoreComment1 logout after addStoreRate
         // closeStore addComment
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -528,7 +528,7 @@ public class SystemIntegrationTests {
 
             Assertions.assertThrows(Exception.class,()->f.addStoreRate(visitorId,-5,4));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -542,9 +542,9 @@ public class SystemIntegrationTests {
         // all should succeed loginFake logout after loginFake addProductComment1 logout after addProductComment2
         // closeStore addComment
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -582,7 +582,7 @@ public class SystemIntegrationTests {
 
             Assertions.assertThrows(Exception.class,()->f.addProductRateAndComment(visitorId,1,-55,4,""));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -595,9 +595,9 @@ public class SystemIntegrationTests {
         // addProduct removeProduct closeStore addProduct removeProduct openNewStore addProduct removeProductFromStore2
         // logout exit
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             Assertions.assertThrows(Exception.class, ()->f.RemoveProduct(visitorId,5,1));
@@ -638,7 +638,7 @@ public class SystemIntegrationTests {
             f.logout(visitorId);
             Assertions.assertTrue(!(f.getOnlineList().get(visitorId) instanceof RegisteredUser));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();
@@ -656,9 +656,9 @@ public class SystemIntegrationTests {
         try {
             int fakePID= -5;
             int fakeStoreId = -5;
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
 
-            f.Register(visitorId, Username1, password1);
+            f.register(visitorId, Username1, password1);
             Assertions.assertTrue(f.getRegisteredUserList().get(Username1) != null);
 
             f.login(visitorId, Username1, password1);
@@ -729,7 +729,7 @@ public class SystemIntegrationTests {
 
             Assertions.assertThrows(Exception.class,()->f.UpdateProductDescription(visitorId,pid1,storeId,"Fail"));
 
-            f.ExitSiteVisitor(visitorId);
+            f.exitSiteVisitor(visitorId);
         } catch (Exception e) {//Should not happen
             System.out.println(e.getMessage());// a print to find out from what function
             Assertions.fail();

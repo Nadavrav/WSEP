@@ -1,7 +1,6 @@
 package UnitTests;
 import DomainLayer.Facade;
 import DomainLayer.Stores.Products.CartProduct;
-import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,12 +23,12 @@ public class BidTests {
         try {
             facade.resetData();
             facade.loadData();
-            id1=facade.EnterNewSiteVisitor();
-            id2=facade.EnterNewSiteVisitor();
-            id3=facade.EnterNewSiteVisitor();
-            facade.Register(id1,"visitor1","visitor1234");
-            facade.Register(id2,"owner1","owner12345");
-            facade.Register(id3,"owner2","owner54321");
+            id1=facade.enterNewSiteVisitor();
+            id2=facade.enterNewSiteVisitor();
+            id3=facade.enterNewSiteVisitor();
+            facade.register(id1,"visitor1","visitor1234");
+            facade.register(id2,"owner1","owner12345");
+            facade.register(id3,"owner2","owner54321");
             facade.login(id1,"visitor1","visitor1234");
             facade.login(id2,"owner1","owner12345");
             facade.login(id3,"owner2","owner54321");

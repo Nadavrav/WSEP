@@ -22,7 +22,6 @@ import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
 import ServiceLayer.ServiceObjects.ServiceBid;
-import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.AndConditionRecord;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
@@ -49,7 +48,7 @@ public class Service {
 
     public Response<Integer> EnterNewSiteVisitor() {//1.1
         try{
-            visitorId= facade.EnterNewSiteVisitor();
+            visitorId= facade.enterNewSiteVisitor();
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -86,7 +85,7 @@ public class Service {
 
     public Response<?> ExitSiteVisitor() {//1.2
         try{
-            facade.ExitSiteVisitor(visitorId);
+            facade.exitSiteVisitor(visitorId);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -118,7 +117,7 @@ public class Service {
     public Response<?> Register( String userName, String password) {//1.3
 
         try{
-            facade.Register(visitorId,userName,password);
+            facade.register(visitorId,userName,password);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
