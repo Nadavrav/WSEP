@@ -785,28 +785,63 @@ public class Service {
     }
 
     // TODO: implement
-    public Response<?> getVisitorsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
-        return null;
+    public Response<Map<Date,Integer>> getVisitorsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getVisitorsAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     // TODO: implement
-    public Response<?> getUsersWithoutStoresAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
-        return null;
+    public Response<Map<Date,Integer>> getUsersWithoutStoresAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getUsersWithoutStoresAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     // TODO: implement
-    public Response<?> getStoreManagersOnlyAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
-        return null;
+    public Response<Map<Date,Integer>> getStoreManagersOnlyAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getStoreManagersOnlyAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     // TODO: implement
-    public Response<?> getStoreOwnersAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
-        return null;
+    public Response<Map<Date,Integer>> getStoreOwnersAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getStoreOwnersAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     // TODO: implement
-    public Response<?> getAdminsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
-        return null;
+    public Response<Map<Date,Integer>> getAdminsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getAdminsAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
 }

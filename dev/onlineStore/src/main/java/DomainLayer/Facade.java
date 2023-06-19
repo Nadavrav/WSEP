@@ -72,7 +72,11 @@ public class Facade {
     private Supplier supplier;
     private PaymentProvider paymentProvider;
 
-    private Map<Date,Map<Integer,Integer>> entriesManager; // Probably need to change types, the secondary map might be <Enum,Integer>
+    private Map<Date,Integer> siteVisitorsEntriesManager;
+    private Map<Date,Integer> nonWorkersEntriesManager;
+    private Map<Date,Integer> managersOnlyEntriesManager;
+    private Map<Date,Integer> storeOwnersEntriesManager;
+    private Map<Date,Integer> adminsEntriesManager;
 
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
@@ -85,7 +89,13 @@ public class Facade {
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
         registerInitialAdmin();
+        siteVisitorsEntriesManager = new HashMap<>();
+        nonWorkersEntriesManager = new HashMap<>();
+        managersOnlyEntriesManager = new HashMap<>();
+        storeOwnersEntriesManager = new HashMap<>();
+        adminsEntriesManager = new HashMap<>();
     }
+
 
     /**
      * Function used by test inorder to reset the data in the facade and make the tests independent of one another.
@@ -297,6 +307,7 @@ public class Facade {
     public int EnterNewSiteVisitor() throws Exception {//1.1
         SiteVisitor visitor = new SiteVisitor();
         onlineList.put(visitor.getVisitorId(), visitor);
+        increaseEntry(siteVisitorsEntriesManager);
         logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
         return visitor.getVisitorId();
     }
@@ -399,9 +410,47 @@ public class Facade {
             throw  new Exception("UserName not Found");
         }
         logger.info("User log in successfully");
-         user.login(password,visitorId);
+        user.login(password,visitorId);
+        if(isOwner(user.getUserName())){
+            increaseEntry(storeOwnersEntriesManager);
+        }
+        else if(isManager(user.getUserName())){
+            increaseEntry(managersOnlyEntriesManager);
+        }
+        else {
+            increaseEntry(nonWorkersEntriesManager);
+        }
 
+        if(isAdmin(visitorId)){
+            increaseEntry(adminsEntriesManager);
+        }
         onlineList.replace(visitorId, user);
+    }
+
+    private boolean isOwner(String userName) {
+        if(employmentList.get(userName) == null)
+        {
+            return false;
+        }
+        for (Integer storeID:employmentList.get(userName).keySet()) {
+            if(employmentList.get(userName).get(storeID).checkIfOwner()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isManager(String userName) {
+        if(employmentList.get(userName) == null)
+        {
+            return false;
+        }
+        for (Integer storeID:employmentList.get(userName).keySet()) {
+            if(employmentList.get(userName).get(storeID).checkIfManager()){
+                return true;
+            }
+        }
+        return false;
     }
 
     public synchronized int logout(int visitorId) throws Exception {//3.1
@@ -1957,4 +2006,75 @@ public class Facade {
 
     }
 
+    public Map<Date,Integer> getVisitorsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:siteVisitorsEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,siteVisitorsEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    public Map<Date,Integer> getUsersWithoutStoresAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:nonWorkersEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,nonWorkersEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    public Map<Date,Integer> getStoreManagersOnlyAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:managersOnlyEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,managersOnlyEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    public Map<Date,Integer> getStoreOwnersAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:storeOwnersEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,storeOwnersEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    public Map<Date,Integer> getAdminsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:adminsEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,adminsEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    private boolean isBetweenDates(Date d, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+
+        Date startDate =new Date(dayStart,monthStart,yearStart);
+        Date endDate = new Date(dayEnd,monthEnd,yearEnd);
+
+        return d.after(startDate) && d.before(endDate);
+
+    }
+
+    private void increaseEntry(Map<Date,Integer> entryMap){
+        Date today = new Date();
+        if(entryMap.keySet().contains(today)){
+            entryMap.put(today,entryMap.get(today) + 1);
+        }
+        else {
+            entryMap.put(today,1);
+        }
+    }
+
+
 }
+
