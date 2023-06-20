@@ -10,6 +10,7 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import ServiceLayer.ServiceObjects.ServiceUser;
 
@@ -17,11 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 public class Server {
-
-    //private boolean logged = false;
-    //private String username = "";
-
-
     private static Server server = null;
     private final HashMap<String,Service> activeSessions;
 
@@ -239,9 +235,11 @@ public class Server {
     public Response<ServiceDiscountInfo> addDiscount(HttpServletRequest request, ServiceDiscount serviceDiscount, int storeId){
         return getSession(request).addDiscount(serviceDiscount, storeId);
     }
-
-    public Response<LinkedList<Permission>> getPermissions(HttpServletRequest request, int storeId, String appointedUserName){
-        return getSession(request).getPermissions(storeId, appointedUserName);
+    public Response<ServicePolicyInfo> addPolicy(HttpServletRequest request, ServicePolicy servicePolicy, int storeId){
+        return getSession(request).addPolicy(servicePolicy, storeId);
+    }
+    public Response<LinkedList<Permission>> getPermissions(HttpServletRequest request, int storeId){
+        return getSession(request).getPermissions(storeId);
     }
 
     public Response<?> declineAppointment(HttpServletRequest request, int storeId, String appointedUserName) {
@@ -260,9 +258,9 @@ public class Server {
         return getSession(request).getDailyIncome(day, month, year);
     }
 
-//    public Response<?> sendAppointmentRequest(HttpServletRequest request, int storeId, String ownerName, String existingOwnerName) {
-//        return getSession(request).sendAppointmentRequest(storeId, ownerName, existingOwnerName);
-//    }
+    public Response<Map<Integer, List<String>>> getAppointmentRequests(HttpServletRequest request){
+        return getSession(request).getAppointmentRequests();
+    }
 
 
 }

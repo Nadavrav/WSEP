@@ -57,6 +57,15 @@ public class Facade {
     }
     private Boolean dataLoaded=false;
     private final Object dataSyncObj=new Object();
+
+    private Map<Date,Integer> siteVisitorsEntriesManager;
+    private Map<Date,Integer> nonWorkersEntriesManager;
+    private Map<Date,Integer> managersOnlyEntriesManager;
+    private Map<Date,Integer> storeOwnersEntriesManager;
+    private Map<Date,Integer> adminsEntriesManager;
+
+
+
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
@@ -67,6 +76,13 @@ public class Facade {
         appointmentsRequests = new ConcurrentHashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
+
+        siteVisitorsEntriesManager = new HashMap<>();
+        nonWorkersEntriesManager = new HashMap<>();
+        managersOnlyEntriesManager = new HashMap<>();
+        storeOwnersEntriesManager = new HashMap<>();
+        adminsEntriesManager = new HashMap<>();
+
         if(!ConfigParser.parse(this))
             registerInitialAdmin("admin","admin12345");
     }
@@ -86,6 +102,7 @@ public class Facade {
         }
         return instanceFacade;
     }
+
 
     public Map<String, RegisteredUser> getRegisteredUserList(int visitorId) throws Exception {
         if(!(onlineList.get(visitorId) instanceof Admin))
@@ -195,8 +212,8 @@ public class Facade {
                 AddProduct(nikitaID, nikitaStoreID, "Milk", 6, "Milk", 30, "Good milk");
                 //new Discounts
                 // NadavStore discounts:
-                // addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
-                // MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
+                 addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
+                addDiscount(new BasicDiscount("5% Discount on milk!",2,10,new NameCondition("Milk")),nadavStoreID);// MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
                 // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
                 // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
                 // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
@@ -239,7 +256,7 @@ public class Facade {
                 // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
 //
                 // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
-//
+
                 // addDiscount(majdBasicDiscount,majdStoreID);
                 // DenisStore discounts:
                 // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
@@ -298,11 +315,16 @@ public class Facade {
     public int enterNewSiteVisitor() throws Exception {//1.1
             SiteVisitor visitor = new SiteVisitor();
             onlineList.put(visitor.getVisitorId(), visitor);
-            logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
+            increaseEntry(siteVisitorsEntriesManager);logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
             return visitor.getVisitorId();
     }
-    public boolean isLoggedIn(int visitorid) {
-        return onlineList.containsKey(visitorid);
+    public boolean isLoggedIn(int visitorId) {
+        SiteVisitor siteVisitor= onlineList.get(visitorId);
+        if(siteVisitor==null){
+            logger.severe("ID ERROR IN isLoggedIn- visitorId not online");
+            throw new RuntimeException("User is not online");
+        }
+        return siteVisitor instanceof RegisteredUser;
     }
     public String getUserName(int visitorId) {
         if(!onlineList.containsKey(visitorId)){
@@ -407,9 +429,47 @@ public class Facade {
                 throw new Exception("UserName not Found");
             }
             logger.info("User log in successfully");
-            user.login(password, visitorId);
+            user.login(password, visitorId);if(isOwner(user.getUserName())){
+            increaseEntry(storeOwnersEntriesManager);
+        }
+        else if(isManager(user.getUserName())){
+            increaseEntry(managersOnlyEntriesManager);
+        }
+        else {
+            increaseEntry(nonWorkersEntriesManager);
+        }
+
+        if(isAdmin(visitorId)){
+            increaseEntry(adminsEntriesManager);
+        }
             onlineList.replace(visitorId, user);
         }
+
+    private boolean isOwner(String userName) {
+        if(employmentList.get(userName) == null)
+        {
+            return false;
+        }
+        for (Integer storeID:employmentList.get(userName).keySet()) {
+            if(employmentList.get(userName).get(storeID).checkIfOwner()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isManager(String userName) {
+        if(employmentList.get(userName) == null)
+        {
+            return false;
+        }
+        for (Integer storeID:employmentList.get(userName).keySet()) {
+            if(employmentList.get(userName).get(storeID).checkIfManager()){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public int logout(int visitorId) throws Exception {//3.1
         SiteVisitor user = onlineList.get(visitorId);
@@ -611,7 +671,7 @@ public class Facade {
           }
           appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
           appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
-
+          store.notifyOwnersAboutNewEmploymentRequests(((RegisteredUser) appointer).getUserName(),appointedUserName);
 
           if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
               appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
@@ -621,14 +681,15 @@ public class Facade {
               }
               employmentList.get(appointedUserName).put(storeId, appointedEmployment);
               store.addNewListener(appointed);
-
+              store.addNewOwnerListener(appointed);
+              store.documentOwner(appointed.getVisitorId());
               appointmentsRequests.get(storeId).remove(appointed);
-
+              store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
               logger.fine("new store owner with name" + appointedUserName +" added successfully");
               registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
           }
 
-          System.out.println(appointmentsRequests.values());
+//          System.out.println(appointmentsRequests.values());
         //catch
         //release lock appointer
         //release lockappointed if locked
@@ -1264,45 +1325,45 @@ public class Facade {
         //release productlock if locked
         //throw e
     }
-
-    public void AddStorePolicy(int visitorId, int storeId, Policy policy) throws Exception {
-        SiteVisitor User = onlineList.get(visitorId);
-        //lock user
-        //try
-        if(! (User instanceof RegisteredUser)){
-            logger.severe("Invalid visitor Id: " + visitorId);
-            throw  new Exception("invalid visitor Id");
-        }
-        Store store = storesList.get(storeId);
-        if(store==null){
-            logger.warning(" store is null");
-            throw  new Exception("there is no store with this id ");
-        }
-        Employment employment = null;
-        try{
-            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
-        }catch (Exception e){
-            logger.warning("user with no store");
-            throw  new Exception("this user dont have any store");
-        }
-        if (employment == null){
-            logger.warning("employment is null");
-            throw  new Exception("there is no employee with this id ");
-        }
-        if (!employment.CanChangePolicyAndDiscounts()) {
-            logger.warning("user are not allowed to add products");
-            throw  new Exception("you are not allowed to add policies to this store");
-        }
-        if(store.getActive())
-            store.addPolicy(policy);
-        else {
-            logger.warning("Store is closed, store id :"+storeId);
-            throw new Exception("Store is closed");
-        }
-        //catch
-        //release lock user
-        //throw e
-    }
+//
+//    public void AddStorePolicy(int visitorId, int storeId, Policy policy) throws Exception {
+//        SiteVisitor User = onlineList.get(visitorId);
+//        //lock user
+//        //try
+//        if(! (User instanceof RegisteredUser)){
+//            logger.severe("Invalid visitor Id: " + visitorId);
+//            throw  new Exception("invalid visitor Id");
+//        }
+//        Store store = storesList.get(storeId);
+//        if(store==null){
+//            logger.warning(" store is null");
+//            throw  new Exception("there is no store with this id ");
+//        }
+//        Employment employment = null;
+//        try{
+//            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
+//        }catch (Exception e){
+//            logger.warning("user with no store");
+//            throw  new Exception("this user dont have any store");
+//        }
+//        if (employment == null){
+//            logger.warning("employment is null");
+//            throw  new Exception("there is no employee with this id ");
+//        }
+//        if (!employment.CanChangePolicyAndDiscounts()) {
+//            logger.warning("user are not allowed to add products");
+//            throw  new Exception("you are not allowed to add policies to this store");
+//        }
+//        if(store.getActive())
+//            store.addPolicy(policy);
+//        else {
+//            logger.warning("Store is closed, store id :"+storeId);
+//            throw new Exception("Store is closed");
+//        }
+//        //catch
+//        //release lock user
+//        //throw e
+//    }
     public Policy AddStorePolicy(int visitorId, int storeId, ServicePolicy policy) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         //lock user
@@ -1918,6 +1979,7 @@ public class Facade {
             store.addNewOwnerListener(appointed);
             store.documentOwner(appointed.getVisitorId());
             appointmentsRequests.get(storeID).remove(appointed);
+            store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
             registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeID).getName()+"'");
         }
@@ -1981,7 +2043,7 @@ public class Facade {
             throw new Exception("This user is not owner of this store");
         }
         try{
-            appointmentsRequests.get(storeID).remove(appointedUserName);
+            appointmentsRequests.get(storeID).remove(registeredUserList.get(appointedUserName));
         }
         catch (Exception e){
             throw new Exception("Something went wrong upon trying to decline employment request.");
@@ -1989,7 +2051,77 @@ public class Facade {
 
     }
 
-    public LinkedList<Permission> getPermissions(int visitorId, int storeId, String appointedUserName) throws Exception {
+
+    public Map<Date,Integer> getVisitorsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:siteVisitorsEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,siteVisitorsEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    public Map<Date,Integer> getUsersWithoutStoresAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:nonWorkersEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,nonWorkersEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    public Map<Date,Integer> getStoreManagersOnlyAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:managersOnlyEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,managersOnlyEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    public Map<Date,Integer> getStoreOwnersAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:storeOwnersEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,storeOwnersEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    public Map<Date,Integer> getAdminsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<Date,Integer> outputMap = new HashMap<>();
+        for (Date d:adminsEntriesManager.keySet()) {
+            if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
+                outputMap.put(d,adminsEntriesManager.get(d));
+            }
+        }
+        return outputMap;
+    }
+
+    private boolean isBetweenDates(Date d, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+
+        Date startDate =new Date(dayStart,monthStart,yearStart);
+        Date endDate = new Date(dayEnd,monthEnd,yearEnd);
+
+        return d.after(startDate) && d.before(endDate);
+
+    }
+
+    private void increaseEntry(Map<Date,Integer> entryMap){
+        Date today = new Date();
+        if(entryMap.keySet().contains(today)){
+            entryMap.put(today,entryMap.get(today) + 1);
+        }
+        else {
+            entryMap.put(today,1);
+        }
+    }
+
+    public LinkedList<Permission> getPermissions(int visitorId, int storeId) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){
             throw new Exception("Invalid visitorID");
@@ -2159,3 +2291,4 @@ public class Facade {
 
 
 }
+

@@ -10,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -40,21 +43,33 @@ public class MainPageController{
         return "MainPage";
     }
 
-    @GetMapping("MainPage")
-    public String reMainPage(Model model) {
-        model.addAttribute("alert", alert.copy());
-        model.addAttribute("logged", server.isLogged(request));
-        model.addAttribute("name", server.getUsername(request));
-        if (server.isAdmin(request).getValue()) {
-            model.addAttribute("Admin", true);
+        @GetMapping("MainPage")
+        public String reMainPage(Model model) {
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("logged", server.isLogged(request));
+            model.addAttribute("name", server.getUsername(request));
+            if (server.isAdmin(request).getValue()) {
+                model.addAttribute("Admin", true);
+            }
+
+            Response<Map<Integer, List<String>>> response = server.getAppointmentRequests(request);
+            if (!response.isError()) {
+                Map<Integer, List<String>> appointmentRequests = response.getValue();
+                model.addAttribute("appointmentRequests", appointmentRequests);
+                System.out.println("Appointment Requests: " + appointmentRequests);
+            }
+
+            alert.reset();
+            return "MainPage";
         }
-
-//        List<AppointmentRequest> appointmentRequests = server.getAppointmentRequests();
-//        model.addAttribute("appointmentRequests", appointmentRequests);
-
-        alert.reset();
-        return "MainPage";
-    }
+//    @GetMapping("MainPage")
+//    public String reMainPage(Model model) {
+//        model.addAttribute("alert", alert.copy());
+//        model.addAttribute("logged", server.isLogged(request));
+//        model.addAttribute("name", server.getUsername(request));
+//        if (server.isAdmin(request).getValue()) {
+//            model.addAttribute("Admin", true);
+//             }
 
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public String signIn(@RequestParam("username") String username,
@@ -82,6 +97,13 @@ public class MainPageController{
                 alert.setMessage("Hey " + username + "! You Have New Messages.");
             } else alert.setMessage("WELCOME TO OUR STORE");
             model.addAttribute("alert", alert.copy());
+
+            Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+            if (!responseRequest.isError()) {
+                Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+                model.addAttribute("appointmentRequests", appointmentRequests);
+                System.out.println("Appointment Requests: " + appointmentRequests);
+            }
         }
         alert.reset();
         return ("MainPage");
@@ -117,8 +139,10 @@ public class MainPageController{
             alert.setSuccess(true);
             alert.setMessage("Logging out..");
             model.addAttribute("alert", alert.copy());
+            System.out.println("logged success");
         }
         model.addAttribute("logged", server.isLogged(request));
+        System.out.println("logged valus is: " + server.isLogged(request));
         alert.reset();
         return "MainPage";
     }
@@ -152,37 +176,42 @@ public class MainPageController{
         return "MainPage";
     }
 
-//    @PostMapping("/acceptRequest/{id}")
-//    public String acceptRequest(@PathVariable("id") int id, Model model) {
-//        Response<?> response = server.acceptAppointment(request, id, appointedUserName);
-//        if (response.isError()) {
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        }
-//        alert.reset();
-//        return "redirect:/MainPage";
-//    }
+    @PostMapping("/acceptRequest")
+    public String acceptRequest(@RequestParam("storeId") int storeId,
+                                @RequestParam("owner") String owner,
+                                Model model) {
 
-//    @PostMapping("/declineRequest/{id}")
-//    public String declineRequest(@PathVariable("id") String id, Model model) {
-//        Response<?> response = server.declineAppointment(request, storeId, appointedUserName);
-//        if (response.isError()) {
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        }
-//        alert.reset();
-//        return "redirect:/MainPage";
-//    }
+        Response<?> response = server.acceptAppointment(request, storeId, owner);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MainPage";
+    }
+
+    @PostMapping("/declineRequest")
+    public String declineRequest(@RequestParam("storeId") int storeId,
+                                 @RequestParam("owner") String owner,
+                                 Model model) {
+        Response<?> response = server.declineAppointment(request, storeId, owner);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MainPage";
+    }
 
     @GetMapping("/error")
     public String error(Model model) {

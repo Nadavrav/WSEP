@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -37,30 +38,38 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
             model.addAttribute("myStoresList", response.getValue());
         }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
+        }
         alert.reset();
         return "Manager";
     }
 
-//    @RequestMapping(value = "/fetch_permissions", method = RequestMethod.POST)
-//    public String fetchPermissions(@RequestParam("storeId") int storeId, Model model) {
-//        // Retrieve the permissions for the given storeId
-//        System.out.println("in fetch permissions");
-//        Response<LinkedList<Permission>> response = server.getPermissions(request, storeId, server.getUsername());
-//        if (response.isError()){
-//            System.out.println("error");
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//            model.addAttribute("myPermissions", response.getValue());
-//            System.out.println(response.getValue());
-//        }
-//        alert.reset();
-//        return "Manager";
-//    }
+    @RequestMapping(value = "/fetch_permissions", method = RequestMethod.POST)
+    public String fetchPermissions(@RequestParam("storeId") int storeId, RedirectAttributes redirectAttributes) {
+        // Retrieve the permissions for the given storeId
+        System.out.println("in fetch permissions");
+        Response<LinkedList<Permission>> response = server.getPermissions(request, storeId);
+        if (response.isError()){
+            System.out.println("error: " + response.getMessage());
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            redirectAttributes.addFlashAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            redirectAttributes.addFlashAttribute("alert", alert.copy());
+            redirectAttributes.addFlashAttribute("myPermissions", response.getValue());
+            System.out.println(response.getValue());
+        }
+        alert.reset();
+        return "redirect:/Manager"; // Redirect to the "Manager" page
+    }
+
 
 
     @RequestMapping(value = "/openStore", method = RequestMethod.POST)
@@ -227,25 +236,26 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
-    public String purchaseHistory(@RequestParam("storeID-purchase") int storeID,
-                                  Model model) {
-
-        Response<List<String>> response = server.GetStoreHistoryPurchase(request,storeID);
+    public String purchaseHistory(@RequestParam("storeID-purchase") int storeID, Model model) {
+        Response<List<String>> response = server.GetStoreHistoryPurchase(request, storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
         } else {
-            System.out.println("Purchase History should be displayed! " + response.getValue());
+            String purchaseHistory = String.join(", ", response.getValue()); // Join the elements of the list
+            System.out.println("Purchase History should be displayed! " + purchaseHistory);
 
             alert.setSuccess(true);
-            alert.setMessage("Purchase History for store with ID: " + storeID);
+            alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
-            model.addAttribute("purchaseHistory", response.getValue()); //List<String>
+            model.addAttribute("purchaseHistory", purchaseHistory); // Pass the joined string as a model attribute
         }
         alert.reset();
-        return "redirect:/Manager";
+        return "Manager";
     }
+
+
 
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
     public String closeStore(@RequestParam("storeID-close") int storeID,
@@ -378,26 +388,4 @@ public class ManagerController {
         alert.reset();
         return "redirect:/Manager";
     }
-
-    //    @RequestMapping(value = "/add-store-discount" , method = RequestMethod.POST)
-//    public String storeDiscount(@RequestParam("cond-desc") String discount,
-//                                @RequestParam("storeID-add-desc") int storeID,
-//                                Model model){
-//
-////        Response<?> response = server.addDiscount(storeID, discount);
-////        if (response.isError()){
-////            alert.setFail(true);
-////            alert.setMessage(response.getMessage());
-////            model.addAttribute("alert", alert.copy());
-////            System.out.println("error");
-////        } else {
-////            alert.setSuccess(true);
-////            alert.setMessage(response.getMessage());
-//////            model.addAttribute("alert", alert.copy());
-////            System.out.println("adding discount: " + discount + " to storeid: " + storeID);
-////        }
-////        alert.reset();
-//        return "Manager";
-//    }
-
 }

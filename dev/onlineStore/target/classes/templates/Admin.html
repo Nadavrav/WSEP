@@ -159,22 +159,28 @@
 			        <button style="background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
 		        </span>
 
-                <!-- Appointment Requests dropdown -->
                 <span class="dropdown">
-                    <button style="background-color: transparent;border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <button style="background-color: transparent; border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
                     <div class="dropdown-content" id="appointment-requests">
                         <ul>
-<!--                            <p th:if="${appointmentRequests.isEmpty()}">-->
-                            <!--                                No appointment requests-->
-                            <!--                            </p>-->
-                            <li th:each="request : ${appointmentRequests}">
-                                <span th:text="${request.name}">Appointment Request will be displayed here</span>
-                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='acceptRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
-                                    Accept
-                                </button>
-                                <button th:if="${request.status == 'PENDING'}" th:attr="onclick='declineRequest(\'' + ${request.id} + '\'); updateDropdown(this)'">
-                                    Decline
-                                </button>
+                            <p th:if="${appointmentRequests == null or appointmentRequests.isEmpty()}">No appointment requests</p>
+                            <li th:each="storeId : ${appointmentRequests}">
+                                <span th:text="${storeId.key}"></span>
+                                <ul>
+                                    <li th:each="owner : ${storeId.value}">
+                                        <span th:text="${owner}"></span>
+                                        <form th:action="@{/acceptRequest}" method="post">
+                                            <input type="hidden" name="storeId" th:value="${storeId.key}">
+                                            <input type="hidden" name="owner" th:value="${owner}">
+                                            <button type="submit" onclick="updateDropdown(this)">Accept</button>
+                                        </form>
+                                        <form th:action="@{/declineRequest}" method="post">
+                                             <input type="hidden" name="storeId" th:value="${storeId.key}">
+                                            <input type="hidden" name="owner" th:value="${owner}">
+                                            <button type="submit" onclick="updateDropdown(this)">Decline</button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
@@ -245,7 +251,6 @@
         <p th:text="${dailyIncome}">No income data available</p>
     </div>
 </div>
-
 <!--// ------------------------------------ DailyStoreIncome Modal --------------------------------------//-->
 <div id="daily-income-store-modal" class="modal">
     <a class="close-button" onclick="closeModal('daily-income-store-modal')">&#x2613</a>
@@ -264,7 +269,6 @@
         <p> <span th:text="${dailyStoreIncome}">No income data available</span></p>
     </div>
 </div>
-
 <!--// ------------------------------------ DeleteUser Modal --------------------------------------//-->
 <div id="delete-user-modal" class="modal">
     <a class="close-button" onclick="closeModal('delete-user-modal')">&#x2613</a>
@@ -279,7 +283,6 @@
         <button type="submit">DELETE USER</button>
     </form>
 </div>
-
 <!------------------------------ Online Users Modal ------------------------------>
 <div id="online-users-modal" class="modal">
     <a class="close-button" onclick="closeModal('online-users-modal')">&#x2613</a>
@@ -300,8 +303,6 @@
         </table>
     </div>
 </div>
-
-
 <!------------------------------ Offline Users Modal ------------------------------>
 <div id="offline-users-modal" class="modal">
     <a class="close-button" onclick="closeModal('offline-users-modal')">&#x2613</a>
@@ -332,6 +333,7 @@
         alertElement.style.display = "none";
     }, 2500);
 </script>
+
 <script th:inline="javascript">
     function toggleDropdown() {
         var dropdownContent = document.getElementById("appointment-requests");
@@ -342,6 +344,12 @@
         var listItem = element.parentNode;
         var dropdown = document.getElementById("appointment-requests");
         dropdown.removeChild(listItem);
+
+        // Toggle dropdown visibility if there are no more appointment requests
+        var requests = dropdown.getElementsByTagName("li");
+        if (requests.length === 0) {
+            toggleDropdown();
+        }
     }
 </script>
 </body>

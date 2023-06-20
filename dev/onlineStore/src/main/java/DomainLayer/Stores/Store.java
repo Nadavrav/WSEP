@@ -795,6 +795,14 @@ public class Store {
         return bid;
     }
 
+    public void notifyOwnersAboutNewEmploymentRequests(String OriginAppointer, String appointed){
+        NotifyOwners(OriginAppointer+" has opened a new appointment request to appoint "+appointed+" to be owner of the store "+getName());
+    }
+
+    public void notifyOwnersAboutNewAppointmentSucceed(String appointed){
+        NotifyOwners(appointed+" is now owner of the store "+getName()+" since every owner of the store accepted the employment request");
+    }
+
     public StoreCallbacks generateStoreCallback() {
         return new StoreCallbacks() {
             @Override
