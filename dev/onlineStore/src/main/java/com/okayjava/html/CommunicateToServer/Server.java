@@ -235,12 +235,9 @@ public class Server {
     public Response<ServiceDiscountInfo> addDiscount(HttpServletRequest request, ServiceDiscount serviceDiscount, int storeId){
         return getSession(request).addDiscount(serviceDiscount, storeId);
     }
-
-
     public Response<ServicePolicyInfo> addPolicy(HttpServletRequest request, ServicePolicy servicePolicy, int storeId){
         return getSession(request).addPolicy(servicePolicy, storeId);
     }
-
     public Response<LinkedList<Permission>> getPermissions(HttpServletRequest request, int storeId){
         return getSession(request).getPermissions(storeId);
     }

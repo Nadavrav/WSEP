@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -41,24 +42,15 @@ public class ManagerController {
         Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
         if (!responseRequest.isError()) {
             Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
-
-            // Filter appointment requests based on the logged-in user
-            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
-            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
-                List<String> owners = entry.getValue();
-                if (owners.contains(server.getUsername(request))) {
-                    filteredAppointmentRequests.put(entry.getKey(), owners);
-                }
-            }
-            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
-            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
         }
         alert.reset();
         return "Manager";
     }
 
     @RequestMapping(value = "/fetch_permissions", method = RequestMethod.POST)
-    public String fetchPermissions(@RequestParam("storeId") int storeId, Model model) {
+    public String fetchPermissions(@RequestParam("storeId") int storeId, RedirectAttributes redirectAttributes) {
         // Retrieve the permissions for the given storeId
         System.out.println("in fetch permissions");
         Response<LinkedList<Permission>> response = server.getPermissions(request, storeId);
@@ -66,17 +58,18 @@ public class ManagerController {
             System.out.println("error: " + response.getMessage());
             alert.setFail(true);
             alert.setMessage(response.getMessage());
-            model.addAttribute("alert", alert.copy());
+            redirectAttributes.addFlashAttribute("alert", alert.copy());
         } else {
             alert.setSuccess(true);
             alert.setMessage(response.getMessage());
-            model.addAttribute("alert", alert.copy());
-            model.addAttribute("myPermissions", response.getValue());
+            redirectAttributes.addFlashAttribute("alert", alert.copy());
+            redirectAttributes.addFlashAttribute("myPermissions", response.getValue());
             System.out.println(response.getValue());
         }
         alert.reset();
-        return "Manager";
+        return "redirect:/Manager"; // Redirect to the "Manager" page
     }
+
 
 
     @RequestMapping(value = "/openStore", method = RequestMethod.POST)

@@ -55,17 +55,8 @@ public class MainPageController{
             Response<Map<Integer, List<String>>> response = server.getAppointmentRequests(request);
             if (!response.isError()) {
                 Map<Integer, List<String>> appointmentRequests = response.getValue();
-
-                // Filter appointment requests based on the logged-in user
-                Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
-                for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
-                    List<String> owners = entry.getValue();
-                    if (owners.contains(server.getUsername(request))) {
-                        filteredAppointmentRequests.put(entry.getKey(), owners);
-                    }
-                }
-                model.addAttribute("appointmentRequests", filteredAppointmentRequests);
-                System.out.println("Appointment Requests: " + filteredAppointmentRequests);
+                model.addAttribute("appointmentRequests", appointmentRequests);
+                System.out.println("Appointment Requests: " + appointmentRequests);
             }
 
             alert.reset();
@@ -106,6 +97,13 @@ public class MainPageController{
                 alert.setMessage("Hey " + username + "! You Have New Messages.");
             } else alert.setMessage("WELCOME TO OUR STORE");
             model.addAttribute("alert", alert.copy());
+
+            Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+            if (!responseRequest.isError()) {
+                Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+                model.addAttribute("appointmentRequests", appointmentRequests);
+                System.out.println("Appointment Requests: " + appointmentRequests);
+            }
         }
         alert.reset();
         return ("MainPage");
@@ -178,37 +176,42 @@ public class MainPageController{
         return "MainPage";
     }
 
-//    @PostMapping("/acceptRequest/{id}")
-//    public String acceptRequest(@PathVariable("id") int id, Model model) {
-//        Response<?> response = server.acceptAppointment(request, id, appointedUserName);
-//        if (response.isError()) {
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        }
-//        alert.reset();
-//        return "redirect:/MainPage";
-//    }
+    @PostMapping("/acceptRequest")
+    public String acceptRequest(@RequestParam("storeId") int storeId,
+                                @RequestParam("owner") String owner,
+                                Model model) {
 
-//    @PostMapping("/declineRequest/{id}")
-//    public String declineRequest(@PathVariable("id") String id, Model model) {
-//        Response<?> response = server.declineAppointment(request, storeId, appointedUserName);
-//        if (response.isError()) {
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        }
-//        alert.reset();
-//        return "redirect:/MainPage";
-//    }
+        Response<?> response = server.acceptAppointment(request, storeId, owner);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MainPage";
+    }
+
+    @PostMapping("/declineRequest")
+    public String declineRequest(@RequestParam("storeId") int storeId,
+                                 @RequestParam("owner") String owner,
+                                 Model model) {
+        Response<?> response = server.declineAppointment(request, storeId, owner);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MainPage";
+    }
 
     @GetMapping("/error")
     public String error(Model model) {
