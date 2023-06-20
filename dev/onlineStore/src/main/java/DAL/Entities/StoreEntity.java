@@ -1,5 +1,7 @@
 package DAL.Entities;
 
+import DomainLayer.Stores.Store;
+
 import javax.persistence.*;
 
 @Entity
@@ -18,6 +20,17 @@ public class StoreEntity {
     @Basic
     @Column(name = "rate")
     private double rate;
+
+    public StoreEntity(int storeId, String name, boolean active, double rate)
+    {
+        this.id = storeId;
+        this.name = name;
+        this.active = active;
+        this.rate = rate;
+    }
+    public StoreEntity()
+    {
+    }
 
     public int getId() {
         return id;

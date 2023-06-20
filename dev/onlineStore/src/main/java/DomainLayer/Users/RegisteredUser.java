@@ -10,10 +10,16 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.logging.*;
 
+import DAL.DTOs.registeredUserDTO;
+
 
 public class RegisteredUser extends SiteVisitor{
     private static final Logger logger=Logger.getLogger("RegisteredUser logger");
     String userName;
+
+    public byte[] getPassword() {
+        return password;
+    }
 
     byte[] password;
     PurchaseHistory purchaseHistory;
@@ -53,6 +59,17 @@ public class RegisteredUser extends SiteVisitor{
         loggedIn=false;
         waitingMessages=new LinkedList<String>();
         
+    }
+
+    /**
+     * A constructor that loads from db
+     */
+    public RegisteredUser(registeredUserDTO userDTO)
+    {
+        super(0);
+        this.userName = userDTO.getUserName();
+        this.password = userDTO.getPassword();
+        this.loggedIn = false;
     }
     private byte[] hashString(String str) throws NoSuchAlgorithmException{
         byte[] unHashedBytes = str.getBytes();

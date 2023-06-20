@@ -19,10 +19,10 @@ public class EmploymentEntity {
     private String appointer;
     @Basic
     @Column(name = "role")
-    private Object role;
+    private int role;
     @Basic
     @Column(name = "permissions")
-    private Object permissions;
+    private String permissions;
 
     public String getEmployee() {
         return employee;
@@ -48,11 +48,11 @@ public class EmploymentEntity {
         this.appointer = appointer;
     }
 
-    public Object getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setRole(Object role) {
+    public void setRole(int role) {
         this.role = role;
     }
 
@@ -60,7 +60,7 @@ public class EmploymentEntity {
         return permissions;
     }
 
-    public void setPermissions(Object permissions) {
+    public void setPermissions(String permissions) {
         this.permissions = permissions;
     }
 
@@ -74,7 +74,7 @@ public class EmploymentEntity {
         if (storeId != that.storeId) return false;
         if (employee != null ? !employee.equals(that.employee) : that.employee != null) return false;
         if (appointer != null ? !appointer.equals(that.appointer) : that.appointer != null) return false;
-        if (role != null ? !role.equals(that.role) : that.role != null) return false;
+        if (role != that.role) return false;
         if (permissions != null ? !permissions.equals(that.permissions) : that.permissions != null) return false;
 
         return true;
@@ -85,7 +85,7 @@ public class EmploymentEntity {
         int result = employee != null ? employee.hashCode() : 0;
         result = 31 * result + storeId;
         result = 31 * result + (appointer != null ? appointer.hashCode() : 0);
-        result = 31 * result + (role != null ? role.hashCode() : 0);
+        result = 31 * result + role;
         result = 31 * result + (permissions != null ? permissions.hashCode() : 0);
         return result;
     }

@@ -6,13 +6,22 @@ import java.util.Arrays;
 @Entity
 @Table(name = "registereduser", schema = "onlinestoredb", catalog = "")
 public class RegistereduserEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "userName")
+    @Column(name = "userName", length = 30, nullable = false)
     private String userName;
     @Basic
-    @Column(name = "password")
+    @Column(name = "password" ,length = 32)
     private byte[] password;
+
+    public RegistereduserEntity(String userName,byte[] password)
+    {
+        this.userName = userName;
+        this.password = password;
+    }
+
+    public RegistereduserEntity() {
+
+    }
 
     public String getUserName() {
         return userName;

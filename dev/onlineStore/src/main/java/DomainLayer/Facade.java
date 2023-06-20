@@ -31,6 +31,10 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceMultiDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
+//DAL IMPORTS
+import DAL.DALService;
+import DAL.DTOs.*;
+
 import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -71,6 +75,8 @@ public class Facade {
     private Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
+
+    private DALService DS;
 
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
@@ -114,7 +120,7 @@ public class Facade {
 
     public void loadData() throws Exception {
         resetData();
-        try{
+        /*try{
             //New users
             int nadavID = EnterNewSiteVisitor();
             int nadiaID = EnterNewSiteVisitor();
@@ -287,7 +293,7 @@ public class Facade {
         }
         catch(Exception e){
             throw new Exception(e);
-        }
+        }*/
 
     }
 
@@ -361,6 +367,8 @@ public class Facade {
 
     }
     public synchronized void Register(int visitorId, String userName, String password) throws Exception {//1.3
+        DS = DALService.getInstance();
+
         //Valid visitorID
         if (!SiteVisitor.checkVisitorId(visitorId)) {
             logger.warning("maybe we have a null visitor!");
@@ -368,7 +376,14 @@ public class Facade {
         }
         //unique userName
         if (registeredUserList.get(userName) != null) {
-            throw  new Exception("This userName already taken");
+                throw new Exception("This userName already taken");
+        }
+        //checking if the user exists in DB
+        registeredUserDTO userDTO = DS.getUser(userName);
+        if(userDTO != null) {
+            RegisteredUser r = new RegisteredUser(userDTO);
+            registeredUserList.put(userName, r);
+            throw new Exception("This userName already taken");
         }
 
 
@@ -381,11 +396,17 @@ public class Facade {
         RegisteredUser r = new RegisteredUser(userName, password);
         //onlineList.replace(visitorId,r);
         registeredUserList.put(userName, r);
+
+        //Save into Db
+        DS.saveUser(r.getUserName(),r.getPassword());
+        //End save
+
         registeredUserList.get(userName).update("Registered to Site");
     }
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
         //
+        DS = DALService.getInstance();
         RegisteredUser user = registeredUserList.get(userName);
         boolean b = registeredUserList.get("admin")!=null;
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
@@ -393,8 +414,15 @@ public class Facade {
             throw  new Exception("Invalid Visitor ID");
         }
         if (user == null) {//check if he has account
-            logger.warning("User is already have an account");
-            throw  new Exception("UserName not Found");
+            registeredUserDTO userDTO = DS.getUser(userName);
+            if(userDTO != null) {
+                user = new RegisteredUser(userDTO);
+                registeredUserList.put(userName, user);
+            }
+            else {
+                logger.warning("User is already have an account");
+                throw new Exception("UserName not Found");
+            }
         }
         logger.info("User log in successfully");
          user.login(password,visitorId);
@@ -1015,6 +1043,7 @@ public class Facade {
         //----------Store-----------
     // open Store
     public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
+        DS = DALService.getInstance();
         // check if register user
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
@@ -1036,6 +1065,11 @@ public class Facade {
         }
         employmentList.get(((RegisteredUser) User).getUserName()).put(store.getID(),employment);
         logger.fine("open new store with name" + storeName+" done successfully");
+
+        //Save store to DB
+        DS.saveStore(store.getID(),storeName,true,store.getRate());
+        //End save
+
         return store.getID();
     }
 
