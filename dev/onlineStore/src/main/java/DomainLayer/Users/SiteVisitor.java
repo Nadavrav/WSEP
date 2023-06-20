@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 public class SiteVisitor{
-    private static AtomicInteger VisitorID_GENERATOR = new AtomicInteger(1);
+    private static final AtomicInteger VisitorID_GENERATOR = new AtomicInteger(1);
     protected static LinkedList<AtomicInteger> FreeVisitorID= new LinkedList<>();
     private Cart cart;
     private int visitorId;
@@ -80,7 +80,6 @@ public class SiteVisitor{
     }
     public void addProductToCart(int storeId, StoreProduct product,int amount) {//2.3
         logger.info("Adding product with ID " + product.getProductId() + " to cart for store with ID " + storeId);
-
         cart.addProductToCart(storeId,product,amount);
     }
     public void addProductToCart(int storeId, StoreProduct product,int amount, StoreCallbacks callback) {//2.3
