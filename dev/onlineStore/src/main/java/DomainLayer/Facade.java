@@ -29,6 +29,7 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -59,12 +60,11 @@ public class Facade {
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
-        Map<Integer, Map<Bid, HashSet<Integer>>> bidVoters = new HashMap<>();
-        onlineList = new HashMap<>();
-        registeredUserList = new HashMap<>();
-        storesList = new HashMap<>();
-        employmentList = new HashMap<>();
-        appointmentsRequests = new HashMap<>();
+        onlineList = new ConcurrentHashMap<>();
+        registeredUserList = new ConcurrentHashMap<>();
+        storesList = new ConcurrentHashMap<>();
+        employmentList = new ConcurrentHashMap<>();
+        appointmentsRequests = new ConcurrentHashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
         if(!ConfigParser.parse(this))
@@ -296,12 +296,10 @@ public class Facade {
 
 //------------UserPackege-----------------------
     public int enterNewSiteVisitor() throws Exception {//1.1
-        synchronized (onlineList) {
             SiteVisitor visitor = new SiteVisitor();
             onlineList.put(visitor.getVisitorId(), visitor);
             logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
             return visitor.getVisitorId();
-        }
     }
     public boolean isLoggedIn(int visitorid) {
         return onlineList.containsKey(visitorid);
@@ -328,7 +326,7 @@ public class Facade {
             throw new IllegalArgumentException("No online user with this id");
         }
     }
-    public synchronized void registerAdmin(int visitorid,String userName,String password) throws Exception{
+    public void registerAdmin(int visitorid,String userName,String password) throws Exception{
         logger.info("Starting admin registration");
         if(!(onlineList.get(visitorid) instanceof Admin)){
             logger.info("Failed admin registration: only admin can register other admins");
@@ -378,12 +376,10 @@ public class Facade {
             logger.warning("maybe we have a null visitor!");
            throw  new Exception("Invalid Visitor ID");
         }
-        synchronized (registeredUserList) {
             //unique userName
             if (registeredUserList.get(userName) != null) {
                 throw new Exception("This userName already taken");
             }
-
 
             //get site visitor object
             //SiteVisitor visitor = onlineList.get(visitorId);
@@ -395,13 +391,11 @@ public class Facade {
             //onlineList.replace(visitorId,r);
             registeredUserList.put(userName, r);
             registeredUserList.get(userName).update("Registered to Site");
-        }
     }
 
     public void login(int visitorId, String userName, String password) throws Exception {//1.4
         //
         RegisteredUser user;
-        synchronized (registeredUserList) {
              user = registeredUserList.get(userName);
             boolean b = registeredUserList.get("admin") != null;
             if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
@@ -414,13 +408,10 @@ public class Facade {
             }
             logger.info("User log in successfully");
             user.login(password, visitorId);
-        }
-        synchronized (onlineList) {
             onlineList.replace(visitorId, user);
         }
-    }
 
-    public synchronized int logout(int visitorId) throws Exception {//3.1
+    public int logout(int visitorId) throws Exception {//3.1
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("this User by  ID:"+ visitorId + "is null");
@@ -899,7 +890,7 @@ public class Facade {
         return output;
     }
 
-    public synchronized LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
+    public LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
 
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
