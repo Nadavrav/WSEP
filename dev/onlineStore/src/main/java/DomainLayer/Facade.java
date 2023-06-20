@@ -42,6 +42,18 @@ public class Facade {
     private final Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
     private Supplier supplier;
     private PaymentProvider paymentProvider;
+    public Map<Integer, SiteVisitor> getOnlineList() {
+        return onlineList;
+    }
+    public Map<String, RegisteredUser> getRegisteredUserList() {
+        return registeredUserList;
+    }
+    public Map<Integer, Store> getStoresList() {
+        return storesList;
+    }
+    public Map<String, Map<Integer, Employment>> getEmploymentList() {
+        return employmentList;
+    }
     private Boolean dataLoaded=false;
     private final Object dataSyncObj=new Object();
     private Facade() {
@@ -74,18 +86,7 @@ public class Facade {
         }
         return instanceFacade;
     }
-    public Map<Integer, SiteVisitor> getOnlineList() {
-        return onlineList;
-    }
-    public Map<String, RegisteredUser> getRegisteredUserList() {
-        return registeredUserList;
-    }
-    public Map<Integer, Store> getStoresList() {
-        return storesList;
-    }
-    public Map<String, Map<Integer, Employment>> getEmploymentList() {
-        return employmentList;
-    }
+
     public Map<String, RegisteredUser> getRegisteredUserList(int visitorId) throws Exception {
         if(!(onlineList.get(visitorId) instanceof Admin))
             throw new Exception("Only admin can fetch user list");
