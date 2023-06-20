@@ -5,9 +5,7 @@ import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.BetweenDa
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MinTotalProductAmountCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.AndCondition;
 import DomainLayer.Stores.Conditions.ComplexConditions.CheckForCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CheckIfCondition;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
@@ -33,8 +31,8 @@ public class PolicyTests {
     public void setUp(){
         try {
             facade.resetData();
-            visitorId = facade.EnterNewSiteVisitor();
-            facade.Register(visitorId, "user", "admin123456");
+            visitorId = facade.enterNewSiteVisitor();
+            facade.register(visitorId, "user", "admin123456");
             facade.login(visitorId, "user", "admin123456");
             storeId=facade.OpenNewStore(visitorId,"Store1");
             facade.AddProduct(visitorId,storeId,bread);

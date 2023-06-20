@@ -31,13 +31,13 @@ public class ConfigParser {
             try {
                 List<User> userList = objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
                 for (User user : userList) {
-                    int id = facade.EnterNewSiteVisitor();
+                    int id = facade.enterNewSiteVisitor();
                     if(user.isAdmin()) {
                         facade.registerInitialAdmin(user.getUsername(), user.getPassword());
                         loadedAdmin=true;
                     }
                     else
-                        facade.Register(id,user.getUsername(), user.getPassword());
+                        facade.register(id,user.getUsername(), user.getPassword());
                     if(user.getStore()!=null){
                         facade.login(id,user.getUsername(), user.getPassword());
                         for(Store store:user.getStore()){

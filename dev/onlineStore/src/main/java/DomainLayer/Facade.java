@@ -3,11 +3,8 @@ package DomainLayer;
 
 import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
-import DomainLayer.Stores.CallBacks.StoreCallbacks;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.*;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.AndCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
@@ -28,55 +25,38 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ExternalServices.PaymentProvider;
 import ExternalServices.Supplier;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceBasicDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
-import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceMultiDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.MultiValueMapAdapter;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class Facade {
-    private static Facade instanceFacade = null;
+    private static volatile Facade instanceFacade = null;
     private  static final Logger logger = Logger.getLogger("Facade Logger");
-
-    private Map<Integer, SiteVisitor> onlineList;//online
-
-
-    private Map<String, RegisteredUser> registeredUserList;
-
-
-    private Map<Integer, Store> storesList;
-    //unit tests getters
+    private final Map<Integer, SiteVisitor> onlineList;//online
+    private final Map<String, RegisteredUser> registeredUserList;
+    private final Map<Integer, Store> storesList;
+    private final Map<String, Map<Integer, Employment>> employmentList;
+    private final Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
+    private Supplier supplier;
+    private PaymentProvider paymentProvider;
     public Map<Integer, SiteVisitor> getOnlineList() {
         return onlineList;
     }
     public Map<String, RegisteredUser> getRegisteredUserList() {
         return registeredUserList;
     }
-
-    public Map<String, RegisteredUser> getRegisteredUserList(int visitorId) throws Exception {
-        if(!(onlineList.get(visitorId) instanceof Admin))
-            throw new Exception("Only admin can fetch user list");
-        return registeredUserList;
-    }
-
-    //Getter for tests
     public Map<Integer, Store> getStoresList() {
         return storesList;
     }
     public Map<String, Map<Integer, Employment>> getEmploymentList() {
         return employmentList;
     }
-
-    private Map<String, Map<Integer, Employment>> employmentList;
-    private Map<Integer,Map<RegisteredUser,LinkedList<RegisteredUser>>> appointmentsRequests;
-    private Map<Integer,Map<Bid,HashSet<Integer>>> bidVoters;
-    private Supplier supplier;
-    private PaymentProvider paymentProvider;
+    private Boolean dataLoaded=false;
+    private final Object dataSyncObj=new Object();
 
     private Map<Date,Integer> siteVisitorsEntriesManager;
     private Map<Date,Integer> nonWorkersEntriesManager;
@@ -85,17 +65,15 @@ public class Facade {
     private Map<Date,Integer> adminsEntriesManager;
 
 
-    private boolean dataLoaded=false;
 
     private Facade() {
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
-        bidVoters=new HashMap<>();
-        onlineList = new HashMap<>();
-        registeredUserList = new HashMap<>();
-        storesList = new HashMap<>();
-        employmentList = new HashMap<>();
-        appointmentsRequests = new HashMap<>();
+        onlineList = new ConcurrentHashMap<>();
+        registeredUserList = new ConcurrentHashMap<>();
+        storesList = new ConcurrentHashMap<>();
+        employmentList = new ConcurrentHashMap<>();
+        appointmentsRequests = new ConcurrentHashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
 
@@ -107,233 +85,238 @@ public class Facade {
 
         if(!ConfigParser.parse(this))
             registerInitialAdmin("admin","admin12345");
-
-
     }
-
-
     /**
-     * Function used by test inorder to reset the data in the facade and make the tests independent of one another.
+     * get instance uses double-checking to prevent synchronization when getting a non-null instance,
+     * improving runtime.
+     * if instance is null, synchronizes and checks again.
+     * (for specific runtime cases when 2 threads passed the 1st if)
+     * @return Facade singleton instance
      */
-    public void resetData()
-    {
-        if(!storesList.isEmpty()){
-            for(Store store:storesList.values()){
-                store.resetCounters();
-                break;
-            }
-        }
-        onlineList = new HashMap<>();
-        registeredUserList = new HashMap<>();
-        storesList = new HashMap<>();
-        employmentList = new HashMap<>();
-        supplier= new Supplier();
-        paymentProvider= new PaymentProvider();
-        dataLoaded=false;
-        //ConfigParser.parse(this);
-
-    }
-    public static synchronized Facade getInstance() {
+    public static Facade getInstance() {
         if (instanceFacade == null) {
-            instanceFacade = new Facade();
+            synchronized (Facade.class) {
+                if(instanceFacade==null)
+                    instanceFacade = new Facade();
+            }
         }
         return instanceFacade;
     }
 
-    public void loadData() throws Exception {
-        if(dataLoaded)
-            return;
-       // resetData();
-        if(!ConfigParser.parse(this))
-            registerInitialAdmin("admin","admin12345");
-        try{
-            //New users
-            int nadavID = EnterNewSiteVisitor();
-            int nadiaID = EnterNewSiteVisitor();
-            int natalieID = EnterNewSiteVisitor();
-            int majdID = EnterNewSiteVisitor();
-            int denisID = EnterNewSiteVisitor();
-            int nikitaID = EnterNewSiteVisitor();
 
-
-            Register(nadavID,"Nadav","123456789");
-            Register(nadiaID,"Nadia","123456789");
-            Register(natalieID,"Natalie","123456789");
-            Register(majdID,"Majd","123456789");
-            Register(denisID,"Denis","123456789");
-            Register(nikitaID,"Nikita","123456789");
-
-            login(nadavID,"Nadav","123456789");
-            login(nadiaID,"Nadia","123456789");
-            login(natalieID,"Natalie","123456789");
-            login(majdID,"Majd","123456789");
-            login(denisID,"Denis","123456789");
-            login(nikitaID,"Nikita","123456789");
-
-            //New Stores
-            int nadavStoreID = OpenNewStore(nadavID,"NadavStore");
-            int nadiaStoreID = OpenNewStore(nadiaID,"NadiaStore");
-            int natalieStoreID = OpenNewStore(natalieID,"NatalieStore");
-            int majdStoreID = OpenNewStore(majdID,"MajdStore");
-            int denisStoreID = OpenNewStore(denisID,"DenisStore");
-            int nikitaStoreID = OpenNewStore(nikitaID,"NikitaStore");
-
-            //New Products
-
-            //new
-            AddProduct(nadavID,nadavStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(nadavID,nadavStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(nadavID,nadavStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(nadavID,nadavStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(nadavID,nadavStoreID,"Steak",100,"Meat",1,"May contain peanuts");
-
-            AddProduct(nadiaID,nadiaStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(nadiaID,nadiaStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(nadiaID,nadiaStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(nadiaID,nadiaStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(nadiaID,nadiaStoreID,"Steak",100,"Meat",1,"May contain peanuts");
-
-            AddProduct(natalieID,natalieStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(natalieID,natalieStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(natalieID,natalieStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(natalieID,natalieStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(natalieID,natalieStoreID,"Steak",100,"Meat",1,"May contain peanuts");
-
-            AddProduct(majdID,majdStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(majdID,majdStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(majdID,majdStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(majdID,majdStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(majdID,majdStoreID,"Steak",100,"Meat",1,"May contain peanuts");
-
-            AddProduct(denisID,denisStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(denisID,denisStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(denisID,denisStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(denisID,denisStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(denisID,denisStoreID,"Steak",100,"Meat",1,"May contain peanuts");
-
-            AddProduct(nikitaID,nikitaStoreID,"Milk 15%",6,"Milk",1,"Freshly milked");
-            AddProduct(nikitaID,nikitaStoreID,"Bread",10,"Wheat Foods",1,"Made of whole wheat");
-            AddProduct(nikitaID,nikitaStoreID,"Yogurt",15,"Dairy",1,"Extra chunky");
-            AddProduct(nikitaID,nikitaStoreID,"Chicken",30,"Meat",1,"40% chicken");
-            AddProduct(nikitaID,nikitaStoreID,"Steak",100,"Meat",1,"May contain peanuts");
-
-            //old
-            AddProduct(nadiaID,nadiaStoreID,"Orange Juice",16,"Juice",90,"Good juice");
-            AddProduct(natalieID,natalieStoreID,"Apples",900,"Fruits",1,"Good apples");
-            AddProduct(majdID,majdStoreID,"Milk",6,"Milk",30,"Good milk");
-            AddProduct(denisID,denisStoreID,"Milk",6,"Milk",30,"Good milk");
-            AddProduct(nikitaID,nikitaStoreID,"Milk",6,"Milk",30,"Good milk");
-            //new Discounts
-            // NadavStore discounts:
-            addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
-            addDiscount(new BasicDiscount("5% Discount on milk!",2,10,new NameCondition("Milk")),nadavStoreID);
-
-            // MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
-           // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
-           // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
-           // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
-           // AdditiveDiscount nadavAdditiveDiscount=new AdditiveDiscount("10% Discount on steaks and another 50% discount on steaks if you buy 2",1);
-           // nadavAdditiveDiscount.addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")));
-           // nadavAdditiveDiscount.addDiscount(new BasicDiscount("50% Discount on steaks if you buy 2",1,50,nameAndMinQuantityCondition));
-           // addDiscount(nadavAdditiveDiscount,nadavStoreID);
-           // // NadiaStore discounts:
-           // BooleanAfterFilterCondition nadiabreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-           // BooleanAfterFilterCondition nadiadairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-           // AndCondition andCondition=new AndCondition(nadiabreadCondition,nadiadairyCondition);
-           // MultiAndCondition nadiaMultiAndCondition=new MultiAndCondition();
-           // nadiaMultiAndCondition.addCondition(andCondition);
-           // nadiaMultiAndCondition.addCondition(new CategoryCondition("Meat"));
-           // BasicDiscount nadiaDiscount =new BasicDiscount(" 50% discount on all meat products if you buy least 5 bread loafs and also at least 6 dairy products",1,50,nadiaMultiAndCondition);
-           // CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
-           // BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
-           // BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
-           // AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
-           // additiveDiscount.addDiscount(storeDiscount);
-           // additiveDiscount.addDiscount(dairyDiscount);
-           // addDiscount(nadiaDiscount,nadiaStoreID);
-           // addDiscount(additiveDiscount,nadiaStoreID);
-           // // NatalieStore discounts:
-           // BooleanAfterFilterCondition natalieBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-           // BooleanAfterFilterCondition natalieDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-           // OrCondition natalieorCondition=new OrCondition(natalieBreadCondition,natalieDairyCondition);
-           // MultiAndCondition NataliemultiAndCondition=new MultiAndCondition();
-           // NataliemultiAndCondition.addCondition(natalieorCondition);
-           // NataliemultiAndCondition.addCondition(new CategoryCondition("Meat"));
-           // BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,NataliemultiAndCondition);
-           // addDiscount(basicDiscount,natalieStoreID);
-//
-           // // MajdStore discounts:
-           // BooleanAfterFilterCondition majdBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-           // BooleanAfterFilterCondition majdDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-           // XorCondition majdXorCondition=new XorCondition(majdBreadCondition,majdDairyCondition);
-           // MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
-           // majdMultiAndCondition.addCondition(majdXorCondition);
-           // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
-//
-           // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
-
-
-           // addDiscount(majdBasicDiscount,majdStoreID);
-            // DenisStore discounts:
-           // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
-           // MinBagPriceCondition denisMinBagPriceCondition=new MinBagPriceCondition(200);
-           // AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
-           // FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
-           // BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
-//
-            //        " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
-//
-            //addDiscount(denisBasicDiscount,denisStoreID);
-            // NikitaStore discounts:
-            NameCondition milkCondition=new NameCondition("Milk 15%");
-            CategoryCondition meatCategoryCondition=new CategoryCondition("Meat");
-            BasicDiscount meatsDiscount=new BasicDiscount("20% discount on all 15% milk cartons",1,20,milkCondition);
-            BasicDiscount milkDiscount =new BasicDiscount("25% discount on all meat products",2,25,meatCategoryCondition);
-            MaxSelectiveDiscount maxSelectiveDiscount=new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them",3);
-            maxSelectiveDiscount.addDiscount(meatsDiscount);
-            maxSelectiveDiscount.addDiscount(milkDiscount);
-            //add policies
-            //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
-            //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
-            //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
-        //    appointNewStoreOwner(nadavID,"Denis",0);
-        //    appointNewStoreOwner(1,"Nadia",0);
-        //    acceptEmploymentRequest(denisID,0,"Nadia");
-            //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
-            //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
-            //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
-            //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
-            //addPolicy(DairyPolicy,nadavStoreID);
-            //addPolicy(BreadPolicy,nadavStoreID);
-            //addPolicy(Meatpolicy,nadiaStoreID);
-            //addPolicy(BreadPolicy,denisStoreID);
-            //addPolicy(BreadPolicy,nadiaStoreID);
-            //addPolicy(BagPolicy,denisStoreID);
-            //addPolicy(BagPolicy,nadiaStoreID);
-            //addPolicy(BagPolicy,natalieStoreID);
-
-            logout(nadavID);
-            logout(nadiaID);
-            logout(natalieID);
-            logout(majdID);
-            logout(denisID);
-            logout(nikitaID);
-            dataLoaded=true;
-
+    public Map<String, RegisteredUser> getRegisteredUserList(int visitorId) throws Exception {
+        if(!(onlineList.get(visitorId) instanceof Admin))
+            throw new Exception("Only admin can fetch user list");
+        return registeredUserList;
+    }
+    /**
+     * Function used by test inorder to reset the data in the facade and make the tests independent of one another.
+     * Synced on the same object as loadData
+     */
+    public void resetData()
+    {
+        synchronized (dataSyncObj) {
+            Store.resetCounters();
+            onlineList.clear();
+            registeredUserList.clear();
+            storesList.clear();
+            employmentList.clear();
+            supplier = new Supplier();
+            paymentProvider = new PaymentProvider();
+            dataLoaded = false;
         }
-        catch(Exception e){
-            throw new Exception(e);
+    }
+    public void loadData() throws Exception {
+        synchronized (dataSyncObj) {
+            if (dataLoaded)
+                return;
+            // resetData();
+            if (!ConfigParser.parse(this))
+                registerInitialAdmin("admin", "admin12345");
+            try {
+                //New users
+                int nadavID = enterNewSiteVisitor();
+                int nadiaID = enterNewSiteVisitor();
+                int natalieID = enterNewSiteVisitor();
+                int majdID = enterNewSiteVisitor();
+                int denisID = enterNewSiteVisitor();
+                int nikitaID = enterNewSiteVisitor();
+
+
+                register(nadavID, "Nadav", "123456789");
+                register(nadiaID, "Nadia", "123456789");
+                register(natalieID, "Natalie", "123456789");
+                register(majdID, "Majd", "123456789");
+                register(denisID, "Denis", "123456789");
+                register(nikitaID, "Nikita", "123456789");
+
+                login(nadavID, "Nadav", "123456789");
+                login(nadiaID, "Nadia", "123456789");
+                login(natalieID, "Natalie", "123456789");
+                login(majdID, "Majd", "123456789");
+                login(denisID, "Denis", "123456789");
+                login(nikitaID, "Nikita", "123456789");
+
+                //New Stores
+                int nadavStoreID = OpenNewStore(nadavID, "NadavStore");
+                int nadiaStoreID = OpenNewStore(nadiaID, "NadiaStore");
+                int natalieStoreID = OpenNewStore(natalieID, "NatalieStore");
+                int majdStoreID = OpenNewStore(majdID, "MajdStore");
+                int denisStoreID = OpenNewStore(denisID, "DenisStore");
+                int nikitaStoreID = OpenNewStore(nikitaID, "NikitaStore");
+
+                //New Products
+
+                //new
+                AddProduct(nadavID, nadavStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(nadavID, nadavStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(nadavID, nadavStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(nadavID, nadavStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(nadavID, nadavStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+
+                AddProduct(nadiaID, nadiaStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(nadiaID, nadiaStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(nadiaID, nadiaStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(nadiaID, nadiaStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(nadiaID, nadiaStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+
+                AddProduct(natalieID, natalieStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(natalieID, natalieStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(natalieID, natalieStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(natalieID, natalieStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(natalieID, natalieStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+
+                AddProduct(majdID, majdStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(majdID, majdStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(majdID, majdStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(majdID, majdStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(majdID, majdStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+
+                AddProduct(denisID, denisStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(denisID, denisStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(denisID, denisStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(denisID, denisStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(denisID, denisStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+
+                AddProduct(nikitaID, nikitaStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+                AddProduct(nikitaID, nikitaStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+                AddProduct(nikitaID, nikitaStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+                AddProduct(nikitaID, nikitaStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+                AddProduct(nikitaID, nikitaStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+
+                //old
+                AddProduct(nadiaID, nadiaStoreID, "Orange Juice", 16, "Juice", 90, "Good juice");
+                AddProduct(natalieID, natalieStoreID, "Apples", 900, "Fruits", 1, "Good apples");
+                AddProduct(majdID, majdStoreID, "Milk", 6, "Milk", 30, "Good milk");
+                AddProduct(denisID, denisStoreID, "Milk", 6, "Milk", 30, "Good milk");
+                AddProduct(nikitaID, nikitaStoreID, "Milk", 6, "Milk", 30, "Good milk");
+                //new Discounts
+                // NadavStore discounts:
+                 addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
+                addDiscount(new BasicDiscount("5% Discount on milk!",2,10,new NameCondition("Milk")),nadavStoreID);// MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
+                // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
+                // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
+                // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
+                // AdditiveDiscount nadavAdditiveDiscount=new AdditiveDiscount("10% Discount on steaks and another 50% discount on steaks if you buy 2",1);
+                // nadavAdditiveDiscount.addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")));
+                // nadavAdditiveDiscount.addDiscount(new BasicDiscount("50% Discount on steaks if you buy 2",1,50,nameAndMinQuantityCondition));
+                // addDiscount(nadavAdditiveDiscount,nadavStoreID);
+                // // NadiaStore discounts:
+                // BooleanAfterFilterCondition nadiabreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+                // BooleanAfterFilterCondition nadiadairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+                // AndCondition andCondition=new AndCondition(nadiabreadCondition,nadiadairyCondition);
+                // MultiAndCondition nadiaMultiAndCondition=new MultiAndCondition();
+                // nadiaMultiAndCondition.addCondition(andCondition);
+                // nadiaMultiAndCondition.addCondition(new CategoryCondition("Meat"));
+                // BasicDiscount nadiaDiscount =new BasicDiscount(" 50% discount on all meat products if you buy least 5 bread loafs and also at least 6 dairy products",1,50,nadiaMultiAndCondition);
+                // CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
+                // BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
+                // BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
+                // AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
+                // additiveDiscount.addDiscount(storeDiscount);
+                // additiveDiscount.addDiscount(dairyDiscount);
+                // addDiscount(nadiaDiscount,nadiaStoreID);
+                // addDiscount(additiveDiscount,nadiaStoreID);
+                // // NatalieStore discounts:
+                // BooleanAfterFilterCondition natalieBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+                // BooleanAfterFilterCondition natalieDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+                // OrCondition natalieorCondition=new OrCondition(natalieBreadCondition,natalieDairyCondition);
+                // MultiAndCondition NataliemultiAndCondition=new MultiAndCondition();
+                // NataliemultiAndCondition.addCondition(natalieorCondition);
+                // NataliemultiAndCondition.addCondition(new CategoryCondition("Meat"));
+                // BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,NataliemultiAndCondition);
+                // addDiscount(basicDiscount,natalieStoreID);
+//
+                // // MajdStore discounts:
+                // BooleanAfterFilterCondition majdBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+                // BooleanAfterFilterCondition majdDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+                // XorCondition majdXorCondition=new XorCondition(majdBreadCondition,majdDairyCondition);
+                // MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
+                // majdMultiAndCondition.addCondition(majdXorCondition);
+                // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
+//
+                // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
+
+                // addDiscount(majdBasicDiscount,majdStoreID);
+                // DenisStore discounts:
+                // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
+                // MinBagPriceCondition denisMinBagPriceCondition=new MinBagPriceCondition(200);
+                // AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
+                // FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
+                // BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
+//
+                //        " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
+//
+                //addDiscount(denisBasicDiscount,denisStoreID);
+                // NikitaStore discounts:
+                NameCondition milkCondition = new NameCondition("Milk 15%");
+                CategoryCondition meatCategoryCondition = new CategoryCondition("Meat");
+                BasicDiscount meatsDiscount = new BasicDiscount("20% discount on all 15% milk cartons", 1, 20, milkCondition);
+                BasicDiscount milkDiscount = new BasicDiscount("25% discount on all meat products", 2, 25, meatCategoryCondition);
+                MaxSelectiveDiscount maxSelectiveDiscount = new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them", 3);
+                maxSelectiveDiscount.addDiscount(meatsDiscount);
+                maxSelectiveDiscount.addDiscount(milkDiscount);
+                //add policies
+                //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
+                //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
+                //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
+                //    appointNewStoreOwner(nadavID,"Denis",0);
+                //    appointNewStoreOwner(1,"Nadia",0);
+                //    acceptEmploymentRequest(denisID,0,"Nadia");
+                //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
+                //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
+                //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
+                //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
+                //addPolicy(DairyPolicy,nadavStoreID);
+                //addPolicy(BreadPolicy,nadavStoreID);
+                //addPolicy(Meatpolicy,nadiaStoreID);
+                //addPolicy(BreadPolicy,denisStoreID);
+                //addPolicy(BreadPolicy,nadiaStoreID);
+                //addPolicy(BagPolicy,denisStoreID);
+                //addPolicy(BagPolicy,nadiaStoreID);
+                //addPolicy(BagPolicy,natalieStoreID);
+
+                logout(nadavID);
+                logout(nadiaID);
+                logout(natalieID);
+                logout(majdID);
+                logout(denisID);
+                logout(nikitaID);
+                dataLoaded = true;
+
+            } catch (Exception e) {
+                throw new Exception(e);
+            }
         }
 
     }
 
 //------------UserPackege-----------------------
-    public int EnterNewSiteVisitor() throws Exception {//1.1
-        SiteVisitor visitor = new SiteVisitor();
-        onlineList.put(visitor.getVisitorId(), visitor);
-        increaseEntry(siteVisitorsEntriesManager);
-        logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
-        return visitor.getVisitorId();
+    public int enterNewSiteVisitor() throws Exception {//1.1
+            SiteVisitor visitor = new SiteVisitor();
+            onlineList.put(visitor.getVisitorId(), visitor);
+            increaseEntry(siteVisitorsEntriesManager);logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
+            return visitor.getVisitorId();
     }
     public boolean isLoggedIn(int visitorId) {
         SiteVisitor siteVisitor= onlineList.get(visitorId);
@@ -352,7 +335,7 @@ public class Facade {
             return ((RegisteredUser)onlineList.get(visitorId)).getUserName();
         }
     }
-    public void ExitSiteVisitor(int id) throws Exception {//1.2
+    public void exitSiteVisitor(int id) throws Exception {//1.2
         if(onlineList.containsKey(id)) {
             SiteVisitor st = onlineList.get(id);
             if(!(st instanceof RegisteredUser))
@@ -365,7 +348,7 @@ public class Facade {
             throw new IllegalArgumentException("No online user with this id");
         }
     }
-    public synchronized void registerAdmin(int visitorid,String userName,String password) throws Exception{
+    public void registerAdmin(int visitorid,String userName,String password) throws Exception{
         logger.info("Starting admin registration");
         if(!(onlineList.get(visitorid) instanceof Admin)){
             logger.info("Failed admin registration: only admin can register other admins");
@@ -409,45 +392,44 @@ public class Facade {
         }
 
     }
-    public synchronized void Register(int visitorId, String userName, String password) throws Exception {//1.3
+    public void register(int visitorId, String userName, String password) throws Exception {//1.3
         //Valid visitorID
         if (!SiteVisitor.checkVisitorId(visitorId)) {
             logger.warning("maybe we have a null visitor!");
            throw  new Exception("Invalid Visitor ID");
         }
-        //unique userName
-        if (registeredUserList.get(userName) != null) {
-            throw  new Exception("This userName already taken");
-        }
+            //unique userName
+            if (registeredUserList.get(userName) != null) {
+                throw new Exception("This userName already taken");
+            }
 
-
-        //get site visitor object
-        //SiteVisitor visitor = onlineList.get(visitorId);
-       // visitor =new RegisteredUser(visitor, userName, password);
-        //onlineList.put(visitorId,visitor);
-        // create new register user
-        logger.info("new visitor has register");
-        RegisteredUser r = new RegisteredUser(userName, password);
-        //onlineList.replace(visitorId,r);
-        registeredUserList.put(userName, r);
-        registeredUserList.get(userName).update("Registered to Site");
+            //get site visitor object
+            //SiteVisitor visitor = onlineList.get(visitorId);
+            // visitor =new RegisteredUser(visitor, userName, password);
+            //onlineList.put(visitorId,visitor);
+            // create new register user
+            logger.info("new visitor has register");
+            RegisteredUser r = new RegisteredUser(userName, password);
+            //onlineList.replace(visitorId,r);
+            registeredUserList.put(userName, r);
+            registeredUserList.get(userName).update("Registered to Site");
     }
 
-    public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
+    public void login(int visitorId, String userName, String password) throws Exception {//1.4
         //
-        RegisteredUser user = registeredUserList.get(userName);
-        boolean b = registeredUserList.get("admin")!=null;
-        if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
-            logger.warning("User IS NOT Entered in the system");
-            throw  new Exception("Invalid Visitor ID");
-        }
-        if (user == null) {//check if he has account
-            logger.warning("User is already have an account");
-            throw  new Exception("UserName not Found");
-        }
-        logger.info("User log in successfully");
-        user.login(password,visitorId);
-        if(isOwner(user.getUserName())){
+        RegisteredUser user;
+             user = registeredUserList.get(userName);
+            boolean b = registeredUserList.get("admin") != null;
+            if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
+                logger.warning("User IS NOT Entered in the system");
+                throw new Exception("Invalid Visitor ID");
+            }
+            if (user == null) {//check if he has account
+                logger.warning("User is already have an account");
+                throw new Exception("UserName not Found");
+            }
+            logger.info("User log in successfully");
+            user.login(password, visitorId);if(isOwner(user.getUserName())){
             increaseEntry(storeOwnersEntriesManager);
         }
         else if(isManager(user.getUserName())){
@@ -460,8 +442,8 @@ public class Facade {
         if(isAdmin(visitorId)){
             increaseEntry(adminsEntriesManager);
         }
-        onlineList.replace(visitorId, user);
-    }
+            onlineList.replace(visitorId, user);
+        }
 
     private boolean isOwner(String userName) {
         if(employmentList.get(userName) == null)
@@ -489,7 +471,7 @@ public class Facade {
         return false;
     }
 
-    public synchronized int logout(int visitorId) throws Exception {//3.1
+    public int logout(int visitorId) throws Exception {//3.1
         SiteVisitor user = onlineList.get(visitorId);
         if (user == null) {
             logger.warning("this User by  ID:"+ visitorId + "is null");
@@ -969,7 +951,7 @@ public class Facade {
         return output;
     }
 
-    public synchronized LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
+    public LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
 
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
@@ -1343,45 +1325,45 @@ public class Facade {
         //release productlock if locked
         //throw e
     }
-//
-//    public void AddStorePolicy(int visitorId, int storeId, Policy policy) throws Exception {
-//        SiteVisitor User = onlineList.get(visitorId);
-//        //lock user
-//        //try
-//        if(! (User instanceof RegisteredUser)){
-//            logger.severe("Invalid visitor Id: " + visitorId);
-//            throw  new Exception("invalid visitor Id");
-//        }
-//        Store store = storesList.get(storeId);
-//        if(store==null){
-//            logger.warning(" store is null");
-//            throw  new Exception("there is no store with this id ");
-//        }
-//        Employment employment = null;
-//        try{
-//            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
-//        }catch (Exception e){
-//            logger.warning("user with no store");
-//            throw  new Exception("this user dont have any store");
-//        }
-//        if (employment == null){
-//            logger.warning("employment is null");
-//            throw  new Exception("there is no employee with this id ");
-//        }
-//        if (!employment.CanChangePolicyAndDiscounts()) {
-//            logger.warning("user are not allowed to add products");
-//            throw  new Exception("you are not allowed to add policies to this store");
-//        }
-//        if(store.getActive())
-//            store.addPolicy(policy);
-//        else {
-//            logger.warning("Store is closed, store id :"+storeId);
-//            throw new Exception("Store is closed");
-//        }
-//        //catch
-//        //release lock user
-//        //throw e
-//    }
+
+    public void AddStorePolicy(int visitorId, int storeId, Policy policy) throws Exception {
+        SiteVisitor User = onlineList.get(visitorId);
+        //lock user
+        //try
+        if(! (User instanceof RegisteredUser)){
+            logger.severe("Invalid visitor Id: " + visitorId);
+            throw  new Exception("invalid visitor Id");
+        }
+        Store store = storesList.get(storeId);
+        if(store==null){
+            logger.warning(" store is null");
+            throw  new Exception("there is no store with this id ");
+        }
+        Employment employment = null;
+        try{
+            employment = employmentList.get(((RegisteredUser) User).getUserName()).get(storeId);
+        }catch (Exception e){
+            logger.warning("user with no store");
+            throw  new Exception("this user dont have any store");
+        }
+        if (employment == null){
+            logger.warning("employment is null");
+            throw  new Exception("there is no employee with this id ");
+        }
+        if (!employment.CanChangePolicyAndDiscounts()) {
+            logger.warning("user are not allowed to add products");
+            throw  new Exception("you are not allowed to add policies to this store");
+        }
+        if(store.getActive())
+            store.addPolicy(policy);
+        else {
+            logger.warning("Store is closed, store id :"+storeId);
+            throw new Exception("Store is closed");
+        }
+        //catch
+        //release lock user
+        //throw e
+    }
     public Policy AddStorePolicy(int visitorId, int storeId, ServicePolicy policy) throws Exception {
         SiteVisitor User = onlineList.get(visitorId);
         //lock user
