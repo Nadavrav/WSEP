@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-          crossorigin="anonymous">
-    <title>Manager/Owner Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <title>Admin Page</title>
     <style>
         body {
             background-image: url("https://media.istockphoto.com/id/1438337441/photo/business-management-concept-development-and-management-executives-looking-virtual-screens.jpg?s=612x612&w=0&k=20&c=F2-E8sUkjY8p5y_FfHRSYcLfrt9zdjdEjzWyCoy4p1c=");
@@ -14,16 +14,16 @@
 
         .container {
             width: 100%;
-            max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            /*padding: 20px;*/
             color: white;
             text-align: center;
         }
 
         h1 {
+            margin-top: 50px;
             font-size: 34px;
-            margin-bottom: 20px;
+            margin-bottom: 40px;
             color: white;
         }
 
@@ -38,46 +38,34 @@
             background-color: #ffffff;
             color: #333333;
             font-size: 18px;
-            border-radius: 4px;
+            border-radius: 6px;
             text-decoration: none;
             margin-right: 10px;
         }
 
         /* Modal Styles */
         .modal {
-            text-align: center;
-            align-items: center;
-            align-content: center;
-            position: fixed;
+            /*position: fixed;*/
             left: 0;
             top: 0;
             width: 280px;
             height: 100%;
             background-color: rgba(255, 255, 255, 0.2);
-            color: whitesmoke;
-            padding: 20px;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .modal.open {
-            transform: translateX(0);
-        }
-
-        .modal-content {
-            /*margin-top: 20px;*/
-        }
-
-        .close-button {
             display: flex;
-            /*margin-top: 0px;*/
-            color: white;
-            cursor: pointer;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            /*z-index: 9999;*/
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            color: whitesmoke;
+            overflow-y: auto;
+
         }
 
-        /* Button Styles */
-        .permissions-button {
-            display: flow;
+        .modal-button {
             padding: 15px 15px;
             font-size: 14px;
             /*font-weight: bold;*/
@@ -92,27 +80,81 @@
             /*transition: background-color 0.3s ease;*/
         }
 
-        .permissions-button:hover {
-            background-color: #5555;
+        .modal.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            /*width: 400px;*/
+            max-width: 80%;
+            background-color: whitesmoke;
+            color: black;
+            padding: 50px;
+            border-radius: 4px;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            /*border-collapse: collapse;*/
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #999999;
+        }
+
+        th {
+            text-align: center;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            color: black;
+            display: none;
+            position: absolute;
+            width: max-content;
+            padding: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-crossorigin="anonymous"></script>
-
+<div th:replace="fragments/alert :: alert(${alert})"></div>
 <header>
     <div class="home-button">
         <div class="menu-button">
             <button style="background-color: transparent; color: white; border: none;">
-                <svg onclick="window.location.href='MainPage';" width="25" height="20" fill="currentColor" class="bi bi-house" viewBox="0 0 10 15">
+                <svg onclick="window.location.href='/MainPage';" width="25" height="20" fill="currentColor" class="bi bi-house" viewBox="0 0 10 15">
                     <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
                 </svg>
             </button>
             <span th:if="${logged}">
-		        <button style="color: white;background-color: transparent;border: none"
+		        <button style="color: white; background-color: transparent;border: none"
                         onclick="location.href='/logout'">
     		        <svg width="25" height="20" fill="currentColor" class="bi bi-power" viewBox="0 0 10 15">
 				        <path d="M7.5 1v7h1V1h-1z"/>
@@ -120,33 +162,60 @@ crossorigin="anonymous"></script>
                     </svg>
                 </button>
 
-                <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Manager';">
+                <button style="color: white; background-color: transparent;border: none;" onclick="location.href='/Manager';">
 			        <svg width="30" height="20" fill="currentColor" class="bi bi-person" viewBox="0 0 10 15">
   				        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
 			        </svg>
 		        </button>
 
-		        <button style="color: white;background-color: transparent;border: none;" onclick="location.href='Messages';">
+		        <button style="color: white; background-color: transparent;border: none;" onclick="location.href='/Messages';">
 			        <svg width="30" height="20" fill="currentColor" class="bi bi-envelope" viewBox="0 0 10 15">
 				        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
 			        </svg>
 		        </button>
 
 		        <span th:if="${Admin}">
-			        <button style="color: white;background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
+			        <button style="color: white; background-color: transparent;border: none;" onclick="location.href='/Admin';">ADMIN</button>
 		        </span>
+
+                <button style="color: white; background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
+
+                <span class="dropdown">
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <div class="dropdown-content" id="appointment-requests">
+                        <ul>
+                            <p th:if="${appointmentRequests == null or appointmentRequests.isEmpty()}">No appointment requests</p>
+                            <li th:each="storeId : ${appointmentRequests}">
+                                <span th:text="${storeId.key}"></span>
+                                <ul>
+                                    <li th:each="owner : ${storeId.value}">
+                                        <span th:text="${owner}"></span>
+                                        <form th:action="@{/acceptRequest}" method="post">
+                                            <input type="hidden" name="storeId" th:value="${storeId.key}">
+                                            <input type="hidden" name="owner" th:value="${owner}">
+                                            <button type="submit" onclick="updateDropdown(this)">Accept</button>
+                                        </form>
+                                        <form th:action="@{/declineRequest}" method="post">
+                                             <input type="hidden" name="storeId" th:value="${storeId.key}">
+                                            <input type="hidden" name="owner" th:value="${owner}">
+                                            <button type="submit" onclick="updateDropdown(this)">Decline</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
             </span>
 
-            <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
-
-            <button style="color: white;background-color: transparent;border: none;position: fixed;right: 3%;" onclick="window.location.href='SearchResults';">
+            <button style="color: white; background-color: transparent;border: none;position: fixed;right: 3%;" onclick="window.location.href='/SearchResults';">
                 <svg width="35" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 10 15">
                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
                 </svg>
             </button>
 
-            <button style="background-color: transparent; color: white; border: none; position: fixed; right: 0%;">
-                <svg onclick="window.location.href='Bag';" width="30" height="20" fill="currentColor" class="bi bi-cart3" viewBox="0 0 13 16">
+            <button style="color: white; background-color: transparent;border: none; position: fixed; right: 0%;">
+                <svg onclick="window.location.href='/Bag';" width="30" height="20" fill="currentColor" class="bi bi-cart3" viewBox="0 0 13 16">
                     <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                 </svg>
             </button>
@@ -154,15 +223,15 @@ crossorigin="anonymous"></script>
     </div>
 </header>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+
 <div class="container">
     <h1>Welcome to the Manager/Owner Page</h1>
     <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('permissions-modal')">Permissions</a>
     <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('new-store-modal')">Open New Store</a>
     <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('my-stores-modal')">My Stores</a>
-</div>
-
-<div class="container" style="font-size: 24px;">
-    <div th:replace="fragments/alert :: alert(${alert})"></div>
 </div>
 
 <script>
@@ -184,7 +253,6 @@ crossorigin="anonymous"></script>
         currentModal = null;
     }
 </script>
-
 <!------------------------------ MyStores Modal ------------------------------>
 <div id="my-stores-modal" class="modal">
     <a class="close-button" onclick="closeModal('my-stores-modal')">&#x2613;</a>
@@ -192,7 +260,6 @@ crossorigin="anonymous"></script>
     <div th:each="myStore : ${myStoresList}">
         <h4>
             <a th:href="@{/MyStore/{storeId}(storeId=${myStore.getStoreId()}, storeName=${myStore.getStoreName()})}">
-<!--            <a th:href="@{'/MyStore/' + ${myStore.getStoreId()} + ${myStore.getStoreName()}}">-->
                 <span style="color: white;" th:text="'Store Name: ' + ${myStore.getStoreName()} + '  / ID: ' + ${myStore.getStoreId()}"></span>
             </a>
         </h4>
@@ -200,21 +267,45 @@ crossorigin="anonymous"></script>
 </div>
 <!------------------------------ Permissions Modal ------------------------------>
 <div id="permissions-modal" class="modal">
-    <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613</a>
-    <!--    <h2>Permissions</h2>-->
-    <button class="permissions-button" onclick="openModal('add-product-modal')">Add Product</button>
-    <button class="permissions-button" onclick="openModal('remove-product-modal')">Remove Product</button>
-    <button class="permissions-button" onclick="openModal('update-product-modal')">Update Product</button>
-    <button class="permissions-button" onclick="openModal('purchase-history-modal')">Purchase History</button>
-    <button class="permissions-button" onclick="openModal('close-store-modal')">Close Store</button>
-    <button class="permissions-button" onclick="openModal('employee-info-modal')">Employee Information</button>
-    <button class="permissions-button" onclick="openModal('remove-employee-modal')">Remove Employee</button>
-    <button class="permissions-button" onclick="openModal('appoint-storeOwner-modal')">Appoint Store Owner</button>
-    <button class="permissions-button" onclick="openModal('appoint-storeManager-modal')">Appoint Store Manager</button>
-    <button class="permissions-button" onclick="openModal('change-permissions-modal')">Change Permissions For Manager
-    </button>
-</div>
+    <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613;</a>
+    <form id="permissions-form" action="/fetch_permissions" method="post">
+        <input type="number" name="storeId" id="storeIdInput" placeholder="Enter Store ID">
+        <button class="permissions-button" type="submit">Submit</button>
+    </form>
 
+    <!-- Iterate over the list of permissions -->
+    <div th:each="permission : ${myPermissions}">
+        <!-- Check if the permission is one of the permissions in the enum -->
+        <div th:if="${T(DomainLayer.Users.Permission).valueOf(permission.toString()) != null}">
+            <!-- Display the button based on the permission -->
+            <div th:switch="${permission.toString()}">
+                <div th:case="CanManageStock">
+                    <button class="modal-button" onclick="openModal('add-product-modal')">Add Product</button>
+                    <button class="modal-button" onclick="openModal('remove-product-modal')">Remove Product</button>
+                    <button class="modal-button" onclick="openModal('update-product-modal')">Update Product</button>
+                </div>
+                <div th:case="CanSeePurchaseHistory">
+                    <button class="modal-button" onclick="openModal('purchase-history-modal')">Purchase History</button>
+                </div>
+                <div th:case="CanSeeStaffAndPermissions">
+                    <button class="modal-button" onclick="openModal('employee-info-modal')">Employee Information</button>
+                </div>
+                <div th:case="CanRemoveStoreManager">
+                    <button class="modal-button" onclick="openModal('remove-employee-modal')">Remove Employee</button>
+                </div>
+                <div th:case="CanAppointStoreOwner">
+                    <button class="modal-button" onclick="openModal('appoint-storeOwner-modal')">Appoint Store Owner</button>
+                </div>
+                <div th:case="CanAppointStoreManager">
+                    <button class="modal-button" onclick="openModal('appoint-storeManager-modal')">Appoint Store Manager</button>
+                </div>
+                <div th:case="CanChangePermissionsForStoreManager">
+                    <button class="modal-button" onclick="openModal('change-permissions-modal')">Change Permissions For Manager</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!------------------------------ Add Product Modal ------------------------------>
 <div id="add-product-modal" class="modal">
     <a class="close-button" onclick="closeModal('add-product-modal')">&#x2613</a>
@@ -304,8 +395,8 @@ crossorigin="anonymous"></script>
 </div>
 
 <!------------------------------ Purchase History Modal ------------------------------>
-<div id="purchase-history-modal" class="modal">
-    <a class="close-button" onclick="closeModal('purchase-history-modal')">&#x2613</a>
+<<div id="purchase-history-modal" class="modal">
+    <a class="close-button" onclick="closeModal('purchase-history-modal')">&#x2613;</a>
     <h2>Purchase History:</h2>
     <form id="purchase-history-form" action="/purchase-history" method="post">
         <label for="storeID-purchase">Store ID:</label>
@@ -317,10 +408,10 @@ crossorigin="anonymous"></script>
 </div>
 
 <div id="show-purchase-history-modal" class="modal">
-    <a class="close-button" onclick="closeModal('show-purchase-history-modal')">&#x2613</a>
-    <h2>Purchase History:</h2>
-    <div th:each="item: ${purchaseHistory}" class="product">
-        <p th:text="${item}"></p>
+    <a class="close-button" onclick="closeModal('show-purchase-history-modal')">&#x2613;</a>
+    <h2 th:text="${purchaseHistory}">Purchase History:</h2>
+    <div th:unless="${purchaseHistory}">
+        <p>No purchase history available.</p>
     </div>
 </div>
 <!------------------------------ Close Store Modal ------------------------------>
@@ -345,27 +436,23 @@ crossorigin="anonymous"></script>
 
 <!------------------------------ Employee Info Modal ------------------------------>
 <div id="employee-info-modal" class="modal">
-    <a class="close-button" onclick="closeModal('employee-info-modal')">&#x2613</a>
+    <a class="close-button" onclick="closeModal('employee-info-modal')">&#x2613;</a>
     <h2>Employee Info:</h2>
     <form id="employee-info-form" action="/employee-info" method="post">
         <label for="storeID-employee">Store ID:</label>
         <br>
         <input type="text" id="storeID-employee" name="storeID-employee" required>
         <br><br>
-        <button type="submit" onclick="openModal('show-employee-info-modal')">SHOW INFO</button>
-        <article th:text="${employeeInfo}"></article>
+        <button type="submit" onclick="openModal('show-employee-info-modal');">SHOW INFO</button>
     </form>
+    <article th:text="${employeeInfo}"></article>
 </div>
 
-<!--<div id="show-employee-info-modal" class="modal" th:if="${showEmployeeInfoModal}">-->
-<!--  <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613</a>-->
-<!--  <h2>Employee Info:</h2>-->
-<!--  <p th:text="${employeeInfo}"></p>-->
-
-<!--&lt;!&ndash;  <div th:if="${alert}" th:class="${alert.isSuccess() ? 'success' : 'error'}">&ndash;&gt;-->
-<!--&lt;!&ndash;    <p th:text="${alert.getMessage()}"></p>&ndash;&gt;-->
-<!--&lt;!&ndash;  </div>&ndash;&gt;-->
-<!--</div>-->
+<div id="show-employee-info-modal" class="modal">
+    <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613;</a>
+    <h2>Employee Info:</h2>
+    <p th:text="${employeeInfo}"></p>
+</div>
 
 <!------------------------------ Remove Employee Modal ------------------------------>
 <div id="remove-employee-modal" class="modal">
@@ -467,5 +554,23 @@ crossorigin="anonymous"></script>
     }, 2500);
 </script>
 
+<script th:inline="javascript">
+    function toggleDropdown() {
+        var dropdownContent = document.getElementById("appointment-requests");
+        dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+    }
+
+    function updateDropdown(element) {
+        var listItem = element.parentNode;
+        var dropdown = document.getElementById("appointment-requests");
+        dropdown.removeChild(listItem);
+
+        // Toggle dropdown visibility if there are no more appointment requests
+        var requests = dropdown.getElementsByTagName("li");
+        if (requests.length === 0) {
+            toggleDropdown();
+        }
+    }
+</script>
 </body>
 </html>

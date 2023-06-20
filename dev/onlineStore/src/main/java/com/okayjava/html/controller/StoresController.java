@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 public class StoresController {
@@ -22,9 +25,9 @@ public class StoresController {
 
     @GetMapping("/Stores")
     public String getStoreAndProductsNames(Model model) {
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
-//        model.addAttribute("alert", alert.copy());
+        model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<?> response = server.getStoresName(request); //linkedlist stores
         if (response.isError()){
@@ -34,8 +37,15 @@ public class StoresController {
         } else {
             alert.setSuccess(true);
             alert.setMessage(response.getMessage());
-            model.addAttribute("alert", alert.copy());
+//            model.addAttribute("alert", alert.copy());
             model.addAttribute("stores", response.getValue());
+        }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
         }
         alert.reset();
         return "Stores";

@@ -3,10 +3,12 @@ package ServiceLayer;
 import DomainLayer.Facade;
 import DomainLayer.Response;
 
+import DomainLayer.Stores.Bid;
 import DomainLayer.Stores.Policies.Policy;
 
 import DomainLayer.Stores.Discounts.Discount;
 
+import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.*;
@@ -19,6 +21,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 
 
+import ServiceLayer.ServiceObjects.ServiceBid;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
@@ -26,6 +29,8 @@ import ServiceLayer.ServiceObjects.ServiceCart;
 
 
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceProduct;
+import ServiceLayer.ServiceObjects.ServiceProducts.ServiceStoreProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 
 import ServiceLayer.ServiceObjects.ServiceUser;
@@ -43,12 +48,28 @@ public class Service {
 
     public Response<Integer> EnterNewSiteVisitor() {//1.1
         try{
-            visitorId= facade.EnterNewSiteVisitor();
+            visitorId= facade.enterNewSiteVisitor();
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
         return new Response<>(visitorId);
+    }
+    public Response<Boolean> isLoggedIn() {//1.1
+        try{
+            return new Response<>(facade.isLoggedIn(visitorId));
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<String> getUserName() {//1.1
+        try{
+            return new Response<>(facade.getUserName(visitorId));
+
+        }catch (Exception e){
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     public Response<Boolean> isAdmin(){
@@ -64,7 +85,7 @@ public class Service {
 
     public Response<?> ExitSiteVisitor() {//1.2
         try{
-            facade.ExitSiteVisitor(visitorId);
+            facade.exitSiteVisitor(visitorId);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -96,7 +117,7 @@ public class Service {
     public Response<?> Register( String userName, String password) {//1.3
 
         try{
-            facade.Register(visitorId,userName,password);
+            facade.register(visitorId,userName,password);
 
         }catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -545,10 +566,10 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<Collection<ServiceStore>> getStoresByUserName(String userName) {
+    public Response<Collection<ServiceStore>> getStoresByUserName() {
         try {
             ArrayList<ServiceStore> serviceStores = new ArrayList<>();
-            List <Store> stores = facade.getStoresByUserName(visitorId,userName);
+            List <Store> stores = facade.getStoresByUserName(visitorId);
             for(Store s : stores) {
                 serviceStores.add(new ServiceStore(s));
             }
@@ -687,18 +708,18 @@ public class Service {
         }
     }
 
-    public Response<Boolean> checkForNewMessages(String userName) {
+    public Response<Boolean> checkForNewMessages() {
         try{
-            return new Response<>(facade.checkForNewMessages(userName));
+            return new Response<>(facade.checkForNewMessages(visitorId));
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
         }
     }
 
-    public Response<LinkedList<String>> getNewMessages(String userName) {
+    public Response<LinkedList<String>> getNewMessages() {
         try{
-            return new Response<>(facade.getNewMessages(userName));
+            return new Response<>(facade.getNewMessages(visitorId));
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -715,25 +736,101 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-
-    // TODO: implement
-    public Response<?> addNewBid(int productId, int storeId,int amount,int newPrice) {
-        return null;
+    public Response<ServiceStoreProduct> getProduct(int storeId,int productId){
+        try{
+            return new Response<>(new ServiceStoreProduct(facade.getProduct(storeId,productId)));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
-    // TODO: implement
-    public Response<?> acceptBid(int productId,int storeId,String userName) {
-        return null;
+    /**
+     * add new bid
+     * @param productId product id to add bid to
+     * @param storeId store to add bid in
+     * @param amount amount of product the user wants to buy
+     * @param newPrice the price PER PRODUCT the user has bid,
+     *                 obviously it has to be smaller than the original price
+     * @return returns ServiceBid with info about added bid
+     */
+    public Response<ServiceBid> addNewBid(int productId, int storeId, int amount, int newPrice)  {
+        try {
+            return new Response<>(new ServiceBid(facade.addBid(visitorId,productId,storeId,amount,newPrice),new ServiceStoreProduct(facade.getProduct(storeId,productId))));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
-
-    // TODO: implement
-    public Response<?> declineBid(int productId,int storeId,String userName) {
-        return null;
+    public Response<ServiceBid> counterOfferBid(int productId, int storeId,String userName,double newPrice,String message){
+        try {
+            return new Response<>(new ServiceBid(facade.counterOfferBid(visitorId,productId,storeId,userName,newPrice,message),new ServiceStoreProduct(facade.getProduct(storeId,productId))));
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
-
-    // TODO: implement
-    public Response<?> updateBid(int productId,int storeId,int newPrice) {
-        return null;
+    public Response<?> acceptCounterOffer(int productId, int storeId){
+        try {
+            facade.acceptCounterOffer(visitorId,productId,storeId);
+            return new Response<>("Bid accepted",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<?> rejectCounterOffer(int productId){
+        try {
+            facade.rejectCounterOffer(visitorId,productId);
+            return new Response<>("Bid rejected",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<?> voteOnBid(int productId,int storeId,String userName,boolean vote) {
+        try {
+            facade.voteOnBid(visitorId,productId,userName,storeId,vote);
+            return new Response<>("Bid rejected",false);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<Collection<ServiceBid>> geStoreBids(int storeId) {
+        try {
+            Collection<Bid> storeBids=facade.getStoreBids(storeId);
+            Map<Integer, StoreProduct> products =facade.getStoresList().get(storeId).getProducts();
+            HashSet<ServiceBid> serviceBids=new HashSet<>();
+            for(Bid bid:storeBids){
+                serviceBids.add(new ServiceBid(bid,new ServiceStoreProduct(products.get(bid.getProductId()))));
+            }
+            return new Response<>(serviceBids);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<Collection<ServiceBid>> getUserBids() {
+        try {
+            Map<Product,Bid> userBids=facade.getUserBids(visitorId);
+            HashSet<ServiceBid> serviceBids=new HashSet<>();
+            for(Product product:userBids.keySet()){
+                serviceBids.add(new ServiceBid(userBids.get(product),new ServiceProduct(product.getName(),product.getPrice(),product.getCategory(),product.getDescription())));
+            }
+            return new Response<>(serviceBids);
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
     }
 
     public Response<Integer> getDailyIncome(int day,int month,int year) {
@@ -779,14 +876,82 @@ public class Service {
         }
     }
     
-    public Response<LinkedList<Permission>> getPermissions(int storeId,String appointedUserName) {
+    public Response<LinkedList<Permission>> getPermissions(int storeId) {
         try {
-            return new Response<>(facade.getPermissions(visitorId, storeId, appointedUserName));
+            return new Response<>(facade.getPermissions(visitorId, storeId));
         } catch (Exception e) {
             return new Response<>(e.getMessage(), true);
         }
     }
 
+
+    
+    public Response<Map<Date,Integer>> getVisitorsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getVisitorsAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    
+    public Response<Map<Date,Integer>> getUsersWithoutStoresAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getUsersWithoutStoresAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    
+    public Response<Map<Date,Integer>> getStoreManagersOnlyAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getStoreManagersOnlyAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+    
+    public Response<Map<Date,Integer>> getStoreOwnersAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getStoreOwnersAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+
+   
+    public Response<Map<Date,Integer>> getAdminsAmountBetweenDates(int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        try{
+            return new Response<>(facade.getAdminsAmountBetweenDates(visitorId,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd));
+
+        }
+        catch (Exception e)
+        {
+            return new Response<>(e.getMessage(),true);
+        }
+    }
+    public Response<Map<Integer,List<String>>> getAppointmentRequests(){
+        try {
+            return new Response<>(facade.getAppointmentRequests(visitorId));
+        } catch (Exception e) {
+            return new Response<>(e.getMessage(), true);
+
+        }
+    }
 
 }
 

@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class BuyController {
@@ -31,6 +33,13 @@ public class BuyController {
         else{
             model.addAttribute("totalAmount", responseT.getValue());
             model.addAttribute("alert", alert.copy());
+        }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
         }
         alert.reset();
         return "Buy";
@@ -59,6 +68,7 @@ public class BuyController {
             alert.setMessage("Thank You ;)");
             model.addAttribute("buy", response.getValue()); //List<String>
             model.addAttribute("alert", alert.copy());
+            System.out.println("successful buy");
         }
         alert.reset();
         return "Buy";

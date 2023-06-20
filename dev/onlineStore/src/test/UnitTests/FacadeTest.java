@@ -34,7 +34,7 @@ class FacadeTest {
     @Test
     void enterNewSiteVisitor() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             Assertions.assertTrue(f.getOnlineList().get(visitorId)!=null);
         }
         catch (Exception e)
@@ -52,9 +52,9 @@ class FacadeTest {
     @Test
     void enterNewSiteVisitorTwice() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             Assertions.assertTrue(f.getOnlineList().get(visitorId)!=null);
-            int visitorId2 = f.EnterNewSiteVisitor();
+            int visitorId2 = f.enterNewSiteVisitor();
             Assertions.assertTrue(f.getOnlineList().get(visitorId2)!=null);
             
         }
@@ -67,8 +67,8 @@ class FacadeTest {
     @Test
     void exitSiteVisitor() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
-            f.ExitSiteVisitor(visitorId);
+            int visitorId = f.enterNewSiteVisitor();
+            f.exitSiteVisitor(visitorId);
             Assertions.assertTrue(f.getOnlineList().get(visitorId)==null);
 
         }
@@ -81,11 +81,11 @@ class FacadeTest {
     @Test
     void exitSiteVisitorExitTwice() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
-            f.ExitSiteVisitor(visitorId);
+            int visitorId = f.enterNewSiteVisitor();
+            f.exitSiteVisitor(visitorId);
             Assertions.assertTrue(f.getOnlineList().get(visitorId)==null);
             //TODO CHECK WHY EXCEPTUION WASNT THROWN
-            Assertions.assertThrows(Exception.class,()->f.ExitSiteVisitor(visitorId));
+            Assertions.assertThrows(Exception.class,()->f.exitSiteVisitor(visitorId));
         }
         catch (Exception e)
         {//Should happen
@@ -97,9 +97,9 @@ class FacadeTest {
     @Test
     void register_OkData() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
-            f.Register(visitorId,Username,"123456789");
+            f.register(visitorId,Username,"123456789");
             Assertions.assertTrue(f.getRegisteredUserList().get(Username)!=null);
         }
         catch (Exception e)
@@ -111,9 +111,9 @@ class FacadeTest {
     @Test
     void register_nullUsername() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = null;
-            Assertions.assertThrows(NullPointerException.class,()->f.Register(visitorId,Username,"123456789"));
+            Assertions.assertThrows(NullPointerException.class,()->f.register(visitorId,Username,"123456789"));
         }
         catch (Exception e)
         {//Should happen
@@ -124,9 +124,9 @@ class FacadeTest {
     @Test
     void register_nullPassword() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
-            Assertions.assertThrows(NullPointerException.class,()->f.Register(visitorId,Username,null));
+            Assertions.assertThrows(NullPointerException.class,()->f.register(visitorId,Username,null));
         }
         catch (Exception e)
         {//Should happen
@@ -137,11 +137,11 @@ class FacadeTest {
     @Test
     void register_sameUsername() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
-            f.Register(visitorId,Username,"123456789");
+            f.register(visitorId,Username,"123456789");
             Assertions.assertTrue(f.getRegisteredUserList().get(Username)!=null);
-            Assertions.assertThrows(Exception.class,()->f.Register(visitorId,Username,"123456789"));
+            Assertions.assertThrows(Exception.class,()->f.register(visitorId,Username,"123456789"));
         }
         catch (Exception e)
         {//Should happen
@@ -152,9 +152,9 @@ class FacadeTest {
     @Test
     void register_badPassword() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
-            Assertions.assertThrows(IllegalArgumentException.class,()->f.Register(visitorId,Username,"123"));
+            Assertions.assertThrows(IllegalArgumentException.class,()->f.register(visitorId,Username,"123"));
         }
         catch (Exception e)
         {//Should happen
@@ -165,9 +165,9 @@ class FacadeTest {
     @Test
     void register_badVisitorId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
-            Assertions.assertThrows(Exception.class,()->f.Register(1000,Username,"123456789"));//TODO CHECK WHY NOT THROWN
+            Assertions.assertThrows(Exception.class,()->f.register(1000,Username,"123456789"));//TODO CHECK WHY NOT THROWN
         }
         catch (Exception e)
         {//Should happen
@@ -178,10 +178,10 @@ class FacadeTest {
     @Test
     void login_OkData() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             Assertions.assertTrue(f.getOnlineList().get(visitorId)!=null);
         }
@@ -194,10 +194,10 @@ class FacadeTest {
     @Test
     void login_nullUsername() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             Assertions.assertThrows(Exception.class,()->f.login(visitorId,null,password));
         }
         catch (Exception e)
@@ -209,10 +209,10 @@ class FacadeTest {
     @Test
     void login_nullPassword() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             Assertions.assertThrows(Exception.class,()->f.login(visitorId,Username,null));
         }
         catch (Exception e)
@@ -224,10 +224,10 @@ class FacadeTest {
     @Test
     void login_BadVisitorId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             Assertions.assertThrows(Exception.class,()->f.login(100,Username,password));
         }
         catch (Exception e)
@@ -239,10 +239,10 @@ class FacadeTest {
     @Test
     void login_Twice() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             Assertions.assertTrue(f.getOnlineList().get(visitorId)!=null);
             Assertions.assertThrows(Exception.class,()->f.login(visitorId,Username,password));
@@ -256,10 +256,10 @@ class FacadeTest {
     @Test
     void logout_ok() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             Assertions.assertTrue(f.getOnlineList().get(visitorId)!=null);
             f.logout(visitorId);
@@ -274,7 +274,7 @@ class FacadeTest {
     @Test
     void logout_notRegistered() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             Assertions.assertThrows(Exception.class,()->f.logout(visitorId));
@@ -288,10 +288,10 @@ class FacadeTest {
     @Test
     void logout_notLogedIn() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             Assertions.assertThrows(Exception.class,()->f.logout(visitorId));
         }
         catch (Exception e)
@@ -303,10 +303,10 @@ class FacadeTest {
     @Test
     void logout_InvalidVisitorId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             Assertions.assertThrows(Exception.class,()->f.logout(100));
         }
         catch (Exception e)
@@ -318,7 +318,7 @@ class FacadeTest {
     @Test
     void addProductToCart_ok() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -326,7 +326,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -346,7 +346,7 @@ class FacadeTest {
     @Test
     void addProductToCart_MultipleProducts() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -359,7 +359,7 @@ class FacadeTest {
             String pCat2 = "Bread";
             int pQuan2 = 10;
             String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -383,7 +383,7 @@ class FacadeTest {
     @Test
     void addProductToCart_MultipleTimes() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -392,7 +392,7 @@ class FacadeTest {
             int pQuan = 10;
             String pDesc = "Milk";
             int newAmount = 5;
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -413,7 +413,7 @@ class FacadeTest {
     @Test
     void addProductToCart_MultipleTimes_MultipleItems() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -428,7 +428,7 @@ class FacadeTest {
             String pDesc2 = "Bread";
             int newAmount1 = 6;
             int newAmount2 = 2;
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -454,7 +454,7 @@ class FacadeTest {
     @Test
     void addProductToCart_MultipleItems_DiffrentStores() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username1 = "ValidUsername";
             String password1 = "123456789";
             String Username2 = "RandomUser2";
@@ -470,12 +470,12 @@ class FacadeTest {
             String pDesc2 = "Bread";
             int newAmount1 = 6;
             int newAmount2 = 2;
-            f.Register(visitorId,Username1,password1);
+            f.register(visitorId,Username1,password1);
             f.login(visitorId,Username1,password1);
             int storeId1 = f.OpenNewStore(visitorId,"MyStore");
             int pid1=f.AddProduct(visitorId,storeId1,pName,pPrice,pCat,pQuan,pDesc);
             f.logout(visitorId);
-            f.Register(visitorId,Username2,password1);
+            f.register(visitorId,Username2,password1);
             f.login(visitorId,Username2,password1);
             int storeId2 = f.OpenNewStore(visitorId,"DiffrentStore");
             int pid2=f.AddProduct(visitorId,storeId2,pName2,pPrice2,pCat2,pQuan2,pDesc2);
@@ -502,7 +502,7 @@ class FacadeTest {
     @Test
     void addProductToCart_BadProductId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -515,7 +515,7 @@ class FacadeTest {
             String pCat2 = "Bread";
             int pQuan2 = 10;
             String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -531,7 +531,7 @@ class FacadeTest {
     @Test
     void addProductToCart_BadVisitorId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -544,7 +544,7 @@ class FacadeTest {
             String pCat2 = "Bread";
             int pQuan2 = 10;
             String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -560,18 +560,18 @@ class FacadeTest {
     @Test
     void appointNewStoreOwner_ok() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -586,18 +586,18 @@ class FacadeTest {
     @Test
     void appointNewStoreOwner_AppointTwice() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -613,18 +613,18 @@ class FacadeTest {
     @Test
     void appointNewStoreOwner_notAllowedToAppoint() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.logout(visitorId);
@@ -640,18 +640,18 @@ class FacadeTest {
     @Test
     void appointNewStoreOwner_badId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             Assertions.assertThrows(Exception.class,()->f.appointNewStoreOwner(100,Username2,storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -665,18 +665,18 @@ class FacadeTest {
     @Test
     void appointNewStoreOwner_badStoreId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             Assertions.assertThrows(Exception.class,()->f.appointNewStoreOwner(visitorId,Username2,100));// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -690,18 +690,18 @@ class FacadeTest {
     @Test
     void appointNewStoreOwner_closedStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             //TODO CHECK WHY STORE OWNER DOESNT GET SAVED
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
@@ -717,18 +717,18 @@ class FacadeTest {
     @Test
     void appointNewStoreOwner_NonexistentUsername() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             //TODO CHEKC WHY STORE OWNER DOESNT GET SAVED
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
@@ -744,18 +744,18 @@ class FacadeTest {
     @Test
     void appointNewStoreManager_ok() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -770,18 +770,18 @@ class FacadeTest {
     @Test
     void appointNewStoreManager_AppointTwice() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -797,18 +797,18 @@ class FacadeTest {
     @Test
     void appointNewStoreManager_notAllowedToAppoint() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.logout(visitorId);
@@ -824,18 +824,18 @@ class FacadeTest {
     @Test
     void appointNewStoreManager_badId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             Assertions.assertThrows(Exception.class,()->f.appointNewStoreManager(100,Username2,storeId));// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -849,18 +849,18 @@ class FacadeTest {
     @Test
     void appointNewStoreManager_badStoreId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             Assertions.assertThrows(Exception.class,()->f.appointNewStoreManager(visitorId,Username2,100));// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -874,18 +874,18 @@ class FacadeTest {
     @Test
     void appointNewStoreManager_closedStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             //TODO CHECK WHY STORE OWNER DOESNT GET SAVED
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
@@ -901,18 +901,18 @@ class FacadeTest {
     @Test
     void appointNewStoreManager_NonexistentUsername() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             //TODO CHECK WHY THE STORE OWNER DOESNT GET SAVED
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
@@ -929,16 +929,16 @@ class FacadeTest {
     @Test
     void changeStoreManagerPermission() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
             String Username3 = "ValidUsernamePerson3";
             String password3 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
-            f.Register(visitorId,Username3,password3);//Register 3 user
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username3,password3);//Register 3 user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);
@@ -959,16 +959,16 @@ class FacadeTest {
     @Test
     void changeStoreManagerPermission_InvalidVisitiorId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
             String Username3 = "ValidUsernamePerson3";
             String password3 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
-            f.Register(visitorId,Username3,password3);//Register 3 user
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username3,password3);//Register 3 user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);
@@ -985,16 +985,16 @@ class FacadeTest {
     @Test
     void changeStoreManagerPermission_BadStoreId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
             String Username3 = "ValidUsernamePerson3";
             String password3 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
-            f.Register(visitorId,Username3,password3);//Register 3 user
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username3,password3);//Register 3 user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);
@@ -1011,16 +1011,16 @@ class FacadeTest {
     @Test
     void changeStoreManagerPermission_ClosedStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
             String Username3 = "ValidUsernamePerson3";
             String password3 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
-            f.Register(visitorId,Username3,password3);//Register 3 user
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username3,password3);//Register 3 user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);//TODO FIX USER NOT HAVING A STORE
@@ -1038,16 +1038,16 @@ class FacadeTest {
     @Test
     void changeStoreManagerPermission_NotStoreOwner() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
             String Username3 = "ValidUsernamePerson3";
             String password3 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
-            f.Register(visitorId,Username3,password3);//Register 3 user
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username3,password3);//Register 3 user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);
@@ -1065,16 +1065,16 @@ class FacadeTest {
     @Test
     void changeStoreManagerPermission_nonExistedtUsername() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
             String Username3 = "ValidUsernamePerson3";
             String password3 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
-            f.Register(visitorId,Username3,password3);//Register 3 user
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username3,password3);//Register 3 user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);
@@ -1091,16 +1091,16 @@ class FacadeTest {
     @Test
     void changeStoreManagerPermission_nullUsername() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
             String Username3 = "ValidUsernamePerson3";
             String password3 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
-            f.Register(visitorId,Username3,password3);//Register 3 user
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username3,password3);//Register 3 user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);
@@ -1118,7 +1118,7 @@ class FacadeTest {
     @Test
     void purchaseCart_ok() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1126,7 +1126,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1144,7 +1144,7 @@ class FacadeTest {
     @Test
     void purchaseCart_InvalidVisitorId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1152,7 +1152,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1168,7 +1168,7 @@ class FacadeTest {
     @Test
     void purchaseCart_MultipleProducts() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1181,7 +1181,7 @@ class FacadeTest {
             String pCat2 = "Bread";
             int pQuan2 = 10;
             String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1201,7 +1201,7 @@ class FacadeTest {
     @Test
     void purchaseCart_notEnoughQuan_Fail() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1209,7 +1209,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 1;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1230,10 +1230,10 @@ class FacadeTest {
     @Test
     void openNewStore_ok() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             Assertions.assertTrue(f.getStoresList().get(storeId)!=null);
@@ -1247,7 +1247,7 @@ class FacadeTest {
     @Test
     void openNewStore_normalVisitor() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             Assertions.assertThrows(Exception.class,()->f.OpenNewStore(visitorId,"MyStore"));
@@ -1261,10 +1261,10 @@ class FacadeTest {
     @Test
     void openNewStore_notLoggedIn() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             Assertions.assertThrows(Exception.class,()->f.OpenNewStore(visitorId,"MyStore"));
         }
         catch (Exception e)
@@ -1277,10 +1277,10 @@ class FacadeTest {
     @Test
     void closeStore_ok() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");//TODO STORE DOESNT GET SAVED AFTER OPENING
             f.CloseStore(visitorId,storeId);
@@ -1295,18 +1295,18 @@ class FacadeTest {
     @Test
     void closeStore_Fail_StoreManager() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -1323,18 +1323,18 @@ class FacadeTest {
     @Test
     void closeStore_FailStoreOwner() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store owner of store 1 which user 1 is the founder of
@@ -1351,10 +1351,10 @@ class FacadeTest {
     @Test
     void closeStore_FakeStoreId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             Assertions.assertThrows(Exception.class,()->f.CloseStore(visitorId,100));
@@ -1368,10 +1368,10 @@ class FacadeTest {
     @Test
     void closeStore_notLoggedIn() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.logout(visitorId);
@@ -1386,16 +1386,16 @@ class FacadeTest {
     @Test
     void closeStore_notMyStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.logout(visitorId);
-            f.Register(visitorId,Username2,password2);
+            f.register(visitorId,Username2,password2);
             f.login(visitorId,Username2,password2);
             Assertions.assertThrows(Exception.class,()->f.CloseStore(visitorId,storeId));
         }
@@ -1409,7 +1409,7 @@ class FacadeTest {
     @Test
     void addProduct_ok() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1417,7 +1417,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             Integer actual = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1432,18 +1432,18 @@ class FacadeTest {
     @Test
     void addProduct_okAllowedUserStoreOwner() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreOwner(visitorId,Username2,storeId);// appoint use2 to be store owner of store 1 which user 1 is the founder of
@@ -1461,18 +1461,18 @@ class FacadeTest {
     @Test
     void addProduct_okAllowedUserStoreManager() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();//Enter Site
+            int visitorId = f.enterNewSiteVisitor();//Enter Site
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
             String password2 = "123456789";
-            f.Register(visitorId,Username2,password2);//Register 2 user
+            f.register(visitorId,Username2,password2);//Register 2 user
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);//register first user
+            f.register(visitorId,Username,password);//register first user
             f.login(visitorId,Username,password);//login first user
             int storeId = f.OpenNewStore(visitorId,"MyStore");// open a new store
             f.appointNewStoreManager(visitorId,Username2,storeId);// appoint use2 to be store manager of store 1 which user 1 is the founder of
@@ -1493,7 +1493,7 @@ class FacadeTest {
     @Test
     void addProduct_nullPName() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = null;
@@ -1501,7 +1501,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             Assertions.assertThrows(Exception.class,()->f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc));
@@ -1515,7 +1515,7 @@ class FacadeTest {
     @Test
     void addProduct_negPPrice() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1523,7 +1523,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             Assertions.assertThrows(Exception.class,()->f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc));
@@ -1537,7 +1537,7 @@ class FacadeTest {
     @Test
     void addProduct_nullPCat() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1545,7 +1545,7 @@ class FacadeTest {
             String pCat = null;
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             Assertions.assertThrows(Exception.class,()->f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc));
@@ -1559,7 +1559,7 @@ class FacadeTest {
     @Test
     void addProduct_negPQuan() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1567,7 +1567,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = -10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             Assertions.assertThrows(Exception.class,()->f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc));
@@ -1581,7 +1581,7 @@ class FacadeTest {
     @Test
     void addProduct_nullPDesc() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1589,7 +1589,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = null;
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             Assertions.assertThrows(Exception.class,()->f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc));
@@ -1603,7 +1603,7 @@ class FacadeTest {
     @Test
     void addProduct_notLoggedIN() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1611,7 +1611,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.logout(visitorId);
@@ -1626,7 +1626,7 @@ class FacadeTest {
     @Test
     void addProduct_notMyStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidUsernamePerson2";
@@ -1636,11 +1636,11 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.logout(visitorId);
-            f.Register(visitorId,Username2,password2);
+            f.register(visitorId,Username2,password2);
             f.login(visitorId,Username2,password2);
             //TODO CHECK WHY VISITOR ID IS INVALID
             Assertions.assertThrows(Exception.class,()->f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc));
@@ -1655,7 +1655,7 @@ class FacadeTest {
     @Test
     void removeProduct() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1663,7 +1663,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1681,7 +1681,7 @@ class FacadeTest {
     @Test
     void removeProduct_notallowed() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1689,7 +1689,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1705,7 +1705,7 @@ class FacadeTest {
     @Test
     void removeProduct_invalidVisitorId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1713,7 +1713,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1728,7 +1728,7 @@ class FacadeTest {
     @Test
     void removeProduct_invalidProductId() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1736,7 +1736,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1751,7 +1751,7 @@ class FacadeTest {
     @Test
     void removeProduct_ProductfromDiffrentStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String Username2 = "ValidSecondUser";
@@ -1766,8 +1766,8 @@ class FacadeTest {
             String pCat2 = "Bread";
             int pQuan2 = 10;
             String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
-            f.Register(visitorId,Username2,password2);
+            f.register(visitorId,Username,password);
+            f.register(visitorId,Username2,password2);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1787,7 +1787,7 @@ class FacadeTest {
     @Test
     void updateProductQuantity() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1795,7 +1795,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1814,7 +1814,7 @@ class FacadeTest {
     @Test
     void updateProductQuantity_NegativeQuan() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1822,7 +1822,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1837,7 +1837,7 @@ class FacadeTest {
     @Test
     void updateProductQuantity_NotAllowedToUpdate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1845,7 +1845,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1861,7 +1861,7 @@ class FacadeTest {
     @Test
     void IncreaseProductQuantity() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1869,7 +1869,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1887,7 +1887,7 @@ class FacadeTest {
     @Test
     void IncreaseProductQuantity_NegativeQuan() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1895,7 +1895,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1910,7 +1910,7 @@ class FacadeTest {
     @Test
     void IncreaseProductQuantity_NotAllowedToUpdate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1918,7 +1918,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1935,7 +1935,7 @@ class FacadeTest {
     @Test
     void UpdateProductName() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1943,7 +1943,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1961,7 +1961,7 @@ class FacadeTest {
     @Test
     void UpdateProductName_Nullname() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1969,7 +1969,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -1984,7 +1984,7 @@ class FacadeTest {
     @Test
     void UpdateProductName_badPID() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -1992,7 +1992,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2007,7 +2007,7 @@ class FacadeTest {
     @Test
     void UpdateProductName_NotAllowedToUpdate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2015,7 +2015,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2033,7 +2033,7 @@ class FacadeTest {
     @Test
     void UpdateProductPrice() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2041,7 +2041,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2059,7 +2059,7 @@ class FacadeTest {
     @Test
     void UpdateProducPrice_notNeg() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2067,7 +2067,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2082,7 +2082,7 @@ class FacadeTest {
     @Test
     void UpdateProductPrice_badPID() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2090,7 +2090,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2105,7 +2105,7 @@ class FacadeTest {
     @Test
     void UpdateProductPrice_NotAllowedToUpdate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2113,7 +2113,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2130,7 +2130,7 @@ class FacadeTest {
     @Test
     void UpdateProductCate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2138,7 +2138,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2156,7 +2156,7 @@ class FacadeTest {
     @Test
     void UpdateProducCate_NullCate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2164,7 +2164,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2179,7 +2179,7 @@ class FacadeTest {
     @Test
     void UpdateProductCate_badPID() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2187,7 +2187,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2202,7 +2202,7 @@ class FacadeTest {
     @Test
     void UpdateProductCate_NotAllowedToUpdate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2210,7 +2210,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2227,7 +2227,7 @@ class FacadeTest {
     @Test
     void UpdateProductDesc() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2235,7 +2235,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2253,7 +2253,7 @@ class FacadeTest {
     @Test
     void UpdateProducDesc_NullCate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2261,7 +2261,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2276,7 +2276,7 @@ class FacadeTest {
     @Test
     void UpdateProductDesc_badPID() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2284,7 +2284,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2299,7 +2299,7 @@ class FacadeTest {
     @Test
     void UpdateProductDesc_NotAllowedToUpdate() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2307,7 +2307,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2323,7 +2323,7 @@ class FacadeTest {
     @Test
     void getInformation_ExistingStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2331,7 +2331,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2349,7 +2349,7 @@ class FacadeTest {
     @Test
     void getInformation_FakeStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2357,7 +2357,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2372,7 +2372,7 @@ class FacadeTest {
     @Test
     void getStoreHistoryPurchase_Admin() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "admin";
             String password = "admin1234";
             String pName = "Milk";
@@ -2406,7 +2406,7 @@ class FacadeTest {
     @Test
     void getStoreHistoryPurchase_NotAdmin() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2414,7 +2414,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid  =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2432,7 +2432,7 @@ class FacadeTest {
     @Test
     void getStoreHistoryPurchase_FakeStore() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2456,7 +2456,7 @@ class FacadeTest {
     @Test
     void getUserHistoryPurchase_Admin() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "admin";
             String password = "admin1234";
             String pName = "Milk";
@@ -2491,7 +2491,7 @@ class FacadeTest {
     @Test
     void getUserHistoryPurchase_NotAdmin() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2499,7 +2499,7 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2516,7 +2516,7 @@ class FacadeTest {
     @Test
     void getUserHistoryPurchase_FakeUserName() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2540,7 +2540,7 @@ class FacadeTest {
     @Test
     void getCartPrice() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2553,7 +2553,7 @@ class FacadeTest {
             String pCat2 = "Bread";
             int pQuan2 = 10;
             String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2573,7 +2573,7 @@ class FacadeTest {
     @Test
     void getCartPriceMultipleProducts() {
         try {
-            int visitorId = f.EnterNewSiteVisitor();
+            int visitorId = f.enterNewSiteVisitor();
             String Username = "ValidUsername";
             String password = "123456789";
             String pName = "Milk";
@@ -2586,7 +2586,7 @@ class FacadeTest {
             String pCat2 = "Bread";
             int pQuan2 = 10;
             String pDesc2 = "Bread";
-            f.Register(visitorId,Username,password);
+            f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);

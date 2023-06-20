@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,19 +30,18 @@ public class SearchResultsController {
 
     @GetMapping("/SearchResults")
     public String searchResult(Model model) {
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
-//        model.addAttribute("alert", alert.copy());
+        model.addAttribute("alert", alert.copy());
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
+        }
         alert.reset();
         return "SearchResults";
     }
-
-//    @PostMapping("/SearchResults")
-//    public String resultPage(Model model){
-//        model.addAttribute("alert", alert.copy());
-//        alert.reset();
-//        return "SearchResults";
-//    }
 
     @RequestMapping(value = "/show-result", method = RequestMethod.POST)
     public String userSearch(@RequestParam(value = "filter-keyword" , defaultValue = "") String keywordStr,

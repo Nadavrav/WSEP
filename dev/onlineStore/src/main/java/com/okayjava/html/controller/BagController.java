@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import DomainLayer.Response;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -22,7 +25,7 @@ public class BagController {
 
     @GetMapping("/Bag")
     public String Bag(Model model) {
-        model.addAttribute("logged", server.isLogged());
+        model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
 //        model.addAttribute("alert", alert.copy());
         alert.reset();
@@ -48,6 +51,12 @@ public class BagController {
             model.addAttribute("alert", alert.copy());
         }
 
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
+        }
         alert.reset();
         return "Bag";
     }

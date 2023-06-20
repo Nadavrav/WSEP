@@ -47,7 +47,10 @@ public class History {
         int totalAmount = 0;
         for (InstantPurchase IP : ShoppingBags) {
             Date purchaseDate = IP.getPurchaseDate();
-            if(purchaseDate.getDay() == day && purchaseDate.getMonth() == month && purchaseDate.getYear() == year)
+            int purchaseDay = purchaseDate.getDate();
+            int purchaseMonth = purchaseDate.getMonth() + 1;
+            int purchaseYear = purchaseDate.getYear() + 1900;
+            if(purchaseDay == day && purchaseMonth == month && purchaseYear == year)
             {
                 totalAmount += IP.getTotalAmount();
             }

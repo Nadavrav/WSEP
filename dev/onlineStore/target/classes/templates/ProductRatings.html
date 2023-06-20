@@ -90,6 +90,30 @@
         .ratings-container table {
             margin: 0 auto;
         }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            color: black;
+            display: none;
+            position: absolute;
+            width: max-content;
+            padding: 12px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -126,6 +150,33 @@
 		        <span th:if="${Admin}">
 			        <button style="color: white;background-color: transparent;border: none;" onclick="location.href='Admin';">ADMIN</button>
 		        </span>
+
+                <span class="dropdown">
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <div class="dropdown-content" id="appointment-requests">
+                        <ul>
+                            <p th:if="${appointmentRequests == null or appointmentRequests.isEmpty()}">No appointment requests</p>
+                            <li th:each="storeId : ${appointmentRequests}">
+                                <span th:text="${storeId.key}"></span>
+                                <ul>
+                                    <li th:each="owner : ${storeId.value}">
+                                        <span th:text="${owner}"></span>
+                                        <form th:action="@{/acceptRequest}" method="post">
+                                            <input type="hidden" name="storeId" th:value="${storeId.key}">
+                                            <input type="hidden" name="owner" th:value="${owner}">
+                                            <button type="submit" onclick="updateDropdown(this)">Accept</button>
+                                        </form>
+                                        <form th:action="@{/declineRequest}" method="post">
+                                             <input type="hidden" name="storeId" th:value="${storeId.key}">
+                                            <input type="hidden" name="owner" th:value="${owner}">
+                                            <button type="submit" onclick="updateDropdown(this)">Decline</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </span>
             </span>
 
             <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">STORES</button>
@@ -145,6 +196,7 @@
     </div>
 </header>
 
+<div th:replace="fragments/alert :: alert(${alert})"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
 crossorigin="anonymous"></script>
@@ -152,7 +204,6 @@ crossorigin="anonymous"></script>
 
 <div>
     <h1>Comments and Ratings</h1>
-    <div th:replace="fragments/alert :: alert(${alert})"></div>
     <!-- Display product ratings -->
     <div class="ratings-container" style="position:fixed; right: 90px">
         <h2>Store Rate: <span th:text="${StoreRate}"></span></h2>
@@ -228,7 +279,24 @@ crossorigin="anonymous"></script>
     }, 3000);
 
 </script>
+<script th:inline="javascript">
+    function toggleDropdown() {
+        var dropdownContent = document.getElementById("appointment-requests");
+        dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+    }
 
+    function updateDropdown(element) {
+        var listItem = element.parentNode;
+        var dropdown = document.getElementById("appointment-requests");
+        dropdown.removeChild(listItem);
+
+        // Toggle dropdown visibility if there are no more appointment requests
+        var requests = dropdown.getElementsByTagName("li");
+        if (requests.length === 0) {
+            toggleDropdown();
+        }
+    }
+</script>
 
 </body>
 </html>
