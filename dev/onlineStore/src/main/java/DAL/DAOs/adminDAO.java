@@ -2,18 +2,19 @@ package DAL.DAOs;
 
 import DAL.Entities.*;
 import DAL.DTOs.*;
+import DomainLayer.Users.Admin;
 import org.hibernate.*;
 import java.sql.SQLException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Session;
+public class adminDAO {
 
-public class registeredUserDAO {
     private SessionFactory sessionFactory;
-    public registeredUserDAO(SessionFactory sf) throws SQLException  {
+
+    public adminDAO(SessionFactory sf) throws SQLException  {
         this.sessionFactory = sf;
     }
-
     public void deleteData() throws SQLException {
         Session session = sessionFactory.openSession();
         Transaction transaction = null;
@@ -21,13 +22,13 @@ public class registeredUserDAO {
             transaction = session.beginTransaction();
             session.setDefaultReadOnly(false);
 
-            String deleteQuery = "DELETE FROM registereduser";
+            String deleteQuery = "DELETE FROM admin";
             Query query = session.createNativeQuery(deleteQuery);
             query.executeUpdate();
 
             transaction.commit();
         }catch (Exception e) {
-            throw new SQLException("SQL fail in deleteData, registeredUser");
+            throw new SQLException("SQL fail in deleteData, Admin");
         }
         finally {
             if (session != null && session.isOpen()) {
@@ -38,17 +39,16 @@ public class registeredUserDAO {
     }
 
     /**
-     * Function to save the user into the db
+     * Function to save the admin user into the db
      * @param userName - the username
-     * @param password - his password
      */
-    public void saveUser(String userName, byte[] password) throws SQLException {
+    public void saveAdminUser(String userName) throws SQLException {
         Session session = sessionFactory.openSession();
         try {
-            RegistereduserEntity rUserEntity = new RegistereduserEntity(userName,password);
+            AdminEntity adminEntity = new AdminEntity(userName);
 
             session.beginTransaction();
-            session.save(rUserEntity);
+            session.save(adminEntity);
             session.getTransaction().commit();
         } catch (HibernateException e) {
             throw new SQLException("Cant connect to DB");
@@ -62,20 +62,20 @@ public class registeredUserDAO {
     }
 
     /**
-     * A Function to get a user by the inputed username
+     * A Function to check if the username is an admin
      * @param userName - the username of the user we want to get
-     * @return - the DTO object of the user or a null if it doesnt exist
+     * @return - true if the userName is in admin table else false
      */
-    public registeredUserDTO getUser(String userName) throws SQLException {
+    public boolean isAdmin(String userName) throws SQLException {
         Session session = sessionFactory.openSession();
         try{
-            Query<RegistereduserEntity> query = session.createQuery("FROM RegistereduserEntity WHERE userName = :username");
+            Query<RegistereduserEntity> query = session.createQuery("FROM AdminEntity WHERE userName = :username");
             query.setParameter("username", userName);
             RegistereduserEntity userEntity = query.uniqueResult();
 
             if(userEntity != null) {
                 session.close();
-                return new registeredUserDTO(userEntity.getUserName(), userEntity.getPassword());
+                return true;
             }
         }catch (Exception e) {
             throw new SQLException("SQL fail in saveUser");
@@ -86,7 +86,6 @@ public class registeredUserDAO {
                 session.close();
             }
         }
-        return null;
+        return false;
     }
-
 }

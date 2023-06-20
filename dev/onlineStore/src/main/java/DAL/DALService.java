@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 
 public class DALService {
-    private static DALService instance;
+    private static volatile DALService instance;
     private final registeredUserDAO userDAO;
     private final storeDAO storeDAO;
     private final adminDAO adminDAO;
@@ -27,9 +27,12 @@ public class DALService {
         adminDAO = new adminDAO(sessionFactory);
     }
 
-    public static synchronized DALService getInstance() throws SQLException {
+    public static DALService getInstance() throws SQLException {
         if (instance == null) {
-            instance = new DALService();
+            synchronized (DALService.class){
+                if(instance == null)
+                    instance = new DALService();
+            }
         }
         return instance;
     }
