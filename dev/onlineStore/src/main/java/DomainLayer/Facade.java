@@ -109,7 +109,7 @@ public class Facade {
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
         try {
-            DS = DS.getInstance();
+            DS = DALService.getInstance();
             DS.deleteDBData();
         }
         catch (Exception e)
