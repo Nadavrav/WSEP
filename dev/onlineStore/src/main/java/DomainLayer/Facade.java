@@ -689,7 +689,7 @@ public class Facade {
           }
           appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
           appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
-
+          store.notifyOwnersAboutNewEmploymentRequests(((RegisteredUser) appointer).getUserName(),appointedUserName);
 
           if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
               appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
@@ -701,7 +701,7 @@ public class Facade {
               store.addNewListener(appointed);
 
               appointmentsRequests.get(storeId).remove(appointed);
-
+              store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
               logger.fine("new store owner with name" + appointedUserName +" added successfully");
               registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeId).getName()+"'");
           }
@@ -1996,6 +1996,7 @@ public class Facade {
             store.addNewOwnerListener(appointed);
             store.documentOwner(appointed.getVisitorId());
             appointmentsRequests.get(storeID).remove(appointed);
+            store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
             registeredUserList.get(appointedUserName).update("You are Owner of the store '"+storesList.get(storeID).getName()+"'");
         }
