@@ -699,7 +699,8 @@ public class Facade {
               }
               employmentList.get(appointedUserName).put(storeId, appointedEmployment);
               store.addNewListener(appointed);
-
+              store.addNewOwnerListener(appointed);
+              store.documentOwner(appointed.getVisitorId());
               appointmentsRequests.get(storeId).remove(appointed);
               store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
               logger.fine("new store owner with name" + appointedUserName +" added successfully");

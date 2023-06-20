@@ -556,7 +556,7 @@ public class Store {
     }
 
     public void notifyOwnersAboutNewAppointmentSucceed(String appointed){
-        NotifyOwners(appointed+" is now owner of the store "+getName()+" since every owner of the store accepted his employment request");
+        NotifyOwners(appointed+" is now owner of the store "+getName()+" since every owner of the store accepted the employment request");
     }
 
     public StoreCallbacks generateStoreCallback() {
