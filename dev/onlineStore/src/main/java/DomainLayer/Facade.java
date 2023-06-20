@@ -2059,7 +2059,7 @@ public class Facade {
             throw new Exception("This user is not owner of this store");
         }
         try{
-            appointmentsRequests.get(storeID).remove(appointedUserName);
+            appointmentsRequests.get(storeID).remove(registeredUserList.get(appointedUserName));
         }
         catch (Exception e){
             throw new Exception("Something went wrong upon trying to decline employment request.");
