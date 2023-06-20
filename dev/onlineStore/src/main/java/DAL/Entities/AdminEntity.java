@@ -10,6 +10,14 @@ public class AdminEntity {
     @Column(name = "userName")
     private String userName;
 
+    public AdminEntity(String userName)
+    {
+        this.userName = userName;
+    }
+    public AdminEntity()
+    {
+
+    }
     public String getUserName() {
         return userName;
     }

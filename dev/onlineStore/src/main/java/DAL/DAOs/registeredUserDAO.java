@@ -14,6 +14,30 @@ public class registeredUserDAO {
         this.sessionFactory = sf;
     }
 
+    public void deleteData() throws SQLException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+        try{
+            transaction = session.beginTransaction();
+            session.setDefaultReadOnly(false);
+
+            String deleteQuery = "DELETE FROM registereduser";
+            Query query = session.createNativeQuery(deleteQuery);
+            query.executeUpdate();
+
+            transaction.commit();
+        }catch (Exception e) {
+            System.out.println("FAIL!!!"+e.getMessage());
+            throw new SQLException("SQL fail in deleteData, registeredUser");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+    }
+
     /**
      * Function to save the user into the db
      * @param userName - the username

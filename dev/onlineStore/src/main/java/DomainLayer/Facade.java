@@ -108,6 +108,14 @@ public class Facade {
         employmentList = new HashMap<>();
         supplier= new Supplier();
         paymentProvider= new PaymentProvider();
+        try {
+            DS = DS.getInstance();
+            DS.deleteDBData();
+        }
+        catch (Exception e)
+        {
+            // do nothing
+        }
         registerInitialAdmin();
 
     }
@@ -381,8 +389,14 @@ public class Facade {
         //checking if the user exists in DB
         registeredUserDTO userDTO = DS.getUser(userName);
         if(userDTO != null) {
-            RegisteredUser r = new RegisteredUser(userDTO);
-            registeredUserList.put(userName, r);
+            if(DS.isAdmin(userName)) {
+                Admin admin = new Admin(userDTO);
+                registeredUserList.put(userName, admin);
+            }
+            else {
+                RegisteredUser r = new RegisteredUser(userDTO);
+                registeredUserList.put(userName, r);
+            }
             throw new Exception("This userName already taken");
         }
 
@@ -406,7 +420,7 @@ public class Facade {
 
     public synchronized void login(int visitorId, String userName, String password) throws Exception {//1.4
         //
-        DS = DALService.getInstance();
+        //DS = DALService.getInstance();
         RegisteredUser user = registeredUserList.get(userName);
         boolean b = registeredUserList.get("admin")!=null;
         if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
@@ -416,7 +430,12 @@ public class Facade {
         if (user == null) {//check if he has account
             registeredUserDTO userDTO = DS.getUser(userName);
             if(userDTO != null) {
-                user = new RegisteredUser(userDTO);
+                if(DS.isAdmin(userName)){
+                    user = new Admin(userDTO);
+                }
+                else {
+                    user = new RegisteredUser(userDTO);
+                }
                 registeredUserList.put(userName, user);
             }
             else {
@@ -1043,7 +1062,7 @@ public class Facade {
         //----------Store-----------
     // open Store
     public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
-        DS = DALService.getInstance();
+        //DS = DALService.getInstance();
         // check if register user
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
@@ -1067,7 +1086,7 @@ public class Facade {
         logger.fine("open new store with name" + storeName+" done successfully");
 
         //Save store to DB
-        DS.saveStore(store.getID(),storeName,true,store.getRate());
+       // DS.saveStore(store.getID(),storeName,true,store.getRate());
         //End save
 
         return store.getID();

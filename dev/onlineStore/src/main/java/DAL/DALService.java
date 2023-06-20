@@ -14,6 +14,7 @@ public class DALService {
     private static DALService instance;
     private final registeredUserDAO userDAO;
     private final storeDAO storeDAO;
+    private final adminDAO adminDAO;
     private SessionFactory sessionFactory;
     private DALService() throws SQLException {
         try {
@@ -23,6 +24,7 @@ public class DALService {
         }
         userDAO = new registeredUserDAO(sessionFactory);
         storeDAO = new storeDAO(sessionFactory);
+        adminDAO = new adminDAO(sessionFactory);
     }
 
     public static synchronized DALService getInstance() throws SQLException {
@@ -30,6 +32,20 @@ public class DALService {
             instance = new DALService();
         }
         return instance;
+    }
+
+    /**
+     * A function to delete all the data in the db
+     */
+    public void deleteDBData() throws SQLException {
+        try{
+            adminDAO.deleteData();
+            userDAO.deleteData();
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saveUser");
+        }
     }
 
     /**
@@ -63,6 +79,36 @@ public class DALService {
         }
     }
 
+    /**
+     * Function to save the admin user into the db
+     * @param userName - the username
+     * @throws SQLException if cant connect to db
+     */
+    public void saveAdmin(String userName) throws SQLException {
+        try{
+            adminDAO.saveAdminUser(userName);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saveUser");
+        }
+    }
+
+    /**
+     * A Function to check if the username is an admin
+     * @param userName - the username of the user we want to get
+     * @return - true if the userName is in admin table else false
+     * @throws SQLException if cant connect to db
+     */
+    public boolean isAdmin(String userName) throws SQLException {
+        try{
+            return adminDAO.isAdmin(userName);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saveUser");
+        }
+    }
     public void saveStore(int storeId, String name, boolean active, double rate) throws SQLException {
         try{
             storeDAO.saveStore(storeId, name, active, rate);
