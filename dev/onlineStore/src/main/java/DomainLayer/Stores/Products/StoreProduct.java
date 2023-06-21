@@ -1,11 +1,13 @@
 package DomainLayer.Stores.Products;
 
 import java.lang.ref.WeakReference;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
+import DAL.DALService;
 import DAL.DTOs.StoreProductDTO;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.Rating;
@@ -89,6 +91,7 @@ public class StoreProduct extends Product {
 
     public void setDescription(String desc) {
         description = desc;
+
     }
     public Integer getProductId() {
         return productId;

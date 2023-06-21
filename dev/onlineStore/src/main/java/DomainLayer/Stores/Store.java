@@ -307,7 +307,7 @@ public class Store {
      * @param storeProduct --
      * @return --
      */
-    public Integer AddNewProduct(StoreProduct storeProduct) {
+    public Integer AddNewProduct(StoreProduct storeProduct) throws SQLException {
         productLock.writeLock().lock();
         try {
             products.put(storeProduct.getProductId(), storeProduct);
@@ -415,59 +415,77 @@ public class Store {
         return products;
     }
 
-    public void UpdateProductQuantity(Integer productId, int quantity) {
+    public void UpdateProductQuantity(Integer productId, int quantity)throws SQLException {
         productLock.readLock().lock();
         try {
-            products.get(productId).UpdateQuantity(quantity);
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.UpdateQuantity(quantity);
+            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
         }
     }
 
-    public void IncreaseProductQuantity(Integer productId, int quantity) {
+    public void IncreaseProductQuantity(Integer productId, int quantity)throws SQLException {
         productLock.readLock().lock();
 
         try {
-            products.get(productId).IncreaseQuantity(quantity);
-        } finally {
-            productLock.readLock().unlock();
-
-        }
-    }
-
-    public void UpdateProductName(Integer productId, String name) {
-        productLock.readLock().lock();
-        try {
-            products.get(productId).setName(name);
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.IncreaseQuantity(quantity);
+            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
 
         }
     }
 
-    public void UpdateProductPrice(Integer productId, double price) {
+    public void UpdateProductName(Integer productId, String name)throws SQLException {
         productLock.readLock().lock();
         try {
-            products.get(productId).setPrice(price);
-        } finally {
-            productLock.readLock().unlock();
-        }
-    }
-
-    public void UpdateProductCategory(Integer productId, String category) {
-        productLock.readLock().lock();
-        try {
-            products.get(productId).setCategory(category);
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.setName(name);
+            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
 
         }
     }
 
-    public void UpdateProductDescription(Integer productId, String description) {
+    public void UpdateProductPrice(Integer productId, double price)throws SQLException {
         productLock.readLock().lock();
         try {
-            products.get(productId).setDescription(description);
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.setPrice(price);
+            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
+        } finally {
+            productLock.readLock().unlock();
+        }
+    }
+
+    public void UpdateProductCategory(Integer productId, String category)throws SQLException {
+        productLock.readLock().lock();
+        try {
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.setCategory(category);
+            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
+        } finally {
+            productLock.readLock().unlock();
+
+        }
+    }
+
+    public void UpdateProductDescription(Integer productId, String description) throws SQLException {
+        productLock.readLock().lock();
+        try {
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.setDescription(description);
+            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
 

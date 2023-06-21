@@ -55,7 +55,7 @@ public class ConfigParser {
                 logger.warning("Failed to parse file "+file.getName()+", Cause: I/O error");
             }
             catch (Exception e){
-                logger.warning("Error while loading data from config file "+file.getName()+": invalid data values or structure");
+                logger.warning("Error while loading data from config file "+file.getName()+": invalid data values or structure, or data already exists");
             }
         }
         return loadedAdmin;

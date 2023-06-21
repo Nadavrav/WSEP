@@ -4,7 +4,6 @@ import DAL.DAOs.*;
 import DAL.DTOs.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Collection;
@@ -138,7 +137,7 @@ public class DALService {
 
     /**
      * A function the get the unique employment by the employee and by storeId
-     * @param employee - (the user name that got appointed)
+     * @param employee - (the username that got appointed)
      * @param storeId - the store the employment belongs to
      * @return an employmentDTO representing the employment from the db
      * @throws SQLException if cant connect to db
@@ -162,6 +161,32 @@ public class DALService {
             throw new SQLException("SQL fail in getEmployment, username and storeId");
         }
     }
+
+    /**
+     * given a username, gets all the stores that user is an owner of
+     * @param userName a user's username
+     * @return a collection of storeDTO, representing many stores
+     * @throws SQLException if any data base errors occur
+     */
+    public Collection<StoreDTO> getStoresFromOwner(String userName) throws SQLException {
+        try{
+            Collection<Integer> stores = employmentDAO.getStoresByEmployment(userName);
+            return storeDAO.getStoresByStoreId(stores);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
+
+    /**
+     * persists a store with the given data
+     * @param storeId store's id
+     * @param name store's name
+     * @param active true if store is active, false otherwise
+     * @param rate store's avarage rating
+     * @throws SQLException if any data base errors occur
+     */
     public void saveStore(int storeId, String name, boolean active, double rate) throws SQLException {
         try{
             storeDAO.saveStore(storeId, name, active, rate);
@@ -172,6 +197,11 @@ public class DALService {
         }
     }
 
+    /**
+     * gets a list of all stores in the system
+     * @return a collection of stores
+     * @throws SQLException if any data base errors occur
+     */
     public Collection<StoreDTO> getStores() throws SQLException {
         try{
             return storeDAO.getStores();
@@ -182,15 +212,14 @@ public class DALService {
         }
     }
 
-    public Integer getMaxStoreId() throws SQLException {
-        try{
-            return storeDAO.getMaxID();
-        }
-        catch (Exception e)
-        {
-            throw new SQLException("SQL fail in getStores");
-        }
-    }
+
+
+    /**
+     *
+     * @param storeId the store's id to look for
+     * @return a storeDTO representing a store's data
+     * @throws SQLException if any data base errors occur
+     */
     public StoreDTO getStoreById(int storeId) throws SQLException {
         try{
             return storeDAO.getStore(storeId);
@@ -200,7 +229,25 @@ public class DALService {
             throw new SQLException("SQL fail in getStores");
         }
     }
-
+    /**
+     * returns the max id of a store stored, so the system will be able to add more stores with valid ids
+     * @return the max store id
+     * @throws SQLException if any data base errors occur
+     */
+    public Integer getMaxStoreId() throws SQLException {
+        try{
+            return storeDAO.getMaxID();
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
+        }
+    }
+    /**
+     * returns the max id of a product stored, so the system will be able to add more products with valid ids
+     * @return the max product id
+     * @throws SQLException if any data base errors occur
+     */
     public Integer getMaxProductId() throws SQLException {
         try{
             return storeProductDAO.getMaxID();
@@ -210,10 +257,31 @@ public class DALService {
             throw new SQLException("SQL fail in getStores");
         }
     }
-
+    /**
+     *
+     * @param productId product's id
+     * @param storeId store's id
+     * @param productName product's name
+     * @param price product's price
+     * @param quantity product's quantity
+     * @param category product's category
+     * @param desc product's description
+     * @param avgRating product's avarage rating
+     * @throws SQLException  if cant connect to db
+     */
     public void saveProduct(int productId,int storeId,String productName, Double price, int quantity, String category, String desc,double avgRating) throws SQLException {
         try{
             storeProductDAO.saveProduct(productId,storeId,productName,price,category,desc,quantity,avgRating);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
+        }
+    }
+
+    public void updateProduct(Integer productId, int storeId, String productName, Double price, String category, String description, int quantity, double averageRating) throws SQLException {
+        try{
+            storeProductDAO.updateProduct(productId,storeId,productName,price,category,description,quantity,averageRating);
         }
         catch (Exception e)
         {

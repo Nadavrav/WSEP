@@ -1,11 +1,13 @@
 package DAL.DAOs;
 
 import DAL.DTOs.StoreDTO;
+import DAL.DTOs.registeredUserDTO;
 import DAL.Entities.*;
 import org.hibernate.*;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -125,6 +127,38 @@ public class storeDAO {
             return storeEntity.getId();
         }catch (Exception e) {
             throw new SQLException("SQL fail in get max store ID");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+    }
+
+    public Collection<StoreDTO> getStoresByStoreId(Collection<Integer> stores) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+            HashSet<StoreDTO> storeDTOS = new HashSet<>();
+            for (Integer id: stores) {
+                Query<StoreEntity> query = session.createQuery("FROM StoreEntity WHERE id = :id");
+                query.setParameter("id", id);
+                StoreEntity store = query.uniqueResult();
+
+                if(store == null) {
+                    session.close();
+                    throw new SQLException("SQL fail in getUsersByUserNames");
+                }
+                else{
+                    StoreDTO storeDTO = new StoreDTO(store);
+                    storeDTOS.add(storeDTO);
+                }
+            }
+            session.close();
+            return storeDTOS;
+
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in saveUser");
         }
         finally {
             if (session != null && session.isOpen()) {

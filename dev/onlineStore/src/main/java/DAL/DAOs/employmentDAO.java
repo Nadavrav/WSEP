@@ -7,7 +7,7 @@ import DAL.Entities.RegistereduserEntity;
 import org.hibernate.*;
 
 import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.*;
 
 public class employmentDAO {
     private SessionFactory sessionFactory;
@@ -128,4 +128,30 @@ public class employmentDAO {
         return null;
     }
 
+    public Collection<Integer> getStoresByEmployment(String userName) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+            Query<EmploymentEntity> query = session.createQuery("FROM EmploymentEntity WHERE employee = :userName AND role != 0");
+            query.setParameter("userName",userName);
+            List<EmploymentEntity> employmentEntities = query.getResultList();
+
+            if(employmentEntities != null && !employmentEntities.isEmpty()) {
+                session.close();
+                HashSet<Integer> stores = new HashSet<>();
+                for (EmploymentEntity EmEntity: employmentEntities) {
+                    stores.add(EmEntity.getStoreId());
+                }
+                return stores;
+            }
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in getEmploymentByUsernameAndStoreId");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+        return null;
+    }
 }

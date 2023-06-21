@@ -21,8 +21,8 @@ public class StoreProductDAO {
 
     public void saveProduct(int productId, int storeId, String name, double price, String category, String desc,int quantity, double avgRating) throws SQLException {
         Session session = sessionFactory.openSession();
-        try {    //TODO: quantity MISSING FROM DB, UPDATE WHEN ITS ADDED
-            StoreproductEntity storeproductEntity = new StoreproductEntity(productId, storeId, name, price,  category,  desc,avgRating);
+        try {
+            StoreproductEntity storeproductEntity = new StoreproductEntity(productId, storeId, name, price,  category,  desc,quantity,avgRating);
             session.beginTransaction();
             session.save(storeproductEntity);
             session.getTransaction().commit();
@@ -78,6 +78,33 @@ public class StoreProductDAO {
                 session.disconnect(); // Disconnect the session if it's still connected
                 session.close();
             }
+        }
+    }
+
+    public void updateProduct(Integer productId, int storeId, String productName, Double price, String category, String description, int quantity, double averageRating) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try {
+            StoreproductEntity storeproductEntity = session.get(StoreproductEntity.class, productId);
+            if (storeproductEntity != null) {
+                // Update the fields with new values
+                storeproductEntity.setStoreId(storeId);
+                storeproductEntity.setName(productName);
+                storeproductEntity.setPrice(price);
+                storeproductEntity.setCategory(category);
+                storeproductEntity.setDesc(description);
+                storeproductEntity.setQuantity(quantity);
+                storeproductEntity.setAvgRating(averageRating);
+                session.update(storeproductEntity);
+                session.getTransaction().commit();
+            }
+        } catch (HibernateException e) {
+            throw new SQLException("Cant connect to DB");
+        }
+        finally {
+            if (session.isConnected()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+            }
+            session.close();
         }
     }
 }

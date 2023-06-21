@@ -1616,6 +1616,8 @@ public class Facade {
         }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store==null)
+            store=fetchStoreIfExists(storeId);
         if(store == null)
             throw  new Exception("there is no store with this storeID:"+storeId);
         if(!store.getActive())
@@ -1632,6 +1634,8 @@ public class Facade {
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store==null)
+            store=fetchStoreIfExists(storeId);
         if(store == null)
             throw  new Exception("there is no store with this storeID:"+storeId);
         if(!store.getActive())
@@ -1644,14 +1648,33 @@ public class Facade {
         //throw e
 
     }
-
+    private Store fetchStoreIfExists(int storeId){
+        try {
+            StoreDTO storeDTO = DALService.getInstance().getStoreById(storeId);
+            if (storeDTO != null) {
+                Store store = new Store(storeDTO);
+                storesList.put(storeId, store);
+                return store;
+            }
+            else{
+                return null;
+            }
+        }
+        catch (Exception e){
+            throw new RuntimeException("Database error");
+        }
+    }
     public void UpdateProductCategory(int visitorId, int productId,int storeId,String category) throws Exception{
         logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
         if(category==null){
             throw new NullPointerException("Null category while updating product category");
         }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
+
         Store store = storesList.get(storeId);
+        if(store==null){
+           store=fetchStoreIfExists(storeId);
+        }
         if(store == null)
             throw  new Exception("there is no store with this storeID:"+storeId);
         if(!store.getActive())
@@ -1669,6 +1692,9 @@ public class Facade {
         }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store==null){
+            store=fetchStoreIfExists(storeId);
+        }
         if(store != null) {
             if(!store.getActive())
                 throw  new Exception("store is closed");
@@ -1881,12 +1907,16 @@ public class Facade {
         return storesList.get(storeId).getDiscounts();
     }
     public List<Store> getStoresByUserName(int visitorId) throws Exception {
+        DS=DALService.getInstance();
         SiteVisitor visitor = onlineList.get(visitorId);
         if(! (visitor instanceof RegisteredUser user)){
             throw new Exception("invalid visitor Id");
         }
-        List<Integer> storesID = new LinkedList<>();
         Map<Integer,Employment> employmentMap = employmentList.get(((RegisteredUser)visitor).getUserName());
+        if(employmentMap.isEmpty())
+            for(StoreDTO storeDTO:DS.getStoresFromOwner(user.getUserName()))
+                if(!employmentMap.containsKey(storeDTO.getId()))
+                    employmentMap.put(storeDTO.getId(),new Employment(user.getUserName(),storeDTO.getId(),Role.StoreOwner));
         LinkedList<Store> stores = new LinkedList<>();
         for(Integer i :employmentMap.keySet()){
             stores.add(storesList.get(i));
