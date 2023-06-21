@@ -47,16 +47,20 @@ public class BuyController {
 
     @RequestMapping(value = "/done", method = RequestMethod.POST)//to update
     public String purchase(@RequestParam("cardNumber") String cardNumber,
-                          @RequestParam("cardholderName") String cardholderName,
+                           @RequestParam("cardholderID") String cardholderID,
+                           @RequestParam("cardholderName") String cardholderName,
                            @RequestParam("expirationMonth") int expirationMonth,
                            @RequestParam("expirationYear") int expirationYear,
                            @RequestParam("address") String address,
+                           @RequestParam("city") String city,
+                           @RequestParam("country") String country,
+                           @RequestParam("zip") String zip,
                            @RequestParam("cvv") int cvv,
                            Model model) throws Exception {
 
 //       . model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<List<String>> response = server.PurchaseCart(request,cardholderName,cardNumber,expirationMonth+"/"+expirationYear,cvv,"206469017", address,"Nazareth","israel","1613101");
+        Response<List<String>> response = server.PurchaseCart(request,cardholderName,cardNumber,expirationMonth+"/"+expirationYear,cvv,cardholderID, address,city,country,zip);
         if (response.isError()){
             System.out.println("error in buying: " + response.getMessage());
             alert.setFail(true);
