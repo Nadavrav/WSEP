@@ -419,23 +419,26 @@ public class Facade {
     }
 
     public void login(int visitorId, String userName, String password) throws Exception {//1.4
-        //
+
         RegisteredUser user;
-             user = registeredUserList.get(userName);
-            boolean b = registeredUserList.get("admin") != null;
-            if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
-                logger.warning("User IS NOT Entered in the system");
-                throw new Exception("Invalid Visitor ID");
-            }
-            if (user == null) {//check if he has account
-                logger.warning("User is already have an account");
-                throw new Exception("UserName not Found");
-            }
-            logger.info("User log in successfully");
-            user.login(password, visitorId);if(isOwner(user.getUserName())){
+        user = registeredUserList.get(userName);
+        boolean b = registeredUserList.get("admin") != null;
+        if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
+            logger.warning("User IS NOT Entered in the system");
+            throw new Exception("Invalid Visitor ID");
+        }
+        if (user == null) {//check if he has account
+            logger.warning("User is already have an account");
+            throw new Exception("UserName not Found");
+        }
+        logger.info("User log in successfully");
+        user.login(password, visitorId);
+        onlineList.replace(visitorId, user);
+
+        if(isOwner(user.getUserName())){
             increaseEntry(storeOwnersEntriesManager);
         }
-        else if(isManager(user.getUserName())){
+        else if(isManagerButNotOwner(user.getUserName())){
             increaseEntry(managersOnlyEntriesManager);
         }
         else {
@@ -445,8 +448,8 @@ public class Facade {
         if(isAdmin(visitorId)){
             increaseEntry(adminsEntriesManager);
         }
-            onlineList.replace(visitorId, user);
-        }
+
+    }
 
     private boolean isOwner(String userName) {
         if(employmentList.get(userName) == null)
@@ -461,17 +464,21 @@ public class Facade {
         return false;
     }
 
-    private boolean isManager(String userName) {
+    private boolean isManagerButNotOwner(String userName) {
         if(employmentList.get(userName) == null)
         {
             return false;
         }
+        boolean isManager = false;
         for (Integer storeID:employmentList.get(userName).keySet()) {
             if(employmentList.get(userName).get(storeID).checkIfManager()){
-                return true;
+                isManager = true;
+            }
+            if(employmentList.get(userName).get(storeID).checkIfOwner()){
+                return false;
             }
         }
-        return false;
+        return isManager;
     }
 
     public int logout(int visitorId) throws Exception {//3.1
