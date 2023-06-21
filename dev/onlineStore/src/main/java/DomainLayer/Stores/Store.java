@@ -210,7 +210,7 @@ public class Store {
     }
 
     public void NewBuyNotification(String name) {
-        NotifyWorkers(Name + " just bought from your shop (" + name + ").");
+        NotifyWorkers(name + " just bought from your shop (" + Name + ").");
     }
 
     private void NotifyOwners(String message) {
