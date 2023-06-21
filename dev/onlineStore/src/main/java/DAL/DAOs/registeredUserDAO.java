@@ -72,7 +72,6 @@ public class registeredUserDAO {
             Query<RegistereduserEntity> query = session.createQuery("FROM RegistereduserEntity WHERE userName = :username");
             query.setParameter("username", userName);
             RegistereduserEntity userEntity = query.uniqueResult();
-
             if(userEntity != null) {
                 session.close();
                 return new registeredUserDTO(userEntity.getUserName(), userEntity.getPassword());

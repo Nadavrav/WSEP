@@ -27,7 +27,15 @@ public class StoreproductEntity {
     @Basic
     @Column(name = "avgRating")
     private double avgRating;
-
+    public StoreproductEntity(int productId, int storeId, String name, double price, String category, String desc, double avgRating){
+        this.productId=productId;
+        this.storeId=storeId;
+        this.name=name;
+        this.price=price;
+        this.category=category;
+        this.desc=desc;
+        this.avgRating=avgRating;
+    }
     public int getProductId() {
         return productId;
     }

@@ -2,18 +2,18 @@ package DAL;
 
 import DAL.DAOs.*;
 import DAL.DTOs.*;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.HibernateException;
+
 import java.sql.SQLException;
+import java.util.Collection;
 
 
 public class DALService {
     private static volatile DALService instance;
     private final registeredUserDAO userDAO;
     private final storeDAO storeDAO;
+    private final StoreProductDAO storeProductDAO;
     private final adminDAO adminDAO;
     private SessionFactory sessionFactory;
     private DALService() throws SQLException {
@@ -22,6 +22,7 @@ public class DALService {
         }catch (Exception  e) {
             throw new SQLException("Cant connect to DB");
         }
+        storeProductDAO = new StoreProductDAO(sessionFactory);
         userDAO = new registeredUserDAO(sessionFactory);
         storeDAO = new storeDAO(sessionFactory);
         adminDAO = new adminDAO(sessionFactory);
@@ -119,6 +120,36 @@ public class DALService {
         catch (Exception e)
         {
             throw new SQLException("SQL fail in saveUser");
+        }
+    }
+
+    public Collection<StoreDTO> getStores() throws SQLException {
+        try{
+            return storeDAO.getStores();
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
+        }
+    }
+
+    public Integer getMaxStoreId() throws SQLException {
+        try{
+            return storeDAO.getMaxID();
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
+        }
+    }
+
+    public Integer getMaxProductId() throws SQLException {
+        try{
+            return storeProductDAO.getMaxID();
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
         }
     }
 }

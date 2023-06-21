@@ -26,7 +26,7 @@ public class RegisteredUser extends SiteVisitor{
 
     byte[] password;
     PurchaseHistory purchaseHistory;
-    private final HashMap<Product,Bid> counterOffers;
+    private final HashMap<StoreProduct,Bid> counterOffers;
     private boolean loggedIn;
     //add lock
 
@@ -106,7 +106,7 @@ public class RegisteredUser extends SiteVisitor{
                 super.ReplaceCart(visitor.getCart());
             }
     }
-    public Map<Product,Bid> getCounterOffers(){
+    public Map<StoreProduct,Bid> getCounterOffers(){
         return counterOffers;
     }
     private void checkPassword(String password) {
@@ -185,7 +185,7 @@ public class RegisteredUser extends SiteVisitor{
     }
 
 
-    public void addCounterOffer(Bid bid, Product product) {
+    public void addCounterOffer(Bid bid, StoreProduct product) {
         counterOffers.put(product,bid);
     }
     public void acceptCounterOff(int productId, Store store){

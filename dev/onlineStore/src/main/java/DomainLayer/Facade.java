@@ -32,6 +32,7 @@ import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 import DAL.DALService;
 import DAL.DTOs.*;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -73,6 +74,14 @@ public class Facade {
     private DALService DS;
 
     private Facade() {
+        try {
+            DS = DALService.getInstance();
+            Store.setStoreIdCounter(DS.getMaxStoreId());
+            Store.setProductIdCounter(DS.getMaxProductId());
+        }
+        catch (SQLException e){
+            Store.resetCounters();
+        }
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         onlineList = new ConcurrentHashMap<>();
@@ -1150,7 +1159,8 @@ public class Facade {
         //----------Store-----------
     // open Store
     public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
-        //DS = DALService.getInstance();
+        DS = DALService.getInstance();
+        //registeredUserDTO registeredUserDTO=DS.getUser(/*USERNAME*/);
         // check if register user
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
@@ -1162,6 +1172,7 @@ public class Facade {
         store.addNewListener((RegisteredUser)User);
         store.addNewOwnerListener((RegisteredUser)User);
         store.documentOwner(User.getVisitorId());
+        DS.saveStore(store.getId(),store.getName(),store.getActive(),store.getRate());
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
@@ -1703,26 +1714,34 @@ public class Facade {
      * @return product list of all products who passed the filter in the store who passed the filters
      */
     public Map<Store,List<StoreProduct>> FilterProductSearch(List<StoreFilter> storeFilters,List<ProductFilter> productFilters) {
-        logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
+       // logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
         HashMap<Store,List<StoreProduct>> storeProducts=new HashMap<>();
-        for(Store store: storesList.values()){ //for each store
-            boolean passStoreFilter=true;
-            if(!storeFilters.isEmpty()) {
-            for(StoreFilter storeFilter:storeFilters){
-                    if (!storeFilter.PassFilter(store)) {
-                        passStoreFilter = false;
-                        break;
+        try {
+            DS = DALService.getInstance();
+            for(StoreDTO storeDTO:DS.getStores())
+                storesList.put(storeDTO.getId(),new Store(storeDTO));
+            for (Store store : storesList.values()) { //for each store
+                boolean passStoreFilter = true;
+                if (!storeFilters.isEmpty()) {
+                    for (StoreFilter storeFilter : storeFilters) {
+                        if (!storeFilter.PassFilter(store)) {
+                            passStoreFilter = false;
+                            break;
+                        }
                     }
                 }
+                if (passStoreFilter) {
+                    ArrayList<StoreProduct> products = new ArrayList<>(store.filterProducts(productFilters));
+                    if (!products.isEmpty())
+                        storeProducts.put(store, products);
+                }
             }
-            if(passStoreFilter) {
-                ArrayList<StoreProduct> products = new ArrayList<>(store.filterProducts(productFilters));
-                if(!products.isEmpty())
-                    storeProducts.put(store,products);
-            }
+            logger.info("Filtered products done, stores found: " + storeProducts.keySet().size());
+            return storeProducts;
         }
-        logger.info("Filtered products done, stores found: "+storeProducts.keySet().size());
-        return storeProducts;
+        catch (SQLException e){
+            throw new RuntimeException("Database error");
+        }
     }
 
     public void deleteUser(int visitorId, String userName) throws Exception {
@@ -2230,7 +2249,7 @@ public class Facade {
         return outputMap;
 
     }
-    public Map<Product,Bid> getUserBids(int visitorId) throws Exception{
+    public Map<StoreProduct,Bid> getUserBids(int visitorId) throws Exception{
 
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){

@@ -1,4 +1,6 @@
 package DomainLayer.Stores;
+import DAL.DTOs.StoreProductDTO;
+import DAL.DTOs.StoreDTO;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -80,6 +82,36 @@ public class Store {
         listeners = new LinkedList<>();
         ownersCount=0;
         this.Active = true;
+    }
+
+    public Store(StoreDTO storeDTO) {
+        ownerlisteners=new LinkedList<>();
+        votingTracker=new HashMap<>();
+        ownerIdSet=new HashSet<>();
+        votingCounter=new HashMap<>();
+        storeDiscounts = new HashMap<>();
+        storePolicies = new HashMap<>();
+        rateMapForStore = new HashMap<>();
+        pendingBids = new HashSet<>();
+        conditionFactory.setStore(this);
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+        Id = storeDTO.getId();
+        Name = storeDTO.getName();
+        History = new History();
+        products = new ConcurrentHashMap<>();
+        for(StoreProductDTO productDTO: storeDTO.getProducts())
+            products.put(productDTO.getProductId(),new StoreProduct(productDTO));
+        listeners = new LinkedList<>();
+        ownersCount=0;
+        this.Active = true;
+    }
+
+    public static void setStoreIdCounter(Integer maxStoreId) {
+        StoreID_GENERATOR.set(maxStoreId);
+    }
+    public static void setProductIdCounter(Integer maxProductId) {
+        ProductID_GENERATOR.set(maxProductId);
     }
 
     public void addNewListener(RegisteredUser storeWorker) {
@@ -172,7 +204,7 @@ public class Store {
     /**
      * rare enough of an action to be done while fully while locking this object
      */
-    public synchronized void CloseStore() {
+    public void CloseStore() {
 
         ratingLock.writeLock().lock();
         productLock.writeLock().lock();
@@ -191,7 +223,7 @@ public class Store {
         }
     }
 
-    public synchronized void OpenStore() {
+    public void OpenStore() {
         ratingLock.writeLock().lock();
         productLock.writeLock().lock();
         policyLock.writeLock().lock();
@@ -574,11 +606,11 @@ public class Store {
     }
 
     public Discount removeDiscount(int id) {
-        discountLock.readLock().lock();
+        discountLock.writeLock().lock();
         try {
             return storeDiscounts.remove(id);
         } finally {
-            discountLock.readLock().unlock();
+            discountLock.writeLock().unlock();
         }
     }
 

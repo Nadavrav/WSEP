@@ -3,11 +3,12 @@ package DAL.Entities;
 import DomainLayer.Stores.Store;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "store", schema = "onlinestoredb", catalog = "")
 public class StoreEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
     private int id;
@@ -20,6 +21,13 @@ public class StoreEntity {
     @Basic
     @Column(name = "rate")
     private double rate;
+    @OneToMany
+    @JoinTable(
+            name = "storeproduct",
+            joinColumns = @JoinColumn(name = "storeId"),
+            inverseJoinColumns = @JoinColumn(name = "id")
+    )
+    private Set<StoreproductEntity> products;
 
     public StoreEntity(int storeId, String name, boolean active, double rate)
     {
@@ -27,9 +35,14 @@ public class StoreEntity {
         this.name = name;
         this.active = active;
         this.rate = rate;
+
     }
-    public StoreEntity()
-    {
+    public StoreEntity() {
+
+    }
+
+    public Set<StoreproductEntity> getProducts() {
+        return products;
     }
 
     public int getId() {

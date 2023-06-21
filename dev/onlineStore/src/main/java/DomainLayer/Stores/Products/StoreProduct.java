@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
+import DAL.DTOs.StoreProductDTO;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.Rating;
 
@@ -62,6 +63,12 @@ public class StoreProduct extends Product {
         Category = category;
         Quantity = quantity;
         description =desc;
+        RateMap=new HashMap<>();
+    }
+
+    public StoreProduct(StoreProductDTO productDTO) {
+        super(productDTO.getName(), productDTO.getPrice(), productDTO.getCategory(), productDTO.getDesc());
+        this.productId= productDTO.getStoreId();
         RateMap=new HashMap<>();
     }
 
