@@ -182,6 +182,13 @@ public class Employment {
      */
     public String getPermissionString()
     {
-        return null;
+        String permissionString = "";
+        for (Permission p: permissions) {
+            permissionString += p.ordinal()+",";
+        }
+        if (!permissionString.isEmpty()) {
+            permissionString = permissionString.substring(0, permissionString.length() - 1);
+        }
+        return permissionString;
     }
 }

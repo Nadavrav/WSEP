@@ -6,11 +6,9 @@ import javax.persistence.*;
 @Table(name = "employment", schema = "onlinestoredb", catalog = "")
 @IdClass(EmploymentEntityPK.class)
 public class EmploymentEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "employee")
     private String employee;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "storeId")
     private int storeId;
@@ -68,7 +66,7 @@ public class EmploymentEntity {
         this.role = role;
     }
 
-    public Object getPermissions() {
+    public String getPermissions() {
         return permissions;
     }
 

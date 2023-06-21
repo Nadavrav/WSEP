@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.HibernateException;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 
 public class DALService {
@@ -131,6 +132,33 @@ public class DALService {
         catch (Exception e)
         {
             throw new SQLException("SQL fail in saveUser");
+        }
+    }
+
+    /**
+     * A function the get the unique employment by the employee and by storeId
+     * @param employee - (the user name that got appointed)
+     * @param storeId - the store the employment belongs to
+     * @return an employmentDTO representing the employment from the db
+     * @throws SQLException if cant connect to db
+     */
+    public employmentDTO getEmploymentByUsernameAndStoreId(String employee,int storeId) throws SQLException {
+        try{
+            return employmentDAO.getEmploymentByUsernameAndStoreId(employee,storeId);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
+    public LinkedList<registeredUserDTO> getStoreOwnersByStoreId(int storeId) throws SQLException {
+        try{
+            LinkedList<String> userNameList = employmentDAO.getStoreOwnerUserNamesByStoreId(storeId);
+            return userDAO.getUsersByUserNames(userNameList);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
         }
     }
     public void saveStore(int storeId, String name, boolean active, double rate) throws SQLException {
