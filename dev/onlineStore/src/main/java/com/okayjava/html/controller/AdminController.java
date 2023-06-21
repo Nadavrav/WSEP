@@ -63,6 +63,9 @@ public class AdminController {
     public String deleteUser(@RequestParam("usernameToDelete") String username,
                              Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("alert", alert.copy());
         Response<?> response = server.deleteUser(request,username);
         if (response.isError()) {
             alert.setFail(true);
@@ -81,6 +84,9 @@ public class AdminController {
     public String showDailyIncome(@RequestParam("date") String dateString,
                                   Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("alert", alert.copy());
         String[] dateParts = dateString.split("-");
         int year = Integer.parseInt(dateParts[0]);
         int month = Integer.parseInt(dateParts[1]);
@@ -107,6 +113,9 @@ public class AdminController {
                                           @RequestParam("date") String dateString,
                                           Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("alert", alert.copy());
         String[] dateParts = dateString.split("-");
         int year = Integer.parseInt(dateParts[0]);
         int month = Integer.parseInt(dateParts[1]);
@@ -140,6 +149,9 @@ public class AdminController {
                                              @RequestParam("endDate") String endDate,
                                              Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("alert", alert.copy());
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
         int startYear = Integer.parseInt(startDateParts[0]);
@@ -176,6 +188,9 @@ public class AdminController {
                                                        @RequestParam("endDate") String endDate,
                                                        Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("alert", alert.copy());
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
         int startYear = Integer.parseInt(startDateParts[0]);
@@ -212,6 +227,9 @@ public class AdminController {
                                                       @RequestParam("endDate") String endDate,
                                                       Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("alert", alert.copy());
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
         int startYear = Integer.parseInt(startDateParts[0]);
@@ -248,6 +266,9 @@ public class AdminController {
                                                       @RequestParam("endDate") String endDate,
                                                       Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("alert", alert.copy());
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
         int startYear = Integer.parseInt(startDateParts[0]);
@@ -284,6 +305,9 @@ public class AdminController {
                                            @RequestParam("endDate") String endDate,
                                            Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("alert", alert.copy());
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
         int startYear = Integer.parseInt(startDateParts[0]);

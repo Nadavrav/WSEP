@@ -181,21 +181,24 @@
         </div>
         <input type="text" name="address" placeholder="Address" required>
         <input type="text" name="cvv" placeholder="CVV">
-        <input type="submit" value="Buy Now" onclick="showThankYouMessage()">
+        <input type="submit" value="Buy Now">
     </form>
-    <div id="thankYouMessage" style="display: none;">
+    <div id="thankYouMessage" th:if="${purchaseSuccessful}" style="display: none">
         <h2>Thank you for your purchase!</h2>
     </div>
 </div>
 
 <script>
-    function showThankYouMessage() {
+    document.addEventListener("DOMContentLoaded", function() {
         var paymentForm = document.getElementById("paymentForm");
         var thankYouMessage = document.getElementById("thankYouMessage");
 
-        paymentForm.style.display = "none";
-        thankYouMessage.style.display = "block";
-    }
+        paymentForm.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+            paymentForm.style.display = "none";
+            thankYouMessage.style.display = "block";
+        });
+    });
 </script>
 
 <script>
