@@ -246,7 +246,7 @@ public class MainPageController {
     public String declineUserBid(@RequestParam("productId") int productId,
                                  Model model) {
 
-        Response<?> response = server.rejectCounterOffer(request, productId);
+        Response<?> response = server.rejectCounterOffer(request, productId,storeId);
         if (response.isError()) {
             System.out.println("error in decline user bid");
             alert.setFail(true);

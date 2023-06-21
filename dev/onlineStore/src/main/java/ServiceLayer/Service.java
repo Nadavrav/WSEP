@@ -783,9 +783,9 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<?> rejectCounterOffer(int productId){
+    public Response<?> rejectCounterOffer(int productId,int storeId){
         try {
-            facade.rejectCounterOffer(visitorId,productId);
+            facade.rejectCounterOffer(visitorId,productId,storeId);
             return new Response<>("Bid rejected",false);
         }
         catch (Exception e)

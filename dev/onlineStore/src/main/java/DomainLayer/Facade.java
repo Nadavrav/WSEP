@@ -685,7 +685,7 @@ public class Facade {
               employmentList.get(appointedUserName).put(storeId, appointedEmployment);
               store.addNewListener(appointed);
               store.addNewOwnerListener(appointed);
-              store.documentOwner(appointed.getVisitorId());
+              store.documentOwner(appointed.getUserName());
               appointmentsRequests.get(storeId).remove(appointed);
               store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
               logger.fine("new store owner with name" + appointedUserName +" added successfully");
@@ -1116,7 +1116,7 @@ public class Facade {
         Store store = new Store(storeName);
         store.addNewListener((RegisteredUser)User);
         store.addNewOwnerListener((RegisteredUser)User);
-        store.documentOwner(User.getVisitorId());
+        store.documentOwner(((RegisteredUser) User).getUserName());
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
@@ -1980,7 +1980,7 @@ public class Facade {
             employmentList.get(appointedUserName).put(storeID, appointedEmployment);
             store.addNewListener(appointed);
             store.addNewOwnerListener(appointed);
-            store.documentOwner(appointed.getVisitorId());
+            store.documentOwner(appointed.getUserName());
             appointmentsRequests.get(storeID).remove(appointed);
             store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
@@ -2242,7 +2242,7 @@ public class Facade {
             throw new Exception("Current user is not registered to system");
         }
         RegisteredUser user = (RegisteredUser)visitor;
-        return store.voteOnBid(user.getVisitorId(),productId,registeredUserList.get(userName),vote);
+        return store.voteOnBid(user.getUserName(),productId,registeredUserList.get(userName),vote);
 
     }
     public Bid counterOfferBid(int visitorId, int productId, int storeId, String userName,double newPrice,String message) throws Exception{
@@ -2283,7 +2283,7 @@ public class Facade {
         }
         ((RegisteredUser)visitor).acceptCounterOff(productId,store);
     }
-    public void rejectCounterOffer(int visitorId, int productId) throws Exception{
+    public void rejectCounterOffer(int visitorId, int productId,int storeId) throws Exception{
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){
             throw new Exception("Wrong visitorId");
@@ -2292,7 +2292,11 @@ public class Facade {
         {
             throw new Exception("Current user is not registered to system");
         }
-        ((RegisteredUser)visitor).rejectCounterOffer(productId);
+        Store store = storesList.get(storeId);
+        if(store == null){
+            throw new Exception("Wrong storeId");
+        }
+        ((RegisteredUser)visitor).rejectCounterOffer(productId,store);
     }
 
     public StoreProduct getProduct(int storeId, int productId) {
