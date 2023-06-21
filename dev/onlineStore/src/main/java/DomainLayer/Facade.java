@@ -954,7 +954,8 @@ public class Facade {
         return output;
     }
 
-    public LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
+    public LinkedList<String> purchaseCart(int visitorID,String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip) throws Exception{
+
 
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
@@ -984,34 +985,32 @@ public class Facade {
                     failedPurchases.add(b.getStoreID().toString());
                 } else {
                     //Check if possible to create a supply
-                    if (!supplier.isValidAddress(address)) {
+                    if (supplier.supply(holder, address, city, country,zip).equals("-1")) {
                         logger.fine("we can avoid this supply");
                         failedPurchases.add(b.getStoreID().toString());
                     } else {
                         //Create a transaction for the store
-                        if (!paymentProvider.applyTransaction(amount, visitorCard)) {
+                        if (paymentProvider.pay(holder,visitorCard,expireDate,cvv,id).equals("-1")) {
                             failedPurchases.add(b.getStoreID().toString());
                         } else {
                             LinkedList<String> productsId = new LinkedList<>();
                             productsId.add(b.bagToString());
                             //Create a request to supply bag's product to customer
-                            if (!supplier.supplyProducts(productsId)) {
-                                failedPurchases.add(b.getStoreID().toString());
-                            } else {
-                                for (CartProduct p : b.getProducts()) {
-                                    s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
-                                }
-                                InstantPurchase p = new InstantPurchase(visitor, b, amount);
-                                if (visitor instanceof RegisteredUser) {
-                                    ((RegisteredUser) visitor).addPurchaseToHistory(p);
-                                    storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
-                                }
-                                else{
-                                    storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
-                                }
-                                storesList.get(b.getStoreID()).addToStoreHistory(p);
-                                visitor.removeBag(b.getStoreID());
+
+                            for (CartProduct p : b.getProducts()) {
+                                s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
                             }
+                            InstantPurchase p = new InstantPurchase(visitor, b, amount);
+                            if (visitor instanceof RegisteredUser) {
+                                ((RegisteredUser) visitor).addPurchaseToHistory(p);
+                                storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
+                            }
+                            else{
+                                storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
+                            }
+                            storesList.get(b.getStoreID()).addToStoreHistory(p);
+                            visitor.removeBag(b.getStoreID());
+
                         }
                     }
                 }

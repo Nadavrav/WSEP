@@ -42,7 +42,7 @@ public class Service {
     private final Facade facade;
     private int visitorId;
 
-    public Service(){
+    public Service() throws Exception {
         facade = Facade.getInstance();
     }
 
@@ -492,9 +492,9 @@ public class Service {
         }
         return new Response<>("Success");
     }
-    public Response<List<String>> PurchaseCart(int visitorCard, String address){
+    public Response<List<String>> PurchaseCart(String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip){
         try{
-            return new Response<>(facade.purchaseCart(visitorId,visitorCard,address));
+            return new Response<>(facade.purchaseCart(visitorId,holder,visitorCard,expireDate,cvv,id, address, city,country, zip));
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
