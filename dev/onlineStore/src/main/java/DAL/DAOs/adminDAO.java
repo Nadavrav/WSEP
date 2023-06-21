@@ -88,4 +88,29 @@ public class adminDAO {
         }
         return false;
     }
+
+    /**
+     * Checks if the admin table is empty
+     * @return - true if empty false if not
+     * @throws SQLException - if cant connect to db
+     */
+    public boolean userDbNotEmpty() throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+            Query query = session.createQuery("SELECT count(*) FROM AdminEntity");
+            Long rows = (Long) query.uniqueResult();
+            if(rows == 0) {
+                return false;
+            }
+            return true;
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in saveUser");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+    }
 }

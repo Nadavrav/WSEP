@@ -74,10 +74,12 @@ public class Facade {
     private DALService DS;
 
     private Facade() {
+        boolean dbHasData = false;
         try {
             DS = DALService.getInstance();
             Store.setStoreIdCounter(DS.getMaxStoreId());
             Store.setProductIdCounter(DS.getMaxProductId());
+            dbHasData = DS.dbNotEmpty();
         }
         catch (SQLException e){
             Store.resetCounters();
@@ -97,9 +99,10 @@ public class Facade {
         managersOnlyEntriesManager = new HashMap<>();
         storeOwnersEntriesManager = new HashMap<>();
         adminsEntriesManager = new HashMap<>();
-
-        if(!ConfigParser.parse(this))
-            registerInitialAdmin("admin","admin12345");
+        if(!dbHasData) {//If db doesnt have data we load data
+            if (!ConfigParser.parse(this))
+                registerInitialAdmin("admin", "admin12345");
+        }
     }
     /**
      * get instance uses double-checking to prevent synchronization when getting a non-null instance,
@@ -720,30 +723,57 @@ public class Facade {
             appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
         }
         else {
-            //TODO get employment from db by appointer username and storeId
-            //TODO if the DTO we get is null then throw the exception else
-            //TODO create it in the employment list and set appointerEmployment to be the DTO
-            logger.warning("the appointer is not owner of store id warning");
-            throw new Exception("the appointer is not owner of store id");
+            //TODO get employment from db by appointer username and storeId - done
+            employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+            //TODO if the DTO we get is null then throw the exception else - done
+            if(employmentDTO == null){
+                logger.warning("the appointer is not owner of store id warning");
+                throw new Exception("the appointer is not owner of store id");
+            }
+            //TODO create it in the employment list and set appointerEmployment to be the DTO - done
+            else{
+                appointerEmployment = new Employment(employmentDTO);
+                Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+                employmentList.put(((RegisteredUser) appointer).getUserName(), newEmploymentMap);
+                employmentList.get(((RegisteredUser) appointer).getUserName()).put(storeId,appointerEmployment);
+            }
         }
-        /*try {
-            appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);//check this
-            logger.warning("the appointer is not owner of store id warning");
-        } catch (Exception e) {
-            throw  new Exception("the appointer is not owner of store id");
-        }*/
 
         if (appointerEmployment == null || !appointerEmployment.canAppointOwner()) {
-            //TODO get employment from db by appointer username and storeId(this could happen if the
-            //TODO appointer has an appointment but not at this store(in the runtime) so we need to pull from db to make sure)
-            throw  new Exception("User cannot appoint store owner");
+            //TODO get employment from db by appointer username and storeId(this could happen if the - done
+            employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+            if(employmentDTO == null){
+                logger.warning("the appointer is not owner of store id warning");
+                throw new Exception("the appointer is not owner of store id");
+            }
+            else{
+                appointerEmployment = new Employment(employmentDTO);
+                employmentList.get(((RegisteredUser) appointer).getUserName()).put(storeId,appointerEmployment);
+                if(!appointerEmployment.canAppointOwner())
+                {
+                    throw  new Exception("User cannot appoint store owner");
+                }
+            }
+            //TODO appointer has an appointment but not at this store(in the runtime) so we need to pull from db to make sure) - done
         }
         // check if appointedUserName is registered
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
         if (appointed == null) {
-            //TODO pull user from db to check if he exists if doesnt throw exception
-            logger.warning("null appointer ");
-            throw  new Exception("inValid appointed UserName");
+            //TODO pull user from db to check if he exists if doesnt throw exception - done
+            registeredUserDTO userDTO = DS.getUser(appointedUserName);
+            if(userDTO != null) {
+                if(DS.isAdmin(appointedUserName)){
+                    appointed = new Admin(userDTO);
+                }
+                else {
+                    appointed = new RegisteredUser(userDTO);
+                }
+                registeredUserList.put(appointedUserName, appointed);
+            }
+            else {
+                logger.warning("null appointer ");
+                throw  new Exception("inValid appointed UserName");
+            }
         }
         // check if appointedUserName has appointment with storeId as storeOwner
         Employment appointedEmployment = null;
@@ -754,12 +784,6 @@ public class Facade {
         else{
             //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store
         }
-       /* try {
-            appointedEmployment = employmentList.get(appointedUserName).get(storeId);//check this
-            //lock appointedlock
-        } catch (Exception e) {
-
-        }*/
         if(appointedEmployment!=null && appointedEmployment.checkIfOwner()){
             throw  new Exception("appointedUserName is already Owner of store Id");
         }
