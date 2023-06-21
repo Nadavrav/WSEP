@@ -372,6 +372,7 @@ public class Facade {
         }
     }
     public void registerAdmin(int visitorid,String userName,String password) throws Exception{
+        DS = DALService.getInstance();
         logger.info("Starting admin registration");
         if(!(onlineList.get(visitorid) instanceof Admin)){
             logger.info("Failed admin registration: only admin can register other admins");
@@ -383,6 +384,11 @@ public class Facade {
         }
         else{
             Admin admin=new Admin(userName, password);
+
+            //DB save
+            DS.saveUser(admin.getUserName(), admin.getPassword());
+            DS.saveAdmin(admin.getUserName());
+            //DB end save
             registeredUserList.replace(userName,admin);
             logger.fine("New admin successfully registered");
             registeredUserList.get(userName).update("You are an Admin now!");
@@ -403,8 +409,14 @@ public class Facade {
         }
         else{
             try {
-
+                DS = DALService.getInstance();
                 Admin admin = new Admin(userName, password);
+
+                //DB save
+                DS.saveUser(admin.getUserName(), admin.getPassword());
+                DS.saveAdmin(admin.getUserName());
+                //DB end save
+
                 registeredUserList.put(userName,admin);
             }
             catch (Exception e) {
@@ -448,13 +460,13 @@ public class Facade {
         // create new register user
         logger.info("new visitor has register");
         RegisteredUser r = new RegisteredUser(userName, password);
-        //onlineList.replace(visitorId,r);
-        registeredUserList.put(userName, r);
 
         //Save into Db
         DS.saveUser(r.getUserName(),r.getPassword());
         //End save
 
+        //onlineList.replace(visitorId,r);
+        registeredUserList.put(userName, r);
         registeredUserList.get(userName).update("Registered to Site");
     }
 
@@ -673,6 +685,7 @@ public class Facade {
     }
 
       public void appointNewStoreOwner(int appointerId, String appointedUserName, int storeId) throws Exception {//4.4
+        DS = DALService.getInstance();
         //check appointerId and registerd user
         SiteVisitor appointer = onlineList.get(appointerId);
         //lock appointer
@@ -685,6 +698,7 @@ public class Facade {
         // check if store id exist
         Store store = storesList.get(storeId);
         if (store == null) {
+            //TODO get store from db
             logger.warning("null store warning ");
             throw  new Exception("inValid store Id");
         }
@@ -694,33 +708,55 @@ public class Facade {
         }
         // check appointer is owner of storeId
         Employment appointerEmployment = null;
-        try {
+        if(employmentList.get(((RegisteredUser) appointer).getUserName()) != null)
+        {
+            appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+        }
+        else {
+            //TODO get employment from db by appointer username and storeId
+            //TODO if the DTO we get is null then throw the exception else
+            //TODO create it in the employment list and set appointerEmployment to be the DTO
+            logger.warning("the appointer is not owner of store id warning");
+            throw new Exception("the appointer is not owner of store id");
+        }
+        /*try {
             appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);//check this
             logger.warning("the appointer is not owner of store id warning");
         } catch (Exception e) {
             throw  new Exception("the appointer is not owner of store id");
-        }
+        }*/
 
         if (appointerEmployment == null || !appointerEmployment.canAppointOwner()) {
+            //TODO get employment from db by appointer username and storeId(this could happen if the
+            //TODO appointer has an appointment but not at this store(in the runtime) so we need to pull from db to make sure)
             throw  new Exception("User cannot appoint store owner");
         }
         // check if appointedUserName is registered
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
         if (appointed == null) {
+            //TODO pull user from db to check if he exists if doesnt throw exception
             logger.warning("null appointer ");
             throw  new Exception("inValid appointed UserName");
         }
         // check if appointedUserName has appointment with storeId as storeOwner
         Employment appointedEmployment = null;
-        try {
+        if(employmentList.get(appointedUserName) != null)
+        {
+            appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+        }
+        else{
+            //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store
+        }
+       /* try {
             appointedEmployment = employmentList.get(appointedUserName).get(storeId);//check this
             //lock appointedlock
         } catch (Exception e) {
 
-        }
+        }*/
         if(appointedEmployment!=null && appointedEmployment.checkIfOwner()){
             throw  new Exception("appointedUserName is already Owner of store Id");
         }
+        //TODO load all storeowners of this storeId into the runtime and set them as listeners
         //add appointedUserName as store owner
           if(appointmentsRequests.get(storeId) == null){
               appointmentsRequests.put(storeId,new HashMap<>());
@@ -730,11 +766,16 @@ public class Facade {
           store.notifyOwnersAboutNewEmploymentRequests(((RegisteredUser) appointer).getUserName(),appointedUserName);
 
           if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
-              appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+              appointedEmployment = new Employment(((RegisteredUser) appointer).getUserName(), appointed.getUserName(), store.getID(), Role.StoreOwner);
               if (employmentList.get(appointedUserName) == null) {
                   Map<Integer, Employment> newEmploymentMap = new HashMap<>();
                   employmentList.put(appointedUserName, newEmploymentMap);
               }
+
+              //save into db
+              //DS.saveEmployment(appointedEmployment.getEmployee(),appointedEmployment.getStore(),appointedEmployment.getAppointer(),appointedEmployment.getRole().ordinal(),appointedEmployment.getPermissionString());
+              //end save into db
+
               employmentList.get(appointedUserName).put(storeId, appointedEmployment);
               store.addNewListener(appointed);
               store.addNewOwnerListener(appointed);
@@ -802,7 +843,7 @@ public class Facade {
             throw  new Exception("appointedUserName is already owner or manager of store Id");
         }
         //add appointedUserName as store manager
-        appointedEmployment = new Employment((RegisteredUser) appointer,appointed,store,Role.StoreManager);
+        appointedEmployment = new Employment(((RegisteredUser) appointer).getUserName(),appointed.getUserName(),store.getID(),Role.StoreManager);
         if(employmentList.get(appointedUserName)== null) {
             Map<Integer, Employment> newEmploymentMap = new HashMap<>();
             employmentList.put(appointedUserName, newEmploymentMap);
@@ -884,7 +925,7 @@ public class Facade {
         for(Map<Integer,Employment> employmentMap : employmentList.values()){
             Employment employment =employmentMap.get(storeId);
             if(employment!=null && employment.getAppointer()!=null && employment.getAppointer().equals(registeredUserList.get(appointerUserName))){
-                String appointedUserName =employment.getEmployee().getUserName();
+                String appointedUserName =employment.getEmployee();
                 RemoveAllEmployee(appointedUserName,storeId);
                 employmentList.get(appointedUserName).remove(storeId);
                 if(employmentList.get(appointedUserName).isEmpty()){
@@ -1176,7 +1217,7 @@ public class Facade {
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
-        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreFounder);
+        Employment employment = new Employment(((RegisteredUser) User).getUserName(),store.getID(),Role.StoreFounder);
         logger.config("adding new employment to the new store ");
         // andd to employment list
         if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
@@ -2041,7 +2082,7 @@ public class Facade {
         //If all store owners accepted, create new employment
         Store store = storesList.get(storeID);
         if(checkIfAllOwnersAgreedOnEmploymentRequest(storeID,appointedUserName)){
-            Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+            Employment appointedEmployment = new Employment(appointer.getUserName(), appointed.getUserName(), store.getID(), Role.StoreOwner);
             if (employmentList.get(appointedUserName) == null) {
                 Map<Integer, Employment> newEmploymentMap = new HashMap<>();
                 employmentList.put(appointedUserName, newEmploymentMap);

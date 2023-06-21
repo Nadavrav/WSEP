@@ -4,6 +4,8 @@ import DAL.Entities.*;
 import DAL.DTOs.*;
 import org.hibernate.*;
 import java.sql.SQLException;
+import java.util.LinkedList;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Session;
@@ -86,6 +88,44 @@ public class registeredUserDAO {
             }
         }
         return null;
+    }
+
+    /**
+     * A function to get all the user from a list of userNames
+     * @param userNames - the list of user names
+     * @return - a list of registeredUserDTO that represents each user
+     * @throws SQLException - if cant connect to db
+     */
+    public LinkedList<registeredUserDTO> getUsersByUserNames(LinkedList<String> userNames) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+            LinkedList<registeredUserDTO> userDTOS = new LinkedList<>();
+            for (String username: userNames) {
+                Query<RegistereduserEntity> query = session.createQuery("FROM RegistereduserEntity WHERE userName = :username");
+                query.setParameter("username", username);
+                RegistereduserEntity userEntity = query.uniqueResult();
+
+                if(userEntity == null) {
+                    session.close();
+                    throw new SQLException("SQL fail in getUsersByUserNames");
+                }
+                else{
+                    registeredUserDTO userDTO = new registeredUserDTO(userEntity.getUserName(), userEntity.getPassword());
+                    userDTOS.add(userDTO);
+                }
+            }
+            session.close();
+            return userDTOS;
+
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in saveUser");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
     }
 
 }

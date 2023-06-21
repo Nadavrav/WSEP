@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.Collection;
 
 
@@ -15,6 +16,7 @@ public class DALService {
     private final storeDAO storeDAO;
     private final StoreProductDAO storeProductDAO;
     private final adminDAO adminDAO;
+    private final employmentDAO employmentDAO;
     private SessionFactory sessionFactory;
     private DALService() throws SQLException {
         try {
@@ -26,6 +28,7 @@ public class DALService {
         userDAO = new registeredUserDAO(sessionFactory);
         storeDAO = new storeDAO(sessionFactory);
         adminDAO = new adminDAO(sessionFactory);
+        employmentDAO = new employmentDAO(sessionFactory);
     }
 
     public static DALService getInstance() throws SQLException {
@@ -43,6 +46,7 @@ public class DALService {
      */
     public void deleteDBData() throws SQLException {
         try{
+            employmentDAO.deleteData();
             adminDAO.deleteData();
             userDAO.deleteData();
         }
@@ -111,6 +115,51 @@ public class DALService {
         catch (Exception e)
         {
             throw new SQLException("SQL fail in saveUser");
+        }
+    }
+
+    /**
+     * A function to save the employment in the db
+     * @param employee - employee username
+     * @param storeId - the store id the employment was created fir
+     * @param appointer - the appointers username
+     * @param role - the role (0,1,2)
+     * @param permissions - a string of permissions
+     */
+    public void saveEmployment(String employee,int storeId, String appointer,int role, String permissions) throws SQLException {
+        try{
+            employmentDAO.saveEmployment(employee,storeId,appointer,role,permissions);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saveUser");
+        }
+    }
+
+    /**
+     * A function the get the unique employment by the employee and by storeId
+     * @param employee - (the user name that got appointed)
+     * @param storeId - the store the employment belongs to
+     * @return an employmentDTO representing the employment from the db
+     * @throws SQLException if cant connect to db
+     */
+    public employmentDTO getEmploymentByUsernameAndStoreId(String employee,int storeId) throws SQLException {
+        try{
+            return employmentDAO.getEmploymentByUsernameAndStoreId(employee,storeId);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
+    public LinkedList<registeredUserDTO> getStoreOwnersByStoreId(int storeId) throws SQLException {
+        try{
+            LinkedList<String> userNameList = employmentDAO.getStoreOwnerUserNamesByStoreId(storeId);
+            return userDAO.getUsersByUserNames(userNameList);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
         }
     }
     public void saveStore(int storeId, String name, boolean active, double rate) throws SQLException {
