@@ -1834,10 +1834,14 @@ public class Facade {
         LinkedList <SiteVisitor> onlineusers = new LinkedList<>();
         for (SiteVisitor sv : onlineList.values())
         {
-            if(sv.getVisitorId()!=0)
-                if(sv instanceof RegisteredUser) {
-                    onlineusers.add((RegisteredUser)sv);
+            if(sv.getVisitorId()!=0) {
+                if (sv instanceof RegisteredUser) {
+                    onlineusers.add((RegisteredUser) sv);
                 }
+                else {
+                    onlineusers.add(sv);
+                }
+            }
         }
         return onlineusers;
     }
