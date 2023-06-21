@@ -2,9 +2,9 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <title>Admin Page</title>
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"-->
+<!--          integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">-->
+    <title>Manager</title>
     <style>
         body {
             background-image: url("https://media.istockphoto.com/id/1438337441/photo/business-management-concept-development-and-management-executives-looking-virtual-screens.jpg?s=612x612&w=0&k=20&c=F2-E8sUkjY8p5y_FfHRSYcLfrt9zdjdEjzWyCoy4p1c=");
@@ -20,99 +20,59 @@
             text-align: center;
         }
 
-        h1 {
-            margin-top: 50px;
-            font-size: 34px;
-            margin-bottom: 40px;
-            color: white;
-        }
-
-        p {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-
         .button {
             display: inline-block;
             padding: 10px 20px;
             background-color: #ffffff;
             color: #333333;
             font-size: 18px;
-            border-radius: 6px;
+            border-radius: 4px;
             text-decoration: none;
             margin-right: 10px;
         }
 
-        /* Modal Styles */
+        /* CSS for modals */
         .modal {
-            /*position: fixed;*/
+            display: none;
+            position: fixed;
+            z-index: 9999;
             left: 0;
             top: 0;
-            width: 300px;
+            width: 330px;
             height: 100%;
-            background-color: rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            /*z-index: 9999;*/
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease-in-out;
-            color: whitesmoke;
-            overflow-y: auto;
-        }
-
-        .modal-button {
-            padding: 15px 15px;
-            font-size: 14px;
-            /*font-weight: bold;*/
-            width: 270px;
-            color: black;
-            background-color: #d2d3d5;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-            margin: 4.5px;
-            cursor: pointer;
-            /*transition: background-color 0.3s ease;*/
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            /*transform: translateX(-100%);*/
+            /*transition: transform 0.3s ease-in-out;*/
         }
 
         .modal.open {
-            opacity: 1;
-            pointer-events: auto;
+            display: block;
         }
 
         .modal-content {
-            /*width: 400px;*/
-            max-width: 80%;
-            background-color: whitesmoke;
-            padding: 50px;
-            border-radius: 4px;
+            /*background-color: #fefefe;*/
+            background-color: transparent;
+            color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
         }
 
-        .close-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            color: white;
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
             cursor: pointer;
         }
 
-        table {
-            width: 100%;
-            /*border-collapse: collapse;*/
-        }
-
-        th, td {
-            padding: 15px;
-            border-bottom: 1px solid #999999;
-        }
-
-        th {
-            text-align: center;
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         .dropdown {
@@ -138,11 +98,29 @@
         .dropdown-item {
             cursor: pointer;
         }
+
+        .permissions-button {
+            display: inline-block;
+            padding: 12px 12px;
+            font-size: 14px;
+            /*font-weight: bold;*/
+            width: 240px;
+            color: black;
+            background-color: #d2d3d5;
+            border: none;
+            border-radius: 7px;
+            text-decoration: none;
+            margin: 4px;
+            cursor: pointer;
+            /*transition: background-color 0.3s ease;*/
+        }
+
+        .permissions-button:hover {
+            background-color: #5555;
+        }
     </style>
 </head>
-
 <body>
-<div th:replace="fragments/alert :: alert(${alert})"></div>
 <header>
     <div class="home-button">
         <div class="menu-button">
@@ -221,15 +199,376 @@
     </div>
 </header>
 
+<div th:replace="fragments/alert :: alert(${alert})"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
 
 <div class="container">
     <h1>Welcome to the Manager/Owner Page</h1>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('permissions-modal')">Permissions</a>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('new-store-modal')">Open New Store</a>
-    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('my-stores-modal')">My Stores</a>
+    <button class="button" onclick="openModal('permissionsModal')">Permissions</button>
+    <button class="button" onclick="openModal('newStoreModal')">Open New Store</button>
+    <button class="button" onclick="openModal('myStoresModal')">My Stores</button>
+</div>
+
+<!-- Permissions Modal -->
+<div id="permissionsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('permissionsModal')">&times;</span>
+        <form id="storeForm" action="fetch_permissions" method="post">
+            <p>Enter Store ID:</p>
+            <input type="number" name="storeId" id="storeIdInput">
+            <button type="submit">Submit</button>
+        </form>
+        <div th:each="permission : ${myPermissions}">
+            <!-- Check if the permission is one of the permissions in the enum -->
+            <div th:if="${T(DomainLayer.Users.Permission).valueOf(permission.toString()) != null}">
+                <!-- Display the button based on the permission -->
+                <div th:switch="${permission.toString()}">
+                    <div th:case="CanManageStock">
+                        <button class="permissions-button" onclick="openModal('add-product-modal')">Add Product</button>
+                        <button class="permissions-button" onclick="openModal('remove-product-modal')">Remove Product</button>
+                        <button class="permissions-button" onclick="openModal('update-product-modal')">Update Product</button>
+                    </div>
+                    <div th:case="CanSeePurchaseHistory">
+                        <button class="permissions-button" onclick="openModal('purchase-history-modal')">Purchase History</button>
+                    </div>
+                    <div th:case="CanSeeStaffAndPermissions">
+                        <button class="permissions-button" onclick="openModal('employee-info-modal')">Employee Information</button>
+                    </div>
+                    <div th:case="CanRemoveStoreManager">
+                        <button class="permissions-button" onclick="openModal('remove-employee-modal')">Remove Employee</button>
+                    </div>
+                    <div th:case="CanAppointStoreOwner">
+                        <button class="permissions-button" onclick="openModal('appoint-storeOwner-modal')">Appoint Store Owner</button>
+                    </div>
+                    <div th:case="CanAppointStoreManager">
+                        <button class="permissions-button" onclick="openModal('appoint-storeManager-modal')">Appoint Store Manager</button>
+                    </div>
+                    <div th:case="CanChangePermissionsForStoreManager">
+                        <button class="permissions-button" onclick="openModal('change-permissions-modal')">Change Permissions For Manager</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Permissions Result Modal -->
+<!--<div id="permissionsResultModal" class="modal">-->
+<!--    <div class="modal-content">-->
+<!--        <span class="close" onclick="closeModal('permissionsResultModal')">&times;</span>-->
+<!--        <div th:each="permission : ${myPermissions}">-->
+<!--            &lt;!&ndash; Check if the permission is one of the permissions in the enum &ndash;&gt;-->
+<!--            <div th:if="${T(DomainLayer.Users.Permission).valueOf(permission.toString()) != null}">-->
+<!--                &lt;!&ndash; Display the button based on the permission &ndash;&gt;-->
+<!--                <div th:switch="${permission.toString()}">-->
+<!--                    <div th:case="CanManageStock">-->
+<!--                        <button class="modal-button" onclick="openModal('add-product-modal')">Add Product</button>-->
+<!--                        <button class="modal-button" onclick="openModal('remove-product-modal')">Remove Product</button>-->
+<!--                        <button class="modal-button" onclick="openModal('update-product-modal')">Update Product</button>-->
+<!--                    </div>-->
+<!--                    <div th:case="CanSeePurchaseHistory">-->
+<!--                        <button class="modal-button" onclick="openModal('purchase-history-modal')">Purchase History</button>-->
+<!--                    </div>-->
+<!--                    <div th:case="CanSeeStaffAndPermissions">-->
+<!--                        <button class="modal-button" onclick="openModal('employee-info-modal')">Employee Information</button>-->
+<!--                    </div>-->
+<!--                    <div th:case="CanRemoveStoreManager">-->
+<!--                        <button class="modal-button" onclick="openModal('remove-employee-modal')">Remove Employee</button>-->
+<!--                    </div>-->
+<!--                    <div th:case="CanAppointStoreOwner">-->
+<!--                        <button class="modal-button" onclick="openModal('appoint-storeOwner-modal')">Appoint Store Owner</button>-->
+<!--                    </div>-->
+<!--                    <div th:case="CanAppointStoreManager">-->
+<!--                        <button class="modal-button" onclick="openModal('appoint-storeManager-modal')">Appoint Store Manager</button>-->
+<!--                    </div>-->
+<!--                    <div th:case="CanChangePermissionsForStoreManager">-->
+<!--                        <button class="modal-button" onclick="openModal('change-permissions-modal')">Change Permissions For Manager</button>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!------------------------------ Open New Store Modal ------------------------------>
+<div id="newStoreModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('newStoreModal')">&times;</span>
+        <h2>Open New Store</h2>
+        <p>You can open a new store and manage its details.</p>
+        <form action="/openStore" method="post">
+            <label for="storeName">Store Name:</label>
+            <input type="text" id="storeName" name="store-name" placeholder="Enter store name" required>
+            <br><br>
+            <button style="padding: 6px;" type="submit">Open Store</button>
+        </form>
+    </div>
+</div>
+
+<!------------------------------ MyStores Modal ------------------------------>
+<div id="myStoresModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('myStoresModal')">&times;</span>
+        <p>My Stores:</p>
+<!--        <ul>-->
+            <div th:each="myStore : ${myStoresList}">
+                <h4>
+                    <a th:href="@{/MyStore/{storeId}(storeId=${myStore.getStoreId()}, storeName=${myStore.getStoreName()})}">
+                        <span style="color: white;font-size: 18px;" th:text="'Store Name: ' + ${myStore.getStoreName()} + '  / ID: ' + ${myStore.getStoreId()}"></span>
+                    </a>
+                </h4>
+            </div>
+<!--        </ul>-->
+    </div>
+</div>
+
+<!------------------------------ Add Product Modal ------------------------------>
+<div id="add-product-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('add-product-modal')">&times;</span>
+        <h2>Add Product</h2>
+        <form id="add-product-form" action="/add-product" method="post">
+            <label for="storeID-add">Store ID:</label>
+            <br>
+            <input type="number" id="storeID-add" name="storeID-add" required>
+            <br>
+            <label for="product-name">Product Name:</label>
+            <br>
+            <input type="text" id="product-name" name="product-name" required>
+            <br>
+            <label for="product-price">Product price:</label>
+            <br>
+            <input type="text" id="product-price" name="product-price" required>
+            <br>
+            <label for="product-category">Product Category:</label>
+            <br>
+            <input type="text" id="product-category" name="product-category" required>
+            <br>
+            <label for="product-quantity">Product Quantity:</label>
+            <br>
+            <input type="number" id="product-quantity" name="product-quantity" required>
+            <br>
+            <label for="product-desc">Product Description:</label>
+            <br>
+            <input type="text" id="product-desc" name="product-desc" required>
+            <br><br>
+            <button type="submit">ADD</button>
+        </form>
+    </div>
+</div>
+
+<!------------------------------ Remove Product Modal ------------------------------>
+<div id="remove-product-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('remove-product-modal')">&times;</span>
+        <h2>Remove Product</h2>
+        <form id="remove-product-form" action="/remove-product" method="post">
+            <label for="storeID-remove">Store ID:</label>
+            <br>
+            <input type="text" id="storeID-remove" name="storeID_remove" required>
+            <br>
+            <label for="productID-remove">Product ID:</label>
+            <br>
+            <input type="text" id="productID-remove" name="productID-remove" required>
+            <br><br>
+            <button type="submit">REMOVE</button>
+        </form>
+    </div>
+</div>
+
+<!------------------------------ Update Product Modal ------------------------------>
+<div id="update-product-modal" class="modal">
+    <div className="modal-content">
+        <span className="close" onClick="closeModal('update-product-modal')">&times;</span>
+        <h2>Update Product:</h2>
+        <form id="update-product-form" action="/update-product" method="post">
+            <label for="storeID-update">Store ID:</label>
+            <br>
+            <input type="text" id="storeID-update" name="storeID-update" required>
+            <br>
+            <label for="productID-update">Product ID:</label>
+            <br>
+            <input type="text" id="productID-update" name="productID-update" required>
+            <br>
+            <label for="productName-update">Product Name:</label>
+            <br>
+            <input type="text" id="productName-update" name="productName-update">
+            <br>
+            <label for="price-update">Price:</label>
+            <br>
+            <input type="text" id="price-update" name="price-update">
+            <br>
+            <label for="quantity-update">Quantity:</label>
+            <br>
+            <input type="number" id="quantity-update" name="quantity-update">
+            <br>
+            <label for="category-update">Category:</label>
+            <br>
+            <input type="text" id="category-update" name="category-update">
+            <br>
+            <label for="description-update">Description:</label>
+            <br>
+            <textarea style="background-color: transparent; width: 200px" id="description-update"
+                      name="description-update"></textarea>
+            <br><br>
+            <button type="submit">UPDATE</button>
+        </form>
+    </div>
+
+</div>
+
+<!------------------------------ Purchase History Modal ------------------------------>
+<div id="purchase-history-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('purchase-history-modal')">&times;</span>
+        <h2>Purchase History:</h2>
+        <form id="purchase-history-form" action="/purchase-history" method="post">
+            <label for="storeID-purchase">Store ID:</label>
+            <br>
+            <input type="text" id="storeID-purchase" name="storeID-purchase" required>
+            <br><br>
+            <button type="submit" onclick="openModal('show-purchase-history-modal')">SHOW HISTORY</button>
+        </form>
+    </div>
+</div>
+
+<div id="show-purchase-history-modal" class="modal">
+    <a class="close-button" onclick="closeModal('show-purchase-history-modal')">&#x2613;</a>
+    <h2 th:text="${purchaseHistory}">Purchase History:</h2>
+    <div th:unless="${purchaseHistory}">
+        <p>No purchase history available.</p>
+    </div>
+</div>
+<!------------------------------ Close Store Modal ------------------------------>
+<div id="close-store-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('close-store-modal')">&times;</span>
+        <h2>Close Store:</h2>
+        <form id="close-store-form" action="/close-store" method="post">
+            <label for="closeStore">Choose:</label>
+            <br>
+            <select id="closeStore" name="closeStore" required>
+                <option value="readwrite">CLOSE</option>
+                <option value="readwrite">PERMANENTLY CLOSE</option>
+            </select>
+            <br>
+            <label for="storeID-close">Store ID:</label>
+            <br>
+            <input type="text" id="storeID-close" name="storeID-close" required>
+            <br><br>
+            <button type="submit">CLOSE STORE</button>
+        </form>
+    </div>
+</div>
+
+<!------------------------------ Employee Info Modal ------------------------------>
+<div id="employee-info-modal" class="modal">
+    <div className="modal-content">
+        <span className="close" onClick="closeModal('employee-info-modal')">&times;</span>
+        <h2>Employee Info:</h2>
+        <form id="employee-info-form" action="/employee-info" method="post">
+            <label for="storeID-employee">Store ID:</label>
+            <br>
+            <input type="text" id="storeID-employee" name="storeID-employee" required>
+            <br><br>
+            <button type="submit" onclick="openModal('show-employee-info-modal');">SHOW INFO</button>
+        </form>
+    </div>
+    <article th:text="${employeeInfo}"></article>
+</div>
+
+<div id="show-employee-info-modal" class="modal">
+    <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613;</a>
+    <h2>Employee Info:</h2>
+    <p th:text="${employeeInfo}"></p>
+</div>
+
+<!------------------------------ Remove Employee Modal ------------------------------>
+<div id="remove-employee-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('remove-employee-modal')">&times;</span>
+        <h2>Remove Employee</h2>
+        <form id="remove-employee-form" action="/remove-employee" method="post">
+            <label for="storeID-remove-emp">Store ID:</label>
+            <br>
+            <input type="text" id="storeID-remove-emp" name="storeID-remove-emp" required>
+            <br>
+            <label for="username-remove-emp">User Name:</label>
+            <br>
+            <input type="text" id="username-remove-emp" name="username-remove-emp" required>
+            <br><br>
+            <button type="submit">REMOVE</button>
+        </form>
+    </div>
+</div>
+
+<!------------------------------ Appoint Owner Modal ------------------------------>
+<div id="appoint-storeOwner-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('appoint-storeOwner-modal')">&times;</span>
+        <h2>Appoint Store Owner:</h2>
+        <form id="appoint-storeOwner-form" action="/appoint-store-owner" method="post">
+            <label for="storeID-add-owner">Store ID:</label>
+            <br>
+            <input type="text" id="storeID-add-owner" name="storeID-add-owner" required>
+            <br>
+            <label for="owner-name-add">Owner Name:</label>
+            <br>
+            <input type="text" id="owner-name-add" name="owner-name-add" required>
+            <br><br>
+            <button type="submit">APPOINT</button>
+        </form>
+    </div>
+</div>
+
+<!------------------------------ Appoint Manager Modal ------------------------------>
+<div id="appoint-storeManager-modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('appoint-storeManager-modal')">&times;</span>
+        <h2>Appoint Store Manager:</h2>
+        <form id="appoint-storeManager-form" action="/appoint-store-manager" method="post">
+            <label for="storeID-add-manager">Store ID:</label>
+            <br>
+            <input type="text" id="storeID-add-manager" name="storeID-add-manager" required>
+            <br>
+            <label for="manager-name-add">Manager Name:</label>
+            <br>
+            <input type="text" id="manager-name-add" name="manager-name-add" required>
+            <br><br>
+            <button type="submit">APPOINT</button>
+        </form>
+    </div>
+</div>
+
+<!------------------------------ Change Permissions Modal ------------------------------>
+<div id="change-permissions-modal" class="modal">
+    <div className="modal-content">
+        <span className="close" onclick="closeModal('change-permissions-modal')">&times;</span>
+        <h2>Change Permissions:</h2>
+        <form id="change-permissions-form" action="/change-permission" method="post">
+            <label for="manager-name">Manager Name:</label><br>
+            <input type="text" id="manager-name" name="manager-name" required><br>
+            <label for="store-id">Store ID:</label><br>
+            <input type="text" id="store-id" name="store-id" required><br>
+            <label for="permission">Permission:</label><br>
+            <select id="permission" name="permission" required multiple size="11">
+                <option value="CanManageStock">CanManageStock</option>
+                <option value="CanChangePolicyAndDiscounts">CanChangePolicyAndDiscounts</option>
+                <option value="CanSetConstraints">CanSetConstraints</option>
+                <option value="CanAppointStoreOwner">CanAppointStoreOwner</option>
+                <option value="CanRemoveStoreOwner">CanRemoveStoreOwner</option>
+                <option value="CanAppointStoreManager">CanAppointStoreManager</option>
+                <option value="CanChangePermissionsForStoreManager">CanChangePermissionsForStoreManager</option>
+                <option value="CanRemoveStoreManager">CanRemoveStoreManager</option>
+                <option value="CanSeeStaffAndPermissions">CanSeeStaffAndPermissions</option>
+                <option value="CanSeeCommentsAndRating">CanSeeCommentsAndRating</option>
+                <option value="CanSeePurchaseHistory">CanSeePurchaseHistory</option>
+            </select><br><br>
+            <button type="submit">CHANGE</button>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -250,325 +589,13 @@
         modal.classList.remove('open');
         currentModal = null;
     }
-</script>
-<!------------------------------ MyStores Modal ------------------------------>
-<div id="my-stores-modal" class="modal">
-    <a class="close-button" onclick="closeModal('my-stores-modal')">&#x2613;</a>
-    <h2>My Stores</h2>
-    <div th:each="myStore : ${myStoresList}">
-        <h4>
-            <a th:href="@{/MyStore/{storeId}(storeId=${myStore.getStoreId()}, storeName=${myStore.getStoreName()})}">
-                <span style="color: white;font-size: 18px;" th:text="'Store Name: ' + ${myStore.getStoreName()} + '  / ID: ' + ${myStore.getStoreId()}"></span>
-            </a>
-        </h4>
-    </div>
-</div>
-<!------------------------------ Permissions Modal ------------------------------>
-<div id="permissions-modal" class="modal">
-    <a class="close-button" onclick="closeModal('permissions-modal')">&#x2613;</a>
-    <form id="permissions-form" action="/fetch_permissions" method="post">
-        <input type="number" name="storeId" id="storeIdInput" placeholder="Enter Store ID">
-        <button class="permissions-button" type="submit">Submit</button>
-    </form>
 
-    <!-- Iterate over the list of permissions -->
-    <div th:each="permission : ${myPermissions}">
-        <!-- Check if the permission is one of the permissions in the enum -->
-        <div th:if="${T(DomainLayer.Users.Permission).valueOf(permission.toString()) != null}">
-            <!-- Display the button based on the permission -->
-            <div th:switch="${permission.toString()}">
-                <div th:case="CanManageStock">
-                    <button class="modal-button" onclick="openModal('add-product-modal')">Add Product</button>
-                    <button class="modal-button" onclick="openModal('remove-product-modal')">Remove Product</button>
-                    <button class="modal-button" onclick="openModal('update-product-modal')">Update Product</button>
-                </div>
-                <div th:case="CanSeePurchaseHistory">
-                    <button class="modal-button" onclick="openModal('purchase-history-modal')">Purchase History</button>
-                </div>
-                <div th:case="CanSeeStaffAndPermissions">
-                    <button class="modal-button" onclick="openModal('employee-info-modal')">Employee Information</button>
-                </div>
-                <div th:case="CanRemoveStoreManager">
-                    <button class="modal-button" onclick="openModal('remove-employee-modal')">Remove Employee</button>
-                </div>
-                <div th:case="CanAppointStoreOwner">
-                    <button class="modal-button" onclick="openModal('appoint-storeOwner-modal')">Appoint Store Owner</button>
-                </div>
-                <div th:case="CanAppointStoreManager">
-                    <button class="modal-button" onclick="openModal('appoint-storeManager-modal')">Appoint Store Manager</button>
-                </div>
-                <div th:case="CanChangePermissionsForStoreManager">
-                    <button class="modal-button" onclick="openModal('change-permissions-modal')">Change Permissions For Manager</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!------------------------------ Add Product Modal ------------------------------>
-<div id="add-product-modal" class="modal">
-    <a class="close-button" onclick="closeModal('add-product-modal')">&#x2613</a>
-    <h2>Add Product</h2>
-    <form id="add-product-form" action="/add-product" method="post">
-        <label for="storeID-add">Store ID:</label>
-        <br>
-        <input type="number" id="storeID-add" name="storeID-add" required>
-        <br>
-        <label for="product-name">Product Name:</label>
-        <br>
-        <input type="text" id="product-name" name="product-name" required>
-        <br>
-        <label for="product-price">Product price:</label>
-        <br>
-        <input type="text" id="product-price" name="product-price" required>
-        <br>
-        <label for="product-category">Product Category:</label>
-        <br>
-        <input type="text" id="product-category" name="product-category" required>
-        <br>
-        <label for="product-quantity">Product Quantity:</label>
-        <br>
-        <input type="number" id="product-quantity" name="product-quantity" required>
-        <br>
-        <label for="product-desc">Product Description:</label>
-        <br>
-        <input type="text" id="product-desc" name="product-desc" required>
-        <br><br>
-        <button type="submit">ADD</button>
-    </form>
-</div>
-
-<!------------------------------ Remove Product Modal ------------------------------>
-<div id="remove-product-modal" class="modal">
-    <a class="close-button" onclick="closeModal('remove-product-modal')">&#x2613</a>
-    <h2>Remove Product</h2>
-    <form id="remove-product-form" action="/remove-product" method="post">
-        <label for="storeID-remove">Store ID:</label>
-        <br>
-        <input type="text" id="storeID-remove" name="storeID_remove" required>
-        <br>
-        <label for="productID-remove">Product ID:</label>
-        <br>
-        <input type="text" id="productID-remove" name="productID-remove" required>
-        <br><br>
-        <button type="submit">REMOVE</button>
-    </form>
-</div>
-
-<!------------------------------ Update Product Modal ------------------------------>
-<div id="update-product-modal" class="modal">
-    <a class="close-button" onclick="closeModal('update-product-modal')">&#x2613;</a>
-    <h2>Update Product:</h2>
-    <form id="update-product-form" action="/update-product" method="post">
-        <label for="storeID-update">Store ID:</label>
-        <br>
-        <input type="text" id="storeID-update" name="storeID-update" required>
-        <br>
-        <label for="productID-update">Product ID:</label>
-        <br>
-        <input type="text" id="productID-update" name="productID-update" required>
-        <br>
-        <label for="productName-update">Product Name:</label>
-        <br>
-        <input type="text" id="productName-update" name="productName-update">
-        <br>
-        <label for="price-update">Price:</label>
-        <br>
-        <input type="text" id="price-update" name="price-update">
-        <br>
-        <label for="quantity-update">Quantity:</label>
-        <br>
-        <input type="number" id="quantity-update" name="quantity-update">
-        <br>
-        <label for="category-update">Category:</label>
-        <br>
-        <input type="text" id="category-update" name="category-update">
-        <br>
-        <label for="description-update">Description:</label>
-        <br>
-        <textarea style="background-color: transparent; width: 200px" id="description-update"
-                  name="description-update"></textarea>
-        <br><br>
-        <button type="submit">UPDATE</button>
-    </form>
-</div>
-
-<!------------------------------ Purchase History Modal ------------------------------>
-<<div id="purchase-history-modal" class="modal">
-    <a class="close-button" onclick="closeModal('purchase-history-modal')">&#x2613;</a>
-    <h2>Purchase History:</h2>
-    <form id="purchase-history-form" action="/purchase-history" method="post">
-        <label for="storeID-purchase">Store ID:</label>
-        <br>
-        <input type="text" id="storeID-purchase" name="storeID-purchase" required>
-        <br><br>
-        <button type="submit" onclick="openModal('show-purchase-history-modal')">SHOW HISTORY</button>
-    </form>
-</div>
-
-<div id="show-purchase-history-modal" class="modal">
-    <a class="close-button" onclick="closeModal('show-purchase-history-modal')">&#x2613;</a>
-    <h2 th:text="${purchaseHistory}">Purchase History:</h2>
-    <div th:unless="${purchaseHistory}">
-        <p>No purchase history available.</p>
-    </div>
-</div>
-<!------------------------------ Close Store Modal ------------------------------>
-<div id="close-store-modal" class="modal">
-    <a class="close-button" onclick="closeModal('close-store-modal')">&#x2613</a>
-    <h2>Close Store:</h2>
-    <form id="close-store-form" action="/close-store" method="post">
-        <label for="closeStore">Choose:</label>
-        <br>
-        <select id="closeStore" name="closeStore" required>
-            <option value="readwrite">CLOSE</option>
-            <option value="readwrite">PERMANENTLY CLOSE</option>
-        </select>
-        <br>
-        <label for="storeID-close">Store ID:</label>
-        <br>
-        <input type="text" id="storeID-close" name="storeID-close" required>
-        <br><br>
-        <button type="submit">CLOSE STORE</button>
-    </form>
-</div>
-
-<!------------------------------ Employee Info Modal ------------------------------>
-<div id="employee-info-modal" class="modal">
-    <a class="close-button" onclick="closeModal('employee-info-modal')">&#x2613;</a>
-    <h2>Employee Info:</h2>
-    <form id="employee-info-form" action="/employee-info" method="post">
-        <label for="storeID-employee">Store ID:</label>
-        <br>
-        <input type="text" id="storeID-employee" name="storeID-employee" required>
-        <br><br>
-        <button type="submit" onclick="openModal('show-employee-info-modal');">SHOW INFO</button>
-    </form>
-    <article th:text="${employeeInfo}"></article>
-</div>
-
-<div id="show-employee-info-modal" class="modal">
-    <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613;</a>
-    <h2>Employee Info:</h2>
-    <p th:text="${employeeInfo}"></p>
-</div>
-
-<!------------------------------ Remove Employee Modal ------------------------------>
-<div id="remove-employee-modal" class="modal">
-    <a class="close-button" onclick="closeModal('remove-employee-modal')">&#x2613</a>
-    <h2>Remove Employee</h2>
-    <form id="remove-employee-form" action="/remove-employee" method="post">
-        <label for="storeID-remove-emp">Store ID:</label>
-        <br>
-        <input type="text" id="storeID-remove-emp" name="storeID-remove-emp" required>
-        <br>
-        <label for="username-remove-emp">User Name:</label>
-        <br>
-        <input type="text" id="username-remove-emp" name="username-remove-emp" required>
-        <br><br>
-        <button type="submit">REMOVE</button>
-    </form>
-</div>
-
-<!------------------------------ Appoint Owner Modal ------------------------------>
-<div id="appoint-storeOwner-modal" class="modal">
-    <a class="close-button" onclick="closeModal('appoint-storeOwner-modal')">&#x2613;</a>
-    <h2>Appoint Store Owner:</h2>
-    <form id="appoint-storeOwner-form" action="/appoint-store-owner" method="post">
-        <label for="storeID-add-owner">Store ID:</label>
-        <br>
-        <input type="text" id="storeID-add-owner" name="storeID-add-owner" required>
-        <br>
-        <label for="owner-name-add">Owner Name:</label>
-        <br>
-        <input type="text" id="owner-name-add" name="owner-name-add" required>
-        <br><br>
-        <button type="submit">APPOINT</button>
-    </form>
-</div>
-
-<!------------------------------ Appoint Manager Modal ------------------------------>
-<div id="appoint-storeManager-modal" class="modal">
-    <a class="close-button" onclick="closeModal('appoint-storeManager-modal')">&#x2613;</a>
-    <h2>Appoint Store Manager:</h2>
-    <form id="appoint-storeManager-form" action="/appoint-store-manager" method="post">
-        <label for="storeID-add-manager">Store ID:</label>
-        <br>
-        <input type="text" id="storeID-add-manager" name="storeID-add-manager" required>
-        <br>
-        <label for="manager-name-add">Manager Name:</label>
-        <br>
-        <input type="text" id="manager-name-add" name="manager-name-add" required>
-        <br><br>
-        <button type="submit">APPOINT</button>
-    </form>
-</div>
-
-<!------------------------------ Change Permissions Modal ------------------------------>
-<div id="change-permissions-modal" class="modal">
-    <a class="close-button" onclick="closeModal('change-permissions-modal')">&#x2613</a>
-    <h2>Change Permissions:</h2>
-    <form id="change-permissions-form" action="/change-permission" method="post">
-        <label for="manager-name">Manager Name:</label><br>
-        <input type="text" id="manager-name" name="manager-name" required><br>
-        <label for="store-id">Store ID:</label><br>
-        <input type="text" id="store-id" name="store-id" required><br>
-        <label for="permission">Permission:</label><br>
-        <select id="permission" name="permission" required multiple size="11">
-            <option value="CanManageStock">CanManageStock</option>
-            <option value="CanChangePolicyAndDiscounts">CanChangePolicyAndDiscounts</option>
-            <option value="CanSetConstraints">CanSetConstraints</option>
-            <option value="CanAppointStoreOwner">CanAppointStoreOwner</option>
-            <option value="CanRemoveStoreOwner">CanRemoveStoreOwner</option>
-            <option value="CanAppointStoreManager">CanAppointStoreManager</option>
-            <option value="CanChangePermissionsForStoreManager">CanChangePermissionsForStoreManager</option>
-            <option value="CanRemoveStoreManager">CanRemoveStoreManager</option>
-            <option value="CanSeeStaffAndPermissions">CanSeeStaffAndPermissions</option>
-            <option value="CanSeeCommentsAndRating">CanSeeCommentsAndRating</option>
-            <option value="CanSeePurchaseHistory">CanSeePurchaseHistory</option>
-        </select><br><br>
-        <button type="submit">CHANGE</button>
-    </form>
-</div>
-
-<!------------------------------ Open New Store Modal ------------------------------>
-<div id="new-store-modal" class="modal">
-    <a class="close-button" onclick="closeModal('new-store-modal')">&#x2613</a>
-    <h2>Open New Store</h2>
-    <p>You can open a new store and manage its details.</p>
-    <form action="/openStore" method="post">
-        <label for="store-name">Store Name:</label>
-        <input type="text" id="store-name" name="store-name" placeholder="Enter store name" required>
-        <br><br>
-        <button style="padding: 6px;" type="submit">Add Store</button>
-    </form>
-</div>
-
-<script>
     var alertElement = document.getElementById("alert");
 
     // Set the timeout to close the alert after 4 seconds (4000 milliseconds)
-    setTimeout(function () {
+    setTimeout(function() {
         alertElement.style.display = "none";
-    }, 2500);
-</script>
-
-<script th:inline="javascript">
-    function toggleDropdown() {
-        var dropdownContent = document.getElementById("appointment-requests");
-        dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
-    }
-
-    function updateDropdown(element) {
-        var listItem = element.parentNode;
-        var dropdown = document.getElementById("appointment-requests");
-        dropdown.removeChild(listItem);
-
-        // Toggle dropdown visibility if there are no more appointment requests
-        var requests = dropdown.getElementsByTagName("li");
-        if (requests.length === 0) {
-            toggleDropdown();
-        }
-    }
+    }, 1500);
 </script>
 </body>
 </html>

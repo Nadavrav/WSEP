@@ -5,6 +5,7 @@ import DomainLayer.Users.Permission;
 import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceBid;
 import ServiceLayer.ServiceObjects.ServiceCart;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceAppliedDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
@@ -262,6 +263,52 @@ public class Server {
         return getSession(request).getAppointmentRequests();
     }
 
+    public Response<ServiceBid> addNewBid(HttpServletRequest request, int productId, int storeId, int amount, int newPrice){
+        return getSession(request).addNewBid(productId, storeId, amount, newPrice);
+    }
 
+    public Response<ServiceBid> counterOfferBid(HttpServletRequest request, int productId, int storeId, String userName, double newPrice, String message){
+        return getSession(request).counterOfferBid(productId, storeId, userName, newPrice, message);
+    }
+
+    public Response<?> acceptCounterOffer(HttpServletRequest request, int productId, int storeId){
+        return getSession(request).acceptCounterOffer(productId, storeId);
+    }
+
+    public Response<?> rejectCounterOffer(HttpServletRequest request, int productId){
+        return getSession(request).rejectCounterOffer(productId);
+    }
+
+    public Response<?> voteOnBid(HttpServletRequest request, int productId,int storeId,String userName,boolean vote){
+        return getSession(request).voteOnBid(productId, storeId, userName, vote);
+    }
+
+    public Response<Collection<ServiceBid>> geStoreBids(HttpServletRequest request, int storeId){
+        return getSession(request).geStoreBids(storeId);
+    }
+
+    public Response<Collection<ServiceBid>> getUserBids(HttpServletRequest request){
+        return getSession(request).getUserBids();
+    }
+
+    public Response<Map<Date,Integer>> getVisitorsAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+        return getSession(request).getVisitorsAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
+    }
+
+    public Response<Map<Date,Integer>> getUsersWithoutStoresAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
+        return getSession(request).getUsersWithoutStoresAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
+    }
+
+    public Response<Map<Date,Integer>> getStoreManagersOnlyAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
+        return getSession(request).getStoreManagersOnlyAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
+    }
+
+    public Response<Map<Date,Integer>> getStoreOwnersAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
+        return getSession(request).getStoreOwnersAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
+    }
+
+    public Response<Map<Date,Integer>> getAdminsAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
+        return getSession(request).getAdminsAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
+    }
 }
 

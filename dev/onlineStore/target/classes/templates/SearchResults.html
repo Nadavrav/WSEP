@@ -91,24 +91,32 @@
         }
 
         .comment-button {
-            padding: 0;
-            position: absolute;
-            top: 0px;
-            right: 0px;
+            /*position: relative;*/
+            /*top: 0px;*/
+            /*right: 0px;*/
+            /*background-color: transparent;*/
+            /*border: none;*/
+            /*font-size: 24px;*/
+            /*cursor: pointer;*/
             background-color: transparent;
             border: none;
-            font-size: 24px;
-            cursor: pointer;
+            padding: 4px;
+            margin-right: 64px;
+            font-size: inherit; /* Add this to inherit font size */
         }
 
         form {
+            display: inline-block; /* Change display to inline-block */
+            /*margin-right: 10px;*/
             display: flex;
             align-items: center;
             margin-top: 0px;
         }
 
         form input[type="number"] {
-            width: 30px;
+            /*width: 130px;*/
+            /*margin-top: 5px;*/
+            /*width: 30px;*/
             /*margin-right: 0px;*/
         }
 
@@ -174,7 +182,7 @@
 		        </span>
 
                 <span class="dropdown">
-                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
+                    <button style="background-color: transparent; border: none;" onclick="toggleDropdown()">APPOINTMENT REQUESTS</button>
                     <div class="dropdown-content" id="appointment-requests">
                         <ul>
                             <p th:if="${appointmentRequests == null or appointmentRequests.isEmpty()}">No appointment requests</p>
@@ -295,34 +303,44 @@
                                 <span th:text="${product.getDescription()}"></span>
                             </p>
 
-                            <form action="/add-to-cart" method="post">
-                                <input type="hidden" name="storeId" th:value="${serviceStore.getStoreId()}"/>
-                                <input type="hidden" name="productId" th:value="${product.getId()}"/>
-                                <span>Quantity: </span>
-                                <input style="width: 40px;" type="number" name="quantity" value="1" min="1" required/>
-                                <button class="comment-button" style="background-color: transparent;border: none;"
-                                        type="submit">
-                                    <svg width="80" height="20" fill="currentColor" class="bi bi-bag-plus"
-                                         viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd"
-                                              d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/>
-                                        <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
-                                    </svg>
-                                </button>
-                            </form>
+                            <div style="display: flex;flex-direction: row;">
+                                <form action="/add-to-cart" method="post">
+                                    <input type="hidden" name="storeId" th:value="${serviceStore.getStoreId()}"/>
+                                    <input type="hidden" name="productId" th:value="${product.getId()}"/>
+<!--                                    <span>Quantity: </span>-->
+                                    <input style="width: 40px;" type="number" name="quantity" value="1" min="1" required/>
+                                    <button class="comment-button" style="background-color: transparent;border: none;" type="submit">
+                                        <svg width="20" height="20" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z"/>
+                                            <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+                                        </svg>
+                                    </button>
+                                </form>
 
-                            <form action="/CommentsAndRatings" method="get">
-                                <input type="hidden" name="storeId" th:value="${serviceStore.getStoreId()}"/>
-                                <input type="hidden" name="productId" th:value="${product.getId()}"/>
-                                <button class="comment-button" style="background-color: transparent;border: none;"
-                                        type="submit">
-                                    <svg width="20" height="20" fill="currentColor" class="bi bi-chat-dots"
-                                         viewBox="0 0 16 16">
-                                        <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                        <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"/>
-                                    </svg>
-                                </button>
-                            </form>
+                                <form action="/CommentsAndRatings" method="get">
+                                    <input type="hidden" name="storeId" th:value="${serviceStore.getStoreId()}"/>
+                                    <input type="hidden" name="productId" th:value="${product.getId()}"/>
+                                    <button class="comment-button" style="background-color: transparent;border: none;" type="submit">
+                                        <svg width="20" height="20" fill="currentColor" class="bi bi-chat-dots" viewBox="0 0 16 16">
+                                            <path d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                            <path d="m2.165 15.803.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+
+                                <form action="/add-bid" method="post">
+                                    <input type="hidden" name="storeId" th:value="${serviceStore.getStoreId()}"/>
+                                    <input type="hidden" name="productId" th:value="${product.getId()}"/>
+                                    <input type="number" name="amount" style="width: 76px;margin: 2px;" min="0" placeholder="amount"/>
+                                    <input type="number" name="newPrice" style="width: 85px;margin: 2px;" min="0" placeholder="newPrice"/>
+                                    <button class="comment-button" style="background-color: transparent;border: none;" type="submit">
+                                        <svg width="20" height="20" fill="currentColor" class="bi bi-bootstrap" viewBox="0 0 16 16">
+                                            <path d="M5.062 12h3.475c1.804 0 2.888-.908 2.888-2.396 0-1.102-.761-1.916-1.904-2.034v-.1c.832-.14 1.482-.93 1.482-1.816 0-1.3-.955-2.11-2.542-2.11H5.062V12zm1.313-4.875V4.658h1.78c.973 0 1.542.457 1.542 1.237 0 .802-.604 1.23-1.764 1.23H6.375zm0 3.762V8.162h1.822c1.236 0 1.887.463 1.887 1.348 0 .896-.627 1.377-1.811 1.377H6.375z"/>
+                                            <path d="M0 4a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4V4zm4-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V4a3 3 0 0 0-3-3H4z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -337,7 +355,7 @@
     // Set the timeout to close the alert after 4 seconds (4000 milliseconds)
     setTimeout(function () {
         alertElement.style.display = "none";
-    }, 2500);
+    }, 2000);
 </script>
 <script th:inline="javascript">
     function toggleDropdown() {

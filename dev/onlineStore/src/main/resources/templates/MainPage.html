@@ -202,6 +202,31 @@
                     </div>
                 </span>
 
+                <span class="dropdown">
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdownBid()">USER BID REQUESTS</button>
+                    <div class="dropdown-content" id="bid-requests">
+                        <ul>
+                            <p th:if="${bidUserRequests == null or bidUserRequests.isEmpty()}">No bid requests</p>
+                            <th:block th:each="bid : ${bidUserRequests}">
+                                <ul>
+                                    <span th:text="'For product ' + ${bid.getProduct().getName()} + ', the store offers you a price ' + ${bid.getNewPrice()}"></span>
+                                    <form th:action="@{/acceptUserBid}" method="post">
+                                        <input type="hidden" name="productId" th:value="${bid.getProductId()}">
+                                        <input type="hidden" name="storeId" th:value="${bid.getStoreId()}">
+                                        <button type="submit" onclick="updateBidDropdown(this)">Accept</button>
+                                        </form>
+                                    <form th:action="@{/declineUserBid}" method="post">
+                                        <input type="hidden" name="productId" th:value="${bid.getProductId()}">
+                                        <input type="hidden" name="storeId" th:value="${bid.getStoreId()}">
+                                        <button type="submit" onclick="updateBidDropdown(this)">Decline</button>
+                                    </form>
+                                </ul>
+                            </th:block>
+                        </ul>
+                    </div>
+                </span>
+
+
             </span>
 
             <span th:if="!${logged}">
@@ -233,8 +258,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
         crossorigin="anonymous"></script>
-
-<!--// ------------------------------------ Head Buttons --------------------------------------//-->
 
 <!--// ------------------------------------ Login Modal --------------------------------------//-->
 <div class="modal" id="modalLogin">
@@ -375,7 +398,7 @@
     // Set the timeout to close the alert after 4 seconds (4000 milliseconds)
     setTimeout(function() {
         alertElement.style.display = "none";
-    }, 2500);
+    }, 1500);
 
     function showErrorModal(errorMessage) {
         var errorModal = document.getElementById("modalError");
@@ -395,6 +418,24 @@
             closeModal();
         }
     };
+
+    //bid
+    function toggleDropdownBid() {
+        var dropdownContentBid = document.getElementById("bid-requests");
+        dropdownContentBid.style.display = dropdownContentBid.style.display === "none" ? "block" : "none";
+    }
+
+    function updateBidDropdown(element) {
+        var bidListItem = element.parentNode;
+        var dropdownBid = document.getElementById("bid-requests");
+        dropdownBid.removeChild(bidListItem);
+
+        // Toggle dropdown visibility if there are no more appointment requests
+        var bidRequests = dropdownBid.getElementsByTagName("li");
+        if (bidRequests.length === 0) {
+            toggleDropdown();
+        }
+    }
 </script>
 
 <script th:inline="javascript">
