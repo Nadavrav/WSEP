@@ -42,6 +42,7 @@
             border-radius: 6px;
             text-decoration: none;
             margin-right: 10px;
+            margin-bottom: 10px;
         }
 
         /* Modal Styles */
@@ -215,6 +216,11 @@
     <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('offline-users-modal')">Offline Users</a>
     <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('daily-income-modal')">Daily Income</a>
     <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('daily-income-store-modal')">Daily Income For Store</a>s
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('VisitorsAmountBetweenDates-modal')">Visitors Amount Between Dates</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('UsersWithoutStoresAmountBetweenDates-modal')">Users Without Stores Amount BetweenDates</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('StoreManagersOnlyAmountBetweenDates-modal')">Store Managers Only Amount Between Dates</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('StoreOwnersAmountBetweenDates-modal')">Store Owners Amount Between Dates</a>
+    <a style="background-color: rgba(255,255,255,0.4);" class="button" onclick="openModal('AdminsAmountBetweenDates-modal')">Admins Amount Between Dates</a>
 </div>
 
 <script>
@@ -236,6 +242,157 @@
         currentModal = null;
     }
 </script>
+<!--// ------------------------------------ VisitorsAmountBetweenDates Modal --------------------------------------//-->
+<div id="VisitorsAmountBetweenDates-modal" class="modal">
+    <a class="close-button" onclick="closeModal('VisitorsAmountBetweenDates-modal')">&#x2613</a>
+    <form action="/VisitorsAmountBetweenDates" method="post">
+        <label for="date">Start Date:</label>
+        <input type="date" name="startDate" required>
+        <br><br>
+        <label for="date">End Date:</label>
+        <input type="date" name="endDate" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>Visitors Amount:</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${visitorsAmount}">
+                <td th:text="${entry.key}"></td>
+                <td th:text="${entry.value}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--// ------------------------------------ UsersWithoutStoresAmountBetweenDates Modal --------------------------------------//-->
+<div id="UsersWithoutStoresAmountBetweenDates-modal" class="modal">
+    <a class="close-button" onclick="closeModal('UsersWithoutStoresAmountBetweenDates-modal')">&#x2613</a>
+    <form action="/UsersWithoutStoresAmountBetweenDates" method="post">
+        <label for="date">Start Date:</label>
+        <input type="date" name="startDate" required>
+        <br><br>
+        <label for="date">End Date:</label>
+        <input type="date" name="endDate" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>Users Without Stores Amount:</h3>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+            <tr th:each="entry : ${usersWithoutStoresAmount}">
+                <td th:text="${entry.key}"></td>
+                <td th:text="${entry.value}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<!--// ------------------------------------ StoreManagersOnlyAmountBetweenDates Modal --------------------------------------//-->
+<div id="StoreManagersOnlyAmountBetweenDates-modal" class="modal">
+    <a class="close-button" onclick="closeModal('StoreManagersOnlyAmountBetweenDates-modal')">&#x2613</a>
+    <form action="/StoreManagersOnlyAmountBetweenDates" method="post">
+        <label for="date">Start Date:</label>
+        <input type="date" name="startDate" required>
+        <br><br>
+        <label for="date">End Date:</label>
+        <input type="date" name="endDate" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>Store Managers Only Amount:</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${storeManagersOnlyAmount}">
+                <td th:text="${entry.key}"></td>
+                <td th:text="${entry.value}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--// ------------------------------------ StoreOwnersAmountBetweenDates Modal --------------------------------------//-->
+<div id="StoreOwnersAmountBetweenDates-modal" class="modal">
+    <a class="close-button" onclick="closeModal('StoreOwnersAmountBetweenDates-modal')">&#x2613</a>
+    <form action="/StoreOwnersAmountBetweenDates" method="post">
+        <label for="date">Start Date:</label>
+        <input type="date" name="startDate" required>
+        <br><br>
+        <label for="date">End Date:</label>
+        <input type="date" name="endDate" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>Store Owners Amount:</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${storeOwnersAmount}">
+                <td th:text="${entry.key}"></td>
+                <td th:text="${entry.value}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--// ------------------------------------ AdminsAmountBetweenDates Modal --------------------------------------//-->
+<div id="AdminsAmountBetweenDates-modal" class="modal">
+    <a class="close-button" onclick="closeModal('AdminsAmountBetweenDates-modal')">&#x2613</a>
+    <form action="/AdminsAmountBetweenDates" method="post">
+        <label for="date">Start Date:</label>
+        <input type="date" name="startDate" required>
+        <br><br>
+        <label for="date">End Date:</label>
+        <input type="date" name="endDate" required>
+        <br><br>
+        <button type="submit">SHOW</button>
+    </form>
+    <br><br>
+    <div>
+        <h3>Admins Amount:</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="entry : ${adminsAmount}">
+                <td th:text="${entry.key}"></td>
+                <td th:text="${entry.value}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 <!--// ------------------------------------ DailyIncome Modal --------------------------------------//-->
 <div id="daily-income-modal" class="modal">
     <a class="close-button" onclick="closeModal('daily-income-modal')">&#x2613</a>
@@ -288,17 +445,8 @@
     <a class="close-button" onclick="closeModal('online-users-modal')">&#x2613</a>
     <div style="overflow-y: auto;">
         <table>
-            <tr>
-                <th>User Visitor ID</th>
-                <th>Is Online</th>
-            </tr>
             <tr th:each="user : ${onlineUsersInfo}">
-                <td><span th:text="${#strings.substring(user.userName, 13)}"></span></td>
-                <td>
-<!--                    <span th:text="${#strings.substring(user.info, 0, 10)}"></span><br/>-->
-<!--                    <span th:text="${#strings.substring(user.info, 10, 20)}"></span><br/>-->
-                    <span th:text="${#strings.substring(user.info, user.info.length()-4)}"></span>
-                </td>
+                <td><span th:text="${user.userName}"></span></td>
             </tr>
         </table>
     </div>

@@ -178,9 +178,16 @@
         <div>
             <input style="width: fit-content;" type="number" name="expirationMonth" placeholder="Expiration Month" min="1" max="12">
             <input style="width: fit-content;" type="number" name="expirationYear" placeholder="Expiration Year" min="2023" max="2050">
+            <input type="text" name="cvv" placeholder="CVV">
         </div>
-        <input type="text" name="address" placeholder="Address" required>
-        <input type="text" name="cvv" placeholder="CVV">
+        <div>
+            <input type="text" name="address" placeholder="Address" required>
+            <input type="text" name="zip" placeholder="ZIP">
+        </div>
+        <div>
+            <input type="text" name="city" placeholder="City" required>
+            <input type="text" name="country" placeholder="Country" required>
+        </div>
         <input type="submit" value="Buy Now" onclick="showThankYouMessage()">
     </form>
     <div id="thankYouMessage" style="display: none;">

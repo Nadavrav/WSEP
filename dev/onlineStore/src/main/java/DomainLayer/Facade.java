@@ -73,7 +73,7 @@ public class Facade {
 
     private DALService DS;
 
-    private Facade() {
+    private Facade(){
         try {
             DS = DALService.getInstance();
             Store.setStoreIdCounter(DS.getMaxStoreId());
@@ -89,8 +89,9 @@ public class Facade {
         storesList = new ConcurrentHashMap<>();
         employmentList = new ConcurrentHashMap<>();
         appointmentsRequests = new ConcurrentHashMap<>();
-        supplier= new Supplier();
-        paymentProvider= new PaymentProvider();
+        supplier= Supplier.getInstance();
+
+        paymentProvider= PaymentProvider.getInstance();
 
         siteVisitorsEntriesManager = new HashMap<>();
         nonWorkersEntriesManager = new HashMap<>();
@@ -338,7 +339,8 @@ public class Facade {
     public int enterNewSiteVisitor() throws Exception {//1.1
             SiteVisitor visitor = new SiteVisitor();
             onlineList.put(visitor.getVisitorId(), visitor);
-            increaseEntry(siteVisitorsEntriesManager);logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
+            increaseEntry(siteVisitorsEntriesManager);
+            logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
             return visitor.getVisitorId();
     }
     public boolean isLoggedIn(int visitorId) {
@@ -472,16 +474,15 @@ public class Facade {
 
     public void login(int visitorId, String userName, String password) throws Exception {//1.4
         //
-        DS = DALService.getInstance();
         RegisteredUser user;
-             user = registeredUserList.get(userName);
-            boolean b = registeredUserList.get("admin") != null;
-            if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
-                logger.warning("User IS NOT Entered in the system");
-                throw new Exception("Invalid Visitor ID");
-            }
-            if (user == null) {//check if he has account
-                registeredUserDTO userDTO = DS.getUser(userName);
+        user = registeredUserList.get(userName);
+        boolean b = registeredUserList.get("admin") != null;
+        if (!SiteVisitor.checkVisitorId(visitorId)) {//check if the user is entered to the system
+            logger.warning("User IS NOT Entered in the system");
+            throw new Exception("Invalid Visitor ID");
+        }
+        if (user == null) {//check if he has account
+            registeredUserDTO userDTO = DS.getUser(userName);
             if(userDTO != null) {
                 if(DS.isAdmin(userName)){
                     user = new Admin(userDTO);
@@ -495,12 +496,15 @@ public class Facade {
                 logger.warning("User is already have an account");
                 throw new Exception("UserName not Found");
             }
-            }
-            logger.info("User log in successfully");
-            user.login(password, visitorId);if(isOwner(user.getUserName())){
+        }
+        logger.info("User log in successfully");
+        user.login(password, visitorId);
+        onlineList.replace(visitorId, user);
+
+        if(isOwner(user.getUserName())){
             increaseEntry(storeOwnersEntriesManager);
         }
-        else if(isManager(user.getUserName())){
+        else if(isManagerButNotOwner(user.getUserName())){
             increaseEntry(managersOnlyEntriesManager);
         }
         else {
@@ -510,8 +514,8 @@ public class Facade {
         if(isAdmin(visitorId)){
             increaseEntry(adminsEntriesManager);
         }
-            onlineList.replace(visitorId, user);
-        }
+
+    }
 
     private boolean isOwner(String userName) {
         if(employmentList.get(userName) == null)
@@ -526,17 +530,21 @@ public class Facade {
         return false;
     }
 
-    private boolean isManager(String userName) {
+    private boolean isManagerButNotOwner(String userName) {
         if(employmentList.get(userName) == null)
         {
             return false;
         }
+        boolean isManager = false;
         for (Integer storeID:employmentList.get(userName).keySet()) {
             if(employmentList.get(userName).get(storeID).checkIfManager()){
-                return true;
+                isManager = true;
+            }
+            if(employmentList.get(userName).get(storeID).checkIfOwner()){
+                return false;
             }
         }
-        return false;
+        return isManager;
     }
 
     public int logout(int visitorId) throws Exception {//3.1
@@ -786,7 +794,7 @@ public class Facade {
               employmentList.get(appointedUserName).put(storeId, appointedEmployment);
               store.addNewListener(appointed);
               store.addNewOwnerListener(appointed);
-              store.documentOwner(appointed.getVisitorId());
+              store.documentOwner(appointed.getUserName());
               appointmentsRequests.get(storeId).remove(appointed);
               store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
               logger.fine("new store owner with name" + appointedUserName +" added successfully");
@@ -1055,7 +1063,17 @@ public class Facade {
         return output;
     }
 
-    public LinkedList<String> purchaseCart(int visitorID,int visitorCard,String address) throws Exception{
+    public LinkedList<String> purchaseCart(int visitorID,String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip) throws Exception{
+        if(!supplier.handShake()){
+
+            throw new Exception("supplier does not hand shake");
+
+        }
+        if(!paymentProvider.handShake()){
+
+            throw new Exception("payment provider does not handshake");
+        }
+
 
         //Validate visitorID
         SiteVisitor visitor = onlineList.get(visitorID);
@@ -1066,7 +1084,9 @@ public class Facade {
 
         LinkedList<String> failedPurchases = new LinkedList<>();
 
-        for(Bag b : visitor.getCart().getBags().values()) {
+        Cart c1 = visitor.getCart();
+        List<Bag> bags = c1.getBags().values().stream().toList();
+        for(Bag b : bags) {
 
             //Calculate amount
             double amount = b.calculateTotalAmount();
@@ -1085,34 +1105,32 @@ public class Facade {
                     failedPurchases.add(b.getStoreID().toString());
                 } else {
                     //Check if possible to create a supply
-                    if (!supplier.isValidAddress(address)) {
+                    if (supplier.supply(holder, address, city, country,zip).equals("-1")) {
                         logger.fine("we can avoid this supply");
                         failedPurchases.add(b.getStoreID().toString());
                     } else {
                         //Create a transaction for the store
-                        if (!paymentProvider.applyTransaction(amount, visitorCard)) {
+                        if (paymentProvider.pay(holder,visitorCard,expireDate,cvv,id).equals("-1")) {
                             failedPurchases.add(b.getStoreID().toString());
                         } else {
                             LinkedList<String> productsId = new LinkedList<>();
                             productsId.add(b.bagToString());
                             //Create a request to supply bag's product to customer
-                            if (!supplier.supplyProducts(productsId)) {
-                                failedPurchases.add(b.getStoreID().toString());
-                            } else {
-                                for (CartProduct p : b.getProducts()) {
-                                    s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
-                                }
-                                InstantPurchase p = new InstantPurchase(visitor, b, amount);
-                                if (visitor instanceof RegisteredUser) {
-                                    ((RegisteredUser) visitor).addPurchaseToHistory(p);
-                                    storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
-                                }
-                                else{
-                                    storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
-                                }
-                                storesList.get(b.getStoreID()).addToStoreHistory(p);
-                                visitor.removeBag(b.getStoreID());
+
+                            for (CartProduct p : b.getProducts()) {
+                                s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
                             }
+                            InstantPurchase p = new InstantPurchase(visitor, b, amount);
+                            if (visitor instanceof RegisteredUser) {
+                                ((RegisteredUser) visitor).addPurchaseToHistory(p);
+                                storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
+                            }
+                            else{
+                                storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
+                            }
+                            storesList.get(b.getStoreID()).addToStoreHistory(p);
+                            visitor.removeBag(b.getStoreID());
+
                         }
                     }
                 }
@@ -1216,7 +1234,7 @@ public class Facade {
         Store store = new Store(storeName);
         store.addNewListener((RegisteredUser)User);
         store.addNewOwnerListener((RegisteredUser)User);
-        store.documentOwner(User.getVisitorId());
+        store.documentOwner(((RegisteredUser) User).getUserName());
         DS.saveStore(store.getId(),store.getName(),store.getActive(),store.getRate());
         // add to store list
         storesList.put(store.getID(),store);
@@ -1290,7 +1308,7 @@ public class Facade {
             logger.warning(" employment is null");
             throw new Exception("there is no employee with this id ");
         }
-        if (employment.checkIfFounder()) {
+        if (employment.CanCloseStore()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
                 logger.warning(" store is null");
@@ -1930,8 +1948,14 @@ public class Facade {
         LinkedList <SiteVisitor> onlineusers = new LinkedList<>();
         for (SiteVisitor sv : onlineList.values())
         {
-            if(sv.getVisitorId()!=0)
-                onlineusers.add(sv);
+            if(sv.getVisitorId()!=0) {
+                if (sv instanceof RegisteredUser) {
+                    onlineusers.add((RegisteredUser) sv);
+                }
+                else {
+                    onlineusers.add(sv);
+                }
+            }
         }
         return onlineusers;
     }
@@ -2094,7 +2118,7 @@ public class Facade {
             employmentList.get(appointedUserName).put(storeID, appointedEmployment);
             store.addNewListener(appointed);
             store.addNewOwnerListener(appointed);
-            store.documentOwner(appointed.getVisitorId());
+            store.documentOwner(appointed.getUserName());
             appointmentsRequests.get(storeID).remove(appointed);
             store.notifyOwnersAboutNewAppointmentSucceed(appointedUserName);
             logger.fine("new store owner with name" + appointedUserName +" added successfully");
@@ -2221,19 +2245,27 @@ public class Facade {
 
     private boolean isBetweenDates(Date d, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
 
-        Date startDate =new Date(dayStart,monthStart,yearStart);
-        Date endDate = new Date(dayEnd,monthEnd,yearEnd);
+        Date startDate =new Date(yearStart-1900,monthStart-1,dayStart);
+        Date endDate = new Date(yearEnd-1900,monthEnd-1,dayEnd);
 
-        return d.after(startDate) && d.before(endDate);
+        return (d.after(startDate) || (areDatesEquals(d,startDate)) ) && (d.before(endDate) || (areDatesEquals(d,endDate)));
 
+    }
+
+    private boolean areDatesEquals(Date d1,Date d2){
+        return d1.getDate()==d2.getDate() && d1.getMonth()==d2.getMonth() && d1.getYear()==d2.getYear();
     }
 
     private void increaseEntry(Map<Date,Integer> entryMap){
         Date today = new Date();
-        if(entryMap.keySet().contains(today)){
-            entryMap.put(today,entryMap.get(today) + 1);
+        boolean foundToday = false;
+        for (Date d : entryMap.keySet()) {
+            if(areDatesEquals(d,today)){
+                entryMap.put(d,entryMap.get(d) + 1);
+                foundToday = true;
+            }
         }
-        else {
+        if(!foundToday){
             entryMap.put(today,1);
         }
     }
@@ -2348,7 +2380,7 @@ public class Facade {
             throw new Exception("Current user is not registered to system");
         }
         RegisteredUser user = (RegisteredUser)visitor;
-        return store.voteOnBid(user.getVisitorId(),productId,registeredUserList.get(userName),vote);
+        return store.voteOnBid(user.getUserName(),productId,registeredUserList.get(userName),vote);
 
     }
     public Bid counterOfferBid(int visitorId, int productId, int storeId, String userName,double newPrice,String message) throws Exception{
@@ -2389,7 +2421,7 @@ public class Facade {
         }
         ((RegisteredUser)visitor).acceptCounterOff(productId,store);
     }
-    public void rejectCounterOffer(int visitorId, int productId) throws Exception{
+    public void rejectCounterOffer(int visitorId, int productId,int storeId) throws Exception{
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){
             throw new Exception("Wrong visitorId");
@@ -2398,7 +2430,11 @@ public class Facade {
         {
             throw new Exception("Current user is not registered to system");
         }
-        ((RegisteredUser)visitor).rejectCounterOffer(productId);
+        Store store = storesList.get(storeId);
+        if(store == null){
+            throw new Exception("Wrong storeId");
+        }
+        ((RegisteredUser)visitor).rejectCounterOffer(productId,store);
     }
 
     public StoreProduct getProduct(int storeId, int productId) {

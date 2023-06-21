@@ -42,7 +42,8 @@ public class Service {
     private final Facade facade;
     private int visitorId;
 
-    public Service(){
+    public Service()  {
+
         facade = Facade.getInstance();
     }
 
@@ -492,9 +493,9 @@ public class Service {
         }
         return new Response<>("Success");
     }
-    public Response<List<String>> PurchaseCart(int visitorCard, String address){
+    public Response<List<String>> PurchaseCart(String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip){
         try{
-            return new Response<>(facade.purchaseCart(visitorId,visitorCard,address));
+            return new Response<>(facade.purchaseCart(visitorId,holder,visitorCard,expireDate,cvv,id, address, city,country, zip));
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -684,8 +685,14 @@ public class Service {
     {
         try {
             List<ServiceUser> serviceUsers = new ArrayList<>();
-            for (SiteVisitor sv : facade.getOnlineUsers())
-                serviceUsers.add(new ServiceUser(sv));
+            for (SiteVisitor sv : facade.getOnlineUsers()) {
+                if(sv instanceof RegisteredUser){
+                    serviceUsers.add(new ServiceUser(((RegisteredUser) sv).getUserName(),((RegisteredUser)sv).toString()));
+                }
+                else{
+                    serviceUsers.add(new ServiceUser(sv));
+                }
+            }
             Response<List<ServiceUser>> r = new Response(serviceUsers);
             return r;
         }
@@ -783,9 +790,9 @@ public class Service {
             return new Response<>(e.getMessage(),true);
         }
     }
-    public Response<?> rejectCounterOffer(int productId){
+    public Response<?> rejectCounterOffer(int productId,int storeId){
         try {
-            facade.rejectCounterOffer(visitorId,productId);
+            facade.rejectCounterOffer(visitorId,productId,storeId);
             return new Response<>("Bid rejected",false);
         }
         catch (Exception e)

@@ -120,6 +120,7 @@
             display: none;
             position: absolute;
             width: max-content;
+            height: max-content;
             padding: 12px;
             background-color: #f9f9f9;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
@@ -132,6 +133,16 @@
 
         .dropdown-item {
             cursor: pointer;
+        }
+
+        .button-group {
+            display: flex; /* Use flexbox to align buttons horizontally */
+            gap: 10px; /* Add some spacing between buttons */
+            margin-top: 5px;
+        }
+
+        .button-group button {
+            flex: 1; /* Distribute available space evenly among buttons */
         }
     </style>
 </head>
@@ -183,22 +194,78 @@
                                 <ul>
                                     <li th:each="owner : ${storeId.value}">
                                         <span th:text="${owner}"></span>
-                                        <form th:action="@{/acceptRequest}" method="post">
-                                            <input type="hidden" name="storeId" th:value="${storeId.key}">
-                                            <input type="hidden" name="owner" th:value="${owner}">
-                                            <button type="submit" onclick="updateDropdown(this)">Accept</button>
-                                        </form>
-                                        <form th:action="@{/declineRequest}" method="post">
-                                             <input type="hidden" name="storeId" th:value="${storeId.key}">
-                                            <input type="hidden" name="owner" th:value="${owner}">
-                                            <button type="submit" onclick="updateDropdown(this)">Decline</button>
-                                        </form>
+                                        <div class="button-group">
+                                            <form th:action="@{/acceptRequest}" method="post">
+                                                <input type="hidden" name="storeId" th:value="${storeId.key}">
+                                                <input type="hidden" name="owner" th:value="${owner}">
+                                                <button style="background-color: green" type="submit" onclick="updateDropdown(this)">Accept</button>
+                                            </form>
+                                            <form th:action="@{/declineRequest}" method="post">
+                                                <input type="hidden" name="storeId" th:value="${storeId.key}">
+                                                <input type="hidden" name="owner" th:value="${owner}">
+                                                <button style="background-color: darkred" type="submit" onclick="updateDropdown(this)">Decline</button>
+                                            </form>
+                                        </div>
                                     </li>
                                 </ul>
                             </li>
                         </ul>
                     </div>
                 </span>
+
+                <span class="dropdown">
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdownBid()">BID REQUESTS</button>
+                    <div class="dropdown-content" id="bid-requests">
+                        <ul>
+                            <p th:if="${bidRequests == null or bidRequests.isEmpty()}">No bid requests</p>
+                            <th:block th:each="bid : ${bidRequests}">
+                            <ul>
+                                <span th:text="'For product ' + ${bid.getProduct().getName()} + ' with ID ' + ${bid.getProductId()} + ', there is a price offer for ' + ${bid.getNewPrice()}"></span>
+                                <div class="button-group">
+                                    <form th:action="@{/acceptBid}" method="post">
+                                        <input type="hidden" name="productId" th:value="${bid.getProductId()}">
+                                        <input type="hidden" name="userName" th:value="${bid.getUserName()}">
+                                        <button style="background-color: green" type="submit">Accept</button>
+                                    </form>
+                                    <form th:action="@{/declineBid}" method="post">
+                                        <input type="hidden" name="productId" th:value="${bid.getProductId()}">
+                                        <input type="hidden" name="userName" th:value="${bid.getUserName()}">
+                                        <button style="background-color: darkred" type="submit">Decline</button>
+                                    </form>
+                                    <form th:action="@{/counterOfferBid}" method="post">
+                                        <input type="hidden" name="productId" th:value="${bid.getProductId()}">
+                                        <input type="hidden" name="userName" th:value="${bid.getUserName()}">
+                                        <input style="width: max-content;" type="number" name="newPrice" placeholder="Offer new price to user" required>
+                                        <input style="width: max-content;" type="text" name="message" placeholder="Message to user" required>
+                                        <button type="submit">Offer Bid</button>
+                                    </form>
+                                </div>
+                            </ul>
+                            </th:block>
+                        </ul>
+                    </div>
+                </span>
+
+                <span class="dropdown">
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">PURCHASE HISTORY</button>
+                    <div class="dropdown-content" id="purchase-history">
+                        <ul>
+                            <p th:if="${purchaseHistory == null or purchaseHistory.isEmpty()}">No purchase history available.</p>
+                            <li th:each="purchase : ${purchaseHistory}" th:text="${purchase}"></li>
+                        </ul>
+                    </div>
+                </span>
+
+                <span class="dropdown">
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">EMPLOYEE INFO</button>
+                    <div class="dropdown-content" id="employee-info">
+                        <ul>
+                            <p th:if="${employeeInfo == null}">No employee information available.</p>
+                            <li th:text="${employeeInfo}"></li>
+                        </ul>
+                    </div>
+                </span>
+
             </span>
 
             <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">
@@ -712,6 +779,24 @@
         // Toggle dropdown visibility if there are no more appointment requests
         var requests = dropdown.getElementsByTagName("li");
         if (requests.length === 0) {
+            toggleDropdown();
+        }
+    }
+
+    //bid
+    function toggleDropdownBid() {
+        var dropdownContentBid = document.getElementById("bid-requests");
+        dropdownContentBid.style.display = dropdownContentBid.style.display === "none" ? "block" : "none";
+    }
+
+    function updateBidDropdown(element) {
+        var bidListItem = element.parentNode;
+        var dropdownBid = document.getElementById("bid-requests");
+        dropdownBid.removeChild(bidListItem);
+
+        // Toggle dropdown visibility if there are no more appointment requests
+        var bidRequests = dropdownBid.getElementsByTagName("li");
+        if (bidRequests.length === 0) {
             toggleDropdown();
         }
     }

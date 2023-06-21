@@ -6,6 +6,7 @@ import ServiceLayer.ServiceObjects.Fiters.ProductFilters.*;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.NameStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.RatingStoreFilter;
 import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
+import ServiceLayer.ServiceObjects.ServiceBid;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
@@ -55,6 +56,9 @@ public class SearchResultsController {
                              @RequestParam(value = "store_rate", defaultValue = "-1") String storeRateStr,
                              Model model) {
 
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("name", server.getUsername(request));
         String keyword = parseOrDefaultS(keywordStr, "");
         String productName = parseOrDefaultS(productNameStr, "");
         String storeName = parseOrDefaultS(storeNameStr, "");
@@ -121,6 +125,9 @@ public class SearchResultsController {
                             @RequestParam("quantity") int quantity,
                             Model model) {
 
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("name", server.getUsername(request));
         Response<?> response = server.addProductToCart(request,productId, storeId, quantity);
         if (response.isError()) {
             alert.setFail(true);
@@ -135,4 +142,31 @@ public class SearchResultsController {
         alert.reset();
         return "SearchResults";
     }
+
+    @PostMapping("/add-bid")
+    public String addBid(HttpServletRequest request,
+                         @RequestParam("storeId") int storeId,
+                         @RequestParam("productId") int productId,
+                         @RequestParam("amount") int amount,
+                         @RequestParam("newPrice") int newPrice,
+                         Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("name", server.getUsername(request));
+        Response<ServiceBid> response = server.addNewBid(request, productId, storeId, amount, newPrice);
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            System.out.println("added new bid successfully. new price: " + newPrice);
+            alert.setSuccess(true);
+            alert.setMessage("PBid Success");
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "SearchResults";
+    }
+
 }
