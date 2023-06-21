@@ -275,8 +275,8 @@ public class Server {
         return getSession(request).acceptCounterOffer(productId, storeId);
     }
 
-    public Response<?> rejectCounterOffer(HttpServletRequest request, int productId,int storeId){
-        return getSession(request).rejectCounterOffer(productId,storeId);
+    public Response<?> rejectCounterOffer(HttpServletRequest request, int productId, int storeId){
+        return getSession(request).rejectCounterOffer(productId, storeId);
     }
 
     public Response<?> voteOnBid(HttpServletRequest request, int productId,int storeId,String userName,boolean vote){

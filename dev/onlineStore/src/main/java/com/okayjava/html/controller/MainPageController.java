@@ -244,9 +244,10 @@ public class MainPageController {
 
     @PostMapping("/declineUserBid")
     public String declineUserBid(@RequestParam("productId") int productId,
+                                 @RequestParam("storeId") int storeId,
                                  Model model) {
 
-        Response<?> response = server.rejectCounterOffer(request, productId,storeId);
+        Response<?> response = server.rejectCounterOffer(request, productId, storeId);
         if (response.isError()) {
             System.out.println("error in decline user bid");
             alert.setFail(true);
