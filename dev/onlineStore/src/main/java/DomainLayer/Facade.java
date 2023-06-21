@@ -439,13 +439,13 @@ public class Facade {
         // create new register user
         logger.info("new visitor has register");
         RegisteredUser r = new RegisteredUser(userName, password);
-        //onlineList.replace(visitorId,r);
-        registeredUserList.put(userName, r);
 
         //Save into Db
         DS.saveUser(r.getUserName(),r.getPassword());
         //End save
 
+        //onlineList.replace(visitorId,r);
+        registeredUserList.put(userName, r);
         registeredUserList.get(userName).update("Registered to Site");
     }
 

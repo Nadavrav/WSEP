@@ -24,6 +24,18 @@ public class EmploymentEntity {
     @Column(name = "permissions")
     private String permissions;
 
+    public EmploymentEntity(String employee,int storeId, String appointer,int role, String permissions)
+    {
+        this.employee = employee;
+        this.storeId = storeId;
+        this.appointer = appointer;
+        this.role = role;
+        this.permissions = permissions;
+    }
+    public EmploymentEntity(){
+
+    }
+
     public String getEmployee() {
         return employee;
     }
