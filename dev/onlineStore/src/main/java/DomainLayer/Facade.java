@@ -721,7 +721,7 @@ public class Facade {
           store.notifyOwnersAboutNewEmploymentRequests(((RegisteredUser) appointer).getUserName(),appointedUserName);
 
           if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
-              appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+              appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store.getID(), Role.StoreOwner);
               if (employmentList.get(appointedUserName) == null) {
                   Map<Integer, Employment> newEmploymentMap = new HashMap<>();
                   employmentList.put(appointedUserName, newEmploymentMap);
@@ -793,7 +793,7 @@ public class Facade {
             throw  new Exception("appointedUserName is already owner or manager of store Id");
         }
         //add appointedUserName as store manager
-        appointedEmployment = new Employment((RegisteredUser) appointer,appointed,store,Role.StoreManager);
+        appointedEmployment = new Employment((RegisteredUser) appointer,appointed,store.getID(),Role.StoreManager);
         if(employmentList.get(appointedUserName)== null) {
             Map<Integer, Employment> newEmploymentMap = new HashMap<>();
             employmentList.put(appointedUserName, newEmploymentMap);
@@ -1165,7 +1165,7 @@ public class Facade {
         // add to store list
         storesList.put(store.getID(),store);
         //new Employment
-        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreFounder);
+        Employment employment = new Employment((RegisteredUser) User,store.getID(),Role.StoreFounder);
         logger.config("adding new employment to the new store ");
         // andd to employment list
         if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
@@ -2022,7 +2022,7 @@ public class Facade {
         //If all store owners accepted, create new employment
         Store store = storesList.get(storeID);
         if(checkIfAllOwnersAgreedOnEmploymentRequest(storeID,appointedUserName)){
-            Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+            Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store.getID(), Role.StoreOwner);
             if (employmentList.get(appointedUserName) == null) {
                 Map<Integer, Employment> newEmploymentMap = new HashMap<>();
                 employmentList.put(appointedUserName, newEmploymentMap);

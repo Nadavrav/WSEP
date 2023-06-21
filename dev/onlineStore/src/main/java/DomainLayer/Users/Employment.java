@@ -12,14 +12,14 @@ import java.util.logging.SimpleFormatter;
 public class Employment {
     private RegisteredUser appointer;
     private RegisteredUser employee;
-    private Store store;
+    private int storeID;
     private Role role;
     private LinkedList<Permission> permissions;
     private static final Logger logger=Logger.getLogger("Employment logger");
 
 
 
-     public Employment (RegisteredUser appointer, RegisteredUser employee, Store store, Role role){
+     public Employment (RegisteredUser appointer, RegisteredUser employee, int storeID, Role role){
        try{
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
@@ -28,7 +28,7 @@ public class Employment {
         }
             this.appointer=appointer;
             this.employee=employee;
-            this.store=store;
+            this.storeID=storeID;
             this.role=role;
             permissions = new LinkedList<>();
 
@@ -43,7 +43,7 @@ public class Employment {
             }
     }
 
-    public Employment ( RegisteredUser employee, Store store, Role role){
+    public Employment ( RegisteredUser employee, int storeID, Role role){
         try{
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
@@ -52,7 +52,7 @@ public class Employment {
         }
         this.appointer = null;
         this.employee = employee;
-        this.store = store;
+        this.storeID = storeID;
         this.role = role;
         permissions = new LinkedList<>();
 
@@ -71,8 +71,8 @@ public class Employment {
         return employee;
     }
 
-    public Store getStore() {
-        return store;
+    public int getStore() {
+        return storeID;
     }
 
     public Role getRole() {
