@@ -210,4 +210,14 @@ public class DALService {
             throw new SQLException("SQL fail in getStores");
         }
     }
+
+    public void saveProduct(int productId,int storeId,String productName, Double price, int quantity, String category, String desc,double avgRating) throws SQLException {
+        try{
+            storeProductDAO.saveProduct(productId,storeId,productName,price,category,desc,quantity,avgRating);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
+        }
+    }
 }

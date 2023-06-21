@@ -19,9 +19,9 @@ public class StoreProductDAO {
         this.sessionFactory = sf;
     }
 
-    public void saveProduct(int productId, int storeId, String name, double price, String category, String desc, double avgRating) throws SQLException {
+    public void saveProduct(int productId, int storeId, String name, double price, String category, String desc,int quantity, double avgRating) throws SQLException {
         Session session = sessionFactory.openSession();
-        try {
+        try {    //TODO: quantity MISSING FROM DB, UPDATE WHEN ITS ADDED
             StoreproductEntity storeproductEntity = new StoreproductEntity(productId, storeId, name, price,  category,  desc,avgRating);
             session.beginTransaction();
             session.save(storeproductEntity);

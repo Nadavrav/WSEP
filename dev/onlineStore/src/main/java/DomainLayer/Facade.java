@@ -1199,7 +1199,6 @@ public class Facade {
     // open Store
     public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
         DS = DALService.getInstance();
-        //registeredUserDTO registeredUserDTO=DS.getUser(/*USERNAME*/);
         // check if register user
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
@@ -1234,6 +1233,7 @@ public class Facade {
 
     //StoreRate
     public double GetStoreRate(int visitorId,int StoreId) throws Exception {
+
         SiteVisitor User = onlineList.get(visitorId);
         if(User==null){
             logger.severe("Invalid visitor Id: " + visitorId);
@@ -1261,7 +1261,6 @@ public class Facade {
         }
 
         return store.getProductByID(productId).getAverageRating();
-
     }
     //close store
      public void CloseStore(int visitorId, int StoreId) throws Exception {

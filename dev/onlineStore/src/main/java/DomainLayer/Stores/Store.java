@@ -1,8 +1,11 @@
 package DomainLayer.Stores;
+import DAL.DALService;
 import DAL.DTOs.StoreProductDTO;
 import DAL.DTOs.StoreDTO;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
+
+import java.sql.SQLException;
 import java.util.concurrent.locks.ReadWriteLock;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Conditions.ConditionFactory;
@@ -283,11 +286,17 @@ public class Store {
     public Integer AddNewProduct(String productName, Double price, int Quantity, String category, String desc) {
         productLock.writeLock().lock();
         try {
-            StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity, desc);
+            DALService DS=DALService.getInstance();
+            int id=getNewProductId();
+            StoreProduct storeProduct = new StoreProduct(id, productName, price, category, Quantity, desc);
             products.put(storeProduct.getProductId(), storeProduct);
+            DS.saveProduct(id,this.Id,productName,price,Quantity,category,desc,0);
             logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
             return storeProduct.getProductId();
-        } finally {
+        } catch (SQLException e){
+            throw new RuntimeException("Database error while adding product");
+        }
+        finally {
             productLock.writeLock().unlock();
         }
     }
