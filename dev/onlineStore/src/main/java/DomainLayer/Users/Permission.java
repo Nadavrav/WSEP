@@ -11,6 +11,7 @@ public enum Permission {
     CanRemoveStoreManager,
     CanSeeStaffAndPermissions,
     CanSeeCommentsAndRating,
-    CanSeePurchaseHistory
+    CanSeePurchaseHistory,
+    CanCloseStore
 
 }

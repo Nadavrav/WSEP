@@ -172,6 +172,12 @@ public class Employment {
         return false;
     }
 
+    public boolean CanCloseStore() {
+        if(getRole()==Role.StoreFounder || permissions.contains(Permission.CanCloseStore))
+            return true;
+        return false;
+    }
+
     public LinkedList<Permission> getPermisssions() {
          return permissions;
     }

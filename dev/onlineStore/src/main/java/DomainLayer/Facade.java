@@ -1202,7 +1202,7 @@ public class Facade {
             logger.warning(" employment is null");
             throw new Exception("there is no employee with this id ");
         }
-        if (employment.checkIfFounder()) {
+        if (employment.CanCloseStore()) {
             Store store = storesList.get(StoreId);
             if (store == null) {
                 logger.warning(" store is null");
