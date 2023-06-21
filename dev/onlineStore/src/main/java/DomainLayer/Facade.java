@@ -66,7 +66,7 @@ public class Facade {
 
 
 
-    private Facade() {
+    private Facade(){
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         onlineList = new ConcurrentHashMap<>();
@@ -74,8 +74,9 @@ public class Facade {
         storesList = new ConcurrentHashMap<>();
         employmentList = new ConcurrentHashMap<>();
         appointmentsRequests = new ConcurrentHashMap<>();
-        supplier= new Supplier();
-        paymentProvider= new PaymentProvider();
+        supplier= Supplier.getInstance();
+
+        paymentProvider= PaymentProvider.getInstance();
 
         siteVisitorsEntriesManager = new HashMap<>();
         nonWorkersEntriesManager = new HashMap<>();
@@ -955,6 +956,15 @@ public class Facade {
     }
 
     public LinkedList<String> purchaseCart(int visitorID,String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip) throws Exception{
+        if(!supplier.handShake()){
+
+            throw new Exception("supplier does not hand shake");
+
+        }
+        if(!paymentProvider.handShake()){
+
+            throw new Exception("payment provider does not handshake");
+        }
 
 
         //Validate visitorID

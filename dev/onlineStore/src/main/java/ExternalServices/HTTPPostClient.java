@@ -28,8 +28,8 @@ public class HTTPPostClient {
         byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity("https://php-server-try.000webhostapp.com/", postData, String.class);
-        URL url = new URL("https://php-server-try.000webhostapp.com/");
+        ResponseEntity<String> stringResponseEntity = restTemplate.postForEntity("https://external-systems.000webhostapp.com/", postData, String.class);
+        URL url = new URL("https://external-systems.000webhostapp.com/");
         URLConnection con = url.openConnection();
         HttpURLConnection http = (HttpURLConnection) con;
         http.setRequestMethod("POST");

@@ -42,7 +42,8 @@ public class Service {
     private final Facade facade;
     private int visitorId;
 
-    public Service() throws Exception {
+    public Service()  {
+
         facade = Facade.getInstance();
     }
 

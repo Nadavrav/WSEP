@@ -22,7 +22,7 @@ public class AdminController {
     private final Server server = Server.getInstance();
 
     @GetMapping("Admin")
-    public String adminPage(Model model) {
+    public String adminPage(Model model) throws Exception {
         model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
         model.addAttribute("alert", alert.copy());
@@ -61,7 +61,7 @@ public class AdminController {
 
     @RequestMapping(value="/delete", method = RequestMethod.POST)
     public String deleteUser(@RequestParam("usernameToDelete") String username,
-                             Model model) {
+                             Model model) throws Exception {
 
         Response<?> response = server.deleteUser(request,username);
         if (response.isError()) {
@@ -79,7 +79,7 @@ public class AdminController {
 
     @RequestMapping(value="/daily-income", method = RequestMethod.POST)
     public String showDailyIncome(@RequestParam("date") String dateString,
-                                  Model model) {
+                                  Model model) throws Exception {
 
         String[] dateParts = dateString.split("-");
         int year = Integer.parseInt(dateParts[0]);
@@ -105,7 +105,7 @@ public class AdminController {
     @RequestMapping(value="/daily-store-income", method = RequestMethod.POST)
     public String showDailyIncomeForStore(@RequestParam("storeId") int storeId,
                                           @RequestParam("date") String dateString,
-                                          Model model) {
+                                          Model model) throws Exception {
 
         String[] dateParts = dateString.split("-");
         int year = Integer.parseInt(dateParts[0]);
@@ -138,7 +138,7 @@ public class AdminController {
     @RequestMapping(value="/VisitorsAmountBetweenDates", method = RequestMethod.POST)
     public String VisitorsAmountBetweenDates(@RequestParam("startDate") String startDate,
                                              @RequestParam("endDate") String endDate,
-                                             Model model) {
+                                             Model model) throws Exception {
 
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
@@ -174,7 +174,7 @@ public class AdminController {
     @RequestMapping(value="/UsersWithoutStoresAmountBetweenDates", method = RequestMethod.POST)
     public String UsersWithoutStoresAmountBetweenDates(@RequestParam("startDate") String startDate,
                                                        @RequestParam("endDate") String endDate,
-                                                       Model model) {
+                                                       Model model) throws Exception {
 
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
@@ -210,7 +210,7 @@ public class AdminController {
     @RequestMapping(value="/StoreManagersOnlyAmountBetweenDates", method = RequestMethod.POST)
     public String StoreManagersOnlyAmountBetweenDates(@RequestParam("startDate") String startDate,
                                                       @RequestParam("endDate") String endDate,
-                                                      Model model) {
+                                                      Model model) throws Exception {
 
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
@@ -246,7 +246,7 @@ public class AdminController {
     @RequestMapping(value="/StoreOwnersAmountBetweenDates", method = RequestMethod.POST)
     public String StoreOwnersAmountBetweenDates(@RequestParam("startDate") String startDate,
                                                       @RequestParam("endDate") String endDate,
-                                                      Model model) {
+                                                      Model model) throws Exception {
 
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
@@ -282,7 +282,7 @@ public class AdminController {
     @RequestMapping(value="/AdminsAmountBetweenDates", method = RequestMethod.POST)
     public String AdminsAmountBetweenDates(@RequestParam("startDate") String startDate,
                                            @RequestParam("endDate") String endDate,
-                                           Model model) {
+                                           Model model) throws Exception {
 
         //satrt-day-split
         String[] startDateParts = startDate.split("-");
