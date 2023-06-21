@@ -191,6 +191,15 @@ public class DALService {
             throw new SQLException("SQL fail in getStores");
         }
     }
+    public StoreDTO getStoreById(int storeId) throws SQLException {
+        try{
+            return storeDAO.getStore(storeId);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
+        }
+    }
 
     public Integer getMaxProductId() throws SQLException {
         try{

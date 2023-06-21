@@ -1191,8 +1191,6 @@ public class Facade {
 
         product.addRatingAndComment(((RegisteredUser) rater).getUserName(),rate,comment);
         logger.info("Exiting method addProductRateAndComment() with success");
-
-
     }
 
 
