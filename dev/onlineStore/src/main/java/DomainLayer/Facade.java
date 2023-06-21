@@ -296,6 +296,8 @@ public class Facade {
                 //addPolicy(BagPolicy,nadiaStoreID);
                 //addPolicy(BagPolicy,natalieStoreID);
 
+                Map<Date, Integer> x= getVisitorsAmountBetweenDates(nadavID,21,6,2023,21,6,2023);
+
                 logout(nadavID);
                 logout(nadiaID);
                 logout(natalieID);
@@ -315,7 +317,8 @@ public class Facade {
     public int enterNewSiteVisitor() throws Exception {//1.1
             SiteVisitor visitor = new SiteVisitor();
             onlineList.put(visitor.getVisitorId(), visitor);
-            increaseEntry(siteVisitorsEntriesManager);logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
+            increaseEntry(siteVisitorsEntriesManager);
+            logger.info("A new visitor with Id:" + visitor.getVisitorId() + "has Enter");
             return visitor.getVisitorId();
     }
     public boolean isLoggedIn(int visitorId) {
@@ -2104,19 +2107,27 @@ public class Facade {
 
     private boolean isBetweenDates(Date d, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
 
-        Date startDate =new Date(dayStart,monthStart,yearStart);
-        Date endDate = new Date(dayEnd,monthEnd,yearEnd);
+        Date startDate =new Date(yearStart-1900,monthStart-1,dayStart);
+        Date endDate = new Date(yearEnd-1900,monthEnd-1,dayEnd);
 
-        return d.after(startDate) && d.before(endDate);
+        return (d.after(startDate) || (areDatesEquals(d,startDate)) ) && (d.before(endDate) || (areDatesEquals(d,endDate)));
 
+    }
+
+    private boolean areDatesEquals(Date d1,Date d2){
+        return d1.getDate()==d2.getDate() && d1.getMonth()==d2.getMonth() && d1.getYear()==d2.getYear();
     }
 
     private void increaseEntry(Map<Date,Integer> entryMap){
         Date today = new Date();
-        if(entryMap.keySet().contains(today)){
-            entryMap.put(today,entryMap.get(today) + 1);
+        boolean foundToday = false;
+        for (Date d : entryMap.keySet()) {
+            if(areDatesEquals(d,today)){
+                entryMap.put(d,entryMap.get(d) + 1);
+                foundToday = true;
+            }
         }
-        else {
+        if(!foundToday){
             entryMap.put(today,1);
         }
     }
