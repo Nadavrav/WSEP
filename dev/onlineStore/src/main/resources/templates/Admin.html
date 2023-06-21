@@ -445,17 +445,8 @@
     <a class="close-button" onclick="closeModal('online-users-modal')">&#x2613</a>
     <div style="overflow-y: auto;">
         <table>
-            <tr>
-                <th>User Visitor ID</th>
-                <th>Is Online</th>
-            </tr>
             <tr th:each="user : ${onlineUsersInfo}">
-                <td><span th:text="${#strings.substring(user.userName, 13)}"></span></td>
-                <td>
-<!--                    <span th:text="${#strings.substring(user.info, 0, 10)}"></span><br/>-->
-<!--                    <span th:text="${#strings.substring(user.info, 10, 20)}"></span><br/>-->
-                    <span th:text="${#strings.substring(user.info, user.info.length()-4)}"></span>
-                </td>
+                <td><span th:text="${user.userName}"></span></td>
             </tr>
         </table>
     </div>
