@@ -38,6 +38,7 @@ public class StoreproductEntity {
         this.category=category;
         this.desc=desc;
         this.avgRating=avgRating;
+        this.quantity = 0;
     }
     public StoreproductEntity(){
 
