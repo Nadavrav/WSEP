@@ -213,8 +213,8 @@ public class Server {
         return getSession(request).getStoresByUserName();
     }
 
-    public Response<List<String>> PurchaseCart(HttpServletRequest request,int visitorCard, String address){
-        return getSession(request).PurchaseCart(visitorCard, address);
+    public Response<List<String>> PurchaseCart(HttpServletRequest request,String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip){
+        return getSession(request).PurchaseCart(holder,visitorCard, expireDate,cvv, id,address, city, country, zip);
     }
 
     public Response<LinkedList<String>> getNewMessages(HttpServletRequest request) throws Exception {

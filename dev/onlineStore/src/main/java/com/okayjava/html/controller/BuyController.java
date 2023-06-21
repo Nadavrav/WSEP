@@ -20,7 +20,7 @@ public class BuyController {
     Alert alert = Alert.getInstance();
     private Server server = Server.getInstance();
     @GetMapping("/Buy")
-    public String purchase(Model model) {
+    public String purchase(Model model) throws Exception {
         model.addAttribute("alert", alert.copy());
         model.addAttribute("Admin", server.isAdmin(request).getValue());
 //        model.addAttribute("alert", alert.copy());
@@ -45,18 +45,18 @@ public class BuyController {
         return "Buy";
     }
 
-    @RequestMapping(value = "/done", method = RequestMethod.POST)
-    public String purchase(@RequestParam("cardNumber") int cardNumber,
-//                           @RequestParam("cardholderName") String cardholderName,
-//                           @RequestParam("expirationMonth") int expirationMonth,
-//                           @RequestParam("expirationYear") int expirationYear,
+    @RequestMapping(value = "/done", method = RequestMethod.POST)//to update
+    public String purchase(@RequestParam("cardNumber") String cardNumber,
+                          @RequestParam("cardholderName") String cardholderName,
+                           @RequestParam("expirationMonth") int expirationMonth,
+                           @RequestParam("expirationYear") int expirationYear,
                            @RequestParam("address") String address,
-//                           @RequestParam("cvv") String cvv,
-                           Model model) {
+                           @RequestParam("cvv") int cvv,
+                           Model model) throws Exception {
 
 //        model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<List<String>> response = server.PurchaseCart(request,cardNumber, address);
+        Response<List<String>> response = server.PurchaseCart(request,cardholderName,cardNumber,expirationMonth+"/"+expirationYear,cvv,"206469017", address,"Nazareth","israel","1613101");
         if (response.isError()){
             System.out.println("error in buying: " + response.getMessage());
             alert.setFail(true);
