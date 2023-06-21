@@ -972,7 +972,9 @@ public class Facade {
 
         LinkedList<String> failedPurchases = new LinkedList<>();
 
-        for(Bag b : visitor.getCart().getBags().values()) {
+        Cart c1 = visitor.getCart();
+        List<Bag> bags = c1.getBags().values().stream().toList();
+        for(Bag b : bags) {
 
             //Calculate amount
             double amount = b.calculateTotalAmount();
