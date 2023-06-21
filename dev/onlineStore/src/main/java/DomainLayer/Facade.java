@@ -698,9 +698,16 @@ public class Facade {
         // check if store id exist
         Store store = storesList.get(storeId);
         if (store == null) {
-            //TODO get store from db
-            logger.warning("null store warning ");
-            throw  new Exception("inValid store Id");
+            //TODO get store from db - DONE
+            StoreDTO storeDTO = DS.getStoreById(storeId);
+            if(storeDTO != null) {
+                store = new Store(storeDTO);
+                storesList.put(storeId,store);
+            }
+            else {
+                logger.warning("null store warning ");
+                throw new Exception("inValid store Id");
+            }
         }
         if(!store.getActive()){
             logger.warning("add to store that is closed warning");
