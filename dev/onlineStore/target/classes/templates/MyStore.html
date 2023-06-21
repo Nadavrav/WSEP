@@ -245,6 +245,26 @@
                     </div>
                 </span>
 
+                <span class="dropdown">
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">PURCHASE HISTORY</button>
+                    <div class="dropdown-content" id="purchase-history">
+                        <ul>
+                            <p th:if="${purchaseHistory == null or purchaseHistory.isEmpty()}">No purchase history available.</p>
+                            <li th:each="purchase : ${purchaseHistory}" th:text="${purchase}"></li>
+                        </ul>
+                    </div>
+                </span>
+
+                <span class="dropdown">
+                    <button style="color: white; background-color: transparent; border: none;" onclick="toggleDropdown()">EMPLOYEE INFO</button>
+                    <div class="dropdown-content" id="employee-info">
+                        <ul>
+                            <p th:if="${employeeInfo == null}">No employee information available.</p>
+                            <li th:text="${employeeInfo}"></li>
+                        </ul>
+                    </div>
+                </span>
+
             </span>
 
             <button style="color: white;background-color: transparent;border: none;" onclick="location.href='/Stores';">

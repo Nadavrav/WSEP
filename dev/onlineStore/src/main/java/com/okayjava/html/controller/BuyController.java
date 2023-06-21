@@ -68,6 +68,7 @@ public class BuyController {
             alert.setMessage("Thank You ;)");
             model.addAttribute("buy", response.getValue()); //List<String>
             model.addAttribute("alert", alert.copy());
+            model.addAttribute("purchaseSuccessful", true);
             System.out.println("successful buy");
         }
         alert.reset();

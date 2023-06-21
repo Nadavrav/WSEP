@@ -42,6 +42,7 @@
             height: 100%;
             overflow: auto;
             background-color: rgba(0, 0, 0, 0.5);
+            color: white;
             /*transform: translateX(-100%);*/
             /*transition: transform 0.3s ease-in-out;*/
         }
@@ -424,23 +425,13 @@
     <div class="modal-content">
         <span class="close" onclick="closeModal('purchase-history-modal')">&times;</span>
         <h2>Purchase History:</h2>
-        <form id="purchase-history-form" action="/purchase-history" method="post">
-            <label for="storeID-purchase">Store ID:</label>
-            <br>
-            <input type="text" id="storeID-purchase" name="storeID-purchase" required>
-            <br><br>
-            <button type="submit" onclick="openModal('show-purchase-history-modal')">SHOW HISTORY</button>
-        </form>
+        <ul>
+            <p th:if="${purchaseHistory == null or purchaseHistory.isEmpty()}">No purchase history available.</p>
+            <li th:each="purchase : ${purchaseHistory}" th:text="${purchase}"></li>
+        </ul>
     </div>
 </div>
 
-<div id="show-purchase-history-modal" class="modal">
-    <a class="close-button" onclick="closeModal('show-purchase-history-modal')">&#x2613;</a>
-    <h2 th:text="${purchaseHistory}">Purchase History:</h2>
-    <div th:unless="${purchaseHistory}">
-        <p>No purchase history available.</p>
-    </div>
-</div>
 <!------------------------------ Close Store Modal ------------------------------>
 <div id="close-store-modal" class="modal">
     <div class="modal-content">
@@ -465,25 +456,19 @@
 
 <!------------------------------ Employee Info Modal ------------------------------>
 <div id="employee-info-modal" class="modal">
-    <div className="modal-content">
-        <span className="close" onClick="closeModal('employee-info-modal')">&times;</span>
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('employee-info-modal')">&times;</span>
         <h2>Employee Info:</h2>
-        <form id="employee-info-form" action="/employee-info" method="post">
-            <label for="storeID-employee">Store ID:</label>
-            <br>
-            <input type="text" id="storeID-employee" name="storeID-employee" required>
-            <br><br>
-            <button type="submit" onclick="openModal('show-employee-info-modal');">SHOW INFO</button>
-        </form>
+        <p th:if="${employeeInfo == null}">No employee information available.</p>
+        <p th:text="${employeeInfo}"></p>
     </div>
-    <article th:text="${employeeInfo}"></article>
 </div>
 
-<div id="show-employee-info-modal" class="modal">
-    <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613;</a>
-    <h2>Employee Info:</h2>
-    <p th:text="${employeeInfo}"></p>
-</div>
+<!--<div id="show-employee-info-modal" class="modal">-->
+<!--    <a class="close-button" onclick="closeModal('show-employee-info-modal')">&#x2613;</a>-->
+<!--    <h2>Employee Info:</h2>-->
+<!--    <p th:text="${employeeInfo}"></p>-->
+<!--</div>-->
 
 <!------------------------------ Remove Employee Modal ------------------------------>
 <div id="remove-employee-modal" class="modal">

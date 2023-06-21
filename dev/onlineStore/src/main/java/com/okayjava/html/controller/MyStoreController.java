@@ -85,6 +85,24 @@ public class MyStoreController {
             System.out.println("Bid Requests: " + bidRequests);
         }
 
+        Response<List<String>> responsePurchaseHistory = server.GetStoreHistoryPurchase(request, storeId);
+        if (!responsePurchaseHistory.isError()) {
+            System.out.println("Purchase History should be displayed! " + responsePurchaseHistory.getValue());
+            alert.setSuccess(true);
+            alert.setMessage(responsePurchaseHistory.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("purchaseHistory", responsePurchaseHistory.getValue());
+        }
+
+        Response<?> responseEmployeeInfo = server.getRolesData(request, storeId);
+        if (!responseEmployeeInfo.isError()) {
+            alert.setSuccess(true);
+            alert.setMessage("Employee Info for StoreId: " + storeId);
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("employeeInfo", responseEmployeeInfo.getValue()); //String
+            System.out.println("success - " + responseEmployeeInfo.getValue());
+        }
+
         this.storeID = storeId;
         this.StoreName = storeName;
         alert.reset();
