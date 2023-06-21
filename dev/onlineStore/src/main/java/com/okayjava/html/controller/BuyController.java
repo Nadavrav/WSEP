@@ -54,7 +54,7 @@ public class BuyController {
                            @RequestParam("cvv") int cvv,
                            Model model) throws Exception {
 
-//        model.addAttribute("alert", alert.copy());
+//       . model.addAttribute("alert", alert.copy());
         alert.reset();
         Response<List<String>> response = server.PurchaseCart(request,cardholderName,cardNumber,expirationMonth+"/"+expirationYear,cvv,"206469017", address,"Nazareth","israel","1613101");
         if (response.isError()){
