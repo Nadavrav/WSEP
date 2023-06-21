@@ -15,6 +15,7 @@ public class DALService {
     private final registeredUserDAO userDAO;
     private final storeDAO storeDAO;
     private final adminDAO adminDAO;
+    private final employmentDAO employmentDAO;
     private SessionFactory sessionFactory;
     private DALService() throws SQLException {
         try {
@@ -25,6 +26,7 @@ public class DALService {
         userDAO = new registeredUserDAO(sessionFactory);
         storeDAO = new storeDAO(sessionFactory);
         adminDAO = new adminDAO(sessionFactory);
+        employmentDAO = new employmentDAO(sessionFactory);
     }
 
     public static DALService getInstance() throws SQLException {
@@ -42,6 +44,7 @@ public class DALService {
      */
     public void deleteDBData() throws SQLException {
         try{
+            employmentDAO.deleteData();
             adminDAO.deleteData();
             userDAO.deleteData();
         }
@@ -106,6 +109,24 @@ public class DALService {
     public boolean isAdmin(String userName) throws SQLException {
         try{
             return adminDAO.isAdmin(userName);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saveUser");
+        }
+    }
+
+    /**
+     * A function to save the employment in the db
+     * @param employee - employee username
+     * @param storeId - the store id the employment was created fir
+     * @param appointer - the appointers username
+     * @param role - the role (0,1,2)
+     * @param permissions - a string of permissions
+     */
+    public void saveEmployment(String employee,int storeId, String appointer,int role, String permissions) throws SQLException {
+        try{
+            employmentDAO.saveEmployment(employee,storeId,appointer,role,permissions);
         }
         catch (Exception e)
         {

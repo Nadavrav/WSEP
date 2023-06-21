@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class Employment {
-    private RegisteredUser appointer;
-    private RegisteredUser employee;
+    private String appointer;
+    private String employee;
     private int storeID;
     private Role role;
     private LinkedList<Permission> permissions;
@@ -19,7 +19,7 @@ public class Employment {
 
 
 
-     public Employment (RegisteredUser appointer, RegisteredUser employee, int storeID, Role role){
+     public Employment (String appointer, String employee, int storeID, Role role){
        try{
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
@@ -43,7 +43,7 @@ public class Employment {
             }
     }
 
-    public Employment ( RegisteredUser employee, int storeID, Role role){
+    public Employment ( String employee, int storeID, Role role){
         try{
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
@@ -63,11 +63,11 @@ public class Employment {
     }
 
 
-    public RegisteredUser getAppointer() {
+    public String getAppointer() {
         return appointer;
     }
 
-    public RegisteredUser getEmployee() {
+    public String getEmployee() {
         return employee;
     }
 
@@ -129,11 +129,11 @@ public class Employment {
          if(appointer == null)
              appointerUserName= " no appointer ";
          else  {
-             appointerUserName = appointer.getUserName();
+             appointerUserName = appointer;
          }
         String output =  "Employment{" +
                 "appointer=" + appointerUserName +
-                ", employee=" + employee.getUserName() +
+                ", employee=" + employee +
                 ", role=" + role +
                 ", permissions=" + permissions +
                 '}';
@@ -174,5 +174,14 @@ public class Employment {
 
     public LinkedList<Permission> getPermisssions() {
          return permissions;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getPermissionString()
+    {
+        return null;
     }
 }

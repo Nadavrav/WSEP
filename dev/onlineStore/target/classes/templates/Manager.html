@@ -48,7 +48,7 @@
             /*position: fixed;*/
             left: 0;
             top: 0;
-            width: 280px;
+            width: 300px;
             height: 100%;
             background-color: rgba(255, 255, 255, 0.2);
             display: flex;
@@ -62,7 +62,6 @@
             transition: opacity 0.3s ease-in-out;
             color: whitesmoke;
             overflow-y: auto;
-
         }
 
         .modal-button {
@@ -89,7 +88,6 @@
             /*width: 400px;*/
             max-width: 80%;
             background-color: whitesmoke;
-            color: black;
             padding: 50px;
             border-radius: 4px;
         }
@@ -260,7 +258,7 @@
     <div th:each="myStore : ${myStoresList}">
         <h4>
             <a th:href="@{/MyStore/{storeId}(storeId=${myStore.getStoreId()}, storeName=${myStore.getStoreName()})}">
-                <span style="color: white;" th:text="'Store Name: ' + ${myStore.getStoreName()} + '  / ID: ' + ${myStore.getStoreId()}"></span>
+                <span style="color: white;font-size: 18px;" th:text="'Store Name: ' + ${myStore.getStoreName()} + '  / ID: ' + ${myStore.getStoreId()}"></span>
             </a>
         </h4>
     </div>

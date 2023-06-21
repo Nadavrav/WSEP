@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "admin", schema = "onlinestoredb", catalog = "")
 public class AdminEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
     @Column(name = "userName")
     private String userName;
