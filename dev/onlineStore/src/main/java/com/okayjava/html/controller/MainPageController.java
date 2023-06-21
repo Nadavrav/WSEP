@@ -2,6 +2,7 @@ package com.okayjava.html.controller;
 
 import DomainLayer.Response;
 
+import ServiceLayer.ServiceObjects.ServiceBid;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +11,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 @Controller
-public class MainPageController{
+public class MainPageController {
     @Autowired
     private HttpServletRequest request;
     Alert alert = Alert.getInstance();
@@ -25,10 +27,10 @@ public class MainPageController{
 
     @GetMapping("/")
     public String mainPage(Model model) throws Exception {
-        if (!isInitialized){
+        if (!isInitialized) {
             Response<?> response = server.loadData(request);
             System.out.println("Loading Data ... ");
-            if (response.isError()){
+            if (response.isError()) {
                 alert.setFail(true);
                 alert.setMessage(response.getMessage());
                 model.addAttribute("alert", alert.copy());
@@ -43,40 +45,39 @@ public class MainPageController{
         return "MainPage";
     }
 
-        @GetMapping("MainPage")
-        public String reMainPage(Model model) {
-            model.addAttribute("alert", alert.copy());
-            model.addAttribute("logged", server.isLogged(request));
-            model.addAttribute("name", server.getUsername(request));
-            if (server.isAdmin(request).getValue()) {
-                model.addAttribute("Admin", true);
-            }
-
-            Response<Map<Integer, List<String>>> response = server.getAppointmentRequests(request);
-            if (!response.isError()) {
-                Map<Integer, List<String>> appointmentRequests = response.getValue();
-                model.addAttribute("appointmentRequests", appointmentRequests);
-                System.out.println("Appointment Requests: " + appointmentRequests);
-            }
-
-            alert.reset();
-            return "MainPage";
+    @GetMapping("MainPage")
+    public String reMainPage(Model model) {
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("name", server.getUsername(request));
+        if (server.isAdmin(request).getValue()) {
+            model.addAttribute("Admin", true);
         }
-//    @GetMapping("MainPage")
-//    public String reMainPage(Model model) {
-//        model.addAttribute("alert", alert.copy());
-//        model.addAttribute("logged", server.isLogged(request));
-//        model.addAttribute("name", server.getUsername(request));
-//        if (server.isAdmin(request).getValue()) {
-//            model.addAttribute("Admin", true);
-//             }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
+        }
+
+        Response<Collection<ServiceBid>> responseBid = server.getUserBids(request);
+        if (!responseBid.isError()) {
+            Collection<ServiceBid> bidUserRequests = responseBid.getValue();
+            model.addAttribute("bidUserRequests", bidUserRequests);
+            System.out.println("Bid Requests For User: " + bidUserRequests);
+        }
+
+        alert.reset();
+        return "MainPage";
+    }
 
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public String signIn(@RequestParam("username") String username,
                          @RequestParam("password") String password,
                          Model model) throws Exception {
 
-        Response<?> response = server.login(request,username, password);
+        Response<?> response = server.login(request, username, password);
         if (response.isError()) {
             model.addAttribute("logged", server.isLogged(request));
             alert.setFail(true);
@@ -93,7 +94,7 @@ public class MainPageController{
                 model.addAttribute("alert", alert.copy());
             }
 
-            if(!server.checkForNewMessages(request).isError()){
+            if (!server.checkForNewMessages(request).isError()) {
                 alert.setMessage("Hey " + username + "! You Have New Messages.");
             } else alert.setMessage("WELCOME TO OUR STORE");
             model.addAttribute("alert", alert.copy());
@@ -103,6 +104,13 @@ public class MainPageController{
                 Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
                 model.addAttribute("appointmentRequests", appointmentRequests);
                 System.out.println("Appointment Requests: " + appointmentRequests);
+            }
+
+            Response<Collection<ServiceBid>> responseBid = server.getUserBids(request);
+            if (!responseBid.isError()) {
+                Collection<ServiceBid> bidUserRequests = responseBid.getValue();
+                model.addAttribute("bidUserRequests", bidUserRequests);
+                System.out.println("Bid Requests For User: " + bidUserRequests);
             }
         }
         alert.reset();
@@ -114,7 +122,7 @@ public class MainPageController{
                            @RequestParam("register-password") String password,
                            Model model) {
 
-        Response<?> response = server.Register(request,username, password);
+        Response<?> response = server.Register(request, username, password);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -131,7 +139,7 @@ public class MainPageController{
     @GetMapping("/logout")
     public String logout(Model model) {
         Response<?> response = server.logout(request);
-        if (response.isError()){
+        if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
@@ -160,7 +168,7 @@ public class MainPageController{
 
 //        model.addAttribute("alert", alert.copy());
         alert.reset();
-        Response<Integer> response = server.OpenStore(request,storeName);
+        Response<Integer> response = server.OpenStore(request, storeName);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -205,6 +213,47 @@ public class MainPageController{
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
         } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MainPage";
+    }
+
+    @PostMapping("/acceptUserBid")
+    public String acceptUserBid(@RequestParam("productId") int productId,
+                                @RequestParam("storeId") int storeId,
+                                Model model) {
+
+        Response<?> response = server.acceptCounterOffer(request, productId, storeId);
+        if (response.isError()) {
+            System.out.println("error in accept user bid");
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            System.out.println("success in accept user bid");
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MainPage";
+    }
+
+    @PostMapping("/declineUserBid")
+    public String declineUserBid(@RequestParam("productId") int productId,
+                                 Model model) {
+
+        Response<?> response = server.rejectCounterOffer(request, productId);
+        if (response.isError()) {
+            System.out.println("error in decline user bid");
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            System.out.println("success in decline user bid");
             alert.setSuccess(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());

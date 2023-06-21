@@ -10,6 +10,7 @@ import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Policies.Policy;
 import ServiceLayer.Service;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.MinPriceProductFilter;
+import ServiceLayer.ServiceObjects.ServiceBid;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.*;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionTypes;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
@@ -74,6 +75,14 @@ public class MyStoreController {
             Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
             model.addAttribute("appointmentRequests", appointmentRequests);
             System.out.println("Appointment Requests: " + appointmentRequests);
+        }
+
+        Response<Collection<ServiceBid>> responseBid = server.geStoreBids(request, storeId);
+        if (!responseBid.isError()) {
+            System.out.println(storeId);
+            Collection<ServiceBid> bidRequests = responseBid.getValue();
+            model.addAttribute("bidRequests", bidRequests);
+            System.out.println("Bid Requests: " + bidRequests);
         }
 
         this.storeID = storeId;
@@ -386,5 +395,69 @@ public class MyStoreController {
 
         alert.reset();
         return "MyStore";
+    }
+
+    @PostMapping("/acceptBid")
+    public String acceptBid(@RequestParam("productId") int productId,
+                            @RequestParam("userName") String userName,
+                            Model model) {
+
+        Response<?> response = server.voteOnBid(request, productId, storeID, userName, true);
+        if (response.isError()) {
+            System.out.println("acceptBid success.");
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            System.out.println("acceptBid success.");
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MyStore";
+    }
+
+    @PostMapping("/declineBid")
+    public String declineBid(@RequestParam("productId") int productId,
+                             @RequestParam("userName") String userName,
+                             Model model) {
+        Response<?> response = server.voteOnBid(request, productId, storeID, userName, false);
+        if (response.isError()) {
+            System.out.println("declineBid success.");
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            System.out.println("declineBid success.");
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MyStore";
+    }
+
+    @PostMapping("/counterOfferBid")
+    public String counterOfferBid(@RequestParam("productId") int productId,
+                                  @RequestParam("userName") String userName,
+                                  @RequestParam("newPrice") double newPrice,
+                                  @RequestParam("message") String message,
+                                  Model model) {
+
+        Response<?> response = server.counterOfferBid(request, productId, storeID, userName, newPrice, message);
+        if (response.isError()) {
+            System.out.println("counterOfferBid failed." + response.getMessage());
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            System.out.println("counterOfferBid success.");
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "redirect:/MyStore";
     }
 }

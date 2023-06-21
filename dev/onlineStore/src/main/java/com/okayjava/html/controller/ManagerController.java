@@ -23,19 +23,19 @@ public class ManagerController {
 
     @GetMapping("/Manager")
     public String menu(Model model) {
-//        model.addAttribute("alert", alert.copy());
+        alert.reset();
+        model.addAttribute("alert", alert.copy());
         model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
-        alert.reset();
         Response<Collection<ServiceStore>> response = server.getMyStores(request);
         if (response.isError()){
             alert.setFail(true);
             alert.setMessage(response.getMessage());
-            model.addAttribute("alert", alert.copy());
+//            model.addAttribute("alert", alert.copy());
         } else {
-            alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
-            model.addAttribute("alert", alert.copy());
+//            alert.setSuccess(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
             model.addAttribute("myStoresList", response.getValue());
         }
 
@@ -45,36 +45,66 @@ public class ManagerController {
             model.addAttribute("appointmentRequests", appointmentRequests);
             System.out.println("Appointment Requests: " + appointmentRequests);
         }
+        model.addAttribute("alert", alert.copy());
         alert.reset();
         return "Manager";
     }
 
-    @RequestMapping(value = "/fetch_permissions", method = RequestMethod.POST)
-    public String fetchPermissions(@RequestParam("storeId") int storeId, RedirectAttributes redirectAttributes) {
-        // Retrieve the permissions for the given storeId
-        System.out.println("in fetch permissions");
+    @RequestMapping(value = "/fetch_permissions", method = {RequestMethod.GET, RequestMethod.POST})
+    public String fetchPermissions(@RequestParam("storeId") int storeId,
+                                   RedirectAttributes redirectAttributes,
+                                   Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+
         Response<LinkedList<Permission>> response = server.getPermissions(request, storeId);
         if (response.isError()){
             System.out.println("error: " + response.getMessage());
             alert.setFail(true);
             alert.setMessage(response.getMessage());
-            redirectAttributes.addFlashAttribute("alert", alert.copy());
+//            model.addAttribute("alert", alert.copy());
         } else {
-            alert.setSuccess(true);
-            alert.setMessage(response.getMessage());
-            redirectAttributes.addFlashAttribute("alert", alert.copy());
+//            alert.setSuccess(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
             redirectAttributes.addFlashAttribute("myPermissions", response.getValue());
             System.out.println(response.getValue());
         }
+
+        //re-manager
+        Response<Collection<ServiceStore>> responseMyStores = server.getMyStores(request);
+        if (responseMyStores.isError()){
+            alert.setFail(true);
+            alert.setMessage(responseMyStores.getMessage());
+//            model.addAttribute("alert", alert.copy());
+        } else {
+//            alert.setSuccess(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
+            model.addAttribute("myStoresList", responseMyStores.getValue());
+        }
+
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
+        }
+
+        model.addAttribute("alert", alert.copy());
         alert.reset();
-        return "redirect:/Manager"; // Redirect to the "Manager" page
+        return "redirect:/Manager";
     }
-
-
 
     @RequestMapping(value = "/openStore", method = RequestMethod.POST)
     public String openStore(@RequestParam("store-name") String storeName,
                             Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
 
         Response<Integer> response = server.OpenStore(request,storeName);
         if (response.isError()) {
@@ -88,14 +118,29 @@ public class ManagerController {
             model.addAttribute("alert", alert.copy());
             System.out.println("Store Opened with ID: " + response.getValue());
         }
-        alert.reset();
-        return "redirect:/Manager";
-    }
+//        model.addAttribute("alert", alert.copy());
+        //re-manager
+        Response<Collection<ServiceStore>> responseMyStores = server.getMyStores(request);
+        if (responseMyStores.isError()){
+            alert.setFail(true);
+            alert.setMessage(responseMyStores.getMessage());
+//            model.addAttribute("alert", alert.copy());
+        } else {
+//            alert.setSuccess(true);
+//            alert.setMessage(response.getMessage());
+//            model.addAttribute("alert", alert.copy());
+            model.addAttribute("myStoresList", responseMyStores.getValue());
+        }
 
-//    @RequestMapping(value = "/permissions", method = RequestMethod.POST)
-//    public String permissions(Model model) {
-//        return "Manager";
-//    }
+        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
+        if (!responseRequest.isError()) {
+            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
+            model.addAttribute("appointmentRequests", appointmentRequests);
+            System.out.println("Appointment Requests: " + appointmentRequests);
+        }
+        alert.reset();
+        return "Manager";
+    }
 
     @RequestMapping(value = "/add-product", method = RequestMethod.POST)
     public String addProduct(@RequestParam("storeID-add") int storeID,
@@ -106,8 +151,11 @@ public class ManagerController {
                              @RequestParam("product-desc") String description,
                              Model model) {
 
-        Response<Integer> response = server.AddProduct(request,storeID, productName, price, category, quantity, description);
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
 
+        Response<Integer> response = server.AddProduct(request,storeID, productName, price, category, quantity, description);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -127,6 +175,10 @@ public class ManagerController {
     public String removeProduct(@RequestParam("storeID_remove") int storeID,
                                 @RequestParam("productID-remove") int productID,
                                 Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
 
         Response<?> response = server.RemoveProduct(request,productID, storeID);
         if (response.isError()) {
@@ -152,6 +204,10 @@ public class ManagerController {
                                 @RequestParam("category-update") String category,
                                 @RequestParam("description-update") String description,
                                 Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
 
         if (productName != null) {
             Response<?> response = server.UpdateProductName(request,productID, storeID, productName);
@@ -237,6 +293,10 @@ public class ManagerController {
 
     @RequestMapping(value = "/purchase-history", method = RequestMethod.POST)
     public String purchaseHistory(@RequestParam("storeID-purchase") int storeID, Model model) {
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+
         Response<List<String>> response = server.GetStoreHistoryPurchase(request, storeID);
         if (response.isError()) {
             alert.setFail(true);
@@ -256,10 +316,13 @@ public class ManagerController {
     }
 
 
-
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
     public String closeStore(@RequestParam("storeID-close") int storeID,
                              Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
 
         Response<?> response = server.CloseStore(request,storeID);
         if (response.isError()) {
@@ -279,6 +342,10 @@ public class ManagerController {
     @RequestMapping(value = "/employee-info", method = RequestMethod.POST)
     public String employeeInfo(@RequestParam("storeID-employee") int storeID,
                                Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
 
         Response<?> response = server.getRolesData(request,storeID);
         if (response.isError()) {
@@ -301,6 +368,10 @@ public class ManagerController {
                                  @RequestParam("username-remove-emp") String userName,
                                  Model model) {
 
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+
         Response<?> response = server.removeEmployee(request,storeID, userName);
         if (response.isError()) {
             alert.setFail(true);
@@ -321,30 +392,19 @@ public class ManagerController {
                                     @RequestParam("owner-name-add") String newOwnerName,
                                     Model model) {
 
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+
         Response<?> response = server.appointNewStoreOwner(request, newOwnerName, storeID);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
-        } else {
-            // check if there are existing store owners
-//            List<String> existingOwners = server.getExistingStoreOwners(storeID);
-//            if (existingOwners.isEmpty()) {
-//                // if no existing owners, directly appoint the new owner
-//                alert.setSuccess(true);
-//                alert.setMessage(newOwnerName + " is now an OWNER for storeID: " + storeID);
-//                model.addAttribute("alert", alert.copy());
-//            } else {
-//                // Send appointment requests to existing owners
-//                for (String existingOwner : existingOwners) {
-//                    server.sendAppointmentRequest(request, storeID, newOwnerName, existingOwner);
-//                }
-                // Display a message indicating that appointment requests have been sent
-                alert.setSuccess(true);
+        } else {alert.setSuccess(true);
                 alert.setMessage("Appointment requests have been sent to existing owners for storeID: " + storeID);
                 model.addAttribute("alert", alert.copy());
             }
-//        }
         alert.reset();
         return "redirect:/Manager";
     }
@@ -354,6 +414,10 @@ public class ManagerController {
     public String appointStoreManager(@RequestParam("storeID-add-manager") int StoreID,
                                       @RequestParam("manager-name-add") String managerName,
                                       Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
 
         Response<?> response = server.appointNewStoreManager(request,managerName, StoreID);
         if (response.isError()) {
@@ -374,6 +438,10 @@ public class ManagerController {
                                    @RequestParam("store-id") int storeID,
                                    @RequestParam("permission") List<Permission> permissions,
                                    Model model) {
+
+        model.addAttribute("alert", alert.copy());
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
 
         Response<?> response = server.changeStoreManagerPermission(request,managerName, storeID, permissions);
         if (response.isError()) {
