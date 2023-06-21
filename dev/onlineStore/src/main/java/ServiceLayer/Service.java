@@ -684,8 +684,14 @@ public class Service {
     {
         try {
             List<ServiceUser> serviceUsers = new ArrayList<>();
-            for (SiteVisitor sv : facade.getOnlineUsers())
-                serviceUsers.add(new ServiceUser(sv));
+            for (SiteVisitor sv : facade.getOnlineUsers()) {
+                //if(sv instanceof RegisteredUser){
+                //    serviceUsers.add(new ServiceUser(((RegisteredUser) sv).getUserName(),((RegisteredUser)sv).toString()));
+                //}
+                //else{
+                    serviceUsers.add(new ServiceUser(sv));
+                //}
+            }
             Response<List<ServiceUser>> r = new Response(serviceUsers);
             return r;
         }

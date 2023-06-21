@@ -132,7 +132,7 @@ public class SiteVisitor{
 
     @Override
     public String toString(){
-          return "VisitorID : "+visitorId;
+          return "Site visitor with ID : "+visitorId;
     }
 
 }

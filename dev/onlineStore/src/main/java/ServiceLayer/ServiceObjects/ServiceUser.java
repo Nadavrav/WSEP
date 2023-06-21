@@ -19,4 +19,9 @@ public class ServiceUser {
         this.userName = "Visitor with visitorID : "+siteVisitor.getVisitorId();
         this.info = siteVisitor.toString();
     }
+
+    public ServiceUser(String userName, String info){
+        this.userName = userName;
+        this.info = info;
+    }
 }

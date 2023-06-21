@@ -1826,7 +1826,9 @@ public class Facade {
         for (SiteVisitor sv : onlineList.values())
         {
             if(sv.getVisitorId()!=0)
-                onlineusers.add(sv);
+                if(sv instanceof RegisteredUser) {
+                    onlineusers.add((RegisteredUser)sv);
+                }
         }
         return onlineusers;
     }
