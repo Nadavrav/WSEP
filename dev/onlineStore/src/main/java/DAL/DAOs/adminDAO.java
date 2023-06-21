@@ -69,9 +69,9 @@ public class adminDAO {
     public boolean isAdmin(String userName) throws SQLException {
         Session session = sessionFactory.openSession();
         try{
-            Query<RegistereduserEntity> query = session.createQuery("FROM AdminEntity WHERE userName = :username");
+            Query<AdminEntity> query = session.createQuery("FROM AdminEntity WHERE userName = :username");
             query.setParameter("username", userName);
-            RegistereduserEntity userEntity = query.uniqueResult();
+            AdminEntity userEntity = query.uniqueResult();
 
             if(userEntity != null) {
                 session.close();
