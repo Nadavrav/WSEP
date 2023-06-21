@@ -69,6 +69,7 @@ public class Employment {
         this.employee = employmentDTO.getEmployee();
         this.storeID = employmentDTO.getStoreID();
         this.role = Role.values()[employmentDTO.getRole()];
+        this.permissions = getPermissionList(employmentDTO.getPermissions());
     }
 
 
@@ -192,8 +193,8 @@ public class Employment {
     }
 
     /**
-     *
-     * @return
+     * Creates a string out of the permission list
+     * @return a string of the permission list that looks like "0,1,2,3"
      */
     public String getPermissionString()
     {
@@ -205,5 +206,22 @@ public class Employment {
             permissionString = permissionString.substring(0, permissionString.length() - 1);
         }
         return permissionString;
+    }
+
+    /**
+     * Creates a LinkedList of permissions from a permission string
+     * @param permissionsString - a string that represents the permission like "0,1,2,3"
+     * @return a linked list of the permissions
+     */
+    private LinkedList<Permission> getPermissionList(String permissionsString)
+    {
+        LinkedList<Permission> permissionList = new LinkedList<>();
+        String[] permissionArray = permissionsString.split(",");
+        for (String permissionValue : permissionArray) {
+            int permissionInt = Integer.parseInt(permissionValue);
+            Permission permission = Permission.values()[permissionInt];
+            permissionList.add(permission);
+        }
+        return permissionList;
     }
 }

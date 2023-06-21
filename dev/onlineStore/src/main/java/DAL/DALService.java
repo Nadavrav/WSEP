@@ -151,10 +151,33 @@ public class DALService {
             throw new SQLException("SQL fail in getEmployment, username and storeId");
         }
     }
+
+    /**
+     * //TODO
+     *
+     * @param storeId
+     * @return
+     * @throws SQLException
+     */
     public LinkedList<registeredUserDTO> getStoreOwnersByStoreId(int storeId) throws SQLException {
         try{
             LinkedList<String> userNameList = employmentDAO.getStoreOwnerUserNamesByStoreId(storeId);
             return userDAO.getUsersByUserNames(userNameList);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
+
+    /**
+     * checks if the Db is empty
+     * @return - true if not empty else false
+     * @throws SQLException - if cant connect to db
+     */
+    public boolean dbNotEmpty() throws SQLException {
+        try{
+            return userDAO.userDbNotEmpty();
         }
         catch (Exception e)
         {
