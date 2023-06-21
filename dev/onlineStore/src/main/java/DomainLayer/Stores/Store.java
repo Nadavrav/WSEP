@@ -46,8 +46,8 @@ public class Store {
     private final LinkedList<RegisteredUser> listeners;
     private final LinkedList<RegisteredUser> ownerlisteners;
 
-    private final HashSet<Integer> ownerIdSet;
-    private final HashMap<Integer,Map<Bid,Boolean>> votingTracker;
+    private final HashSet<String> ownerIdSet;
+    private final HashMap<String,Map<Bid,Boolean>> votingTracker;
     /**
      * each lock is for specific store functionality, used to lock read or read/write operations
      */
@@ -90,9 +90,9 @@ public class Store {
         ownersCount++;
 
     }
-    public void documentOwner(Integer userId){
-        ownerIdSet.add(userId);
-        votingTracker.put(userId,new HashMap<>());
+    public void documentOwner(String userName){
+        ownerIdSet.add(userName);
+        votingTracker.put(userName,new HashMap<>());
 
     }
     private Integer getNewProductId() {
@@ -710,27 +710,29 @@ public class Store {
             Bid bid = new Bid(productId, newPrice, userName, amount, userId,Id);
             pendingBids.add(bid);
             votingCounter.put(bid,0);
-            for(Integer ownerId:ownerIdSet){
-                votingTracker.get(ownerId).put(bid,false);
+            for(String ownerUserName:ownerIdSet){
+                votingTracker.get(ownerUserName).put(bid,false);
             }
             return bid;
         } finally {
             bidLock.writeLock().unlock();
         }
     }
-    public Bid voteOnBid(int ownerId,int productId,RegisteredUser user,boolean vote) throws Exception{
+    public Bid voteOnBid(String ownerUserName,int productId,RegisteredUser user,boolean vote) throws Exception{
         for(Bid bid:pendingBids) {
             if (bid.getProductId() == productId && bid.getUserName().equals(user.getUserName())) {
-                if (!votingTracker.containsKey(ownerId) || !votingTracker.get(ownerId).containsKey(bid))
+                if (!votingTracker.containsKey(ownerUserName) || !votingTracker.get(ownerUserName).containsKey(bid))
                     throw new RuntimeException("Invalid owner id or bid while voting on bid");
-                if(votingTracker.get(ownerId).get(bid))
+                if(votingTracker.get(ownerUserName).get(bid))
                     throw new Exception("User has already voted on bid and cannot vote again");
                 if (vote) {
                     votingCounter.replace(bid,votingCounter.get(bid)+1);
                     if(votingCounter.get(bid)==ownersCount){
                         votingCounter.remove(bid);
-                        votingTracker.get(ownerId).remove(bid);
+                        votingTracker.get(ownerUserName).remove(bid);
                         acceptBid(bid,user);
+                        pendingBids.remove(bid);
+                        user.update("Your bid for the product "+productId+" in store "+getName()+" was accepted and the product was added to your cart with the price that you offered.");
                     }
                 }
                 else{
@@ -767,7 +769,7 @@ public class Store {
                 throw new Exception("Invalid product id "+productId);
             }
         } finally {
-            productLock.writeLock().unlock();
+            productLock.readLock().unlock();
         }
         bidLock.writeLock().lock();
         try {
