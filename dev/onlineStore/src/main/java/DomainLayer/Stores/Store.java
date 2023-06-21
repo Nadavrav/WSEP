@@ -294,7 +294,7 @@ public class Store {
             logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
             return storeProduct.getProductId();
         } catch (SQLException e){
-            throw new RuntimeException("Database error while adding product");
+            throw new RuntimeException(e.getMessage());
         }
         finally {
             productLock.writeLock().unlock();

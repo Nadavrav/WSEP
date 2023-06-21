@@ -77,8 +77,8 @@ public class Facade {
         boolean dbHasData = false;
         try {
             DS = DALService.getInstance();
-            Store.setStoreIdCounter(DS.getMaxStoreId());
-            Store.setProductIdCounter(DS.getMaxProductId());
+            Store.setStoreIdCounter(DS.getMaxStoreId()+1);
+            Store.setProductIdCounter(DS.getMaxProductId()+1);
             dbHasData = DS.dbNotEmpty();
         }
         catch (SQLException e){

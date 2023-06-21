@@ -1,7 +1,5 @@
 package DAL.Entities;
 
-import DomainLayer.Stores.Store;
-
 import javax.persistence.*;
 import java.util.Set;
 

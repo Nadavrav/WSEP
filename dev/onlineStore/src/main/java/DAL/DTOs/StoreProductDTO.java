@@ -2,8 +2,6 @@ package DAL.DTOs;
 
 import DAL.Entities.StoreproductEntity;
 
-import javax.persistence.*;
-
 public class StoreProductDTO {
 
     private final int productId;

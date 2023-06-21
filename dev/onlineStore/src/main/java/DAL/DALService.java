@@ -216,7 +216,7 @@ public class DALService {
         }
         catch (Exception e)
         {
-            throw new SQLException("SQL fail in saveUser");
+            throw new SQLException("SQL fail in save store");
         }
     }
 
@@ -298,7 +298,7 @@ public class DALService {
         }
         catch (Exception e)
         {
-            throw new SQLException("SQL fail in getStores");
+            throw e;
         }
     }
 

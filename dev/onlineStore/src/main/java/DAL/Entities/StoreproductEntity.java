@@ -3,9 +3,10 @@ package DAL.Entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "storeproduct", schema = "onlinestoredb")
+@Table(name = "storeproduct", schema = "onlinestoredb", catalog = "")
 public class StoreproductEntity {
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "productId")
     private int productId;
@@ -30,7 +31,7 @@ public class StoreproductEntity {
     @Basic
     @Column(name = "quantity")
     private int quantity;
-    public StoreproductEntity(int productId, int storeId, String name, double price, String category, String desc, int quantity,double avgRating){
+    public StoreproductEntity(int productId, int storeId, String name, double price, String category, String desc, int quantity, double avgRating){
         this.productId=productId;
         this.storeId=storeId;
         this.name=name;

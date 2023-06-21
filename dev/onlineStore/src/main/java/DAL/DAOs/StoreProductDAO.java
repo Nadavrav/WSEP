@@ -1,8 +1,6 @@
 package DAL.DAOs;
 
-import DAL.DTOs.StoreDTO;
 import DAL.DTOs.StoreProductDTO;
-import DAL.Entities.StoreEntity;
 import DAL.Entities.StoreproductEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -10,8 +8,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashSet;
 
 public class StoreProductDAO {
     private SessionFactory sessionFactory;
@@ -22,12 +18,13 @@ public class StoreProductDAO {
     public void saveProduct(int productId, int storeId, String name, double price, String category, String desc,int quantity, double avgRating) throws SQLException {
         Session session = sessionFactory.openSession();
         try {
-            StoreproductEntity storeproductEntity = new StoreproductEntity(productId, storeId, name, price,  category,  desc,quantity,avgRating);
             session.beginTransaction();
-            session.save(storeproductEntity);
+            session.save(new StoreproductEntity(productId, storeId, name, price,  category,  desc,quantity,avgRating));
+           // session.save(storeproductEntity);
             session.getTransaction().commit();
-        } catch (HibernateException e) {
-            throw new SQLException("Cant connect to DB");
+        }
+        catch (HibernateException e) {
+            throw e;
         }
         finally {
             if (session.isConnected()) {
@@ -50,7 +47,7 @@ public class StoreProductDAO {
             }
         }
         catch (Exception e) {
-            throw new SQLException("SQL fail in saveUser");
+            throw new SQLException("SQL fail in getProducts");
         }
         finally {
             if (session != null && session.isOpen()) {
