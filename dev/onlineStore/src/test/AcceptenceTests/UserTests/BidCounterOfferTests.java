@@ -93,7 +93,7 @@ public class BidCounterOfferTests {
         for(ServiceBid serviceBid:r1.getValue()) {
             assertTrue(serviceBid.getProductId() == bid.getProductId() && serviceBid.getStoreId() == bid.getStoreId() &&
                     serviceBid.getUserName().equals(bid.getUserName()) && serviceBid.getNewPrice() == 8);
-            userBridge.rejectCounterOffer(serviceBid.getProductId());
+            userBridge.rejectCounterOffer(serviceBid.getProductId(),storeId);
         }
         Response<ServiceCart> r3=userBridge.getCartProducts();
         assertFalse(r3.isError());

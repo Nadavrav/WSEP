@@ -302,15 +302,14 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Response<?> rejectCounterOffer(int productId) {
-        return service.rejectCounterOffer(productId);
+    public Response<?> rejectCounterOffer(int productId, int storeId) {
+        return service.rejectCounterOffer(productId,storeId);
     }
 
     @Override
     public Response<?> voteOnBid(int productId, int storeId, String userName, boolean vote) {
         return service.voteOnBid(productId,storeId,userName,vote);
     }
-
     @Override
     public Response<Collection<ServiceBid>> geStoreBids(int storeId) {
         return service.geStoreBids(storeId);
