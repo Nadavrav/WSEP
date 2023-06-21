@@ -1,5 +1,6 @@
 package DomainLayer.Users;
 
+import DAL.DTOs.employmentDTO;
 import DomainLayer.Stores.Store;
 import DomainLayer.Logging.UniversalHandler;
 import java.util.logging.*;
@@ -60,6 +61,14 @@ public class Employment {
             permissions.add(p);
         }
 
+    }
+
+    public Employment(employmentDTO employmentDTO)
+    {
+        this.appointer = employmentDTO.getAppointer();
+        this.employee = employmentDTO.getEmployee();
+        this.storeID = employmentDTO.getStoreID();
+        this.role = Role.values()[employmentDTO.getRole()];
     }
 
 

@@ -27,6 +27,9 @@ public class StoreproductEntity {
     @Basic
     @Column(name = "avgRating")
     private double avgRating;
+    @Basic
+    @Column(name = "quantity")
+    private int quantity;
     public StoreproductEntity(int productId, int storeId, String name, double price, String category, String desc, double avgRating){
         this.productId=productId;
         this.storeId=storeId;
@@ -36,6 +39,10 @@ public class StoreproductEntity {
         this.desc=desc;
         this.avgRating=avgRating;
     }
+    public StoreproductEntity(){
+
+    }
+
     public int getProductId() {
         return productId;
     }
@@ -124,5 +131,13 @@ public class StoreproductEntity {
         temp = Double.doubleToLongBits(avgRating);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
