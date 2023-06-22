@@ -2286,51 +2286,51 @@ private void fetchCartIfExists(RegisteredUser user){
     }
 
 
-    public Map<Date,Integer> getVisitorsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getVisitorsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:siteVisitorsEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,siteVisitorsEntriesManager.get(d));
+                outputMap.put(dateToString(d),siteVisitorsEntriesManager.get(d));
             }
         }
         return outputMap;
     }
 
-    public Map<Date,Integer> getUsersWithoutStoresAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getUsersWithoutStoresAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:nonWorkersEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,nonWorkersEntriesManager.get(d));
+                outputMap.put(dateToString(d),nonWorkersEntriesManager.get(d));
             }
         }
         return outputMap;
     }
 
-    public Map<Date,Integer> getStoreManagersOnlyAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getStoreManagersOnlyAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:managersOnlyEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,managersOnlyEntriesManager.get(d));
+                outputMap.put(dateToString(d),managersOnlyEntriesManager.get(d));
             }
         }
         return outputMap;
     }
 
-    public Map<Date,Integer> getStoreOwnersAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getStoreOwnersAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:storeOwnersEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,storeOwnersEntriesManager.get(d));
+                outputMap.put(dateToString(d),storeOwnersEntriesManager.get(d));
             }
         }
         return outputMap;
     }
 
-    public Map<Date,Integer> getAdminsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getAdminsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:adminsEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,adminsEntriesManager.get(d));
+                outputMap.put(dateToString(d),adminsEntriesManager.get(d));
             }
         }
         return outputMap;
@@ -2363,6 +2363,9 @@ private void fetchCartIfExists(RegisteredUser user){
         }
     }
 
+    private String dateToString(Date d){
+        return d.getDate()+"/"+(d.getMonth()+1)+"/"+(d.getYear()+1900);
+    }
     public LinkedList<Permission> getPermissions(int visitorId, int storeId) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){

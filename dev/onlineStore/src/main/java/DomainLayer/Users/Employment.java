@@ -38,6 +38,9 @@ public class Employment {
                     permissions.add(p);
                 }
             }
+            if(role == Role.StoreOwner){
+                permissions.remove(Permission.CanCloseStore);
+            }
             else if(role == Role.StoreManager){
                 permissions.add(Permission.CanSeeCommentsAndRating);
                 permissions.add(Permission.CanSeePurchaseHistory);

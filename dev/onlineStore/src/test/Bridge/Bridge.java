@@ -218,11 +218,11 @@ public interface Bridge {
 
     /**
      * A function to purchase the contents of the cart
-     * @param creditCard - the credit card
+
      * @param address - address of the purchaser
      * @return a response that contains a list of the items it failed to purchase
      */
-    Response PurchaseCart(int creditCard,String address);
+    Response PurchaseCart(String holderName,String visitorCard,String expireDate, int cvv , String id ,String address,String city,String country ,String zip);
 
     /**
      * A function to get a requested item quantity

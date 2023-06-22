@@ -231,6 +231,9 @@
                         <button class="permissions-button" onclick="openModal('remove-product-modal')">Remove Product</button>
                         <button class="permissions-button" onclick="openModal('update-product-modal')">Update Product</button>
                     </div>
+                    <div th:case="CanCloseStore">
+                        <button class="permissions-button" onclick="openModal('close-store-modal')">Close Store</button>
+                    </div>
                     <div th:case="CanSeePurchaseHistory">
                         <button class="permissions-button" onclick="openModal('purchase-history-modal')">Purchase History</button>
                     </div>
