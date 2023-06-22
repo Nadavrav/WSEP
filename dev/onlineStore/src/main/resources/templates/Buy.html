@@ -188,20 +188,20 @@
             <input type="text" name="city" placeholder="City" required>
             <input type="text" name="country" placeholder="Country" required>
         </div>
-        <input type="submit" value="Buy Now" onclick="showThankYouMessage()">
+        <input type="submit" value="Buy Now" onclick="processingMessage()">
     </form>
-    <div id="thankYouMessage" style="display: none;">
-        <h2>Thank you for your purchase!</h2>
+    <div id="processingMessage" style="display: none;">
+        <h2>processing...</h2>
     </div>
 </div>
 
 <script>
-    function showThankYouMessage() {
+    function processingMessage() {
         var paymentForm = document.getElementById("paymentForm");
-        var thankYouMessage = document.getElementById("thankYouMessage");
+        var processingMessage = document.getElementById("processingMessage");
 
         paymentForm.style.display = "none";
-        thankYouMessage.style.display = "block";
+        processingMessage.style.display = "block";
     }
 </script>
 
