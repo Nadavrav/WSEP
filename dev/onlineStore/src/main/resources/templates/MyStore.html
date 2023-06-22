@@ -21,20 +21,28 @@
             position: fixed;
             top: 10px;
         }
+        .add-button:nth-child(4) {
+            right: 200px;
+            margin-top: 100px;
+        }
+
         .add-button:nth-child(3) {
-            right: 70px;
+            right: 20px;
             margin-top: 50px;
         }
 
         .add-button:nth-child(2) {
-            right: 40px;
+            right: 200px;
+            margin-top: 50px;
         }
 
         .add-button:nth-child(1) {
-            right: 150px;
+            right: 20px;
+            margin-top: 100px;
         }
 
-        .discount-box {
+        .discount-box,
+        .policy-box{
             background-color: #555555;
             color: white;
             border: none;
@@ -44,7 +52,8 @@
             width: 250px;
         }
 
-        .discount-box.selected {
+        .discount-box.selected,
+        .policy-box.selected{
             width: 250px;
             background-color: #ff0000; /* Change the color to your desired selection color */
         }
@@ -319,7 +328,7 @@
     <p>No discounts available.</p>
 </div>
 <div th:each="discount : ${discountInfo}" class="discount-box" onclick="toggleDiscountSelection(this)">
-    <p th:text="'Discount Description: ' + ${discount.discountDescription()}"></p>
+    <p th:text="'Discount Description: ' + ${discount.description}"></p>
     <input type="hidden" class="discount-checkbox" name="discountId" th:value="${discount.id}" />
 </div>
 
@@ -411,7 +420,7 @@
 <!------------------- choose condition for basic discount ------------------->
 <div id="myModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
+        <span class="close" onclick="closeDiscountModal()">&times;</span>
         <h2>Add New Discount</h2>
         <!-- Your form for adding a new discount here -->
         <form id="newDiscountForm" action="/add-basic-discount" method="post">
@@ -447,12 +456,12 @@
 </div>
 
 <script>
-    function openModal() {
+    function openDiscountModal() {
         const modal = document.getElementById("myModal");
         modal.style.display = "block";
     }
 
-    function closeModal() {
+    function closeDiscountModal() {
         const modal = document.getElementById("myModal");
         modal.style.display = "none";
     }
@@ -576,7 +585,7 @@
                 if (response.ok) {
                     // Handle successful response
                     console.log("Discount added successfully");
-                    closeModal(); // Close the modal after form submission
+                    closeDiscountModal(); // Close the modal after form submission
                 } else {
                     // Handle error response
                     console.error("Error adding discount");
@@ -593,151 +602,275 @@
 <!----------------------------------------- Policies ----------------------------------------->
 <!------------------- display policies ------------------->
 <h3>Policies:</h3>
-<div th:if="${#sets.isEmpty(policyInfo)}">
+<div th:if="${#lists.isEmpty(policyInfo)}">
     <p>No policies available.</p>
 </div>
-<div th:each="policy : ${policyInfo}">
-    <div>
-        <p th:text="'Policy Name: ' + ${policy.policyName}"></p>
+<div th:each="policy : ${policyInfo}" class="policy-box" onclick="togglePolicySelection(this)">
+    <p th:text="'Policy Description: ' + ${policy.description}"></p>
+    <input type="hidden" class="policy-checkbox" name="policyId" th:value="${policy.id}" />
+</div>
+
+<div id="policyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePolicyModal()">&times;</span>
+        <h2>Add New Policy</h2>
+        <!-- Your form for adding a new discount here -->
+        <form id="newPolicyForm" action="/add-basic-policy" method="post">
+            <!-- Form fields here -->
+            <label for="policyConditionSelect">Choose Condition:</label>
+            <select id="policyConditionSelect" name="policyConditionSelect" onchange="handlePolicyConditionChange()">
+                <option value="">Select a condition</option>
+                <option value="BetweenDatesCondition">Between Dates Condition</option>
+                <option value="LocalHourRangeCondition">Local Hour Range Condition</option>
+                <option value="CategoryCondition">Category Condition</option>
+                <option value="NameCondition">Name Condition</option>
+                <option value="MaxBagPriceCondition">Max Bag Price Condition</option>
+                <option value="MinBagPriceCondition">Min Bag Price Condition</option>
+                <option value="MaxTotalProductAmountCondition">Max Total Product Amount Condition</option>
+                <option value="MinTotalProductAmountCondition">Min Total Product Amount Condition</option>
+            </select>
+            <br><br>
+            <div id="inputPolicyContainer" style="display: none;">
+                <!-- Input field for the selected condition -->
+                <div id="inputPolicyField"></div>
+            </div>
+            <br>
+            <label for="description">Description:</label>
+            <input type="text" id="policyDescription" name="description">
+            <br><br>
+            <!-- Submit button -->
+            <button type="submit" value="Add Policy">Add Policy</button>
+        </form>
     </div>
 </div>
 
-<!--&lt;!&ndash;-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; adding new policy -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&ndash;&gt;-->
-<!--<div id="policyModal" class="modal">-->
-<!--    <div class="modal-content">-->
-<!--        <span class="close" onclick="closeModal()">&times;</span>-->
-<!--        <h2>Add New Discount</h2>-->
-<!--        &lt;!&ndash; Your form for adding a new discount here &ndash;&gt;-->
-<!--        <form id="newPolicyForm" action="/add-policy" method="post">-->
-<!--            &lt;!&ndash; Form fields here &ndash;&gt;-->
-<!--            <label for="policyConditionSelect">Choose Condition:</label>-->
-<!--            <select id="policyConditionSelect" name="policyConditionSelect" onchange="handleConditionChange()">-->
-<!--                <option value="">Select a condition</option>-->
-<!--                <option value="CompositeCondition">Composite Condition</option>-->
-<!--                <option value="OnlyIfCondition">Only If Condition</option>-->
-<!--                <option value="FilterCondition">Filter Condition</option>-->
-<!--            </select>-->
-<!--            <br><br>-->
-<!--            <div id="inputPolicyContainer" style="display: none;">-->
-<!--                &lt;!&ndash; Input field for the selected condition &ndash;&gt;-->
-<!--                <div id="inputPolicyField"></div>-->
-<!--            </div>-->
-<!--            <br>-->
-<!--            <label for="description">Description:</label>-->
-<!--            <input type="text" id="policyDescription" name="description">-->
-<!--            <br><br>-->
-<!--            &lt;!&ndash; Submit button &ndash;&gt;-->
-<!--            <button type="submit" value="Add Policy">Add Policy</button>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</div>-->
+<script>
+    function openPolicyModal() {
+        const modal = document.getElementById("policyModal");
+        modal.style.display = "block";
+    }
 
-<!--<script>-->
-<!--    function openModal() {-->
-<!--        const modal = document.getElementById("policyModal");-->
-<!--        modal.style.display = "block";-->
-<!--    }-->
+    function closePolicyModal() {
+        const modal = document.getElementById("policyModal");
+        modal.style.display = "none";
+    }
 
-<!--    function closeModal() {-->
-<!--        const modal = document.getElementById("policyModal");-->
-<!--        modal.style.display = "none";-->
-<!--    }-->
+    // Handle condition change
+    function handlePolicyConditionChange() {
+        const conditionSelect = document.getElementById("policyConditionSelect");
+        const inputContainer = document.getElementById("inputPolicyContainer");
+        const inputField = document.getElementById("inputPolicyField");
 
-<!--    // Handle condition change-->
-<!--    function handleConditionChange() {-->
-<!--        const conditionSelect = document.getElementById("policyConditionSelect");-->
-<!--        const inputContainer = document.getElementById("inputPolicyContainer");-->
-<!--        const inputField = document.getElementById("inputPolicyField");-->
+        // Reset input value
+        inputField.innerHTML = "";
 
-<!--        // Reset input value-->
-<!--        inputField.innerHTML = "";-->
+        if (conditionSelect.value !== "") {
+            inputContainer.style.display = "block";
 
-<!--        if (conditionSelect.value !== "") {-->
-<!--            inputContainer.style.display = "block";-->
+            // Generate the appropriate input field based on the selected condition
+            switch (conditionSelect.value) {
+                case "BetweenDatesCondition":
+                    inputField.innerHTML =
+                        '<label for="startDatePolicy">Start Date:</label><input type="date" id="startDatePolicy" name="startDatePolicy"><br>' +
+                        '<label for="endDatePolicy">End Date:</label><input type="date" id="endDatePolicy" name="endDatePolicy">';
+                    break;
+                case "LocalHourRangeCondition":
+                    inputField.innerHTML =
+                        '<label for="startHourPolicy">Start Hour:</label><input type="time" id="startHourPolicy" name="startHourPolicy"><br>' +
+                        '<label for="endHourPolicy">End Hour:</label><input type="time" id="endHourPolicy" name="endHourPolicy">';
+                    break;
+                case "CategoryCondition":
+                    inputField.innerHTML = '<label for="categoryPolicy">Category:</label><input type="text" id="categoryPolicy" name="category">';
+                    break;
+                case "NameCondition":
+                    inputField.innerHTML = '<label for="namePolicy">Name:</label><input type="text" id="namePolicy" name="namePolicy">';
+                    break;
+                case "MaxBagPriceCondition":
+                    inputField.innerHTML =
+                        '<label for="maxBagPricePolicy">Max Bag Price:</label><input type="number" step="0.01" id="maxBagPricePolicy" name="maxBagPricePolicy">';
+                    break;
+                case "MinBagPriceCondition":
+                    inputField.innerHTML =
+                        '<label for="minBagPricePolicy">Min Bag Price:</label><input type="number" step="0.01" id="minBagPricePolicy" name="minBagPricePolicy">';
+                    break;
+                case "MaxTotalProductAmountCondition":
+                    inputField.innerHTML =
+                        '<label for="maxTotalProductAmountPolicy">Maximum Total Product Amount:</label><input type="number" step="0.01" id="maxTotalProductAmountPolicy" name="maxTotalProductAmountPolicy">';
+                    break;
+                case "MinTotalProductAmountCondition":
+                    inputField.innerHTML =
+                        '<label for="minTotalProductAmountPolicy">Minimum Total Product Amount:</label><input type="number" id="minTotalProductAmountPolicy" name="minTotalProductAmountPolicy">';
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            inputContainer.style.display = "none";
+        }
+    }
 
-<!--            // Generate the appropriate input field based on the selected condition-->
-<!--            switch (conditionSelect.value) {-->
-<!--                case "CompositeCondition":-->
-<!--                    inputField.innerHTML =-->
-<!--                        '<label for="message">Message:</label><input type="text" id="message" name="message"><br>'-->
-<!--                    break;-->
-<!--                // case "OnlyIfCondition":-->
-<!--                //     inputField.innerHTML =-->
-<!--                //     break;-->
-<!--                // case "FilterCondition":-->
-<!--                //     inputField.innerHTML =-->
-<!--                //     break;-->
-<!--                default:-->
-<!--                    break;-->
-<!--            }-->
-<!--        } else {-->
-<!--            inputContainer.style.display = "none";-->
-<!--        }-->
-<!--    }-->
+    // Handle form submission
+    document.getElementById("newPolicyForm").addEventListener("submit", function (event) {
+        event.preventDefault();
 
-<!--    // Handle form submission-->
-<!--    document.getElementById("newPolicyForm").addEventListener("submit", function (event) {-->
-<!--        event.preventDefault();-->
+        // Get selected condition
+        const conditionSelect = document.getElementById("policyConditionSelect");
+        const selectedCondition = conditionSelect.value;
 
-<!--        // Get selected condition-->
-<!--        const conditionSelect = document.getElementById("policyConditionSelect");-->
-<!--        const selectedCondition = conditionSelect.value;-->
+        // Validate if a condition is selected
+        if (selectedCondition === "") {
+            alert("Please select a condition");
+            return;
+        }
 
-<!--        // Validate if a condition is selected-->
-<!--        if (selectedCondition === "") {-->
-<!--            alert("Please select a condition");-->
-<!--            return;-->
-<!--        }-->
+        // Create a new FormData object
+        const formData = new FormData();
 
-<!--        // Create a new FormData object-->
-<!--        const formData = new FormData();-->
+        // Add selected condition
+        formData.append("policyConditionSelect", selectedCondition);
 
-<!--        // Add selected condition-->
-<!--        formData.append("policyConditionSelect", selectedCondition);-->
+        // Add additional form data based on the selected condition
+        switch (selectedCondition) {
+            case "BetweenDatesCondition":
+                formData.append("startDatePolicy", document.getElementById("startDatePolicy").value);
+                formData.append("endDatePolicy", document.getElementById("endDatePolicy").value);
+                break;
+            case "LocalHourRangeCondition":
+                formData.append("startHourPolicy", document.getElementById("startHourPolicy").value);
+                formData.append("endHourPolicy", document.getElementById("endHourPolicy").value);
+                break;
+            case "CategoryCondition":
+                formData.append("categoryPolicy", document.getElementById("categoryPolicy").value);
+                break;
+            case "NameCondition":
+                formData.append("namePolicy", document.getElementById("namePolicy").value);
+                break;
+            case "MaxBagPriceCondition":
+                formData.append("maxBagPricePolicy", document.getElementById("maxBagPricePolicy").value);
+                break;
+            case "MinBagPriceCondition":
+                formData.append("minBagPricePolicy", document.getElementById("minBagPricePolicy").value);
+                break;
+            case "MaxTotalProductAmountCondition":
+                formData.append("maxTotalProductAmountPolicy", document.getElementById("maxTotalProductAmountPolicy").value);
+                break;
+            case "MinTotalProductAmountCondition":
+                formData.append("minTotalProductAmountPolicy", document.getElementById("minTotalProductAmountPolicy").value);
+                break;
+            default:
+                break;
+        }
 
-<!--        // Add additional form data based on the selected condition-->
-<!--        switch (selectedCondition) {-->
-<!--            case "CompositeCondition":-->
-<!--                formData.append("message", document.getElementById("message").value);-->
-<!--                break;-->
-<!--            // case "OnlyIfCondition":-->
-<!--            //     break;-->
-<!--            // case "FilterCondition":-->
-<!--            //     break;-->
-<!--            default:-->
-<!--                break;-->
-<!--        }-->
+        // Add description
+        formData.append("policyDescription", document.getElementById("policyDescription").value);
 
-<!--        // Add description-->
-<!--        formData.append("policyDescription", document.getElementById("policyDescription").value);-->
+        // Send the form data to the server
+        fetch("/add-basic-policy", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    // Handle successful response
+                    console.log("Policy added successfully");
+                    closePolicyModal(); // Close the modal after form submission
+                } else {
+                    // Handle error response
+                    console.error("Error adding policy");
+                }
+            })
+            .catch(error => {
+                // Handle network error
+                console.error("Network error:", error);
+            });
+    });
 
-<!--        // Send the form data to the server-->
-<!--        fetch("/add-policy", {-->
-<!--            method: "POST",-->
-<!--            body: formData-->
-<!--        })-->
-<!--            .then(response => {-->
-<!--                if (response.ok) {-->
-<!--                    // Handle successful response-->
-<!--                    console.log("Policy added successfully");-->
-<!--                    closeModal(); // Close the modal after form submission-->
-<!--                } else {-->
-<!--                    // Handle error response-->
-<!--                    console.error("Error adding policy");-->
-<!--                }-->
-<!--            })-->
-<!--            .catch(error => {-->
-<!--                // Handle network error-->
-<!--                console.error("Network error:", error);-->
-<!--            });-->
-<!--    });-->
+</script>
 
-<!--</script>-->
+<!------------------- choose condition for 2+ policies ------------------->
+<form class="policy-checklist" action="/assemble-policy" method="post">
+    <h4>Select Policies</h4>
+    <div id="selectedPolicies">
+        <!-- Selected discounts will be dynamically added here -->
+    </div>
+    <h4>Select Arithmetic Condition</h4>
+    <input type="radio" name="policyCondition" value="AndCondition"> AND Condition<br>
+    <input type="radio" name="policyCondition" value="OrCondition"> OR Condition<br>
+    <input type="radio" name="policyCondition" value="XorCondition"> XOR Condition<br>
+
+    <h4>Enter Description</h4>
+    <div id="additionalPolicyInfo">
+        <!-- Additional input fields will be dynamically added here -->
+    </div>
+
+    <br><input type="submit" value="Submit">
+</form>
+
+<script>
+    let selectedConditionsForPolicy = [];
+
+    function togglePolicySelection(policyBox) {
+        const checkbox = policyBox.querySelector('.policy-checkbox');
+        const policyId = parseInt(checkbox.value);
+        const policyDescription = policyBox.querySelector('p').textContent;
+
+        const existingIndex = selectedConditionsForPolicy.findIndex(item => item.policyId === policyId);
+
+        if (existingIndex !== -1) {
+            selectedConditionsForPolicy.splice(existingIndex, 1);
+            policyBox.classList.remove('selected');
+        } else {
+            if (selectedConditionsForPolicy.length < 2) {
+                selectedConditionsForPolicy.push({ policyId, policyDescription });
+                policyBox.classList.add('selected');
+            }
+        }
+
+        updateSelectedPolicies();
+        updateAdditionalPolicyInfo();
+    }
+
+    function updateSelectedPolicies() {
+        const selectedConditionsPoliciesContainer = document.getElementById('selectedPolicies');
+        selectedConditionsPoliciesContainer.innerHTML = '';
+
+        selectedConditionsForPolicy.forEach(item => {
+            const policyItem = document.createElement('div');
+            policyItem.innerHTML = `
+                <input type="hidden" name="policyId" value="${item.policyId}">
+                <p>${item.policyDescription}</p>
+                `;
+
+            selectedConditionsPoliciesContainer.appendChild(policyItem);
+        });
+    }
+
+    function updateAdditionalPolicyInfo() {
+        const additionalPolicyInfoContainer = document.getElementById('additionalPolicyInfo');
+        additionalPolicyInfoContainer.innerHTML = '';
+
+        if (selectedConditionsForPolicy.length === 2) {
+            const descriptionInput = document.createElement('input');
+            descriptionInput.type = 'text';
+            descriptionInput.name = 'policyDescription';
+            descriptionInput.placeholder = 'enter policy description';
+            additionalPolicyInfoContainer.appendChild(descriptionInput);
+
+        } else if (selectedConditionsForPolicy.length > 2) {
+            const conditionInput = document.createElement('input');
+            conditionInput.type = 'text';
+            conditionInput.name = 'policyCondition';
+            conditionInput.placeholder = 'Condition';
+            additionalPolicyInfoContainer.appendChild(conditionInput);
+        }
+    }
+</script>
 <!----------------------------------------- adding policies and discounts ----------------------------------------->
 <div>
-    <button class="add-button" onclick="toggleDiscountChecklist()">Add Discount</button>
-    <button class="add-button" onclick="togglePolicyChecklist()">Add Policy</button>
-    <button class="add-button" onclick="openModal()">Add New Discount</button>
+    <button class="add-button" onclick="toggleDiscountChecklist()">Assemble Discounts</button>
+    <button class="add-button" onclick="togglePolicyChecklist()">Assemble Policies</button>
+    <button class="add-button" onclick="openDiscountModal()">Add New Discount</button>
+    <button class="add-button" onclick="openPolicyModal()">Add New Policy</button>
 </div>
 
 <script>

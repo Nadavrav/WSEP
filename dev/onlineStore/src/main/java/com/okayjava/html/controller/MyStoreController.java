@@ -1,25 +1,15 @@
 package com.okayjava.html.controller;
 
 import DomainLayer.Response;
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
-import DomainLayer.Stores.Conditions.ConditionTypes.Condition;
-import DomainLayer.Stores.Conditions.ConditionTypes.FilterCondition;
-import DomainLayer.Stores.Discounts.AdditiveDiscount;
-import DomainLayer.Stores.Discounts.BasicDiscount;
-import DomainLayer.Stores.Policies.Policy;
-import ServiceLayer.Service;
-import ServiceLayer.ServiceObjects.Fiters.ProductFilters.MinPriceProductFilter;
 import ServiceLayer.ServiceObjects.ServiceBid;
 import ServiceLayer.ServiceObjects.ServiceConditions.ConditionRecords.*;
-import ServiceLayer.ServiceObjects.ServiceConditions.ConditionTypes;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.*;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServiceBasicPolicy;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
+import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.CompositeMessageCondition;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -137,57 +127,46 @@ public class MyStoreController {
 
         ServiceMultiDiscount serviceMultiDiscount;
         ServiceBasicDiscount serviceBasicDiscount;
+        Response<ServiceDiscountInfo> response = null;
 
         if (discountIds.length == 2){
             if (condition.equals("AndCondition")) {
                 AndConditionRecord andConditionRecord = new AndConditionRecord(id1, id2);
                 serviceBasicDiscount = new ServiceBasicDiscount(description, amount, andConditionRecord);
-                server.addDiscount(request, serviceBasicDiscount, storeID);
+                response = server.addDiscount(request, serviceBasicDiscount, storeID);
             } else if (condition.equals("OrCondition")) {
                 OrConditionRecord orConditionRecord = new OrConditionRecord(id1, id2);
                 serviceBasicDiscount = new ServiceBasicDiscount(description, amount, orConditionRecord);
-                server.addDiscount(request, serviceBasicDiscount, storeID);
+                response = server.addDiscount(request, serviceBasicDiscount, storeID);
             } else if (condition.equals("XorCondition")) {
                 XorConditionRecord xorConditionRecord = new XorConditionRecord(id1, id2);
                 serviceBasicDiscount = new ServiceBasicDiscount(description, amount, xorConditionRecord);
-                server.addDiscount(request, serviceBasicDiscount, storeID);
+                response = server.addDiscount(request, serviceBasicDiscount, storeID);
             }
         } else if (discountIds.length > 2) {
             if (condition.equals("MinBetween")) {
                 serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.MinBetweenDiscount, description, Arrays.asList(discountIds));
-                server.addDiscount(request, serviceMultiDiscount, storeID);
+                response = server.addDiscount(request, serviceMultiDiscount, storeID);
             } else if (condition.equals("Additive")) {
                 serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.AdditiveDiscount, description, Arrays.asList(discountIds));
-                server.addDiscount(request, serviceMultiDiscount, storeID);
+                response = server.addDiscount(request, serviceMultiDiscount, storeID);
             } else if (condition.equals("MaxBetween")) {
                 serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.MaxBetweenDiscounts, description, Arrays.asList(discountIds));
-                server.addDiscount(request, serviceMultiDiscount, storeID);
+                response = server.addDiscount(request, serviceMultiDiscount, storeID);
             }
         }
 
-//        Response<Collection<ServiceDiscountInfo>> responseDiscount = server.getStoreDiscountInfo(request, storeID);
-//        if (responseDiscount.isError()) {
-//            alert.setFail(true);
-//            alert.setMessage(responseDiscount.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(responseDiscount.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//            model.addAttribute("discountInfo", responseDiscount.getValue());
-//        }
+        if (response.isError()) {
+            alert.setFail(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+        } else {
+            alert.setSuccess(true);
+            alert.setMessage(response.getMessage());
+            model.addAttribute("alert", alert.copy());
+            model.addAttribute("discountInfo", response.getValue());
+        }
 
-//        Response<HashSet<ServicePolicy>> responsePolicy = server.getStorePolicy(request, storeID);
-//        if (responsePolicy.isError()) {
-//            alert.setFail(true);
-//            alert.setMessage(responsePolicy.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            alert.setSuccess(true);
-//            alert.setMessage(responsePolicy.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//            model.addAttribute("policyInfo", responsePolicy.getValue());
-//        }
         alert.reset();
         return "MyStore";
 //        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
@@ -209,6 +188,7 @@ public class MyStoreController {
                                  @RequestParam("amount") Integer amount,
                                  Model model) {
 
+        System.out.println("in addNewDiscount function");
         model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
         model.addAttribute("storeName", StoreName);
@@ -229,7 +209,17 @@ public class MyStoreController {
                     BetweenDatesConditionRecord betweenDatesConditionRecord =
                             new BetweenDatesConditionRecord(fromDay, fromMonth, fromYear, untilDay, untilMonth, untilYear);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, betweenDatesConditionRecord);
-                    server.addDiscount(request, serviceBasicDiscount, storeID);
+                    Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
+                    if (!response.isError()) {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("discountInfo", response.getValue());
+                    }
+                } else {
+                    alert.setFail(true);
+                    alert.setMessage("failed to add discount!");
+                    model.addAttribute("alert", alert.copy());
                 }
             }
             case "LocalHourRangeCondition" -> {
@@ -247,37 +237,85 @@ public class MyStoreController {
                             new LocalHourRangeConditionRecord(lowerBoundaryHour, lowerBoundaryMin, upperBoundaryHour, upperBoundaryMin);
 
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, localHourRangeConditionRecord);
-                    server.addDiscount(request, serviceBasicDiscount, storeID);
+                    Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
+                    if (!response.isError()) {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("discountInfo", response.getValue());
+                    }
+                } else {
+                    alert.setFail(true);
+                    alert.setMessage("failed to add discount!");
+                    model.addAttribute("alert", alert.copy());
                 }
             }
             case "CategoryCondition" -> {
                 if (category != null) {
                     CategoryConditionRecord categoryConditionRecord = new CategoryConditionRecord(category);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, categoryConditionRecord);
-                    server.addDiscount(request, serviceBasicDiscount, storeID);
+                    Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
+                    if (!response.isError()) {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("discountInfo", response.getValue());
+                    }
+                } else {
+                    alert.setFail(true);
+                    alert.setMessage("failed to add discount!");
+                    model.addAttribute("alert", alert.copy());
                 }
             }
             case "NameCondition" -> {
                 if (name != null) {
-                    System.out.println("in name condition: " + name);
                     NameConditionRecord nameConditionRecord = new NameConditionRecord(name);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, nameConditionRecord);
-//                    server.addDiscount(request, serviceBasicDiscount, storeID);
-                    System.out.println("after adding disocunt: " + server.addDiscount(request, serviceBasicDiscount, storeID).getValue());
+                    Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
+                    if (!response.isError()) {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("discountInfo", response.getValue());
+                    }
+                } else {
+                    alert.setFail(true);
+                    alert.setMessage("failed to add discount!");
+                    model.addAttribute("alert", alert.copy());
                 }
             }
             case "MaxBagPriceCondition" -> {
                 if (maxBagPrice != null) {
                     MaxBagPriceConditionRecord maxBagPriceConditionRecord = new MaxBagPriceConditionRecord(maxBagPrice);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, maxBagPriceConditionRecord);
-                    server.addDiscount(request, serviceBasicDiscount, storeID);
+                    Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
+                    if (!response.isError()) {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("discountInfo", response.getValue());
+                    }
+                } else {
+                    alert.setFail(true);
+                    alert.setMessage("failed to add discount!");
+                    model.addAttribute("alert", alert.copy());
                 }
             }
             case "MinBagPriceCondition" -> {
                 if (minBagPrice != null) {
                     MinBagPriceConditionRecord minBagPriceConditionRecord = new MinBagPriceConditionRecord(minBagPrice);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, minBagPriceConditionRecord);
-                    server.addDiscount(request, serviceBasicDiscount, storeID);
+                    Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
+                    if (!response.isError()) {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("discountInfo", response.getValue());
+                    }
+                } else {
+                    alert.setFail(true);
+                    alert.setMessage("failed to add discount!");
+                    model.addAttribute("alert", alert.copy());
                 }
             }
             case "MaxTotalProductAmountCondition" -> {
@@ -285,7 +323,17 @@ public class MyStoreController {
                     MaxTotalProductAmountConditionRecord maxTotalProductAmountConditionRecord =
                             new MaxTotalProductAmountConditionRecord(maxTotalProductAmount);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, maxTotalProductAmountConditionRecord);
-                    server.addDiscount(request, serviceBasicDiscount, storeID);
+                    Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
+                    if (!response.isError()) {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("discountInfo", response.getValue());
+                    }
+                } else {
+                    alert.setFail(true);
+                    alert.setMessage("failed to add discount!");
+                    model.addAttribute("alert", alert.copy());
                 }
             }
             case "MinTotalProductAmountCondition" -> {
@@ -293,28 +341,320 @@ public class MyStoreController {
                     MinTotalProductAmountConditionRecord minTotalProductAmountConditionRecord =
                             new MinTotalProductAmountConditionRecord(minTotalProductAmount);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, minTotalProductAmountConditionRecord);
-                    server.addDiscount(request, serviceBasicDiscount, storeID);
+                    Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
+                    if (!response.isError()) {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("discountInfo", response.getValue());
+                    }
+                } else {
+                    alert.setFail(true);
+                    alert.setMessage("failed to add discount!");
+                    model.addAttribute("alert", alert.copy());
                 }
             }
             default -> {
             }
         }
-//        alert.setSuccess(true);
-//        alert.setMessage("Discount was added to store " + StoreName);
-//        model.addAttribute("alert", alert.copy());
         alert.reset();
 //        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
         return "MyStore";
     }
 
-//    @PostMapping ("policy_option")
-//    public String addNewPolicy(@RequestParam("policyConditionSelect") String condition,
-//                               @RequestParam("policyDescription") String description,
-//                               @RequestParam(value = "message", required = false) String message,
-//                               Model model){
-//
-//
-//    }
+    @PostMapping("/assemble-policy")
+    public String assemblePolicy(@RequestParam("policyId") Integer[] policyIds,
+                                 @RequestParam("policyDescription") String description,
+                                 @RequestParam("policyCondition") String condition,
+                                 Model model) {
+
+        System.out.println("in assemble policy function");
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("storeName", StoreName);
+        Integer id1 = policyIds[0]; //first selected discount
+        Integer id2 = policyIds[1]; // second selected discount
+        System.out.println("ids: " + id1 + " , " + id2);
+        ServiceBasicPolicy serviceBasicPolicy;
+
+        if (policyIds.length == 2){
+            if (condition.equals("AndCondition")) {
+                AndConditionRecord andConditionRecord = new AndConditionRecord(id1, id2);
+                serviceBasicPolicy = new ServiceBasicPolicy(description, andConditionRecord);
+                Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                if (response.isError()) {
+                    alert.setFail(true);
+                    alert.setMessage(response.getMessage());
+                    model.addAttribute("alert", alert.copy());
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage(response.getMessage());
+                    model.addAttribute("alert", alert.copy());
+                    model.addAttribute("policyInfo", response.getValue());
+                }
+            } else if (condition.equals("OrCondition")) {
+                OrConditionRecord orConditionRecord = new OrConditionRecord(id1, id2);
+                serviceBasicPolicy = new ServiceBasicPolicy(description, orConditionRecord);
+                Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                if (response.isError()) {
+                    alert.setFail(true);
+                    alert.setMessage(response.getMessage());
+                    model.addAttribute("alert", alert.copy());
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage(response.getMessage());
+                    model.addAttribute("alert", alert.copy());
+                    model.addAttribute("policyInfo", response.getValue());
+                }
+            } else if (condition.equals("XorCondition")) {
+                XorConditionRecord xorConditionRecord = new XorConditionRecord(id1, id2);
+                serviceBasicPolicy = new ServiceBasicPolicy(description, xorConditionRecord);
+                Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                if (response.isError()) {
+                    alert.setFail(true);
+                    alert.setMessage(response.getMessage());
+                    model.addAttribute("alert", alert.copy());
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage(response.getMessage());
+                    model.addAttribute("alert", alert.copy());
+                    model.addAttribute("policyInfo", response.getValue());
+                }
+            }
+        }
+
+        else {
+            alert.setFail(true);
+            alert.setMessage("You should choose only 2 policies in order to assemble them!");
+            model.addAttribute("alert", alert.copy());
+        }
+        alert.reset();
+        return "MyStore";
+//        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
+    }
+
+
+    @PostMapping ("add-basic-policy")
+    public String addNewPolicy(@RequestParam("policyConditionSelect") String condition,
+                               @RequestParam("policyDescription") String description,
+                               @RequestParam(value = "startDatePolicy", required = false) String startDate,
+                               @RequestParam(value = "endDatePolicy", required = false) String endDate,
+                               @RequestParam(value = "startHourPolicy", required = false) String startHour,
+                               @RequestParam(value = "endHourPolicy", required = false) String endHour,
+                               @RequestParam(value = "categoryPolicy", required = false) String category,
+                               @RequestParam(value = "namePolicy", required = false) String name,
+                               @RequestParam(value = "maxBagPricePolicy", required = false) Double maxBagPrice,
+                               @RequestParam(value = "minBagPricePolicy", required = false) Double minBagPrice,
+                               @RequestParam(value = "maxTotalProductAmountPolicy", required = false) Double maxTotalProductAmount,
+                               @RequestParam(value = "minTotalProductAmountPolicy", required = false) Integer minTotalProductAmount,
+                               Model model){
+
+        System.out.println("in addNewPolicy function");
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("storeName", StoreName);
+        switch (condition) {
+            case "BetweenDatesCondition" -> {
+                if (startDate != null && endDate != null) {
+                    String[] startDateParts = startDate.split("-");
+                    String[] endDateParts = endDate.split("-");
+
+                    int fromDay = Integer.parseInt(startDateParts[2]);
+                    int fromMonth = Integer.parseInt(startDateParts[1]);
+                    int fromYear = Integer.parseInt(startDateParts[0]);
+
+                    int untilDay = Integer.parseInt(endDateParts[2]);
+                    int untilMonth = Integer.parseInt(endDateParts[1]);
+                    int untilYear = Integer.parseInt(endDateParts[0]);
+
+                    BetweenDatesConditionRecord betweenDatesConditionRecord =
+                            new BetweenDatesConditionRecord(fromDay, fromMonth, fromYear, untilDay, untilMonth, untilYear);
+                    ServiceBasicPolicy serviceBasicPolicy = new ServiceBasicPolicy(description, betweenDatesConditionRecord);
+                    Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("policyInfo", response.getValue());
+                    }
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage("Failed to add new policy");
+                    model.addAttribute("alert", alert.copy());
+                }
+            }
+            case "LocalHourRangeCondition" -> {
+                if (startHour != null && endHour != null) {
+                    String[] startHourParts = startHour.split(":");
+                    String[] endHourParts = endHour.split(":");
+
+                    int lowerBoundaryHour = Integer.parseInt(startHourParts[0]);
+                    int lowerBoundaryMin = Integer.parseInt(startHourParts[1]);
+
+                    int upperBoundaryHour = Integer.parseInt(endHourParts[0]);
+                    int upperBoundaryMin = Integer.parseInt(endHourParts[1]);
+
+                    LocalHourRangeConditionRecord localHourRangeConditionRecord =
+                            new LocalHourRangeConditionRecord(lowerBoundaryHour, lowerBoundaryMin, upperBoundaryHour, upperBoundaryMin);
+
+                    ServiceBasicPolicy serviceBasicPolicy = new ServiceBasicPolicy(description, localHourRangeConditionRecord);
+                    Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                    if (response.isError()){
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("policyInfo", response.getValue());
+                    }
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage("Failed to add new policy");
+                    model.addAttribute("alert", alert.copy());
+                }
+            }
+            case "CategoryCondition" -> {
+                if (category != null) {
+                    CategoryConditionRecord categoryConditionRecord = new CategoryConditionRecord(category);
+                    ServiceBasicPolicy serviceBasicPolicy = new ServiceBasicPolicy(description, categoryConditionRecord);
+                    Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                    if (response.isError()){
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("policyInfo", response.getValue());
+                    }
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage("Failed to add new policy");
+                    model.addAttribute("alert", alert.copy());
+                }
+            }
+            case "NameCondition" -> {
+                if (name != null) {
+                    System.out.println("in name condition: " + name);
+                    NameConditionRecord nameConditionRecord = new NameConditionRecord(name);
+                    ServiceBasicPolicy serviceBasicPolicy = new ServiceBasicPolicy(description, nameConditionRecord);
+                    Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                    if (response.isError()){
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("policyInfo", response.getValue());
+                    }
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage("Failed to add new policy");
+                    model.addAttribute("alert", alert.copy());
+                }
+            }
+            case "MaxBagPriceCondition" -> {
+                if (maxBagPrice != null) {
+                    MaxBagPriceConditionRecord maxBagPriceConditionRecord = new MaxBagPriceConditionRecord(maxBagPrice);
+                    ServiceBasicPolicy serviceBasicPolicy = new ServiceBasicPolicy(description, maxBagPriceConditionRecord);
+                    Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                    if (response.isError()){
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("policyInfo", response.getValue());
+                    }
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage("Failed to add new policy");
+                    model.addAttribute("alert", alert.copy());
+                }
+            }
+            case "MinBagPriceCondition" -> {
+                if (minBagPrice != null) {
+                    MinBagPriceConditionRecord minBagPriceConditionRecord = new MinBagPriceConditionRecord(minBagPrice);
+                    ServiceBasicPolicy serviceBasicPolicy = new ServiceBasicPolicy(description, minBagPriceConditionRecord);
+                    Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                    if (response.isError()){
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("policyInfo", response.getValue());
+                    }
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage("Failed to add new policy");
+                    model.addAttribute("alert", alert.copy());
+                }
+            }
+            case "MaxTotalProductAmountCondition" -> {
+                if (maxTotalProductAmount != null) {
+                    MaxTotalProductAmountConditionRecord maxTotalProductAmountConditionRecord =
+                            new MaxTotalProductAmountConditionRecord(maxTotalProductAmount);
+                    ServiceBasicPolicy serviceBasicPolicy = new ServiceBasicPolicy(description, maxTotalProductAmountConditionRecord);
+                    Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                    if (response.isError()){
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("policyInfo", response.getValue());
+                    }
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage("Failed to add new policy");
+                    model.addAttribute("alert", alert.copy());
+                }
+            }
+            case "MinTotalProductAmountCondition" -> {
+                if (minTotalProductAmount != null) {
+                    MinTotalProductAmountConditionRecord minTotalProductAmountConditionRecord =
+                            new MinTotalProductAmountConditionRecord(minTotalProductAmount);
+                    ServiceBasicPolicy serviceBasicPolicy = new ServiceBasicPolicy(description, minTotalProductAmountConditionRecord);
+                    Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
+                    if (response.isError()){
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
+                        alert.setSuccess(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                        model.addAttribute("policyInfo", response.getValue());
+                    }
+                } else {
+                    alert.setSuccess(true);
+                    alert.setMessage("Failed to add new policy");
+                    model.addAttribute("alert", alert.copy());
+                }
+            }
+            default -> {
+            }
+        }
+        alert.reset();
+//        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
+        return "MyStore";
+    }
 
     @RequestMapping(value="/dailyStoreIncome", method = RequestMethod.GET)
     public String showDailyIncomeToStore(@RequestParam("date") String dateString,
