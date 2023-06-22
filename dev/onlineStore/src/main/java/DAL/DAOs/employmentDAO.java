@@ -2,8 +2,8 @@ package DAL.DAOs;
 
 import DAL.DTOs.EmploymentDTO;
 import DAL.Entities.EmploymentEntity;
+import DAL.Entities.*;
 import org.hibernate.*;
-
 import java.sql.SQLException;
 import java.util.*;
 
@@ -52,6 +52,37 @@ public class employmentDAO {
 
             session.beginTransaction();
             session.save(employmentEntity);
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            throw new SQLException("Cant connect to DB,saveEmployment");
+        }
+        finally {
+            if (session.isConnected()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+            }
+            session.close();
+        }
+    }
+    /**
+     * A function to update an employment status into the db
+     * @param employee - the username of the employee
+     * @param storeId - the store id that the employment belongs to
+     * @param appointer - the username of who make the appointment
+     * @param role - the role of the employee
+     * @param permissions - the permissions the employee has as a string or numbers sepereted by a ','
+     * @throws SQLException - if there was an error connecting to db
+     */
+    public void updateEmployment(String employee,int storeId, String appointer,int role, String permissions) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try {
+            EmploymentEntityPK key=new EmploymentEntityPK(employee,storeId);
+            EmploymentEntity employmentEntity = session.get(EmploymentEntity.class,key);
+            if (employmentEntity != null) {
+                employmentEntity.setRole(role);
+                employmentEntity.setAppointer(appointer);
+                employmentEntity.setPermissions(permissions);
+                session.update(employmentEntity);
+            }
             session.getTransaction().commit();
         } catch (HibernateException e) {
             throw new SQLException("Cant connect to DB,saveEmployment");

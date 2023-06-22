@@ -136,6 +136,23 @@ public class DALService {
             throw new SQLException("SQL fail in saveEmployment");
         }
     }
+    /**
+     * A function to update the employment in the db
+     * @param employee - employee username
+     * @param storeId - the store id the employment was created fir
+     * @param appointer - the appointers username
+     * @param role - the role (0,1,2)
+     * @param permissions - a string of permissions
+     */
+    public void updateEmployment(String employee,int storeId, String appointer,int role, String permissions) throws SQLException {
+        try{
+            employmentDAO.saveEmployment(employee,storeId,appointer,role,permissions);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saveEmployment");
+        }
+    }
 
     /**
      * A function the get the unique employment by the employee and by storeId

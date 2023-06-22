@@ -14,6 +14,15 @@ public class EmploymentEntityPK implements Serializable {
     @Id
     private int storeId;
 
+    public EmploymentEntityPK(String employee, int storeId){
+        this.employee = employee;
+        this.storeId = storeId;
+
+    }
+    public EmploymentEntityPK(){
+
+    }
+
     public String getEmployee() {
         return employee;
     }

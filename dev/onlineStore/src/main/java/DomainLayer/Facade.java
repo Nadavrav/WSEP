@@ -816,9 +816,12 @@ private void fetchCartIfExists(RegisteredUser user){
         }
         // check if appointedUserName has appointment with storeId as storeOwner
         Employment appointedEmployment = null;
+        boolean hadEmployment = false;
         if(employmentList.get(appointedUserName) != null)
         {
             appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+            if(appointedEmployment == null)
+                hadEmployment = true;
         }
         else{
             //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store - done
@@ -886,9 +889,16 @@ private void fetchCartIfExists(RegisteredUser user){
                   employmentList.put(appointedUserName, newEmploymentMap);
               }
 
-              //save into db
-              DS.saveEmployment(appointedEmployment.getEmployee(),appointedEmployment.getStore(),appointedEmployment.getAppointer(),appointedEmployment.getRole().ordinal(),appointedEmployment.getPermissionString());
-              //end save into db
+              if(hadEmployment){
+                  //update Db
+                  DS.updateEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
+                  //end update
+              }
+              else {
+                  //save into db
+                  DS.saveEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
+                  //end save into db
+              }
 
               employmentList.get(appointedUserName).put(storeId, appointedEmployment);
               store.addNewListener(appointed);
@@ -997,9 +1007,12 @@ private void fetchCartIfExists(RegisteredUser user){
        }
         // check if appointedUserName has appointment with storeId as storeOwner or as storeManager
        Employment appointedEmployment=null;
+       boolean hadEmployment = false;
        if(employmentList.get(appointedUserName) != null)
        {
            appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+           if(appointedEmployment == null)
+               hadEmployment = true;
        }
        else{
            //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store - done
@@ -1014,9 +1027,16 @@ private void fetchCartIfExists(RegisteredUser user){
         //add appointedUserName as store manager
         appointedEmployment = new Employment(((RegisteredUser) appointer).getUserName(),appointed.getUserName(),store.getID(),Role.StoreManager);
 
-       //save into db
-       DS.saveEmployment(appointedEmployment.getEmployee(),appointedEmployment.getStore(),appointedEmployment.getAppointer(),appointedEmployment.getRole().ordinal(),appointedEmployment.getPermissionString());
-       //end save into db
+       if(hadEmployment){
+           //update Db
+           DS.updateEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
+           //end update
+       }
+       else {
+           //save into db
+           DS.saveEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
+           //end save into db
+       }
 
         if(employmentList.get(appointedUserName)== null) {
             Map<Integer, Employment> newEmploymentMap = new HashMap<>();
@@ -1032,6 +1052,38 @@ private void fetchCartIfExists(RegisteredUser user){
         //throw e
 
     }
+    private void loadUserFromDb(String userName) throws Exception {
+        //TODO pull user from db to check if he exists if doesnt throw exception - done
+        if(!registeredUserList.containsKey(userName)) {
+            registeredUserDTO userDTO = DS.getUser(userName);
+            RegisteredUser user;
+            if (userDTO != null) {
+                if (DS.isAdmin(userName)) {
+                    user = new Admin(userDTO);
+                } else {
+                    user = new RegisteredUser(userDTO);
+                }
+                registeredUserList.put(userName, user);
+            }
+        }
+    }
+    private Employment fetchEmploymentForDBIfExists(String username,int storeId) throws SQLException {
+        Employment appointerEmployment =null;
+        if(employmentList.get(username) != null)
+        {
+            appointerEmployment = employmentList.get(username).get(storeId);
+            if(appointerEmployment != null)
+                return appointerEmployment;
+        }
+        employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(username,storeId);
+        if(employmentDTO == null){
+            return null;
+        }
+        else{
+            appointerEmployment = new Employment(employmentDTO);
+            return appointerEmployment;
+        }
+    }
 
     public void removeEmployee(int appointerId, String appointedUserName, int storeId) throws Exception{
         logger.info("Staring remove employee");
@@ -1046,6 +1098,8 @@ private void fetchCartIfExists(RegisteredUser user){
         }
         // check if store id exist
         Store store=storesList.get(storeId);
+        if(store == null)
+            store = fetchStoreIfExists(storeId);
         if(store==null){
             logger.warning("remove failed: no store with "+storeId+" store id");
             throw  new Exception("invalid store Id");
@@ -1054,8 +1108,16 @@ private void fetchCartIfExists(RegisteredUser user){
             logger.info("remove failed: store is closed");
             throw  new Exception("cant remove workers from closed store");
         }
+        Employment appointedEmployment = fetchEmploymentForDBIfExists(appointedUserName,storeId);
+        if(appointedEmployment != null)
+        {
+
+        }
+        else {
+            throw new Exception("this userName not appointed to this store");
+        }
         try{
-            Employment appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+           // Employment appointedEmployment = employmentList.get(appointedUserName).get(storeId);
             if(appointedEmployment == null){
                 throw new Exception("this userName not appointed to this store");
             }
