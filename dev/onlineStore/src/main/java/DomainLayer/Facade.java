@@ -297,7 +297,7 @@ public class Facade {
                 //addPolicy(BagPolicy,nadiaStoreID);
                 //addPolicy(BagPolicy,natalieStoreID);
 
-                Map<Date, Integer> x= getVisitorsAmountBetweenDates(nadavID,21,6,2023,21,6,2023);
+                Map<String, Integer> x= getVisitorsAmountBetweenDates(nadavID,21,6,2023,21,6,2023);
 
                 logout(nadavID);
                 logout(nadiaID);

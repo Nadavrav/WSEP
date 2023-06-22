@@ -167,7 +167,7 @@ public class AdminController {
         System.out.println(endMonth + "/"+ endDay +"/"+ endYear);
 
 
-        Response<Map<Date, Integer>> response = server.getVisitorsAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
+        Response<Map<String, Integer>> response = server.getVisitorsAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -206,7 +206,7 @@ public class AdminController {
         System.out.println(endMonth + "/"+ endDay +"/"+ endYear);
 
 
-        Response<Map<Date, Integer>> response = server.getUsersWithoutStoresAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
+        Response<Map<String, Integer>> response = server.getUsersWithoutStoresAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -245,7 +245,7 @@ public class AdminController {
         System.out.println(endMonth + "/"+ endDay +"/"+ endYear);
 
 
-        Response<Map<Date, Integer>> response = server.getStoreManagersOnlyAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
+        Response<Map<String, Integer>> response = server.getStoreManagersOnlyAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -284,7 +284,7 @@ public class AdminController {
         System.out.println(endMonth + "/"+ endDay +"/"+ endYear);
 
 
-        Response<Map<Date, Integer>> response = server.getStoreOwnersAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
+        Response<Map<String, Integer>> response = server.getStoreOwnersAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());
@@ -323,7 +323,7 @@ public class AdminController {
         System.out.println(endMonth + "/"+ endDay +"/"+ endYear);
 
 
-        Response<Map<Date, Integer>> response = server.getAdminsAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
+        Response<Map<String, Integer>> response = server.getAdminsAmountBetweenDates(request, startDay, startMonth, startYear, endDay, endMonth, endYear);
         if (response.isError()) {
             alert.setFail(true);
             alert.setMessage(response.getMessage());

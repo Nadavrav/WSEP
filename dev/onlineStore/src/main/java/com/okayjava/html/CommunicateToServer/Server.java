@@ -291,23 +291,23 @@ public class Server {
         return getSession(request).getUserBids();
     }
 
-    public Response<Map<Date,Integer>> getVisitorsAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
+    public Response<Map<String,Integer>> getVisitorsAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd){
         return getSession(request).getVisitorsAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
     }
 
-    public Response<Map<Date,Integer>> getUsersWithoutStoresAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
+    public Response<Map<String,Integer>> getUsersWithoutStoresAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
         return getSession(request).getUsersWithoutStoresAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
     }
 
-    public Response<Map<Date,Integer>> getStoreManagersOnlyAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
+    public Response<Map<String,Integer>> getStoreManagersOnlyAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
         return getSession(request).getStoreManagersOnlyAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
     }
 
-    public Response<Map<Date,Integer>> getStoreOwnersAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
+    public Response<Map<String,Integer>> getStoreOwnersAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
         return getSession(request).getStoreOwnersAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
     }
 
-    public Response<Map<Date,Integer>> getAdminsAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
+    public Response<Map<String,Integer>> getAdminsAmountBetweenDates(HttpServletRequest request, int dayStart,int monthStart,int yearStart,int dayEnd,int monthEnd, int yearEnd) {
         return getSession(request).getAdminsAmountBetweenDates(dayStart, monthStart, yearStart, dayEnd, monthEnd, yearEnd);
     }
 }
