@@ -75,6 +75,7 @@ public class RegisteredUser extends SiteVisitor{
         this.password = userDTO.getPassword();
         this.loggedIn = false;
         counterOffers=new HashMap<>();
+        waitingMessages=new LinkedList<String>();
     }
     private byte[] hashString(String str) throws NoSuchAlgorithmException{
         byte[] unHashedBytes = str.getBytes();

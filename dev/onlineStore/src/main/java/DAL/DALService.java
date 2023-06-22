@@ -133,7 +133,7 @@ public class DALService {
         }
         catch (Exception e)
         {
-            throw new SQLException("SQL fail in saveUser");
+            throw new SQLException("SQL fail in saveEmployment");
         }
     }
 
@@ -155,10 +155,25 @@ public class DALService {
     }
 
     /**
-     * //TODO
-     *
-     * @param storeId
-     * @return
+     * A function to get the owner employments of a store
+     * @param storeId - the id of said store
+     * @return - a linked list containing all the dtos of employments of store owners
+     * @throws SQLException if cant connect to db
+     */
+    public LinkedList<employmentDTO> getStoreOwnersEmployment(int storeId) throws SQLException {
+        try{
+            LinkedList<employmentDTO> employments = employmentDAO.getStoreOwnersEmployment(storeId);
+            return employments;
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
+    /**
+     * Gets the store owners based on the id of the store
+     * @param storeId id of said store
+     * @return a linked list containing the dtos of the owners
      * @throws SQLException
      */
     public LinkedList<registeredUserDTO> getStoreOwnersByStoreId(int storeId) throws SQLException {
@@ -168,7 +183,7 @@ public class DALService {
         }
         catch (Exception e)
         {
-            throw new SQLException("SQL fail in getEmployment, username and storeId");
+            throw new SQLException("SQL fail in getEmployment, getStoreOwnersByStoreId");
         }
     }
 
