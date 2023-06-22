@@ -1,6 +1,7 @@
 package DomainLayer;
 
 
+import DAL.Entities.EmploymentEntity;
 import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
@@ -822,13 +823,56 @@ private void fetchCartIfExists(RegisteredUser user){
             appointedEmployment = employmentList.get(appointedUserName).get(storeId);
         }
         else{
-            //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store
+            //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store - done
+            employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(appointedUserName,storeId);
+            if(employmentDTO != null)
+                appointedEmployment = new Employment(employmentDTO);
         }
         if(appointedEmployment!=null && appointedEmployment.checkIfOwner()){
             throw  new Exception("appointedUserName is already Owner of store Id");
         }
-        //TODO load all storeowners of this storeId into the runtime and set them as listeners
+        //TODO load all storeowners of this storeId into the runtime -done
+        LinkedList<registeredUserDTO> owners = DS.getStoreOwnersByStoreId(storeId);
+        if(!owners.isEmpty())
+        {
+            for (registeredUserDTO userDTO: owners) {
+                if(!(registeredUserList.containsKey(userDTO.getUserName()))){
+                    //meaning this user isnt in the runtime
+                    if(DS.isAdmin(userDTO.getUserName()))
+                    {
+                        Admin toAdd = new Admin(userDTO);
+                        registeredUserList.put(toAdd.getUserName(),toAdd);
+                        //todo set them as listeners - done
+                        store.addNewListener(toAdd);
+                        store.addNewOwnerListener(toAdd);
+                    }
+                    else {
+                        RegisteredUser toAdd = new RegisteredUser(userDTO);
+                        registeredUserList.put(toAdd.getUserName(), toAdd);
+                        //todo set them as listeners - done
+                        store.addNewListener(toAdd);
+                        store.addNewOwnerListener(toAdd);
+                    }
+                }
+                //todo load their employment if needed
+                if(employmentList.get(userDTO.getUserName()) == null && employmentList.get(userDTO.getUserName()).get(storeId) == null)
+                {
+                    //meaning that he is an owner but his employment isnt loded
+                    employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(userDTO.getUserName(),storeId);
+                    if(employmentList.get(userDTO.getUserName()) == null)
+                    {
+                        Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+                        employmentList.put(((RegisteredUser) appointer).getUserName(), newEmploymentMap);
+                    }
+                    Employment employmenttoAdd = new Employment(employmentDTO);
+                    employmentList.get(userDTO.getUserName()).put(storeId,employmenttoAdd);
+
+                }
+                //in the case the if is false that means the the employment is already loaded so we dont need to load it
+            }
+        }
         //add appointedUserName as store owner
+          System.out.println("got past all the dal work");
           if(appointmentsRequests.get(storeId) == null){
               appointmentsRequests.put(storeId,new HashMap<>());
           }
@@ -836,6 +880,7 @@ private void fetchCartIfExists(RegisteredUser user){
           appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
           store.notifyOwnersAboutNewEmploymentRequests(((RegisteredUser) appointer).getUserName(),appointedUserName);
 
+          System.out.println("got into this code");
           if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
               appointedEmployment = new Employment(((RegisteredUser) appointer).getUserName(), appointed.getUserName(), store.getID(), Role.StoreOwner);
               if (employmentList.get(appointedUserName) == null) {
@@ -844,7 +889,7 @@ private void fetchCartIfExists(RegisteredUser user){
               }
 
               //save into db
-              //DS.saveEmployment(appointedEmployment.getEmployee(),appointedEmployment.getStore(),appointedEmployment.getAppointer(),appointedEmployment.getRole().ordinal(),appointedEmployment.getPermissionString());
+              DS.saveEmployment(appointedEmployment.getEmployee(),appointedEmployment.getStore(),appointedEmployment.getAppointer(),appointedEmployment.getRole().ordinal(),appointedEmployment.getPermissionString());
               //end save into db
 
               employmentList.get(appointedUserName).put(storeId, appointedEmployment);
@@ -877,44 +922,104 @@ private void fetchCartIfExists(RegisteredUser user){
         }
         // check if store id exist
         Store store=storesList.get(storeId);
-        if(store==null){
-            logger.warning("null store warning ");
-            throw  new Exception("inValid store Id");
-        }
+       if (store == null) {
+           //TODO get store from db - DONE
+           StoreDTO storeDTO = DS.getStoreById(storeId);
+           if(storeDTO != null) {
+               store = new Store(storeDTO);
+               storesList.put(storeId,store);
+           }
+           else {
+               logger.warning("null store warning ");
+               throw new Exception("inValid store Id");
+           }
+       }
         if(!store.getActive()){
             logger.warning("closed store you cant work while its close");
             throw  new Exception("this is closed Store");
         }
         // check if appointer is owner (or founder) of storeId
         Employment appointerEmployment =null;
-        try{
-            appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
-            logger.warning("the appointer is not owner of store id ");
-        }catch (Exception e){
-            throw  new Exception("the appointer is not owner of store id");
-        }
+       if(employmentList.get(((RegisteredUser) appointer).getUserName()) != null)
+       {
+           appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+       }
+       else {
+           //TODO get employment from db by appointer username and storeId - done
+           employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+           //TODO if the DTO we get is null then throw the exception else - done
+           if(employmentDTO == null){
+               logger.warning("the appointer is not owner of store id warning");
+               throw new Exception("the appointer is not owner of store id");
+           }
+           //TODO create it in the employment list and set appointerEmployment to be the DTO - done
+           else{
+               appointerEmployment = new Employment(employmentDTO);
+               Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+               employmentList.put(((RegisteredUser) appointer).getUserName(), newEmploymentMap);
+               employmentList.get(((RegisteredUser) appointer).getUserName()).put(storeId,appointerEmployment);
+           }
+       }
 
-        if(appointerEmployment==null || !appointerEmployment.canAppointManager()){
-            throw  new Exception("User isnt allowed to appoint store manager");
-        }
+       if (appointerEmployment == null || !appointerEmployment.canAppointManager()) {
+           //TODO get employment from db by appointer username and storeId(this could happen if the - done
+           employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+           if(employmentDTO == null){
+               logger.warning("the appointer is not owner of store id warning");
+               throw new Exception("the appointer is not owner of store id");
+           }
+           else{
+               appointerEmployment = new Employment(employmentDTO);
+               employmentList.get(((RegisteredUser) appointer).getUserName()).put(storeId,appointerEmployment);
+               if(!appointerEmployment.canAppointManager())
+               {
+                   throw  new Exception("User cannot appoint store owner");
+               }
+           }
+           //TODO appointer has an appointment but not at this store(in the runtime) so we need to pull from db to make sure) - done
+       }
         // check if appointedUserName is registered to system
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
-        if(appointed==null){
-            throw  new Exception("inValid appointed UserName");
-        }
+       if (appointed == null) {
+           //TODO pull user from db to check if he exists if doesnt throw exception - done
+           registeredUserDTO userDTO = DS.getUser(appointedUserName);
+           if(userDTO != null) {
+               if(DS.isAdmin(appointedUserName)){
+                   appointed = new Admin(userDTO);
+               }
+               else {
+                   appointed = new RegisteredUser(userDTO);
+               }
+               registeredUserList.put(appointedUserName, appointed);
+           }
+           else {
+               logger.warning("null appointer ");
+               throw  new Exception("inValid appointed UserName");
+           }
+       }
         // check if appointedUserName has appointment with storeId as storeOwner or as storeManager
-        Employment appointedEmployment=null;
-        try{
-            appointedEmployment = employmentList.get(appointedUserName).get(storeId);
-        }catch (Exception e){
-
-        }
+       Employment appointedEmployment=null;
+       if(employmentList.get(appointedUserName) != null)
+       {
+           appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+       }
+       else{
+           //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store - done
+           employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(appointedUserName,storeId);
+           if(employmentDTO != null)
+               appointedEmployment = new Employment(employmentDTO);
+       }
 
         if(appointedEmployment!=null && (appointedEmployment.checkIfOwner() || appointedEmployment.checkIfManager())){
             throw  new Exception("appointedUserName is already owner or manager of store Id");
         }
         //add appointedUserName as store manager
         appointedEmployment = new Employment(((RegisteredUser) appointer).getUserName(),appointed.getUserName(),store.getID(),Role.StoreManager);
+
+       //save into db
+       DS.saveEmployment(appointedEmployment.getEmployee(),appointedEmployment.getStore(),appointedEmployment.getAppointer(),appointedEmployment.getRole().ordinal(),appointedEmployment.getPermissionString());
+       //end save into db
+
         if(employmentList.get(appointedUserName)== null) {
             Map<Integer, Employment> newEmploymentMap = new HashMap<>();
             employmentList.put(appointedUserName, newEmploymentMap);
@@ -951,29 +1056,6 @@ private void fetchCartIfExists(RegisteredUser user){
             logger.info("remove failed: store is closed");
             throw  new Exception("cant remove workers from closed store");
         }
-//        try {
-//            Map<Integer, Employment> appointerEmploymentMap = employmentList.get(((RegisteredUser) appointer).getUserName());
-//            if (appointerEmploymentMap == null) {
-//                throw new Exception("user " + ((RegisteredUser) appointer).getUserName()+" has no appointed employees");
-//            }
-//            boolean found=false;
-//            for(Integer userId:appointerEmploymentMap.keySet()){
-//                String workerName=appointerEmploymentMap.get(storeId).getEmployee().getUserName();
-//                if (workerName.equals(appointedUserName)) {
-//                    found = true;
-//                    cascadeRemoveAllEmployees(workerName);
-//                    appointerEmploymentMap.remove(userId);
-//                    break;
-//                }
-//            }
-//            if(!found)
-//                throw new Exception("user has no employee named "+appointedUserName);
-//
-//        }
-//            catch (Exception e){
-//            logger.warning("remove employee failed- probably failed while casting");
-//            throw new Exception(e.getMessage());
-//        }
         try{
             Employment appointedEmployment = employmentList.get(appointedUserName).get(storeId);
             if(appointedEmployment == null){
@@ -1007,16 +1089,7 @@ private void fetchCartIfExists(RegisteredUser user){
             }
         }
     }
-
-//    private void cascadeRemoveAllEmployees(String userName){
-//            Map<Integer,Employment> employmentMap=employmentList.get(userName);
-//            for(Integer id:employmentMap.keySet()) {
-//                cascadeRemoveAllEmployees(employmentMap.get(id).getAppointer().getUserName());
-//                employmentMap.remove(id);
-//            }
-//            employmentList.remove(userName);
-//        }
-        public Employment changeStoreManagerPermission(int visitorID, String username, int storeID, List<Permission> permissions) throws Exception {
+    public Employment changeStoreManagerPermission(int visitorID, String username, int storeID, List<Permission> permissions) throws Exception {
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorID);
         //lock appointer
@@ -1296,9 +1369,12 @@ private void fetchCartIfExists(RegisteredUser user){
         store.documentOwner(((RegisteredUser) User).getUserName());
         DS.saveStore(store.getId(),store.getName(),store.getActive(),store.getRate());
         // add to store list
-        storesList.put(store.getID(),store);
+
         //new Employment
         Employment employment = new Employment(((RegisteredUser) User).getUserName(),store.getID(),Role.StoreFounder);
+        DS.saveEmployment(employment.getEmployee(),employment.getStore(),employment.getAppointer(),employment.getRole().ordinal(),employment.getPermissionString());
+
+        storesList.put(store.getID(),store);
         logger.config("adding new employment to the new store ");
         // andd to employment list
         if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
@@ -1307,10 +1383,6 @@ private void fetchCartIfExists(RegisteredUser user){
         }
         employmentList.get(((RegisteredUser) User).getUserName()).put(store.getID(),employment);
         logger.fine("open new store with name" + storeName+" done successfully");
-
-        //Save store to DB
-       // DS.saveStore(store.getID(),storeName,true,store.getRate());
-        //End save
 
         return store.getID();
     }

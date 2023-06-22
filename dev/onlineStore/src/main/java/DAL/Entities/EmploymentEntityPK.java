@@ -9,11 +9,9 @@ import java.io.Serializable;
 public class EmploymentEntityPK implements Serializable {
     @Column(name = "employee")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String employee;
     @Column(name = "storeId")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int storeId;
 
     public String getEmployee() {

@@ -106,7 +106,7 @@ public class employmentDAO {
         try{
             Query<EmploymentEntity> query = session.createQuery("FROM EmploymentEntity WHERE storeId = :storeId AND role != 0");
             query.setParameter("storeId",storeId);
-            LinkedList<EmploymentEntity> employmentEntities = (LinkedList<EmploymentEntity>) query.getResultList();
+            ArrayList<EmploymentEntity> employmentEntities = (ArrayList<EmploymentEntity>) query.getResultList();
 
             if(employmentEntities != null && !employmentEntities.isEmpty()) {
                 session.close();
@@ -116,6 +116,39 @@ public class employmentDAO {
                     }
                 return userNames;
                 }
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in getEmploymentByUsernameAndStoreId");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * A function to get the owner employments of a store
+     * @param storeId - the id of said store
+     * @return - a linked list containing all the dtos of employments of store owners
+     */
+    public LinkedList<employmentDTO> getStoreOwnersEmployment(int storeId) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+            Query<EmploymentEntity> query = session.createQuery("FROM EmploymentEntity WHERE storeId = :storeId AND role != 0");
+            query.setParameter("storeId",storeId);
+            LinkedList<EmploymentEntity> employmentEntities = (LinkedList<EmploymentEntity>) query.getResultList();
+
+            if(employmentEntities != null && !employmentEntities.isEmpty()) {
+                session.close();
+                LinkedList<employmentDTO> employments = new LinkedList<>();
+                for (EmploymentEntity EmEntity: employmentEntities) {
+                    employmentDTO employmentDTO = new employmentDTO(EmEntity.getEmployee(),EmEntity.getStoreId(),EmEntity.getAppointer(),EmEntity.getRole(),EmEntity.getPermissions());
+                    employments.add(employmentDTO);
+                }
+                return employments;
+            }
         }catch (Exception e) {
             throw new SQLException("SQL fail in getEmploymentByUsernameAndStoreId");
         }
