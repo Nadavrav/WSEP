@@ -679,11 +679,13 @@ public class Facade {
             throw  new Exception("appointedUserName is already Owner of store Id");
         }
         //add appointedUserName as store owner
-          if(appointmentsRequests.get(storeId) == null){
-              appointmentsRequests.put(storeId,new HashMap<>());
+
+          appointmentsRequests.putIfAbsent(storeId, new HashMap<>());
+          appointmentsRequests.get(storeId).put(appointed, new LinkedList<>());
+          if(!appointerEmployment.checkIfManager()) {
+              appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
           }
-          appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
-          appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
+
           store.notifyOwnersAboutNewEmploymentRequests(((RegisteredUser) appointer).getUserName(),appointedUserName);
 
           if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
