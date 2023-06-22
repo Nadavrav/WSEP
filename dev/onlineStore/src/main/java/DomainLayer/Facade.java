@@ -3,11 +3,13 @@ package DomainLayer;
 
 import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
+import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MaxTotalProductAmountCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
 import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
+import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
@@ -279,16 +281,16 @@ public class Facade {
                 maxSelectiveDiscount.addDiscount(milkDiscount);
                 //add policies
                 //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
-                //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
+//                BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
                 //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
                 //    appointNewStoreOwner(nadavID,"Denis",0);
                 //    appointNewStoreOwner(1,"Nadia",0);
                 //    acceptEmploymentRequest(denisID,0,"Nadia");
-                //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
+                Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",999);
                 //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
                 //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
                 //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
-                //addPolicy(DairyPolicy,nadavStoreID);
+                AddStorePolicy(nadavID, nadavStoreID, DairyPolicy);
                 //addPolicy(BreadPolicy,nadavStoreID);
                 //addPolicy(Meatpolicy,nadiaStoreID);
                 //addPolicy(BreadPolicy,denisStoreID);
