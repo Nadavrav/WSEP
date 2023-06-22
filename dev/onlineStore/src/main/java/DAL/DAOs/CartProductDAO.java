@@ -75,9 +75,6 @@ public class CartProductDAO {
             CartproductEntityPK key=new CartproductEntityPK(productId,userName);
             CartproductEntity cartproductEntity = session.get(CartproductEntity.class,key);
             if (cartproductEntity != null) {
-                // Update the fields with new values
-                //cartproductEntity.setProductId(productId);
-                //cartproductEntity.setUserName(userName);
                 cartproductEntity.setAmount(amount);
                 session.update(cartproductEntity);
             }

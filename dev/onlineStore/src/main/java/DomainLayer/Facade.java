@@ -1148,6 +1148,8 @@ private void fetchCartIfExists(RegisteredUser user){
             //Calculate amount
             double amount = b.calculateTotalAmount();
             Store s = storesList.get(b.getStoreID());
+            if(s==null)
+                s=fetchStoreIfExists(b.getStoreID());
             if (!b.passesPolicy()) {
                 throw new RuntimeException("Bag doesn't pass the store policy");
             }

@@ -25,6 +25,14 @@ public class PurchaseHistoryEntity {
     @Column(name = "products")
     private String products;
 
+    public PurchaseHistoryEntity(int storeId, String userName, Timestamp purchaseDate, double totalAmount, String products) {
+        this.storeId = storeId;
+        this.userName = userName;
+        this.purchaseDate = purchaseDate;
+        this.totalAmount = totalAmount;
+        this.products = products;
+    }
+
     public int getStoreId() {
         return storeId;
     }
