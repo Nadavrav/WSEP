@@ -1,16 +1,20 @@
 package UnitTests;
 
 import DomainLayer.Stores.Comment;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class CommentTest {
     Comment c = new Comment();
     int RegisterdId = 1;
+    @BeforeEach
+    public void setUp(){
+        TestsFlags.getInstance().setTests();
+    }
     @Test
     void addComment_okData() {
         c.AddComment(RegisterdId,"Great product");

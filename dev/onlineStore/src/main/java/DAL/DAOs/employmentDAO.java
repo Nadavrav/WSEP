@@ -274,4 +274,38 @@ public class employmentDAO {
         }
         return null;
     }
+
+    public void removeEmployee(String appointedUserName, int storeId) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+            session.beginTransaction();
+            Query<EmploymentEntity> query = session.createQuery("FROM EmploymentEntity WHERE employee = :appointedUserName AND storeId= :storeId");
+            query.setParameter("appointedUserName",appointedUserName);
+            query.setParameter("storeId",storeId);
+            EmploymentEntity employmentEntity = query.uniqueResult();
+            if(employmentEntity != null) {
+                session.delete(employmentEntity);
+                 query = session.createQuery("FROM EmploymentEntity WHERE appointer = :appointedUserName AND storeId= :storeId");
+                query.setParameter("appointedUserName",employmentEntity.getEmployee());
+                query.setParameter("storeId",storeId);
+                List<EmploymentEntity> employmentEntities = query.getResultList();
+                for(EmploymentEntity employee:employmentEntities){
+                    if (session.isOpen()) {
+                        session.disconnect();
+                        session.close();
+                    }
+                    removeEmployee(employee.getEmployee(),storeId);
+                }
+                session.getTransaction().commit();
+            }
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in getEmploymentByUsernameAndStoreId");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+    }
 }

@@ -4,10 +4,9 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import static org.junit.jupiter.api.Assertions.*;
 
+import DAL.TestsFlags;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
 
 class BagTest {
 
@@ -16,6 +15,7 @@ class BagTest {
     @BeforeEach
     void setup()
     {
+        TestsFlags.getInstance().setTests();
         p1 = new StoreProduct(0,"Milk",5,"Milk",20,"Its Milk what did you expect"); //store 0
         p2 = new StoreProduct(1,"Bread",7.2,"Bread",6,"Just a whole loaf of bread"); //store 0
         p3 = new StoreProduct(2,"Butter",3.4,"Butter",6,"A Golden Brick"); //store 1

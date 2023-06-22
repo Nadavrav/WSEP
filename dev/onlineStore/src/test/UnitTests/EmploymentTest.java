@@ -2,14 +2,12 @@ package UnitTests;
 
 import DomainLayer.Stores.Store;
 import DomainLayer.Users.Employment;
-import DomainLayer.Users.Permission;
 import DomainLayer.Users.RegisteredUser;
 import DomainLayer.Users.Role;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,6 +18,7 @@ class EmploymentTest {
     public void setup()
     {
         try {
+            TestsFlags.getInstance().setTests();
             String password = "123456789";
             Apointer = new RegisteredUser("ValidApointerName", password);
             Apointee = new RegisteredUser("ValidApointeeName", password);

@@ -1,6 +1,8 @@
 package DomainLayer;
 
 
+import DAL.TestsFlags;
+import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
@@ -69,14 +71,16 @@ public class Facade {
 
     private Facade(){
         boolean dbHasData = false;
-        try {
-            DS = DALService.getInstance();
-            Store.setStoreIdCounter(DS.getMaxStoreId()+1);
-            Store.setProductIdCounter(DS.getMaxProductId()+1);
-            dbHasData = DS.dbNotEmpty();
-        }
-        catch (SQLException e){
-            Store.resetCounters();
+        if(!TestsFlags.getInstance().isTests()) {
+            try {
+                DS = DALService.getInstance();
+                DS.deleteDBData();
+                Store.setStoreIdCounter(DS.getMaxStoreId() + 1);
+                Store.setProductIdCounter(DS.getMaxProductId() + 1);
+                dbHasData = DS.dbNotEmpty();
+            } catch (SQLException e) {
+                Store.resetCounters();
+            }
         }
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
@@ -86,19 +90,17 @@ public class Facade {
         employmentList = new ConcurrentHashMap<>();
         appointmentsRequests = new ConcurrentHashMap<>();
         supplier= Supplier.getInstance();
-
         paymentProvider= PaymentProvider.getInstance();
-
         siteVisitorsEntriesManager = new HashMap<>();
         nonWorkersEntriesManager = new HashMap<>();
         managersOnlyEntriesManager = new HashMap<>();
         storeOwnersEntriesManager = new HashMap<>();
         adminsEntriesManager = new HashMap<>();
         //TODO: TELL NIKITA TO FIX, MAKES DOMAIN CRASH ON STARTUP
-    //    if(!dbHasData) {//If db doesnt have data we load data
-    //            if (!ConfigParser.parse(this))
-    //                registerInitialAdmin("admin", "admin12345");
-    //        }
+        if(!dbHasData) {//If db doesnt have data we load data
+                if (!ConfigParser.parse(this))
+                    registerInitialAdmin("admin", "admin12345");
+            }
     }
     /**
      * get instance uses double-checking to prevent synchronization when getting a non-null instance,
@@ -834,7 +836,7 @@ private void fetchCartIfExists(RegisteredUser user){
         }
         //TODO load all storeowners of this storeId into the runtime -done
         LinkedList<registeredUserDTO> owners = DS.getStoreOwnersByStoreId(storeId);
-        if(!owners.isEmpty())
+        if(owners!=null && !owners.isEmpty())
         {
             for (registeredUserDTO userDTO: owners) {
                 if(!(registeredUserList.containsKey(userDTO.getUserName()))){
@@ -1075,7 +1077,7 @@ private void fetchCartIfExists(RegisteredUser user){
             if(appointerEmployment != null)
                 return appointerEmployment;
         }
-        employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(username,storeId);
+        EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(username,storeId);
         if(employmentDTO == null){
             return null;
         }
@@ -1108,22 +1110,30 @@ private void fetchCartIfExists(RegisteredUser user){
             logger.info("remove failed: store is closed");
             throw  new Exception("cant remove workers from closed store");
         }
-        Employment appointedEmployment = fetchEmploymentForDBIfExists(appointedUserName,storeId);
-        if(appointedEmployment != null)
-        {
+       // Employment appointedEmployment = fetchEmploymentForDBIfExists(appointedUserName,storeId);
+       //if(appointedEmployment != null)
+       //{
 
-        }
-        else {
-            throw new Exception("this userName not appointed to this store");
-        }
+       //}
+       // else {
+       //     throw new Exception("this userName not appointed to this store");
+       // }
         try{
-           // Employment appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+            Collection<EmploymentDTO> employmentDTOS=DALService.getInstance().getStoreEmployment(storeId);
+            for(EmploymentDTO employmentDTO:employmentDTOS){
+                if(!employmentList.containsKey(employmentDTO.getEmployee()))
+                    employmentList.put(employmentDTO.getEmployee(),new HashMap<>());
+                if(!employmentList.get(employmentDTO.getEmployee()).containsKey(employmentDTO.getStoreID()))
+                    employmentList.get(employmentDTO.getEmployee()).put(employmentDTO.getStoreID(),new Employment(employmentDTO));
+            }
+            Employment appointedEmployment=employmentList.get(appointedUserName).get(storeId);
             if(appointedEmployment == null){
                 throw new Exception("this userName not appointed to this store");
             }
-            if(!appointedEmployment.getAppointer().equals(appointer)){
+            if(!appointedEmployment.getAppointer().equals(((RegisteredUser) appointer).getUserName())){
                 throw new Exception("you are not the appointer to this user so you cant remove him");
             }
+            DALService.getInstance().removeEmployee(appointedUserName,storeId);
             RemoveAllEmployee(appointedUserName,storeId);
             employmentList.get(appointedUserName).remove(storeId);
             store.addNewListener(registeredUserList.get(appointedUserName));
@@ -2361,6 +2371,7 @@ private void fetchCartIfExists(RegisteredUser user){
         Store store = storesList.get(storeID);
         if(checkIfAllOwnersAgreedOnEmploymentRequest(storeID,appointedUserName)){
             Employment appointedEmployment = new Employment(appointer.getUserName(), appointed.getUserName(), store.getID(), Role.StoreOwner);
+            DS.saveEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
             if (employmentList.get(appointedUserName) == null) {
                 Map<Integer, Employment> newEmploymentMap = new HashMap<>();
                 employmentList.put(appointedUserName, newEmploymentMap);

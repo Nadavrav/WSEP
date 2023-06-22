@@ -3,9 +3,9 @@ package UnitTests;
 import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Stores.Products.StoreProductObserver;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.lang.ref.WeakReference;
@@ -20,6 +20,7 @@ class StoreProductTest {
     @BeforeEach
     void setup()
     {
+        TestsFlags.getInstance().setTests();
         p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");
         p2 = new StoreProduct(1,"Bread",7.2,"Bread",6,"Just a whole loaf of bread");
         p3 = new StoreProduct(0,"Butter",3.4,"Butter",6,"A Golden Brick");

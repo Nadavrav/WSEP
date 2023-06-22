@@ -2,6 +2,7 @@ package IntegrationTests;
 
 import DomainLayer.Facade;
 import DomainLayer.Users.RegisteredUser;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,7 @@ public class SystemIntegrationTests {
 
     @BeforeEach
     void setup() {
+        TestsFlags.getInstance().setTests();
         f = Facade.getInstance();
     }
 

@@ -5,10 +5,7 @@ import DAL.DTOs.StoreProductDTO;
 import DAL.Entities.CartproductEntity;
 import DAL.Entities.CartproductEntityPK;
 import DAL.Entities.StoreproductEntity;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -93,6 +90,7 @@ public class CartProductDAO {
     public void remove(int productId, String userName) throws SQLException {
         Session session = sessionFactory.openSession();
         try {
+            session.beginTransaction();
             CartproductEntityPK key=new CartproductEntityPK(productId,userName);
             CartproductEntity cartproductEntity = session.get(CartproductEntity.class,key);
             if (cartproductEntity != null) {
@@ -110,6 +108,28 @@ public class CartProductDAO {
                 session.disconnect(); // Disconnect the session if it's still connected
             }
             session.close();
+        }
+    }
+    public void deleteData() throws SQLException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+        try{
+            transaction = session.beginTransaction();
+            session.setDefaultReadOnly(false);
+
+            String deleteQuery = "DELETE FROM cartproduct";
+            Query query = session.createNativeQuery(deleteQuery);
+            query.executeUpdate();
+
+            transaction.commit();
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in deleteData, cartproduct");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
         }
     }
 }

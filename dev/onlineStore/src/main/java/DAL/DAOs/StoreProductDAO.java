@@ -4,10 +4,7 @@ import DAL.DTOs.StoreProductDTO;
 import DAL.Entities.CartproductEntity;
 import DAL.Entities.CartproductEntityPK;
 import DAL.Entities.StoreproductEntity;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 
 import java.sql.SQLException;
 
@@ -110,6 +107,7 @@ public class StoreProductDAO {
     public void removeProduct(Integer productId) throws SQLException{
         Session session = sessionFactory.openSession();
         try {
+            session.beginTransaction();
             StoreproductEntity storeproductEntity = session.get(StoreproductEntity.class,productId);
             if (storeproductEntity != null) {
                 session.delete(storeproductEntity);
@@ -134,6 +132,28 @@ public class StoreProductDAO {
 
         }catch (Exception e) {
             throw new SQLException("SQL fail in saveUser");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+    }
+    public void deleteData() throws SQLException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+        try{
+            transaction = session.beginTransaction();
+            session.setDefaultReadOnly(false);
+
+            String deleteQuery = "DELETE FROM storeproduct";
+            Query query = session.createNativeQuery(deleteQuery);
+            query.executeUpdate();
+
+            transaction.commit();
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in deleteData, storeproduct");
         }
         finally {
             if (session != null && session.isOpen()) {

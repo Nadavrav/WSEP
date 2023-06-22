@@ -4,13 +4,14 @@ import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Users.Bag;
 import static org.junit.jupiter.api.Assertions.*;
 
+import DAL.TestsFlags;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
 public class BidTests {
-    Facade facade=Facade.getInstance();
+    Facade facade;
     int product1;
     int product2;
     int product3;
@@ -21,6 +22,8 @@ public class BidTests {
     @BeforeEach
     public void setUp(){
         try {
+            TestsFlags.getInstance().setTests();
+            facade=Facade.getInstance();
             facade.resetData();
             facade.loadData();
             id1=facade.enterNewSiteVisitor();

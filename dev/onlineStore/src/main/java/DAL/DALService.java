@@ -5,6 +5,7 @@ import DAL.DTOs.*;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Collection;
 
@@ -46,14 +47,17 @@ public class DALService {
      * A function to delete all the data in the db
      */
     public void deleteDBData() throws SQLException {
-        try{
-            employmentDAO.deleteData();
-            adminDAO.deleteData();
-            userDAO.deleteData();
-        }
-        catch (Exception e)
-        {
-            throw new SQLException("SQL fail in saveUser");
+        if(!TestsFlags.getInstance().isTests()) {
+            try {
+                employmentDAO.deleteData();
+                adminDAO.deleteData();
+                userDAO.deleteData();
+                storeDAO.deleteData();
+                cartProductDAO.deleteData();
+                storeProductDAO.deleteData();
+            } catch (Exception e) {
+                throw new SQLException("SQL fail in saveUser");
+            }
         }
     }
 
@@ -65,7 +69,8 @@ public class DALService {
      */
     public void saveUser(String userName, byte[] password) throws SQLException {
         try{
-            userDAO.saveUser(userName, password);
+            if(!TestsFlags.getInstance().isTests())
+                userDAO.saveUser(userName, password);
         }
         catch (Exception e)
         {
@@ -80,7 +85,9 @@ public class DALService {
      */
     public registeredUserDTO getUser(String userName) throws SQLException {
         try{
-            return userDAO.getUser(userName);
+            if(!TestsFlags.getInstance().isTests())
+                return userDAO.getUser(userName);
+            return null;
         }
             catch (Exception e)
         {
@@ -95,7 +102,8 @@ public class DALService {
      */
     public void saveAdmin(String userName) throws SQLException {
         try{
-            adminDAO.saveAdminUser(userName);
+            if(!TestsFlags.getInstance().isTests())
+                 adminDAO.saveAdminUser(userName);
         }
         catch (Exception e)
         {
@@ -111,7 +119,9 @@ public class DALService {
      */
     public boolean isAdmin(String userName) throws SQLException {
         try{
-            return adminDAO.isAdmin(userName);
+            if(!TestsFlags.getInstance().isTests())
+                return adminDAO.isAdmin(userName);
+            return false;
         }
         catch (Exception e)
         {
@@ -129,7 +139,8 @@ public class DALService {
      */
     public void saveEmployment(String employee,int storeId, String appointer,int role, String permissions) throws SQLException {
         try{
-            employmentDAO.saveEmployment(employee,storeId,appointer,role,permissions);
+            if(!TestsFlags.getInstance().isTests())
+                employmentDAO.saveEmployment(employee,storeId,appointer,role,permissions);
         }
         catch (Exception e)
         {
@@ -146,7 +157,8 @@ public class DALService {
      */
     public void updateEmployment(String employee,int storeId, String appointer,int role, String permissions) throws SQLException {
         try{
-            employmentDAO.saveEmployment(employee,storeId,appointer,role,permissions);
+            if(!TestsFlags.getInstance().isTests())
+                 employmentDAO.saveEmployment(employee,storeId,appointer,role,permissions);
         }
         catch (Exception e)
         {
@@ -163,7 +175,9 @@ public class DALService {
      */
     public EmploymentDTO getEmploymentByUsernameAndStoreId(String employee, int storeId) throws SQLException {
         try{
-            return employmentDAO.getEmploymentByUsernameAndStoreId(employee,storeId);
+            if(!TestsFlags.getInstance().isTests())
+                return employmentDAO.getEmploymentByUsernameAndStoreId(employee,storeId);
+            return null;
         }
         catch (Exception e)
         {
@@ -179,8 +193,9 @@ public class DALService {
      */
     public LinkedList<EmploymentDTO> getStoreOwnersEmployment(int storeId) throws SQLException {
         try{
-            LinkedList<EmploymentDTO> employments = employmentDAO.getStoreOwnersEmployment(storeId);
-            return employments;
+            if(!TestsFlags.getInstance().isTests())
+                return employmentDAO.getStoreOwnersEmployment(storeId);
+            return null;
         }
         catch (Exception e)
         {
@@ -195,8 +210,9 @@ public class DALService {
      */
     public LinkedList<EmploymentDTO> getStoreEmployment(int storeId) throws SQLException {
         try{
-            LinkedList<EmploymentDTO> employments = employmentDAO.getStoreEmployment(storeId);
-            return employments;
+            if(!TestsFlags.getInstance().isTests())
+                return employmentDAO.getStoreEmployment(storeId);
+            return null;
         }
         catch (Exception e)
         {
@@ -211,8 +227,11 @@ public class DALService {
      */
     public LinkedList<registeredUserDTO> getStoreOwnersByStoreId(int storeId) throws SQLException {
         try{
-            LinkedList<String> userNameList = employmentDAO.getStoreOwnerUserNamesByStoreId(storeId);
-            return userDAO.getUsersByUserNames(userNameList);
+            if(!TestsFlags.getInstance().isTests()) {
+                LinkedList<String> userNameList = employmentDAO.getStoreOwnerUserNamesByStoreId(storeId);
+                return userDAO.getUsersByUserNames(userNameList);
+            }
+            return null;
         }
         catch (Exception e)
         {
@@ -227,7 +246,9 @@ public class DALService {
      */
     public boolean dbNotEmpty() throws SQLException {
         try{
-            return userDAO.userDbNotEmpty();
+            if(!TestsFlags.getInstance().isTests())
+                return userDAO.userDbNotEmpty();
+            return false;
         }
         catch (Exception e)
         {
@@ -243,8 +264,11 @@ public class DALService {
      */
     public Collection<StoreDTO> getStoresFromOwner(String userName) throws SQLException {
         try{
-            Collection<Integer> stores = employmentDAO.getStoresByEmployment(userName);
-            return storeDAO.getStoresByStoreId(stores);
+            if(!TestsFlags.getInstance().isTests()) {
+                Collection<Integer> stores = employmentDAO.getStoresByEmployment(userName);
+                return storeDAO.getStoresByStoreId(stores);
+            }
+            return new ArrayList<>();
         }
         catch (Exception e)
         {
@@ -262,7 +286,8 @@ public class DALService {
      */
     public void saveStore(int storeId, String name, boolean active, double rate) throws SQLException {
         try{
-            storeDAO.saveStore(storeId, name, active, rate);
+            if(!TestsFlags.getInstance().isTests())
+                storeDAO.saveStore(storeId, name, active, rate);
         }
         catch (Exception e)
         {
@@ -277,7 +302,9 @@ public class DALService {
      */
     public Collection<StoreDTO> getStores() throws SQLException {
         try{
-            return storeDAO.getStores();
+            if(!TestsFlags.getInstance().isTests())
+                return storeDAO.getStores();
+            return new ArrayList<>();
         }
         catch (Exception e)
         {
@@ -295,7 +322,9 @@ public class DALService {
      */
     public StoreDTO getStoreById(int storeId) throws SQLException {
         try{
-            return storeDAO.getStore(storeId);
+            if(!TestsFlags.getInstance().isTests())
+                return storeDAO.getStore(storeId);
+            return null;
         }
         catch (Exception e)
         {
@@ -309,7 +338,9 @@ public class DALService {
      */
     public Integer getMaxStoreId() throws SQLException {
         try{
-            return storeDAO.getMaxID();
+            if(!TestsFlags.getInstance().isTests())
+                return storeDAO.getMaxID();
+            return 0;
         }
         catch (Exception e)
         {
@@ -323,7 +354,9 @@ public class DALService {
      */
     public Integer getMaxProductId() throws SQLException {
         try{
-            return storeProductDAO.getMaxID();
+            if(!TestsFlags.getInstance().isTests())
+                return storeProductDAO.getMaxID();
+            return 0;
         }
         catch (Exception e)
         {
@@ -344,7 +377,8 @@ public class DALService {
      */
     public void saveProduct(int productId,int storeId,String productName, Double price, int quantity, String category, String desc,double avgRating) throws SQLException {
         try{
-            storeProductDAO.saveProduct(productId,storeId,productName,price,category,desc,quantity,avgRating);
+            if(!TestsFlags.getInstance().isTests())
+                storeProductDAO.saveProduct(productId,storeId,productName,price,category,desc,quantity,avgRating);
         }
         catch (Exception e)
         {
@@ -366,7 +400,8 @@ public class DALService {
      */
     public void updateStoreProduct(Integer productId, int storeId, String productName, Double price, String category, String description, int quantity, double averageRating) throws SQLException {
         try{
-            storeProductDAO.updateProduct(productId,storeId,productName,price,category,description,quantity,averageRating);
+            if(!TestsFlags.getInstance().isTests())
+                storeProductDAO.updateProduct(productId,storeId,productName,price,category,description,quantity,averageRating);
         }
         catch (Exception e)
         {
@@ -375,7 +410,8 @@ public class DALService {
     }
     public void removeStoreProduct(Integer productId) throws SQLException {
         try{
-            storeProductDAO.removeProduct(productId);
+            if(!TestsFlags.getInstance().isTests())
+                storeProductDAO.removeProduct(productId);
         }
         catch (Exception e)
         {
@@ -384,7 +420,8 @@ public class DALService {
     }
     public void saveCartProduct(int productId,String userName,int amount) throws SQLException{
         try{
-            cartProductDAO.saveProduct(productId,userName,amount);
+            if(!TestsFlags.getInstance().isTests())
+                cartProductDAO.saveProduct(productId,userName,amount);
         }
         catch (Exception e)
         {
@@ -393,7 +430,8 @@ public class DALService {
     }
     public void updateCartProduct(int productId, String userName, int amount) throws SQLException{
         try{
-            cartProductDAO.updateProduct(productId,userName,amount);
+            if(!TestsFlags.getInstance().isTests())
+                cartProductDAO.updateProduct(productId,userName,amount);
         }
         catch (Exception e)
         {
@@ -402,7 +440,8 @@ public class DALService {
     }
     public void removeCartProduct(int productId, String userName) throws SQLException{
         try{
-            cartProductDAO.remove(productId,userName);
+            if(!TestsFlags.getInstance().isTests())
+                cartProductDAO.remove(productId,userName);
         }
         catch (Exception e)
         {
@@ -411,7 +450,9 @@ public class DALService {
     }
     public Collection<CartProductDTO> getCartProducts(String userName) throws SQLException{
         try{
-            return cartProductDAO.getUserProducts(userName);
+            if(!TestsFlags.getInstance().isTests())
+                return cartProductDAO.getUserProducts(userName);
+            return new ArrayList<>();
         }
         catch (Exception e)
         {
@@ -420,7 +461,9 @@ public class DALService {
     }
     public Long storeCounter() throws SQLException {
         try{
-            return storeDAO.storeCounter();
+            if(!TestsFlags.getInstance().isTests())
+                return storeDAO.storeCounter();
+            return 0L;
         }
         catch (Exception e)
         {
@@ -429,7 +472,9 @@ public class DALService {
     }
     public Long storeProductCounter() throws SQLException {
         try{
-            return storeProductDAO.storeCounter();
+            if(!TestsFlags.getInstance().isTests())
+                return storeProductDAO.storeCounter();
+            return 0L;
         }
         catch (Exception e)
         {
@@ -438,7 +483,9 @@ public class DALService {
     }
     public Collection<EmploymentDTO> getEmploymentsByName(String name) throws SQLException {
         try{
-            return employmentDAO.getEmploymentsFromName(name);
+            if(!TestsFlags.getInstance().isTests())
+                return employmentDAO.getEmploymentsFromName(name);
+            return new ArrayList<>();
         }
         catch (Exception e)
         {
@@ -446,4 +493,14 @@ public class DALService {
         }
     }
 
+    public void removeEmployee(String appointedUserName, int storeId) throws SQLException {
+        try{
+            if(!TestsFlags.getInstance().isTests())
+                employmentDAO.removeEmployee(appointedUserName,storeId);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
 }

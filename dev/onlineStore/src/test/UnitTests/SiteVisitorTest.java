@@ -1,8 +1,8 @@
 package UnitTests;
 
 import DomainLayer.Stores.Products.StoreProduct;
-import DomainLayer.Users.Cart;
 import DomainLayer.Users.SiteVisitor;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +17,7 @@ class SiteVisitorTest {
     @BeforeEach
     void setup()
     {
+        TestsFlags.getInstance().setTests();
         try{
             visitor = new SiteVisitor();
         }

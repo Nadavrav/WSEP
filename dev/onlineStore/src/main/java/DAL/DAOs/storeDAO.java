@@ -17,7 +17,28 @@ public class storeDAO {
     public storeDAO(SessionFactory sf) throws SQLException {
         this.sessionFactory = sf;
     }
+    public void deleteData() throws SQLException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = null;
+        try{
+            transaction = session.beginTransaction();
+            session.setDefaultReadOnly(false);
 
+            String deleteQuery = "DELETE FROM store";
+            Query query = session.createNativeQuery(deleteQuery);
+            query.executeUpdate();
+
+            transaction.commit();
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in deleteData, store");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+    }
     public void saveStore(int storeId, String name, boolean active, double rate) throws SQLException {
         Session session = sessionFactory.openSession();
         try {

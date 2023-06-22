@@ -3,6 +3,7 @@ package UnitTests;
 import DomainLayer.Stores.Rating;
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ class StoreTest {
     @BeforeEach
     void setup()
     {
+        TestsFlags.getInstance().setTests();
         p1 = new StoreProduct(1,"Milk",5,"Milk",20,"Its Milk what did you expect");
         p2 = new StoreProduct(1,"Butter",3.4,"Butter",6,"A Golden Brick");
     }
