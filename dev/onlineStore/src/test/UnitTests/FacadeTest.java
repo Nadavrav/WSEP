@@ -948,6 +948,9 @@ class FacadeTest {
             f.logout(visitorId);
             f.login(visitorId,Username2,password2);
             f.appointNewStoreOwner(visitorId,Username3,storeId);
+            f.logout(visitorId);
+            f.login(visitorId,Username,password);
+            f.acceptEmploymentRequest(visitorId,storeId,Username3);
             assertEquals(Role.StoreOwner,f.getEmploymentList().get(Username3).get(storeId).getRole());
         }
         catch (Exception e)
