@@ -101,9 +101,9 @@ public class Facade {
         storeOwnersEntriesManager = new HashMap<>();
         adminsEntriesManager = new HashMap<>();
         if(!dbHasData) {//If db doesnt have data we load data
-            if (!ConfigParser.parse(this))
-                registerInitialAdmin("admin", "admin12345");
-        }
+                if (!ConfigParser.parse(this))
+                    registerInitialAdmin("admin", "admin12345");
+            }
     }
     /**
      * get instance uses double-checking to prevent synchronization when getting a non-null instance,
@@ -646,6 +646,8 @@ public class Facade {
        //     int storeId = getStoreIdByProductId(productId);
 
             Store store = storesList.get(storeId);
+            if(store==null)
+                store=fetchStoreIfExists(storeId);
             if (store == null) {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
@@ -674,6 +676,21 @@ public class Facade {
             logger.warning("trying to add from a null user");
             throw  new Exception("Invalid Visitor ID");
         }
+        if(user instanceof RegisteredUser)
+            if(user.getCart()==null) {
+               Collection<CartProductDTO> products= DS.getCartProducts(((RegisteredUser)user).getUserName());
+               for(CartProductDTO cartProductDTO:products){
+                   int storeId=cartProductDTO.getStoreProduct().getStoreId();
+                   if(!storesList.containsKey(storeId)){
+                       StoreDTO storeDTO=DS.getStoreById(storeId);
+                       if(storeDTO==null){
+                           throw new RuntimeException("User has product that belongs to a non existent store");
+                       }
+                       storesList.put(storeId,new Store(storeDTO));
+                   }
+                   user.addProductToCart(storeId,storesList.get(storeId).getProductByID(cartProductDTO.getProductId()), cartProductDTO.getAmount());
+               }
+            }
 
         return user.getCart();
         //return user.GetCart
@@ -1592,12 +1609,13 @@ public class Facade {
         //throw e
     }
     public void UpdateProductQuantity(int visitorId,int storeId, int productID,int quantity) throws Exception{
-        //lock product (get product object)
         //try
         logger.fine("Entering method UpdateProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", quantity: " + quantity);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productID);
         Store store = storesList.get(storeId);
+        if(store==null)
+            store=fetchStoreIfExists(storeId);
         if(store == null)
             throw  new Exception("there is no store with this storeID:"+storeId);
         if(!store.getActive())
@@ -1615,9 +1633,12 @@ public class Facade {
         //lock product (get product object)
         //try
                 logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", quantity: " + quantity);
-
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store==null)
+            store=fetchStoreIfExists(storeId);
+        if(store==null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
         if(store.getActive()) {
             store.IncreaseProductQuantity(productId, quantity);
             logger.fine("Exiting method IncreaseProductQuantity()");
@@ -1626,11 +1647,6 @@ public class Facade {
             logger.warning("Failed on method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", quantity: " + quantity);
             throw new Exception("Store is closed");
         }
-
-        //catch
-        //release lock product
-        //throw e
-
     }
 
     public void UpdateProductName(int visitorId, int productId,int storeId,String Name) throws Exception{
@@ -1648,7 +1664,6 @@ public class Facade {
             throw  new Exception("store is closed");
         store.UpdateProductName(productId,Name);
         logger.fine("Exiting method UpdateProductName()");
-
     }
 
     public void UpdateProductPrice(int visitorId, int productId,int storeId,double price) throws Exception{
@@ -1879,6 +1894,11 @@ public class Facade {
 //    }
     public LinkedList<Store> getStoresName() throws Exception {
         LinkedList<Store> storesName = new LinkedList<>();
+        Collection<StoreDTO> storeDTOS=DALService.getInstance().getStores();
+        for(StoreDTO storeDTO:storeDTOS){
+            if(!storesList.containsKey(storeDTO.getId()))
+                storesList.put(storeDTO.getId(),new Store(storeDTO));
+        }
         for(Store store : storesList.values()){
             if(store.getActive()){
                 storesName.add(store);

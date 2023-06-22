@@ -15,7 +15,10 @@ public class CartproductEntityPK implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productId;
-
+    public CartproductEntityPK(int productId,String userName){
+        this.userName=userName;
+        this.productId=productId;
+    }
     public String getUserName() {
         return userName;
     }

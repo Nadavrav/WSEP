@@ -23,7 +23,7 @@ public class StoreEntity {
     @JoinTable(
             name = "storeproduct",
             joinColumns = @JoinColumn(name = "storeId"),
-            inverseJoinColumns = @JoinColumn(name = "id")
+            inverseJoinColumns = @JoinColumn(name = "productId")
     )
     private Set<StoreproductEntity> products;
 

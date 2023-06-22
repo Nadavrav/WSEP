@@ -16,6 +16,7 @@ public class DALService {
     private final StoreProductDAO storeProductDAO;
     private final adminDAO adminDAO;
     private final employmentDAO employmentDAO;
+    private final CartProductDAO cartProductDAO;
     private SessionFactory sessionFactory;
     private DALService() throws SQLException {
         try {
@@ -23,6 +24,7 @@ public class DALService {
         }catch (Exception  e) {
             throw new SQLException("Cant connect to DB");
         }
+        cartProductDAO=new CartProductDAO(sessionFactory);
         storeProductDAO = new StoreProductDAO(sessionFactory);
         userDAO = new registeredUserDAO(sessionFactory);
         storeDAO = new storeDAO(sessionFactory);
@@ -221,7 +223,7 @@ public class DALService {
     }
 
     /**
-     * gets a list of all stores in the system
+     * gets a list of all stores in the database
      * @return a collection of stores
      * @throws SQLException if any data base errors occur
      */
@@ -238,7 +240,7 @@ public class DALService {
 
 
     /**
-     *
+     * returns a store with the id of storeId, or null if no such store exists
      * @param storeId the store's id to look for
      * @return a storeDTO representing a store's data
      * @throws SQLException if any data base errors occur
@@ -281,7 +283,7 @@ public class DALService {
         }
     }
     /**
-     *
+     * saves the product with all the fields
      * @param productId product's id
      * @param storeId store's id
      * @param productName product's name
@@ -302,6 +304,18 @@ public class DALService {
         }
     }
 
+    /**
+     * updates the store product with corresponding productId with all the fields
+     * @param productId  productId
+     * @param storeId storeId
+     * @param productName productName
+     * @param price price
+     * @param category category
+     * @param description description
+     * @param quantity quantity
+     * @param averageRating averageRating
+     * @throws SQLException if any database errors occur
+     */
     public void updateProduct(Integer productId, int storeId, String productName, Double price, String category, String description, int quantity, double averageRating) throws SQLException {
         try{
             storeProductDAO.updateProduct(productId,storeId,productName,price,category,description,quantity,averageRating);
@@ -311,4 +325,41 @@ public class DALService {
             throw new SQLException("SQL fail in getStores");
         }
     }
+    public void saveCartProduct(int productId,String userName,int amount) throws SQLException{
+        try{
+            cartProductDAO.saveProduct(productId,userName,amount);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saving cart product");
+        }
+    }
+    public void updateCrtProduct(int productId,String userName,int amount) throws SQLException{
+        try{
+            cartProductDAO.updateProduct(productId,userName,amount);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saving cart product");
+        }
+    }
+    public void removeCrtProduct(int productId,String userName) throws SQLException{
+        try{
+            cartProductDAO.remove(productId,userName);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saving cart product");
+        }
+    }
+    public Collection<CartProductDTO> getCartProducts(String userName) throws SQLException{
+        try{
+            return cartProductDAO.getUserProducts(userName);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saving cart product");
+        }
+    }
+
 }

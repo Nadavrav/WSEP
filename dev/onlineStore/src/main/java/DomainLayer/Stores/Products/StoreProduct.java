@@ -71,6 +71,11 @@ public class StoreProduct extends Product {
     public StoreProduct(StoreProductDTO productDTO) {
         super(productDTO.getName(), productDTO.getPrice(), productDTO.getCategory(), productDTO.getDesc());
         this.productId= productDTO.getStoreId();
+        this.name = productDTO.getName();
+        this.price = productDTO.getPrice();
+        Category = productDTO.getCategory();
+        Quantity = productDTO.getQuantity();
+        description =productDTO.getDesc();
         RateMap=new HashMap<>();
     }
 

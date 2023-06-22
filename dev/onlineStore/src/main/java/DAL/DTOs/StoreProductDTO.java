@@ -11,6 +11,7 @@ public class StoreProductDTO {
     private final String category;
     private final String desc;
     private final double avgRating;
+    private final int quantity;
 
     public StoreProductDTO(StoreproductEntity storeproduct) {
         productId=storeproduct.getProductId();
@@ -20,6 +21,11 @@ public class StoreProductDTO {
         category=storeproduct.getCategory();
         desc=storeproduct.getDesc();
         avgRating=storeproduct.getAvgRating();
+        quantity=storeproduct.getQuantity();
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public int getProductId() {

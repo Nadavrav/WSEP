@@ -6,7 +6,6 @@ import javax.persistence.*;
 @Table(name = "storeproduct", schema = "onlinestoredb", catalog = "")
 public class StoreproductEntity {
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "productId")
     private int productId;
@@ -23,21 +22,21 @@ public class StoreproductEntity {
     @Column(name = "category")
     private String category;
     @Basic
-    @Column(name = "desc")
-    private String desc;
+    @Column(name = "description")
+    private String description;
     @Basic
     @Column(name = "avgRating")
     private double avgRating;
     @Basic
     @Column(name = "quantity")
     private int quantity;
-    public StoreproductEntity(int productId, int storeId, String name, double price, String category, String desc, int quantity, double avgRating){
+    public StoreproductEntity(int productId, int storeId, String name, double price, String category, String description, int quantity, double avgRating){
         this.productId=productId;
         this.storeId=storeId;
         this.name=name;
         this.price=price;
         this.category=category;
-        this.desc=desc;
+        this.description=description;
         this.avgRating=avgRating;
         this.quantity = quantity;
     }
@@ -86,11 +85,11 @@ public class StoreproductEntity {
     }
 
     public String getDesc() {
-        return desc;
+        return description;
     }
 
     public void setDesc(String desc) {
-        this.desc = desc;
+        this.description = desc;
     }
 
     public double getAvgRating() {
@@ -114,7 +113,7 @@ public class StoreproductEntity {
         if (Double.compare(that.avgRating, avgRating) != 0) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (category != null ? !category.equals(that.category) : that.category != null) return false;
-        if (desc != null ? !desc.equals(that.desc) : that.desc != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
 
         return true;
     }
@@ -129,7 +128,7 @@ public class StoreproductEntity {
         temp = Double.doubleToLongBits(price);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (desc != null ? desc.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         temp = Double.doubleToLongBits(avgRating);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;

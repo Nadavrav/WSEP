@@ -1,5 +1,7 @@
 package DAL.Entities;
 
+import DAL.DTOs.StoreProductDTO;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,6 +19,20 @@ public class CartproductEntity {
     @Basic
     @Column(name = "amount")
     private int amount;
+    @ManyToOne
+    @JoinColumn(name = "productId", referencedColumnName = "productId", insertable = false, updatable = false)
+    private StoreproductEntity storeProduct;
+
+    public CartproductEntity(int productId,String userName,int amount){
+        this.userName=userName;
+        this.productId=productId;
+        this.amount=amount;
+    }
+    public CartproductEntity(){}
+
+    public StoreProductDTO getStoreProduct() {
+        return new StoreProductDTO(storeProduct);
+    }
 
     public String getUserName() {
         return userName;

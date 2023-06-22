@@ -95,6 +95,8 @@ public class storeDAO {
         Session session = sessionFactory.openSession();
         try{
             Query<StoreEntity> query = session.createQuery("FROM StoreEntity se LEFT JOIN FETCH se.products");
+          //  Query<StoreEntity> query = session.createQuery("FROM StoreEntity");
+
             Collection<StoreEntity> storeEntities = query.getResultList();
 
             if(storeEntities != null) {
