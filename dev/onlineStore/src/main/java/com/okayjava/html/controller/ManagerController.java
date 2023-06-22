@@ -309,30 +309,6 @@ public class ManagerController {
         return "redirect:/Manager";
     }
 
-//    @RequestMapping(value = "/purchase-history", method = RequestMethod.GET)
-//    public String purchaseHistory(@RequestParam("storeID-purchase") int storeID, Model model) {
-//        model.addAttribute("alert", alert.copy());
-//        model.addAttribute("logged", server.isLogged(request));
-//        model.addAttribute("Admin", server.isAdmin(request).getValue());
-//
-//        Response<List<String>> response = server.GetStoreHistoryPurchase(request, storeID);
-//        if (response.isError()) {
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else {
-//            System.out.println("Purchase History should be displayed! " + response.getValue());
-//
-//            alert.setSuccess(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//            model.addAttribute("purchaseHistory", response.getValue());
-//        }
-//        alert.reset();
-//        return "Manager";
-//    }
-
-
     @RequestMapping(value = "/close-store", method = RequestMethod.POST)
     public String closeStore(@RequestParam("storeID-close") int storeID,
                              Model model) {
@@ -355,30 +331,6 @@ public class ManagerController {
         alert.reset();
         return "redirect:/Manager";
     }
-
-//    @RequestMapping(value = "/employee-info", method = RequestMethod.POST)
-//    public String employeeInfo(@RequestParam("storeID-employee") int storeID,
-//                               Model model) {
-//
-//        model.addAttribute("alert", alert.copy());
-//        model.addAttribute("logged", server.isLogged(request));
-//        model.addAttribute("Admin", server.isAdmin(request).getValue());
-//
-//        Response<?> response = server.getRolesData(request,storeID);
-//        if (response.isError()) {
-//            alert.setFail(true);
-//            alert.setMessage(response.getMessage());
-//            model.addAttribute("alert", alert.copy());
-//        } else{
-//            alert.setSuccess(true);
-//            alert.setMessage("Employee Info for StoreId: " + storeID);
-//            model.addAttribute("alert", alert.copy());
-//            model.addAttribute("employeeInfo", response.getValue()); //String
-//            System.out.println("success - " + response.getValue());
-//        }
-//        alert.reset();
-//        return "redirect:/Manager";
-//    }
 
     @RequestMapping(value = "/remove-employee", method = RequestMethod.POST)
     public String removeEmployee(@RequestParam("storeID-remove-emp") int storeID,
@@ -425,7 +377,6 @@ public class ManagerController {
         alert.reset();
         return "redirect:/Manager";
     }
-
 
     @RequestMapping(value = "/appoint-store-manager", method = RequestMethod.POST)
     public String appointStoreManager(@RequestParam("storeID-add-manager") int StoreID,
