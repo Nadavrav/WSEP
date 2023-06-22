@@ -50,7 +50,7 @@ public class Server {
     public String getUsername(HttpServletRequest request){
         Response<String> r= getSession(request).getUserName();
         if(r.isError())
-            return "SYSTEM ERROR";
+            return "GUEST";
         return r.getValue();
     }
     public Response<Integer> EnterNewSiteVisitor(HttpServletRequest request) {

@@ -114,16 +114,24 @@ public class MyStoreController {
 
         model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("storeName", StoreName); // Add the store name attribute
+        model.addAttribute("discountInfo", server.getStoreDiscountInfo(request, storeID).getValue());
+        model.addAttribute("policyInfo", server.getStorePolicy(request, storeID).getValue());
+        model.addAttribute("appointmentRequests", server.getAppointmentRequests(request).getValue());
+        model.addAttribute("purchaseHistory", server.GetStoreHistoryPurchase(request, storeID).getValue());
         return "MyStore";
     }
 
-    @PostMapping("/discount_option")
+    @PostMapping("/add-discount")
     public String processDiscountOption(@RequestParam("discountId") Integer[] discountIds,
                                         @RequestParam("description") String description,
                                         @RequestParam("amount") Integer amount,
                                         @RequestParam("condition") String condition,
                                         Model model) {
 
+        model.addAttribute("logged", server.isLogged(request));
+        model.addAttribute("Admin", server.isAdmin(request).getValue());
+        model.addAttribute("storeName", StoreName);
         Integer id1 = discountIds[0]; //first selected discount
         Integer id2 = discountIds[1]; // second selected discount
 
@@ -157,54 +165,35 @@ public class MyStoreController {
             }
         }
 
-        model.addAttribute("logged", server.isLogged(request));
-        model.addAttribute("Admin", server.isAdmin(request).getValue());
+//        Response<Collection<ServiceDiscountInfo>> responseDiscount = server.getStoreDiscountInfo(request, storeID);
+//        if (responseDiscount.isError()) {
+//            alert.setFail(true);
+//            alert.setMessage(responseDiscount.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//        } else {
+//            alert.setSuccess(true);
+//            alert.setMessage(responseDiscount.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//            model.addAttribute("discountInfo", responseDiscount.getValue());
+//        }
 
-        Response<Collection<ServiceDiscountInfo>> responseDiscount = server.getStoreDiscountInfo(request, storeID);
-        if (responseDiscount.isError()) {
-            alert.setFail(true);
-            alert.setMessage(responseDiscount.getMessage());
-            model.addAttribute("alert", alert.copy());
-        } else {
-            alert.setSuccess(true);
-            alert.setMessage(responseDiscount.getMessage());
-            model.addAttribute("alert", alert.copy());
-            model.addAttribute("discountInfo", responseDiscount.getValue());
-        }
-
-        Response<HashSet<ServicePolicy>> responsePolicy = server.getStorePolicy(request, storeID);
-        if (responsePolicy.isError()) {
-            alert.setFail(true);
-            alert.setMessage(responsePolicy.getMessage());
-            model.addAttribute("alert", alert.copy());
-        } else {
-            alert.setSuccess(true);
-            alert.setMessage(responsePolicy.getMessage());
-            model.addAttribute("alert", alert.copy());
-            model.addAttribute("policyInfo", responsePolicy.getValue());
-        }
-
-        Response<Map<Integer, List<String>>> responseRequest = server.getAppointmentRequests(request);
-        if (!responseRequest.isError()) {
-            Map<Integer, List<String>> appointmentRequests = responseRequest.getValue();
-
-            // Filter appointment requests based on the logged-in user
-            Map<Integer, List<String>> filteredAppointmentRequests = new HashMap<>();
-            for (Map.Entry<Integer, List<String>> entry : appointmentRequests.entrySet()) {
-                List<String> owners = entry.getValue();
-                if (owners.contains(server.getUsername(request))) {
-                    filteredAppointmentRequests.put(entry.getKey(), owners);
-                }
-            }
-            model.addAttribute("appointmentRequests", filteredAppointmentRequests);
-            System.out.println("Appointment Requests: " + filteredAppointmentRequests);
-        }
-//        return "MyStore";
-        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
-
+//        Response<HashSet<ServicePolicy>> responsePolicy = server.getStorePolicy(request, storeID);
+//        if (responsePolicy.isError()) {
+//            alert.setFail(true);
+//            alert.setMessage(responsePolicy.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//        } else {
+//            alert.setSuccess(true);
+//            alert.setMessage(responsePolicy.getMessage());
+//            model.addAttribute("alert", alert.copy());
+//            model.addAttribute("policyInfo", responsePolicy.getValue());
+//        }
+        alert.reset();
+        return "MyStore";
+//        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
     }
 
-    @PostMapping("/add_discount")
+    @PostMapping("/add-basic-discount")
     public String addNewDiscount(@RequestParam("conditionSelect") String condition,
                                  @RequestParam(value = "startDate", required = false) String startDate,
                                  @RequestParam(value = "endDate", required = false) String endDate,
@@ -314,8 +303,8 @@ public class MyStoreController {
 //        alert.setMessage("Discount was added to store " + StoreName);
 //        model.addAttribute("alert", alert.copy());
         alert.reset();
-        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
-//        return "MyStore";
+//        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
+        return "MyStore";
     }
 
 //    @PostMapping ("policy_option")
@@ -323,26 +312,8 @@ public class MyStoreController {
 //                               @RequestParam("policyDescription") String description,
 //                               @RequestParam(value = "message", required = false) String message,
 //                               Model model){
-
-//        switch (condition) {
-//            case "CompositeCondition" -> {
-//                if (message != null) {
-//                    ConditionRecord conditionRecord = new CompositeMessageCondition();
-//                    ServicePolicy servicePolicy = new ServiceBasicPolicy(description, conditionRecord);
-//                    server.addPolicy(request, servicePolicy, storeID);
-//                }
-//            }
-//            case "OnlyIfCondition" -> {
-//                    FilterOnlyIfCondition filterOnlyIfCondition = new FilterOnlyIfCondition()
-//            }
-//            case "FilterCondition" -> {
 //
-//            }
-//            default -> {
-//            }
-//        }
-//        alert.reset();
-//        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
+//
 //    }
 
     @RequestMapping(value="/dailyStoreIncome", method = RequestMethod.GET)
@@ -433,7 +404,7 @@ public class MyStoreController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "redirect:/MyStore";
+        return "MyStore";
     }
 
     @PostMapping("/declineBid")
@@ -453,7 +424,7 @@ public class MyStoreController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "redirect:/MyStore";
+        return "MyStore";
     }
 
     @PostMapping("/counterOfferBid")
@@ -476,6 +447,6 @@ public class MyStoreController {
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
-        return "redirect:/MyStore";
+        return "MyStore";
     }
 }
