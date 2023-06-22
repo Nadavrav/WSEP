@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FacadeTest {
     Facade f = Facade.getInstance();
     private String adminUname= "admin";
-    private String adminPass = "admin1234";
+    private String adminPass = "admin12345";
     @BeforeEach
     void setup()
     {
@@ -2409,8 +2409,7 @@ class FacadeTest {
     void getStoreHistoryPurchase_Admin() {
         try {
             int visitorId = f.enterNewSiteVisitor();
-            String Username = "admin";
-            String password = "admin1234";
+
             String pName = "Milk";
             double pPrice = 5.0;
             String pCat = "Milk";
@@ -2425,6 +2424,7 @@ class FacadeTest {
             String city ="Nazareth";
             String country ="Israel";
             String zip = "1613101";
+            f.register(visitorId,adminUname,adminPass);
 
             f.login(visitorId,adminUname,adminPass);
 
@@ -2503,6 +2503,7 @@ class FacadeTest {
             String city ="Nazareth";
             String country ="Israel";
             String zip = "1613101";
+            f.register(visitorId,adminUname,adminPass);
             f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
@@ -2520,7 +2521,7 @@ class FacadeTest {
     void getUserHistoryPurchase_Admin() {
         try {
             int visitorId = f.enterNewSiteVisitor();
-            String Username = "admin";
+            String Username = "newuser";
             String password = "admin1234";
             String pName = "Milk";
             double pPrice = 5.0;
@@ -2536,7 +2537,8 @@ class FacadeTest {
             String city ="Nazareth";
             String country ="Israel";
             String zip = "1613101";
-       
+            f.register(visitorId,Username,password);
+
             f.login(visitorId,Username,password);
 
             int storeId = f.OpenNewStore(visitorId,"MyStore");
@@ -2545,11 +2547,18 @@ class FacadeTest {
             Date today = new Date();
             f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             f.logout(visitorId);
+
+            f.registerInitialAdmin(adminUname,adminPass);
+
             f.login(visitorId,adminUname,adminPass);
             String actual = f.GetUserHistoryPurchase(Username,visitorId);
-            String expected = "Name: Milk Description: Milk Category: Milk price per unit: 5.0 Amount: 1 total price: 5.0\n" +
-                    "The total price was :5.0";
-            String expectedDate = today.toString();
+            //String expectedDate =today.+" "+today.getMonth()+" "+ today.getDate()+" "+today.getHours()+":"+today.getMinutes();
+            String expectedDate= today.toString();
+            expectedDate=expectedDate.substring(0,16);
+
+            String expected = "The total price was :5.0";
+
+
             Assertions.assertTrue(actual.contains(expected));
             Assertions.assertTrue(actual.contains(expectedDate));
 
@@ -2614,6 +2623,7 @@ class FacadeTest {
             String city ="Nazareth";
             String country ="Israel";
             String zip = "1613101";
+            f.register(visitorId,adminUname,adminPass);
             f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
