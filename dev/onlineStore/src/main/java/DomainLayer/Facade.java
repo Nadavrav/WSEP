@@ -95,10 +95,11 @@ public class Facade {
         managersOnlyEntriesManager = new HashMap<>();
         storeOwnersEntriesManager = new HashMap<>();
         adminsEntriesManager = new HashMap<>();
-        if(!dbHasData) {//If db doesnt have data we load data
-                if (!ConfigParser.parse(this))
-                    registerInitialAdmin("admin", "admin12345");
-            }
+        //TODO: TELL NIKITA TO FIX, MAKES DOMAIN CRASH ON STARTUP
+    //    if(!dbHasData) {//If db doesnt have data we load data
+    //            if (!ConfigParser.parse(this))
+    //                registerInitialAdmin("admin", "admin12345");
+    //        }
     }
     /**
      * get instance uses double-checking to prevent synchronization when getting a non-null instance,
@@ -676,7 +677,7 @@ public class Facade {
 
 private void fetchCartIfExists(RegisteredUser user){
         try {
-            if (user.getCart() == null) {
+            if (user.getCart().getBags().isEmpty()) {
                 Collection<CartProductDTO> products = DS.getCartProducts(user.getUserName());
                 for (CartProductDTO cartProductDTO : products) {
                     int storeId = cartProductDTO.getStoreProduct().getStoreId();
@@ -697,13 +698,12 @@ private void fetchCartIfExists(RegisteredUser user){
 }
     public Cart getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
+        if(user instanceof RegisteredUser)
+            fetchCartIfExists((RegisteredUser) user);
         if (user == null) {
             logger.warning("trying to add from a null user");
             throw  new Exception("Invalid Visitor ID");
         }
-        if(user instanceof RegisteredUser){
-            fetchCartIfExists((RegisteredUser) user);
-            }
 
         return user.getCart();
         //return user.GetCart
@@ -1137,7 +1137,8 @@ private void fetchCartIfExists(RegisteredUser user){
             logger.warning("visitor is null");
             throw new Exception("Invalid Visitor ID");
         }
-
+        if(visitor instanceof RegisteredUser)
+            fetchCartIfExists((RegisteredUser) visitor);
         LinkedList<String> failedPurchases = new LinkedList<>();
 
         Cart c1 = visitor.getCart();
@@ -1853,7 +1854,7 @@ private void fetchCartIfExists(RegisteredUser user){
     }
 
     /**
-     *
+     * using filters, filters stuff
      * @param storeFilters filters for store in which products are to be filtered
      * @param productFilters filters who the returned products have to pass
      * @return product list of all products who passed the filter in the store who passed the filters
@@ -1862,9 +1863,12 @@ private void fetchCartIfExists(RegisteredUser user){
        // logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
         HashMap<Store,List<StoreProduct>> storeProducts=new HashMap<>();
         try {
-            DS = DALService.getInstance();
-            for(StoreDTO storeDTO:DS.getStores())
-                storesList.put(storeDTO.getId(),new Store(storeDTO));
+            if(DALService.getInstance().storeCounter()>storesList.keySet().size()) {
+                DS = DALService.getInstance();
+                for (StoreDTO storeDTO : DS.getStores())
+                    if (!storesList.containsKey(storeDTO.getId()))
+                        storesList.put(storeDTO.getId(), new Store(storeDTO));
+            }
             for (Store store : storesList.values()) { //for each store
                 boolean passStoreFilter = true;
                 if (!storeFilters.isEmpty()) {

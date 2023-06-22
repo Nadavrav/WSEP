@@ -71,6 +71,7 @@ public class CartProductDAO {
     public void updateProduct(int productId, String userName, int amount) throws SQLException {
         Session session = sessionFactory.openSession();
         try {
+            session.beginTransaction();
             CartproductEntityPK key=new CartproductEntityPK(productId,userName);
             CartproductEntity cartproductEntity = session.get(CartproductEntity.class,key);
             if (cartproductEntity != null) {
@@ -79,8 +80,8 @@ public class CartProductDAO {
                 //cartproductEntity.setUserName(userName);
                 cartproductEntity.setAmount(amount);
                 session.update(cartproductEntity);
-                session.getTransaction().commit();
             }
+            session.getTransaction().commit();
         } catch (HibernateException e) {
             throw new SQLException("Cant connect to DB");
         }

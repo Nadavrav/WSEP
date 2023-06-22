@@ -125,4 +125,21 @@ public class StoreProductDAO {
             session.close();
         }
     }
+
+    public Long storeCounter() throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+         //   Query query = session.createQuery("SELECT count(*) FROM StoreproductEntity ");
+            return (Long) session.createQuery("SELECT count(*) FROM StoreproductEntity ").uniqueResult();
+
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in saveUser");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+    }
 }

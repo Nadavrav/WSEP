@@ -370,5 +370,23 @@ public class DALService {
             throw new SQLException("SQL fail in saving cart product");
         }
     }
+    public Long storeCounter() throws SQLException {
+        try{
+            return storeDAO.storeCounter();
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
+    public Long storeProductCounter() throws SQLException {
+        try{
+            return storeProductDAO.storeCounter();
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
 
 }
