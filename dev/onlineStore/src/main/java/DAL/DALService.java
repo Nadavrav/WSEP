@@ -316,9 +316,18 @@ public class DALService {
      * @param averageRating averageRating
      * @throws SQLException if any database errors occur
      */
-    public void updateProduct(Integer productId, int storeId, String productName, Double price, String category, String description, int quantity, double averageRating) throws SQLException {
+    public void updateStoreProduct(Integer productId, int storeId, String productName, Double price, String category, String description, int quantity, double averageRating) throws SQLException {
         try{
             storeProductDAO.updateProduct(productId,storeId,productName,price,category,description,quantity,averageRating);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
+        }
+    }
+    public void removeStoreProduct(Integer productId) throws SQLException {
+        try{
+            storeProductDAO.removeProduct(productId);
         }
         catch (Exception e)
         {
@@ -334,7 +343,7 @@ public class DALService {
             throw new SQLException("SQL fail in saving cart product");
         }
     }
-    public void updateCrtProduct(int productId,String userName,int amount) throws SQLException{
+    public void updateCartProduct(int productId, String userName, int amount) throws SQLException{
         try{
             cartProductDAO.updateProduct(productId,userName,amount);
         }
@@ -343,7 +352,7 @@ public class DALService {
             throw new SQLException("SQL fail in saving cart product");
         }
     }
-    public void removeCrtProduct(int productId,String userName) throws SQLException{
+    public void removeCartProduct(int productId, String userName) throws SQLException{
         try{
             cartProductDAO.remove(productId,userName);
         }

@@ -318,7 +318,7 @@ public class Store {
         }
     }
 
-    public Response<?> RemoveProduct(Integer productID) {
+    public Response<?> RemoveProduct(Integer productID) throws SQLException {
         productLock.writeLock().lock();
         try {
             if (!products.containsKey(productID)) {
@@ -326,6 +326,7 @@ public class Store {
                 throw new IllegalArgumentException("There is no product in our products with this ID");
                 // return new Response<>("There is no product in our products with this ID", true);
             }
+            DALService.getInstance().removeStoreProduct(productID);
             products.get(productID).notifyRemoval();
             products.remove(productID);
             logger.info("Product removed from store. Product ID: " + productID);
@@ -420,7 +421,7 @@ public class Store {
         try {
             StoreProduct storeProduct=products.get(productId);
             storeProduct.UpdateQuantity(quantity);
-            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
                     storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
@@ -433,7 +434,7 @@ public class Store {
         try {
             StoreProduct storeProduct=products.get(productId);
             storeProduct.IncreaseQuantity(quantity);
-            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
                     storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
@@ -446,7 +447,7 @@ public class Store {
         try {
             StoreProduct storeProduct=products.get(productId);
             storeProduct.setName(name);
-            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
                     storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
@@ -459,7 +460,7 @@ public class Store {
         try {
             StoreProduct storeProduct=products.get(productId);
             storeProduct.setPrice(price);
-            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
                     storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
@@ -471,7 +472,7 @@ public class Store {
         try {
             StoreProduct storeProduct=products.get(productId);
             storeProduct.setCategory(category);
-            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
                     storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
@@ -484,7 +485,7 @@ public class Store {
         try {
             StoreProduct storeProduct=products.get(productId);
             storeProduct.setDescription(description);
-            DALService.getInstance().updateProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
                     storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();

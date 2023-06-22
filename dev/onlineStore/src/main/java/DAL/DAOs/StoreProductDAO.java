@@ -1,6 +1,8 @@
 package DAL.DAOs;
 
 import DAL.DTOs.StoreProductDTO;
+import DAL.Entities.CartproductEntity;
+import DAL.Entities.CartproductEntityPK;
 import DAL.Entities.StoreproductEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -96,6 +98,25 @@ public class StoreProductDAO {
             }
         } catch (HibernateException e) {
             throw new SQLException("Cant connect to DB");
+        }
+        finally {
+            if (session.isConnected()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+            }
+            session.close();
+        }
+    }
+
+    public void removeProduct(Integer productId) throws SQLException{
+        Session session = sessionFactory.openSession();
+        try {
+            StoreproductEntity storeproductEntity = session.get(StoreproductEntity.class,productId);
+            if (storeproductEntity != null) {
+                session.delete(storeproductEntity);
+                session.getTransaction().commit();
+            }
+        } catch (HibernateException e) {
+            throw new SQLException("Error while removing store product");
         }
         finally {
             if (session.isConnected()) {
