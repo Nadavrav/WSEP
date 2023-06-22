@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,19 +73,25 @@ class StoreTest {
 
     @Test
     void removeProduct() {
-        int pid1 = s.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
-        s.RemoveProduct(pid1);
-        int pid1S1 = s1.AddNewProduct(p1Name,p1Price,p1Quan,p1Cate,p1Desc);
-        s1.RemoveProduct(pid1S1);
-        int pid2 = s.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
-        s.RemoveProduct(pid2);
-        int pid2S1 = s1.AddNewProduct(p2Name,p2Price,p2Quan,p2Cate,p2Desc);
-        s1.RemoveProduct(pid2S1);
-        // check if  products removed
-        assertFalse(s.getProducts().values().contains(p1));
-        assertFalse(s1.getProducts().values().contains(p1));
-        assertFalse(s.getProducts().values().contains(p2));
-        assertFalse(s1.getProducts().values().contains(p2));
+        try {
+            int pid1 = s.AddNewProduct(p1Name, p1Price, p1Quan, p1Cate, p1Desc);
+            s.RemoveProduct(pid1);
+            int pid1S1 = s1.AddNewProduct(p1Name, p1Price, p1Quan, p1Cate, p1Desc);
+            s1.RemoveProduct(pid1S1);
+            int pid2 = s.AddNewProduct(p2Name, p2Price, p2Quan, p2Cate, p2Desc);
+            s.RemoveProduct(pid2);
+            int pid2S1 = s1.AddNewProduct(p2Name, p2Price, p2Quan, p2Cate, p2Desc);
+            s1.RemoveProduct(pid2S1);
+            // check if  products removed
+            assertFalse(s.getProducts().values().contains(p1));
+            assertFalse(s1.getProducts().values().contains(p1));
+            assertFalse(s.getProducts().values().contains(p2));
+            assertFalse(s1.getProducts().values().contains(p2));
+        }
+        catch (SQLException e){
+            fail(e.getCause());
+        }
+
 
     }
 

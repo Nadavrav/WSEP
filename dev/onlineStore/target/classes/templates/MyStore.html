@@ -324,7 +324,7 @@
 </div>
 
 <!------------------- choose condition for 2+ discounts ------------------->
-<form class="discount-checklist" action="/discount_option" method="post">
+<form class="discount-checklist" action="/add-discount" method="post">
     <h4>Select Discounts</h4>
     <div id="selectedDiscounts">
         <!-- Selected discounts will be dynamically added here -->
@@ -414,7 +414,7 @@
         <span class="close" onclick="closeModal()">&times;</span>
         <h2>Add New Discount</h2>
         <!-- Your form for adding a new discount here -->
-        <form id="newDiscountForm" action="/add_discount" method="post">
+        <form id="newDiscountForm" action="/add-basic-discount" method="post">
             <!-- Form fields here -->
             <label for="conditionSelect">Choose Condition:</label>
             <select id="conditionSelect" name="conditionSelect" onchange="handleConditionChange()">
@@ -568,7 +568,7 @@
         formData.append("amount", document.getElementById("amount").value);
 
         // Send the form data to the server
-        fetch("/add_discount", {
+        fetch("/add-basic-discount", {
             method: "POST",
             body: formData
         })
@@ -608,7 +608,7 @@
 <!--        <span class="close" onclick="closeModal()">&times;</span>-->
 <!--        <h2>Add New Discount</h2>-->
 <!--        &lt;!&ndash; Your form for adding a new discount here &ndash;&gt;-->
-<!--        <form id="newPolicyForm" action="/policy_option" method="post">-->
+<!--        <form id="newPolicyForm" action="/add-policy" method="post">-->
 <!--            &lt;!&ndash; Form fields here &ndash;&gt;-->
 <!--            <label for="policyConditionSelect">Choose Condition:</label>-->
 <!--            <select id="policyConditionSelect" name="policyConditionSelect" onchange="handleConditionChange()">-->
@@ -712,7 +712,7 @@
 <!--        formData.append("policyDescription", document.getElementById("policyDescription").value);-->
 
 <!--        // Send the form data to the server-->
-<!--        fetch("/policy_option", {-->
+<!--        fetch("/add-policy", {-->
 <!--            method: "POST",-->
 <!--            body: formData-->
 <!--        })-->

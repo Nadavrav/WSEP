@@ -9,16 +9,17 @@ import java.io.Serializable;
 public class CartproductEntityPK implements Serializable {
     @Column(name = "userName")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String userName;
     @Column(name = "productId")
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productId;
     public CartproductEntityPK(int productId,String userName){
         this.userName=userName;
         this.productId=productId;
     }
+    public CartproductEntityPK(){}
     public String getUserName() {
         return userName;
     }

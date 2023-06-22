@@ -8,11 +8,11 @@ import javax.persistence.*;
 @Table(name = "cartproduct", schema = "onlinestoredb", catalog = "")
 @IdClass(CartproductEntityPK.class)
 public class CartproductEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "userName")
     private String userName;
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "productId")
     private int productId;

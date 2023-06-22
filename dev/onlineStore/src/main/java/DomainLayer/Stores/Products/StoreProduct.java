@@ -70,7 +70,7 @@ public class StoreProduct extends Product {
 
     public StoreProduct(StoreProductDTO productDTO) {
         super(productDTO.getName(), productDTO.getPrice(), productDTO.getCategory(), productDTO.getDesc());
-        this.productId= productDTO.getStoreId();
+        this.productId= productDTO.getProductId();
         this.name = productDTO.getName();
         this.price = productDTO.getPrice();
         Category = productDTO.getCategory();

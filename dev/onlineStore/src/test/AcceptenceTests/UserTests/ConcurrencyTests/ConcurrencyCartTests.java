@@ -52,9 +52,18 @@ public class ConcurrencyCartTests {
         final Service user2=new Service();
         user1.EnterNewSiteVisitor();
         user2.EnterNewSiteVisitor();
+        String holderName="nadia safadi";
+        String visitorCard ="1234123412341234";
+        String expireDate = "4/28";
+        int cvv = 123;
+        String id ="206469017";
+        String address = "4036";
+        String city ="Nazareth";
+        String country ="Israel";
+        String zip = "1613101";
         Future<Boolean> f1=executor.submit(() -> {
-            assertFalse(user1.login(userName2,password2).isError()); assertFalse(user1.addProductToCart(productId_MegaMilk,storeId,1 ).isError()); Response<List<String>> output1 =  user1.PurchaseCart("idk","19128192","1-1-2024",122,"12","Deadvlei, Namibia","Void","Space","2937123"); if(!output1.isError()){return output1.getValue().isEmpty();} else return false;});
-        Future<Boolean> f2=executor.submit(() -> {assertFalse(user2.login(userName1,password1).isError()); assertFalse(user2.addProductToCart(productId_MegaMilk,storeId,1 ).isError()); Response<List<String>> output2 =  user2.PurchaseCart("idk","19128192","1-1-2024",122,"12","Deadvlei, Namibia","Void","Space","2937123"); if(!output2.isError()){return output2.getValue().isEmpty();} else return false;});
+            assertFalse(user1.login(userName2,password2).isError()); assertFalse(user1.addProductToCart(productId_MegaMilk,storeId,1 ).isError()); Response<List<String>> output1 =  user1.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip); if(!output1.isError()){return output1.getValue().isEmpty();} else return false;});
+        Future<Boolean> f2=executor.submit(() -> {assertFalse(user2.login(userName1,password1).isError()); assertFalse(user2.addProductToCart(productId_MegaMilk,storeId,1 ).isError()); Response<List<String>> output2 =  user2.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip); if(!output2.isError()){return output2.getValue().isEmpty();} else return false;});
         try {
             boolean r1=f1.get();
             boolean r2=f2.get();

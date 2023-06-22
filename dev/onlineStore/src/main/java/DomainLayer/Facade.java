@@ -4,17 +4,12 @@ package DomainLayer;
 import DAL.Entities.EmploymentEntity;
 import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
-import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.Discount;
-import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
-import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
@@ -101,10 +96,11 @@ public class Facade {
         managersOnlyEntriesManager = new HashMap<>();
         storeOwnersEntriesManager = new HashMap<>();
         adminsEntriesManager = new HashMap<>();
-        if(!dbHasData) {//If db doesnt have data we load data
-                if (!ConfigParser.parse(this))
-                    registerInitialAdmin("admin", "admin12345");
-            }
+        //TODO: TELL NIKITA TO FIX, MAKES DOMAIN CRASH ON STARTUP
+    //    if(!dbHasData) {//If db doesnt have data we load data
+    //            if (!ConfigParser.parse(this))
+    //                registerInitialAdmin("admin", "admin12345");
+    //        }
     }
     /**
      * get instance uses double-checking to prevent synchronization when getting a non-null instance,
@@ -579,6 +575,8 @@ public class Facade {
         //Get product lock
         try {
             Store store = storesList.get(storeId);
+            if(store==null)
+                store=fetchStoreIfExists(storeId);
             if (store == null) {
                 logger.warning("trying to add product to store that not exist");
                 throw new Exception("Invalid product ID");
@@ -592,6 +590,8 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
+            if(user instanceof RegisteredUser)
+                DALService.getInstance().saveCartProduct(productId,((RegisteredUser)user).getUserName(),amount);
             user.addProductToCart(storeId, product,amount, store.generateStoreCallback());
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
@@ -612,6 +612,8 @@ public class Facade {
         try {
 
             Store store = storesList.get(storeId);
+            if(store==null)
+                fetchStoreIfExists(storeId);
             if (store == null) {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
@@ -625,6 +627,8 @@ public class Facade {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
             }
+            if(user instanceof RegisteredUser)
+                DALService.getInstance().removeCartProduct(productId,((RegisteredUser)user).getUserName());
             user.removeProductFromCart(storeId, product);
         }
         catch (Exception e){
@@ -662,6 +666,8 @@ public class Facade {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
             }
+            if(user instanceof RegisteredUser)
+                DALService.getInstance().updateCartProduct(productId,((RegisteredUser)user).getUserName(),newAmount);
             user.changeCartProductQuantity(storeId, product,newAmount);
         } catch (Exception e) {
             //release lock
@@ -670,28 +676,35 @@ public class Facade {
         }
     }
 
-
+private void fetchCartIfExists(RegisteredUser user){
+        try {
+            if (user.getCart().getBags().isEmpty()) {
+                Collection<CartProductDTO> products = DS.getCartProducts(user.getUserName());
+                for (CartProductDTO cartProductDTO : products) {
+                    int storeId = cartProductDTO.getStoreProduct().getStoreId();
+                    if (!storesList.containsKey(storeId)) {
+                        StoreDTO storeDTO = DS.getStoreById(storeId);
+                        if (storeDTO == null) {
+                            throw new RuntimeException("User has product that belongs to a non existent store");
+                        }
+                        storesList.put(storeId, new Store(storeDTO));
+                    }
+                    user.addProductToCart(storeId,storesList.get(storeId).getProductByID(cartProductDTO.getProductId()), cartProductDTO.getAmount());
+                }
+            }
+        }
+        catch (SQLException e){
+            throw new RuntimeException(e.getMessage());
+        }
+}
     public Cart getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
+        if(user instanceof RegisteredUser)
+            fetchCartIfExists((RegisteredUser) user);
         if (user == null) {
             logger.warning("trying to add from a null user");
             throw  new Exception("Invalid Visitor ID");
         }
-        if(user instanceof RegisteredUser)
-            if(user.getCart()==null) {
-               Collection<CartProductDTO> products= DS.getCartProducts(((RegisteredUser)user).getUserName());
-               for(CartProductDTO cartProductDTO:products){
-                   int storeId=cartProductDTO.getStoreProduct().getStoreId();
-                   if(!storesList.containsKey(storeId)){
-                       StoreDTO storeDTO=DS.getStoreById(storeId);
-                       if(storeDTO==null){
-                           throw new RuntimeException("User has product that belongs to a non existent store");
-                       }
-                       storesList.put(storeId,new Store(storeDTO));
-                   }
-                   user.addProductToCart(storeId,storesList.get(storeId).getProductByID(cartProductDTO.getProductId()), cartProductDTO.getAmount());
-               }
-            }
 
         return user.getCart();
         //return user.GetCart
@@ -710,6 +723,8 @@ public class Facade {
         if (user == null) {
             throw  new Exception("Invalid Visitor ID");
         }
+        if(user instanceof RegisteredUser)
+            fetchCartIfExists((RegisteredUser) user);
         return user.getCart();
     }
 
@@ -1195,7 +1210,8 @@ public class Facade {
             logger.warning("visitor is null");
             throw new Exception("Invalid Visitor ID");
         }
-
+        if(visitor instanceof RegisteredUser)
+            fetchCartIfExists((RegisteredUser) visitor);
         LinkedList<String> failedPurchases = new LinkedList<>();
 
         Cart c1 = visitor.getCart();
@@ -1547,6 +1563,8 @@ public class Facade {
             throw  new Exception("there is no employee with this id ");
         if (employment.CanManageStock()) {
             Store store = storesList.get(storeId);
+            if(store==null)
+                store=fetchStoreIfExists(storeId);
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
             }
@@ -1908,7 +1926,7 @@ public class Facade {
     }
 
     /**
-     *
+     * using filters, filters stuff
      * @param storeFilters filters for store in which products are to be filtered
      * @param productFilters filters who the returned products have to pass
      * @return product list of all products who passed the filter in the store who passed the filters
@@ -1917,9 +1935,12 @@ public class Facade {
        // logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
         HashMap<Store,List<StoreProduct>> storeProducts=new HashMap<>();
         try {
-            DS = DALService.getInstance();
-            for(StoreDTO storeDTO:DS.getStores())
-                storesList.put(storeDTO.getId(),new Store(storeDTO));
+            if(DALService.getInstance().storeCounter()>storesList.keySet().size()) {
+                DS = DALService.getInstance();
+                for (StoreDTO storeDTO : DS.getStores())
+                    if (!storesList.containsKey(storeDTO.getId()))
+                        storesList.put(storeDTO.getId(), new Store(storeDTO));
+            }
             for (Store store : storesList.values()) { //for each store
                 boolean passStoreFilter = true;
                 if (!storeFilters.isEmpty()) {
@@ -2167,6 +2188,8 @@ public class Facade {
         }
         Double totalPrice = user.getCart().getTotalPrice();
         Cart userCart = user.getCart();
+        if(user instanceof RegisteredUser && userCart.getBags().isEmpty())
+            fetchCartIfExists((RegisteredUser) user);
         for (Bag currbag: userCart.getBags().values()) {
             Store s = storesList.get(currbag.getStoreID());
             if(s  == null)
@@ -2339,51 +2362,51 @@ public class Facade {
     }
 
 
-    public Map<Date,Integer> getVisitorsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getVisitorsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:siteVisitorsEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,siteVisitorsEntriesManager.get(d));
+                outputMap.put(dateToString(d),siteVisitorsEntriesManager.get(d));
             }
         }
         return outputMap;
     }
 
-    public Map<Date,Integer> getUsersWithoutStoresAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getUsersWithoutStoresAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:nonWorkersEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,nonWorkersEntriesManager.get(d));
+                outputMap.put(dateToString(d),nonWorkersEntriesManager.get(d));
             }
         }
         return outputMap;
     }
 
-    public Map<Date,Integer> getStoreManagersOnlyAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getStoreManagersOnlyAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:managersOnlyEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,managersOnlyEntriesManager.get(d));
+                outputMap.put(dateToString(d),managersOnlyEntriesManager.get(d));
             }
         }
         return outputMap;
     }
 
-    public Map<Date,Integer> getStoreOwnersAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getStoreOwnersAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:storeOwnersEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,storeOwnersEntriesManager.get(d));
+                outputMap.put(dateToString(d),storeOwnersEntriesManager.get(d));
             }
         }
         return outputMap;
     }
 
-    public Map<Date,Integer> getAdminsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
-        Map<Date,Integer> outputMap = new HashMap<>();
+    public Map<String,Integer> getAdminsAmountBetweenDates(int visitorId, int dayStart, int monthStart, int yearStart, int dayEnd, int monthEnd, int yearEnd) {
+        Map<String,Integer> outputMap = new HashMap<>();
         for (Date d:adminsEntriesManager.keySet()) {
             if(isBetweenDates(d,dayStart,monthStart,yearStart,dayEnd,monthEnd,yearEnd)){
-                outputMap.put(d,adminsEntriesManager.get(d));
+                outputMap.put(dateToString(d),adminsEntriesManager.get(d));
             }
         }
         return outputMap;
@@ -2416,6 +2439,9 @@ public class Facade {
         }
     }
 
+    private String dateToString(Date d){
+        return d.getDate()+"/"+(d.getMonth()+1)+"/"+(d.getYear()+1900);
+    }
     public LinkedList<Permission> getPermissions(int visitorId, int storeId) throws Exception {
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){
