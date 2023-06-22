@@ -1,8 +1,6 @@
 package DomainLayer;
 
 
-import DAL.Entities.EmploymentEntity;
-import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
@@ -765,7 +763,7 @@ private void fetchCartIfExists(RegisteredUser user){
         }
         else {
             //TODO get employment from db by appointer username and storeId - done
-            employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+            EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
             //TODO if the DTO we get is null then throw the exception else - done
             if(employmentDTO == null){
                 logger.warning("the appointer is not owner of store id warning");
@@ -782,7 +780,7 @@ private void fetchCartIfExists(RegisteredUser user){
 
         if (appointerEmployment == null || !appointerEmployment.canAppointOwner()) {
             //TODO get employment from db by appointer username and storeId(this could happen if the - done
-            employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+            EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
             if(employmentDTO == null){
                 logger.warning("the appointer is not owner of store id warning");
                 throw new Exception("the appointer is not owner of store id");
@@ -824,7 +822,7 @@ private void fetchCartIfExists(RegisteredUser user){
         }
         else{
             //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store - done
-            employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(appointedUserName,storeId);
+            EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(appointedUserName,storeId);
             if(employmentDTO != null)
                 appointedEmployment = new Employment(employmentDTO);
         }
@@ -858,7 +856,7 @@ private void fetchCartIfExists(RegisteredUser user){
                 if(employmentList.get(userDTO.getUserName()) == null && employmentList.get(userDTO.getUserName()).get(storeId) == null)
                 {
                     //meaning that he is an owner but his employment isnt loded
-                    employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(userDTO.getUserName(),storeId);
+                    EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(userDTO.getUserName(),storeId);
                     if(employmentList.get(userDTO.getUserName()) == null)
                     {
                         Map<Integer, Employment> newEmploymentMap = new HashMap<>();
@@ -946,7 +944,7 @@ private void fetchCartIfExists(RegisteredUser user){
        }
        else {
            //TODO get employment from db by appointer username and storeId - done
-           employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+           EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
            //TODO if the DTO we get is null then throw the exception else - done
            if(employmentDTO == null){
                logger.warning("the appointer is not owner of store id warning");
@@ -963,7 +961,7 @@ private void fetchCartIfExists(RegisteredUser user){
 
        if (appointerEmployment == null || !appointerEmployment.canAppointManager()) {
            //TODO get employment from db by appointer username and storeId(this could happen if the - done
-           employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+           EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
            if(employmentDTO == null){
                logger.warning("the appointer is not owner of store id warning");
                throw new Exception("the appointer is not owner of store id");
@@ -1005,7 +1003,7 @@ private void fetchCartIfExists(RegisteredUser user){
        }
        else{
            //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store - done
-           employmentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(appointedUserName,storeId);
+           EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(appointedUserName,storeId);
            if(employmentDTO != null)
                appointedEmployment = new Employment(employmentDTO);
        }
@@ -1165,15 +1163,22 @@ private void fetchCartIfExists(RegisteredUser user){
     public String getRolesData(int visitorId,int storeId) throws Exception {//4.11
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorId);
-        if(!(appointer instanceof RegisteredUser)){
+        if(!(appointer instanceof RegisteredUser user)){
             logger.warning("invalid visitor ID");
             throw  new Exception("invalid visitor Id");
         }
-
+        Collection<EmploymentDTO> employmentDTOS=DALService.getInstance().getStoreEmployment(storeId);
+        for(EmploymentDTO employmentDTO:employmentDTOS){
+            if(!employmentList.containsKey(employmentDTO.getEmployee()))
+                employmentList.put(employmentDTO.getEmployee(),new HashMap<>());
+            if(!employmentList.get(employmentDTO.getEmployee()).containsKey(employmentDTO.getStoreID()))
+                employmentList.get(employmentDTO.getEmployee()).put(employmentDTO.getStoreID(),new Employment(employmentDTO));
+        }
+        Employment appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
         if(!(appointer instanceof Admin)) {
             //is he storeowner
             try {
-                Employment appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+
                 if(!appointerEmployment.CanSeeStaffAndPermissions()){
                     throw new Exception("You do not have the permission to see staff and permissions.");
                 }
@@ -2051,11 +2056,23 @@ private void fetchCartIfExists(RegisteredUser user){
         if(! (visitor instanceof RegisteredUser user)){
             throw new Exception("invalid visitor Id");
         }
-        Map<Integer,Employment> employmentMap = employmentList.get(((RegisteredUser)visitor).getUserName());
-        if(employmentMap.isEmpty())
-            for(StoreDTO storeDTO:DS.getStoresFromOwner(user.getUserName()))
-                if(!employmentMap.containsKey(storeDTO.getId()))
-                    employmentMap.put(storeDTO.getId(),new Employment(user.getUserName(),storeDTO.getId(),Role.StoreOwner));
+        String userName=user.getUserName();
+        Collection<EmploymentDTO> employmentDTOS=DS.getEmploymentsByName(userName);
+        for(EmploymentDTO employmentDTO:employmentDTOS){
+            if(!employmentList.containsKey(userName)){
+                employmentList.put(userName,new HashMap<>());
+            }
+            employmentList.get(userName).put(employmentDTO.getStoreID(),new Employment(employmentDTO));
+        }
+        Map<Integer,Employment> employmentMap = employmentList.get(userName);
+        for(StoreDTO storeDTO:DS.getStoresFromOwner(userName)) {
+            if (!employmentMap.containsKey(storeDTO.getId()))
+                employmentMap.put(storeDTO.getId(), new Employment(userName, storeDTO.getId(), Role.StoreOwner));
+            if(!storesList.containsKey(storeDTO.getId())){
+                storesList.put(storeDTO.getId(),new Store(storeDTO));
+            }
+        }
+
         LinkedList<Store> stores = new LinkedList<>();
         for(Integer i :employmentMap.keySet()){
             stores.add(storesList.get(i));

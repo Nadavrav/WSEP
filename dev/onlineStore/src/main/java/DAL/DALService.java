@@ -144,7 +144,7 @@ public class DALService {
      * @return an employmentDTO representing the employment from the db
      * @throws SQLException if cant connect to db
      */
-    public employmentDTO getEmploymentByUsernameAndStoreId(String employee,int storeId) throws SQLException {
+    public EmploymentDTO getEmploymentByUsernameAndStoreId(String employee, int storeId) throws SQLException {
         try{
             return employmentDAO.getEmploymentByUsernameAndStoreId(employee,storeId);
         }
@@ -160,9 +160,25 @@ public class DALService {
      * @return - a linked list containing all the dtos of employments of store owners
      * @throws SQLException if cant connect to db
      */
-    public LinkedList<employmentDTO> getStoreOwnersEmployment(int storeId) throws SQLException {
+    public LinkedList<EmploymentDTO> getStoreOwnersEmployment(int storeId) throws SQLException {
         try{
-            LinkedList<employmentDTO> employments = employmentDAO.getStoreOwnersEmployment(storeId);
+            LinkedList<EmploymentDTO> employments = employmentDAO.getStoreOwnersEmployment(storeId);
+            return employments;
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
+    /**
+     * A function to get the all employees of a given store
+     * @param storeId - the id of said store
+     * @return - a linked list containing all the dtos of employments of store owners
+     * @throws SQLException if cant connect to db
+     */
+    public LinkedList<EmploymentDTO> getStoreEmployment(int storeId) throws SQLException {
+        try{
+            LinkedList<EmploymentDTO> employments = employmentDAO.getStoreEmployment(storeId);
             return employments;
         }
         catch (Exception e)
@@ -397,6 +413,15 @@ public class DALService {
     public Long storeProductCounter() throws SQLException {
         try{
             return storeProductDAO.storeCounter();
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getEmployment, username and storeId");
+        }
+    }
+    public Collection<EmploymentDTO> getEmploymentsByName(String name) throws SQLException {
+        try{
+            return employmentDAO.getEmploymentsFromName(name);
         }
         catch (Exception e)
         {

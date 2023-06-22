@@ -1,9 +1,7 @@
 package DAL.DAOs;
 
-import DAL.DTOs.employmentDTO;
-import DAL.DTOs.registeredUserDTO;
+import DAL.DTOs.EmploymentDTO;
 import DAL.Entities.EmploymentEntity;
-import DAL.Entities.RegistereduserEntity;
 import org.hibernate.*;
 
 import java.sql.SQLException;
@@ -72,7 +70,7 @@ public class employmentDAO {
      * @param storeId - the store the employment belongs to
      * @return an employmentDTO representing the employment from the db
      */
-    public employmentDTO getEmploymentByUsernameAndStoreId(String employee,int storeId) throws SQLException {
+    public EmploymentDTO getEmploymentByUsernameAndStoreId(String employee, int storeId) throws SQLException {
         Session session = sessionFactory.openSession();
         try{
             Query<EmploymentEntity> query = session.createQuery("FROM EmploymentEntity WHERE employee = :username AND storeId = :storeId");
@@ -82,7 +80,7 @@ public class employmentDAO {
 
             if(employmentEntity != null) {
                 session.close();
-                return new employmentDTO(employmentEntity.getEmployee(),employmentEntity.getStoreId(),employmentEntity.getAppointer(),employmentEntity.getRole(),employmentEntity.getPermissions());
+                return new EmploymentDTO(employmentEntity.getEmployee(),employmentEntity.getStoreId(),employmentEntity.getAppointer(),employmentEntity.getRole(),employmentEntity.getPermissions());
             }
         }catch (Exception e) {
             throw new SQLException("SQL fail in getEmploymentByUsernameAndStoreId");
@@ -129,22 +127,53 @@ public class employmentDAO {
     }
 
     /**
+     * TODO: NIKITA
+     * @param userName
+     * @return
+     * @throws SQLException
+     */
+    public Collection<EmploymentDTO> getEmploymentsFromName(String userName) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+            Query<EmploymentEntity> query = session.createQuery("FROM EmploymentEntity WHERE employee = :userName");
+            query.setParameter("userName",userName);
+            List<EmploymentEntity> employmentEntities = query.getResultList();
+            if(employmentEntities != null && !employmentEntities.isEmpty()) {
+                session.close();
+                HashSet<EmploymentDTO> contracts = new HashSet<>();
+                for (EmploymentEntity employmentEntity: employmentEntities) {
+                    contracts.add(new EmploymentDTO(employmentEntity.getEmployee(),employmentEntity.getStoreId(),employmentEntity.getAppointer(),employmentEntity.getRole(),employmentEntity.getPermissions()));
+                }
+                return contracts;
+            }
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in getEmploymentByUsernameAndStoreId");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+        return null;
+    }
+    /**
      * A function to get the owner employments of a store
      * @param storeId - the id of said store
      * @return - a linked list containing all the dtos of employments of store owners
      */
-    public LinkedList<employmentDTO> getStoreOwnersEmployment(int storeId) throws SQLException {
+    public LinkedList<EmploymentDTO> getStoreOwnersEmployment(int storeId) throws SQLException {
         Session session = sessionFactory.openSession();
         try{
             Query<EmploymentEntity> query = session.createQuery("FROM EmploymentEntity WHERE storeId = :storeId AND role != 0");
             query.setParameter("storeId",storeId);
-            LinkedList<EmploymentEntity> employmentEntities = (LinkedList<EmploymentEntity>) query.getResultList();
+            List<EmploymentEntity> employmentEntities =  query.getResultList();
 
             if(employmentEntities != null && !employmentEntities.isEmpty()) {
                 session.close();
-                LinkedList<employmentDTO> employments = new LinkedList<>();
+                LinkedList<EmploymentDTO> employments = new LinkedList<>();
                 for (EmploymentEntity EmEntity: employmentEntities) {
-                    employmentDTO employmentDTO = new employmentDTO(EmEntity.getEmployee(),EmEntity.getStoreId(),EmEntity.getAppointer(),EmEntity.getRole(),EmEntity.getPermissions());
+                    EmploymentDTO employmentDTO = new EmploymentDTO(EmEntity.getEmployee(),EmEntity.getStoreId(),EmEntity.getAppointer(),EmEntity.getRole(),EmEntity.getPermissions());
                     employments.add(employmentDTO);
                 }
                 return employments;
@@ -188,4 +217,30 @@ public class employmentDAO {
         return null;
     }
 
+    public LinkedList<EmploymentDTO> getStoreEmployment(int storeId) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try{
+            Query<EmploymentEntity> query = session.createQuery("FROM EmploymentEntity WHERE storeId = :storeId");
+            query.setParameter("storeId",storeId);
+            List<EmploymentEntity> employmentEntities = query.getResultList();
+            if(employmentEntities != null && !employmentEntities.isEmpty()) {
+                session.close();
+                LinkedList<EmploymentDTO> employments = new LinkedList<>();
+                for (EmploymentEntity EmEntity: employmentEntities) {
+                    EmploymentDTO employmentDTO = new EmploymentDTO(EmEntity.getEmployee(),EmEntity.getStoreId(),EmEntity.getAppointer(),EmEntity.getRole(),EmEntity.getPermissions());
+                    employments.add(employmentDTO);
+                }
+                return employments;
+            }
+        }catch (Exception e) {
+            throw new SQLException("SQL fail in getEmploymentByUsernameAndStoreId");
+        }
+        finally {
+            if (session != null && session.isOpen()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+                session.close();
+            }
+        }
+        return null;
+    }
 }

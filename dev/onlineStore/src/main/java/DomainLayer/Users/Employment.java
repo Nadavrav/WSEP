@@ -1,14 +1,10 @@
 package DomainLayer.Users;
 
-import DAL.DTOs.employmentDTO;
-import DomainLayer.Stores.Store;
+import DAL.DTOs.EmploymentDTO;
 import DomainLayer.Logging.UniversalHandler;
-import java.util.logging.*;
+
 import java.util.LinkedList;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Employment {
     private String appointer;
@@ -66,7 +62,7 @@ public class Employment {
 
     }
 
-    public Employment(employmentDTO employmentDTO)
+    public Employment(EmploymentDTO employmentDTO)
     {
         this.appointer = employmentDTO.getAppointer();
         this.employee = employmentDTO.getEmployee();

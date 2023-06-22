@@ -1,19 +1,13 @@
 package DAL.DTOs;
 
-import DomainLayer.Users.Permission;
-import DomainLayer.Users.RegisteredUser;
-import DomainLayer.Users.Role;
-
-import java.util.LinkedList;
-
-public class employmentDTO {
+public class EmploymentDTO {
     private String appointer;
     private String employee;
     private int storeID;
     private int role;
     private String permissions;
 
-    public employmentDTO(String employee,int storeId, String appointer,int role, String permissions)
+    public EmploymentDTO(String employee, int storeId, String appointer, int role, String permissions)
     {
         this.employee = employee;
         this.storeID = storeId;
