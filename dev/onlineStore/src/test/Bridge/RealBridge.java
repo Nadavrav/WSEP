@@ -218,8 +218,9 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Response<List<String>> PurchaseCart(int creditCard, String address) {
-        return service.PurchaseCart(creditCard,address);
+    public Response<List<String>> PurchaseCart(String holderName,String visitorCard,String expireDate, int cvv , String id ,String address,String city,String country ,String zip) {
+
+        return service.PurchaseCart(holderName, visitorCard, expireDate, cvv, id, address, city, country, zip);
     }
 
     @Override
@@ -302,8 +303,8 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Response<?> rejectCounterOffer(int productId) {
-        return service.rejectCounterOffer(productId);
+    public Response<?> rejectCounterOffer(int productId,int storeId) {
+        return service.rejectCounterOffer(productId,storeId);
     }
 
     @Override

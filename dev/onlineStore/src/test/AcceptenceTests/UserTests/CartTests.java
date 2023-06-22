@@ -22,8 +22,15 @@ public class CartTests {
     private Integer productId_UltraMilk = -1;//Product that exits
     private Integer productId_GigaMilk = -1;//Product that exits
     private final Integer badProductId = -1;//Product that doesn't exist
-    private Integer RealcreditProxy = 123; // A credit card
-    private String address = "home";
+    private String holderName="nadia safadi";
+    private String visitorCard ="1234123412341234";
+    private String expireDate = "4/28";
+    private int cvv = 123;
+    private String id ="206469017";
+    private String address = "4036";
+    private String city ="Nazareth";
+    private String country ="Israel";
+    private String zip = "1613101";
     @BeforeAll
     public void Setup()
     {
@@ -206,7 +213,7 @@ public class CartTests {
         assertTrue(bridge.addToCart(productId_MegaMilk, storeId));
 
         int BeforePurchaseQuantity = bridge.GetItemQuantity(storeId,productId_MegaMilk);
-        Response<List<String>> r= bridge.PurchaseCart(RealcreditProxy,address);
+        Response<List<String>> r= bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
         assertFalse(r.isError());
         int AfterPurchaseQuantity = bridge.GetItemQuantity(storeId,productId_MegaMilk);
         Assertions.assertEquals(BeforePurchaseQuantity-1,AfterPurchaseQuantity);
@@ -218,7 +225,7 @@ public class CartTests {
 
         int BeforePurchaseQuantity = bridge.GetItemQuantity(storeId,productId_MegaMilk);
         assertTrue(bridge.CartChangeItemQuantity(productId_MegaMilk,storeId,BeforePurchaseQuantity+1));
-        Response<List<String>> r= bridge.PurchaseCart(RealcreditProxy,address);
+        Response<List<String>> r= bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
         Assertions.assertFalse(r.isError());
     }
     @Test
@@ -228,7 +235,7 @@ public class CartTests {
 
         int BeforePurchaseQuantity = bridge.GetItemQuantity(storeId,productId_MegaMilk);
         assertTrue(bridge.CartChangeItemQuantity(productId_MegaMilk,storeId,BeforePurchaseQuantity+1));
-        Response<List<String>> r= bridge.PurchaseCart(RealcreditProxy,address);
+        Response<List<String>> r= bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
         Assertions.assertFalse(r.isError());
     }
 }

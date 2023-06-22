@@ -1126,12 +1126,21 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
             f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
-            List<String> actual = f.purchaseCart(visitorId,123,"Adress");
+            List<String> actual = f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             List<String> expected = new LinkedList<>();
             Assertions.assertEquals(expected,actual);
         }
@@ -1152,12 +1161,21 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
             f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
-            Assertions.assertThrows(Exception.class,()->f.purchaseCart(1000,123,"Adress"));
+            Assertions.assertThrows(Exception.class,()->f.purchaseCart(1000,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip));
         }
         catch (Exception e)
         {//Should happen
@@ -1181,6 +1199,15 @@ class FacadeTest {
             String pCat2 = "Bread";
             int pQuan2 = 10;
             String pDesc2 = "Bread";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
             f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
@@ -1188,7 +1215,7 @@ class FacadeTest {
             int pid2 = f.AddProduct(visitorId,storeId,pName2,pPrice2,pCat2,pQuan2,pDesc2);
             f.addProductToCart(pid1,storeId,1,visitorId);
             f.addProductToCart(pid2,storeId,1,visitorId);
-            List<String> actual = f.purchaseCart(visitorId,123,"Adress");
+            List<String> actual = f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             List<String> expected = new LinkedList<>();
             Assertions.assertEquals(expected,actual);
         }
@@ -1209,13 +1236,22 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 1;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
             f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid1,storeId,1,visitorId);
             f.changeCartProductQuantity(pid1,storeId,100,visitorId);
-            List<String> actual = f.purchaseCart(visitorId,123,"Adress");
+            List<String> actual = f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             List<String> expected = new LinkedList<>();
             expected.add(String.valueOf(storeId));
             Assertions.assertEquals(expected,actual);
@@ -2380,6 +2416,15 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
 
             f.login(visitorId,adminUname,adminPass);
 
@@ -2387,7 +2432,7 @@ class FacadeTest {
             int pid1 = f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
 
             f.addProductToCart(pid1,storeId,1,visitorId);
-            f.purchaseCart(visitorId,123,"Adress");
+            f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             List<String> actual = f.GetStoreHistoryPurchase(storeId,visitorId);
             List<String> expected = new LinkedList<>();
             Bag b = new Bag(storeId);
@@ -2414,12 +2459,21 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
             f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid  =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
-            f.purchaseCart(visitorId,123,"Adress");
+            f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             f.logout(visitorId);
             Assertions.assertThrows(Exception.class,()->f.GetStoreHistoryPurchase(storeId,visitorId));
         }
@@ -2440,11 +2494,20 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
             f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
-            f.purchaseCart(visitorId,123,"Adress");
+            f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             Assertions.assertThrows(Exception.class,()->f.GetStoreHistoryPurchase(1000,visitorId));
         }
         catch (Exception e)
@@ -2464,6 +2527,15 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
        
             f.login(visitorId,Username,password);
 
@@ -2471,7 +2543,7 @@ class FacadeTest {
             int pid=f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
             Date today = new Date();
-            f.purchaseCart(visitorId,123,"Adress");
+            f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             f.logout(visitorId);
             f.login(visitorId,adminUname,adminPass);
             String actual = f.GetUserHistoryPurchase(Username,visitorId);
@@ -2499,12 +2571,21 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
             f.register(visitorId,Username,password);
             f.login(visitorId,Username,password);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
-            f.purchaseCart(visitorId,123,"Adress");
+            f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             Assertions.assertThrows(Exception.class,()->f.GetUserHistoryPurchase(Username,visitorId));
         }
         catch (Exception e)
@@ -2524,11 +2605,20 @@ class FacadeTest {
             String pCat = "Milk";
             int pQuan = 10;
             String pDesc = "Milk";
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
             f.login(visitorId,adminUname,adminPass);
             int storeId = f.OpenNewStore(visitorId,"MyStore");
             int pid =f.AddProduct(visitorId,storeId,pName,pPrice,pCat,pQuan,pDesc);
             f.addProductToCart(pid,storeId,1,visitorId);
-            f.purchaseCart(visitorId,123,"Adress");
+            f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             Assertions.assertThrows(Exception.class,()->f.GetUserHistoryPurchase("NotRealUser",visitorId));
         }
         catch (Exception e)

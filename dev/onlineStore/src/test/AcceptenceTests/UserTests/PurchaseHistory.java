@@ -30,8 +30,15 @@ public class PurchaseHistory {
     private Integer productId_Cheese = -1;//Product that exits
     private Integer productId_Hamburger = -1;//Product that exits
     private final Integer badProductId = -1;//Product that doesn't exist
-    private final int RealcreditProxy = 123; // A credit card Proxy class
-    private String address = "home";
+    private String holderName="nadia safadi";
+    private String visitorCard ="1234123412341234";
+    private String expireDate = "4/28";
+    private int cvv = 123;
+    private String id ="206469017";
+    private String address = "4036";
+    private String city ="Nazareth";
+    private String country ="Israel";
+    private String zip = "1613101";
 
     //  private final HashMap<String,String> productIdMapper=new HashMap<>();
     private final HashMap<String,ServiceProduct> serviceProductMap=new HashMap<>();
@@ -94,7 +101,7 @@ public class PurchaseHistory {
         assertTrue(bridge.Login(NormalUser,password));
         assertTrue(bridge.addToCart(productId_Milk, storeId));
         assertTrue(bridge.addToCart(productId_Cheese, storeId));
-        assertFalse(bridge.PurchaseCart(RealcreditProxy,address).isError());
+        assertFalse(bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip).isError());
         assertTrue(bridge.Logout());
         assertTrue(bridge.Login(StoreFounerName,password));
         List<String> r = bridge.StorePurchaseHistory(storeId);
@@ -114,13 +121,13 @@ public class PurchaseHistory {
         assertTrue(bridge.Login(StoreWorkerOwnerPerms,password));
         assertTrue(bridge.addToCart(productId_Milk, storeId));
         assertTrue(bridge.addToCart(productId_Hamburger, storeId));
-        assertFalse(bridge.PurchaseCart(RealcreditProxy,address).isError());
+        assertFalse(bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip).isError());
         assertTrue(bridge.Logout());
         //Adding more items through a different user
         assertTrue(bridge.Login(NormalUser,password));
         assertTrue(bridge.addToCart(productId_Hamburger, storeId));
         purchaseRecords.add(new PurchaseRecord(serviceProductMap.get(productId_Hamburger),NormalUser));
-        assertFalse(bridge.PurchaseCart(RealcreditProxy,address).isError());
+        assertFalse(bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip).isError());
         assertTrue(bridge.Logout());
         assertTrue(bridge.Login(StoreFounerName,password));
         List<String> r = bridge.StorePurchaseHistory(storeId);
@@ -139,7 +146,7 @@ public class PurchaseHistory {
         assertTrue(bridge.Login(NormalUser,password));
         assertTrue(bridge.addToCart(productId_Milk, storeId));
         assertTrue(bridge.addToCart(productId_Cheese, storeId));
-        assertFalse(bridge.PurchaseCart(RealcreditProxy,address).isError());
+        assertFalse(bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip).isError());
         assertTrue(bridge.Logout());
 
         List<String> r = bridge.StorePurchaseHistory(storeId);
@@ -152,7 +159,7 @@ public class PurchaseHistory {
         assertTrue(bridge.Login(NormalUser,password));
         assertTrue(bridge.addToCart(productId_Milk, storeId));
         assertTrue(bridge.addToCart(productId_Cheese, storeId));
-        assertFalse(bridge.PurchaseCart(RealcreditProxy,address).isError());
+        assertFalse(bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip).isError());
         assertTrue(bridge.Logout());
 
         assertTrue(bridge.Login(NormalUser,password));
@@ -178,7 +185,7 @@ public class PurchaseHistory {
         assertTrue(bridge.Login(NormalUser,password));
         assertTrue(bridge.addToCart(productId_Cheese, storeId));
         assertTrue(bridge.addToCart(productId_Milk, storeId));
-        assertFalse(bridge.PurchaseCart(RealcreditProxy,address).isError());
+        assertFalse(bridge.PurchaseCart(holderName,visitorCard,expireDate,cvv,id,address,city,country,zip).isError());
         assertTrue(bridge.Logout());
 
         assertTrue(bridge.Login(AdminUsername,AdminPassword));

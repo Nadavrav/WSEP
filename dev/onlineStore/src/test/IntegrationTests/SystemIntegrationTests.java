@@ -375,8 +375,17 @@ public class SystemIntegrationTests {
             String ExpectedproductsInCartStr = "Name: "+pName+" Description: "+pDesc+" Category: "+pCat+" price per unit: "+pPrice+" Amount: 1 total price: "+pPrice;
             Assertions.assertTrue(actual.contains(ExpectedstoreIdStr));
             Assertions.assertTrue(actual.contains(ExpectedproductsInCartStr));
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
 
-            List<String> actualPurchase = f.purchaseCart(visitorId,123,"Adress");
+            List<String> actualPurchase = f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             List<String> expectedPurchase = new LinkedList<>();
             Assertions.assertEquals(expectedPurchase,actualPurchase);
 
@@ -423,7 +432,17 @@ public class SystemIntegrationTests {
             Assertions.assertTrue(actualInCart.contains(ExpectedstoreIdStr1));
             Assertions.assertTrue(actualInCart.contains(ExpectedproductsInCartStr1));
 
-            List<String> actualPurchase = f.purchaseCart(visitorId,123,"Adress");
+            String holderName="nadia safadi";
+            String visitorCard ="1234123412341234";
+            String expireDate = "4/28";
+            int cvv = 123;
+            String id ="206469017";
+            String address = "4036";
+            String city ="Nazareth";
+            String country ="Israel";
+            String zip = "1613101";
+
+            List<String> actualPurchase = f.purchaseCart(visitorId,holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
             List<String> expectedPurchase = new LinkedList<>();
             expectedPurchase.add(String.valueOf(storeId));
             Assertions.assertEquals(expectedPurchase,actualPurchase);
