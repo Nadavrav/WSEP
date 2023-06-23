@@ -25,7 +25,7 @@ public class RegisteredUser extends SiteVisitor{
     }
 
     byte[] password;
-    PurchaseHistory purchaseHistory;
+    final PurchaseHistory purchaseHistory;
     private final HashMap<StoreProduct,Bid> counterOffers;
     private boolean loggedIn;
     //add lock
@@ -33,7 +33,10 @@ public class RegisteredUser extends SiteVisitor{
     public boolean hasNewMessage() {
         return hasNewMessage;
     }
-
+    @Override
+    public void removeBag(int storeId) throws Exception {
+        getCart().removeBag(storeId,this.getUserName());
+    }
     boolean hasNewMessage = false;
     LinkedList<String> waitingMessages;
 
@@ -74,6 +77,7 @@ public class RegisteredUser extends SiteVisitor{
         this.userName = userDTO.getUserName();
         this.password = userDTO.getPassword();
         this.loggedIn = false;
+        this.purchaseHistory = new PurchaseHistory();
         counterOffers=new HashMap<>();
         waitingMessages=new LinkedList<String>();
     }

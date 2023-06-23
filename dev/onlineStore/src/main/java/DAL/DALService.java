@@ -94,6 +94,17 @@ public class DALService {
             throw new SQLException("SQL fail in saveUser");
         }
     }
+    public boolean adminExists() throws SQLException {
+        try{
+            if(!TestsFlags.getInstance().isTests())
+                return adminDAO.userDbNotEmpty();
+            return false;
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in saveUser");
+        }
+    }
 
     /**
      * Function to save the admin user into the db

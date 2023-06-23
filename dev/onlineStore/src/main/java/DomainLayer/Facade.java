@@ -75,14 +75,14 @@ public class Facade {
     private DALService DS;
 
     private Facade(){
-        boolean dbHasData = false;
+      //  boolean dbHasData = false;
         if(!TestsFlags.getInstance().isTests()) {
             try {
                 DS = DALService.getInstance();
-                DS.deleteDBData();
+               //       DS.deleteDBData();
                 Store.setStoreIdCounter(DS.getMaxStoreId() + 1);
                 Store.setProductIdCounter(DS.getMaxProductId() + 1);
-                dbHasData = DS.dbNotEmpty();
+               // dbHasData = DS.dbNotEmpty();
             } catch (SQLException e) {
                 Store.resetCounters();
             }
@@ -101,11 +101,13 @@ public class Facade {
         managersOnlyEntriesManager = new HashMap<>();
         storeOwnersEntriesManager = new HashMap<>();
         adminsEntriesManager = new HashMap<>();
-        //TODO: TELL NIKITA TO FIX, MAKES DOMAIN CRASH ON STARTUP
-        if(!dbHasData) {//If db doesnt have data we load data
-                if (!ConfigParser.parse(this))
+        try {
+                if (!ConfigParser.parse(this) && !DALService.getInstance().adminExists())
                     registerInitialAdmin("admin", "admin12345");
-            }
+        }
+        catch (SQLException e){
+            logger.severe("ERROR WHILE FETCHING/SAVING ADMIN IN DB");
+        }
     }
     /**
      * get instance uses double-checking to prevent synchronization when getting a non-null instance,
@@ -694,7 +696,7 @@ private void fetchCartIfExists(RegisteredUser user){
                         }
                         storesList.put(storeId, new Store(storeDTO));
                     }
-                    user.addProductToCart(storeId,storesList.get(storeId).getProductByID(cartProductDTO.getProductId()), cartProductDTO.getAmount());
+                    user.addProductToCart(storeId,storesList.get(storeId).getProductByID(cartProductDTO.getProductId()), cartProductDTO.getAmount(),storesList.get(storeId).generateStoreCallback());
                 }
             }
         }
@@ -1288,7 +1290,6 @@ private void fetchCartIfExists(RegisteredUser user){
 
         }
         if(!paymentProvider.handShake()){
-
             throw new Exception("payment provider does not handshake");
         }
 
@@ -1343,16 +1344,16 @@ private void fetchCartIfExists(RegisteredUser user){
                                 s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
                             }
                             InstantPurchase p = new InstantPurchase(visitor, b, amount);
-                            if (visitor instanceof RegisteredUser) {
-                                ((RegisteredUser) visitor).addPurchaseToHistory(p);
-                                storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
+                            if (visitor instanceof RegisteredUser user) {
+                                user.addPurchaseToHistory(p);
+                                storesList.get(b.getStoreID()).NewBuyNotification((user.getUserName()));
+                                user.removeBag(b.getStoreID());
                             }
                             else{
                                 storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
+                                visitor.removeBag(b.getStoreID());
                             }
                             storesList.get(b.getStoreID()).addToStoreHistory(p);
-                            visitor.removeBag(b.getStoreID());
-
                         }
                     }
                 }
