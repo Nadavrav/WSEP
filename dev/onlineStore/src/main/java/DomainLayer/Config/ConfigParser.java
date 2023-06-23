@@ -1,5 +1,6 @@
 package DomainLayer.Config;
 
+import DAL.DALService;
 import DomainLayer.Facade;
 import DomainLayer.Logging.UniversalHandler;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,20 +32,21 @@ public class ConfigParser {
             try {
                 List<User> userList = objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, User.class));
                 for (User user : userList) {
-                    int id = facade.enterNewSiteVisitor();
-                    if(user.isAdmin()) {
-                        facade.registerInitialAdmin(user.getUsername(), user.getPassword());
-                        loadedAdmin=true;
-                    }
-                    else
-                        facade.register(id,user.getUsername(), user.getPassword());
-                    if(user.getStore()!=null){
-                        facade.login(id,user.getUsername(), user.getPassword());
-                        for(Store store:user.getStore()){
-                            int storeId=facade.OpenNewStore(id,store.getName());
-                            if(store.getProducts()!=null){
-                                for(Product product:store.getProducts()){
-                                    facade.AddProduct(id,storeId,product.getName(),product.getPrice(),product.getCategory(),product.getQuantity(),product.getDescription());
+                    if (DALService.getInstance().getUser(user.getUsername()) == null) {
+                        int id = facade.enterNewSiteVisitor();
+                        if (user.isAdmin()) {
+                            facade.registerInitialAdmin(user.getUsername(), user.getPassword());
+                            loadedAdmin = true;
+                        } else
+                            facade.register(id, user.getUsername(), user.getPassword());
+                        if (user.getStore() != null) {
+                            facade.login(id, user.getUsername(), user.getPassword());
+                            for (Store store : user.getStore()) {
+                                int storeId = facade.OpenNewStore(id, store.getName());
+                                if (store.getProducts() != null) {
+                                    for (Product product : store.getProducts()) {
+                                        facade.AddProduct(id, storeId, product.getName(), product.getPrice(), product.getCategory(), product.getQuantity(), product.getDescription());
+                                    }
                                 }
                             }
                         }
@@ -55,7 +57,7 @@ public class ConfigParser {
                 logger.warning("Failed to parse file "+file.getName()+", Cause: I/O error");
             }
             catch (Exception e){
-                logger.warning("Error while loading data from config file "+file.getName()+": invalid data values or structure");
+                logger.warning("Error while loading data from config file "+file.getName()+": invalid data values or structure, or data already exists");
             }
         }
         return loadedAdmin;

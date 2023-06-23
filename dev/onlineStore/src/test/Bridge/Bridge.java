@@ -218,11 +218,11 @@ public interface Bridge {
 
     /**
      * A function to purchase the contents of the cart
-     * @param creditCard - the credit card
+
      * @param address - address of the purchaser
      * @return a response that contains a list of the items it failed to purchase
      */
-    Response PurchaseCart(int creditCard,String address);
+    Response PurchaseCart(String holderName,String visitorCard,String expireDate, int cvv , String id ,String address,String city,String country ,String zip);
 
     /**
      * A function to get a requested item quantity
@@ -251,7 +251,7 @@ public interface Bridge {
     Response<ServiceBid> addNewBid(int productId, int storeId, int amount, int newPrice);
     Response<ServiceBid> counterOfferBid(int productId, int storeId,String userName,double newPrice,String message);
     Response<?> acceptCounterOffer(int productId, int storeId);
-    Response<?> rejectCounterOffer(int productId);
+    Response<?> rejectCounterOffer(int productId,int storeId);
     Response<?> voteOnBid(int productId,int storeId,String userName,boolean vote);
     Response<Collection<ServiceBid>> geStoreBids(int storeId);
     Response<Collection<ServiceBid>> getUserBids();

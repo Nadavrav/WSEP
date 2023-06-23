@@ -13,6 +13,7 @@ import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,7 @@ public class DiscountTest {
      */
     @BeforeEach
     public void setUp(){
+        TestsFlags.getInstance().setTests();
         fullBag=new Bag(1);
         fullBag.addProduct(bread,1);
         fullBag.addProduct(milk,1);

@@ -10,6 +10,7 @@ public class ServiceAppliedDiscount {
 
     private final HashMap<ServiceCartProduct,Double> savingsPerProduct;
 
+
     /**
      * calculates the savings info after all store discounts are applied to a bag
      * note: this is info that includes many operations from many discounts,

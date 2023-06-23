@@ -89,8 +89,9 @@ public class Cart {
             return s;
         }
 
-        public void removeBag(int storeId) throws Exception {
+        public void removeBag(int storeId,String userName) throws Exception {
             try {
+                bagList.get(storeId).empty(userName);
                 bagList.remove(storeId);
             }
             catch (Exception e)
@@ -98,6 +99,15 @@ public class Cart {
                 throw new Exception("something bad at removeBag");
             }
         }
+    public void removeBag(int storeId) throws Exception {
+        try {
+            bagList.remove(storeId);
+        }
+        catch (Exception e)
+        {
+            throw new Exception("something bad at removeBag");
+        }
+    }
 
         /**
          * A function that gets the price of the user's cart

@@ -1,5 +1,6 @@
 package Bridge;
 
+import DAL.TestsFlags;
 import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.Service;
@@ -12,16 +13,18 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
-import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import org.opentest4j.TestSkippedException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class RealBridge implements Bridge {
-    Service service=new Service();
+    Service service;
+    public RealBridge(){
+        TestsFlags.getInstance().setTests();
+        service=new Service();
+    }
     @Override
     public boolean initialize() {
         service.loadData();
@@ -218,8 +221,9 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Response<List<String>> PurchaseCart(int creditCard, String address) {
-        return service.PurchaseCart(creditCard,address);
+    public Response<List<String>> PurchaseCart(String holderName,String visitorCard,String expireDate, int cvv , String id ,String address,String city,String country ,String zip) {
+
+        return service.PurchaseCart(holderName, visitorCard, expireDate, cvv, id, address, city, country, zip);
     }
 
     @Override
@@ -302,8 +306,8 @@ public class RealBridge implements Bridge {
     }
 
     @Override
-    public Response<?> rejectCounterOffer(int productId) {
-        return service.rejectCounterOffer(productId);
+    public Response<?> rejectCounterOffer(int productId,int storeId) {
+        return service.rejectCounterOffer(productId,storeId);
     }
 
     @Override

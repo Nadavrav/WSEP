@@ -1,6 +1,7 @@
 package DomainLayer;
 
 
+import DAL.TestsFlags;
 import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
 import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MaxTotalProductAmountCondition;
@@ -12,10 +13,8 @@ import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondit
 import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.Discount;
-import DomainLayer.Stores.Discounts.MaxSelectiveDiscount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
-import DomainLayer.Stores.Products.Product;
 import DomainLayer.Stores.Purchases.InstantPurchase;
 
 import DomainLayer.Logging.UniversalHandler;
@@ -30,6 +29,11 @@ import ServiceLayer.ServiceObjects.Fiters.StoreFilters.StoreFilter;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 
+//DAL IMPORTS
+import DAL.DALService;
+import DAL.DTOs.*;
+
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -68,7 +72,21 @@ public class Facade {
 
 
 
+    private DALService DS;
+
     private Facade(){
+      //  boolean dbHasData = false;
+        if(!TestsFlags.getInstance().isTests()) {
+            try {
+                DS = DALService.getInstance();
+               //       DS.deleteDBData();
+                Store.setStoreIdCounter(DS.getMaxStoreId() + 1);
+                Store.setProductIdCounter(DS.getMaxProductId() + 1);
+               // dbHasData = DS.dbNotEmpty();
+            } catch (SQLException e) {
+                Store.resetCounters();
+            }
+        }
         UniversalHandler.GetInstance().HandleError(logger);
         UniversalHandler.GetInstance().HandleInfo(logger);
         onlineList = new ConcurrentHashMap<>();
@@ -77,17 +95,19 @@ public class Facade {
         employmentList = new ConcurrentHashMap<>();
         appointmentsRequests = new ConcurrentHashMap<>();
         supplier= Supplier.getInstance();
-
         paymentProvider= PaymentProvider.getInstance();
-
         siteVisitorsEntriesManager = new HashMap<>();
         nonWorkersEntriesManager = new HashMap<>();
         managersOnlyEntriesManager = new HashMap<>();
         storeOwnersEntriesManager = new HashMap<>();
         adminsEntriesManager = new HashMap<>();
-
-        if(!ConfigParser.parse(this))
-            registerInitialAdmin("admin","admin12345");
+        try {
+                if (!ConfigParser.parse(this) && !DALService.getInstance().adminExists())
+                    registerInitialAdmin("admin", "admin12345");
+        }
+        catch (SQLException e){
+            logger.severe("ERROR WHILE FETCHING/SAVING ADMIN IN DB");
+        }
     }
     /**
      * get instance uses double-checking to prevent synchronization when getting a non-null instance,
@@ -116,206 +136,212 @@ public class Facade {
      * Function used by test inorder to reset the data in the facade and make the tests independent of one another.
      * Synced on the same object as loadData
      */
-    public void resetData()
-    {
+    public void resetData() {
         synchronized (dataSyncObj) {
             Store.resetCounters();
             onlineList.clear();
             registeredUserList.clear();
             storesList.clear();
             employmentList.clear();
+            dataLoaded = false;
             supplier = new Supplier();
             paymentProvider = new PaymentProvider();
-            dataLoaded = false;
+            try {
+                DS = DALService.getInstance();
+                DS.deleteDBData();
+            } catch (Exception e) {
+                // do nothing
+            }
+            //registerInitialAdmin();
+
         }
     }
     public void loadData() throws Exception {
-        synchronized (dataSyncObj) {
-            if (dataLoaded)
-                return;
-            // resetData();
-            if (!ConfigParser.parse(this))
-                registerInitialAdmin("admin", "admin12345");
-            try {
-                //New users
-                int nadavID = enterNewSiteVisitor();
-                int nadiaID = enterNewSiteVisitor();
-                int natalieID = enterNewSiteVisitor();
-                int majdID = enterNewSiteVisitor();
-                int denisID = enterNewSiteVisitor();
-                int nikitaID = enterNewSiteVisitor();
-
-
-                register(nadavID, "Nadav", "123456789");
-                register(nadiaID, "Nadia", "123456789");
-                register(natalieID, "Natalie", "123456789");
-                register(majdID, "Majd", "123456789");
-                register(denisID, "Denis", "123456789");
-                register(nikitaID, "Nikita", "123456789");
-
-                login(nadavID, "Nadav", "123456789");
-                login(nadiaID, "Nadia", "123456789");
-                login(natalieID, "Natalie", "123456789");
-                login(majdID, "Majd", "123456789");
-                login(denisID, "Denis", "123456789");
-                login(nikitaID, "Nikita", "123456789");
-
-                //New Stores
-                int nadavStoreID = OpenNewStore(nadavID, "NadavStore");
-                int nadiaStoreID = OpenNewStore(nadiaID, "NadiaStore");
-                int natalieStoreID = OpenNewStore(natalieID, "NatalieStore");
-                int majdStoreID = OpenNewStore(majdID, "MajdStore");
-                int denisStoreID = OpenNewStore(denisID, "DenisStore");
-                int nikitaStoreID = OpenNewStore(nikitaID, "NikitaStore");
-
-                //New Products
-
-                //new
-                AddProduct(nadavID, nadavStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
-                AddProduct(nadavID, nadavStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
-                AddProduct(nadavID, nadavStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
-                AddProduct(nadavID, nadavStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
-                AddProduct(nadavID, nadavStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
-
-                AddProduct(nadiaID, nadiaStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
-                AddProduct(nadiaID, nadiaStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
-                AddProduct(nadiaID, nadiaStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
-                AddProduct(nadiaID, nadiaStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
-                AddProduct(nadiaID, nadiaStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
-
-                AddProduct(natalieID, natalieStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
-                AddProduct(natalieID, natalieStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
-                AddProduct(natalieID, natalieStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
-                AddProduct(natalieID, natalieStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
-                AddProduct(natalieID, natalieStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
-
-                AddProduct(majdID, majdStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
-                AddProduct(majdID, majdStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
-                AddProduct(majdID, majdStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
-                AddProduct(majdID, majdStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
-                AddProduct(majdID, majdStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
-
-                AddProduct(denisID, denisStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
-                AddProduct(denisID, denisStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
-                AddProduct(denisID, denisStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
-                AddProduct(denisID, denisStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
-                AddProduct(denisID, denisStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
-
-                AddProduct(nikitaID, nikitaStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
-                AddProduct(nikitaID, nikitaStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
-                AddProduct(nikitaID, nikitaStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
-                AddProduct(nikitaID, nikitaStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
-                AddProduct(nikitaID, nikitaStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
-
-                //old
-                AddProduct(nadiaID, nadiaStoreID, "Orange Juice", 16, "Juice", 90, "Good juice");
-                AddProduct(natalieID, natalieStoreID, "Apples", 900, "Fruits", 1, "Good apples");
-                AddProduct(majdID, majdStoreID, "Milk", 6, "Milk", 30, "Good milk");
-                AddProduct(denisID, denisStoreID, "Milk", 6, "Milk", 30, "Good milk");
-                AddProduct(nikitaID, nikitaStoreID, "Milk", 6, "Milk", 30, "Good milk");
-                //new Discounts
-                // NadavStore discounts:
-                 addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
-                addDiscount(new BasicDiscount("5% Discount on milk!",2,10,new NameCondition("Milk")),nadavStoreID);// MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
-                // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
-                // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
-                // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
-                // AdditiveDiscount nadavAdditiveDiscount=new AdditiveDiscount("10% Discount on steaks and another 50% discount on steaks if you buy 2",1);
-                // nadavAdditiveDiscount.addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")));
-                // nadavAdditiveDiscount.addDiscount(new BasicDiscount("50% Discount on steaks if you buy 2",1,50,nameAndMinQuantityCondition));
-                // addDiscount(nadavAdditiveDiscount,nadavStoreID);
-                // // NadiaStore discounts:
-                // BooleanAfterFilterCondition nadiabreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-                // BooleanAfterFilterCondition nadiadairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-                // AndCondition andCondition=new AndCondition(nadiabreadCondition,nadiadairyCondition);
-                // MultiAndCondition nadiaMultiAndCondition=new MultiAndCondition();
-                // nadiaMultiAndCondition.addCondition(andCondition);
-                // nadiaMultiAndCondition.addCondition(new CategoryCondition("Meat"));
-                // BasicDiscount nadiaDiscount =new BasicDiscount(" 50% discount on all meat products if you buy least 5 bread loafs and also at least 6 dairy products",1,50,nadiaMultiAndCondition);
-                // CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
-                // BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
-                // BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
-                // AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
-                // additiveDiscount.addDiscount(storeDiscount);
-                // additiveDiscount.addDiscount(dairyDiscount);
-                // addDiscount(nadiaDiscount,nadiaStoreID);
-                // addDiscount(additiveDiscount,nadiaStoreID);
-                // // NatalieStore discounts:
-                // BooleanAfterFilterCondition natalieBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-                // BooleanAfterFilterCondition natalieDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-                // OrCondition natalieorCondition=new OrCondition(natalieBreadCondition,natalieDairyCondition);
-                // MultiAndCondition NataliemultiAndCondition=new MultiAndCondition();
-                // NataliemultiAndCondition.addCondition(natalieorCondition);
-                // NataliemultiAndCondition.addCondition(new CategoryCondition("Meat"));
-                // BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,NataliemultiAndCondition);
-                // addDiscount(basicDiscount,natalieStoreID);
+        //  synchronized (dataSyncObj) {
+        //      if (dataLoaded)
+        //          return;
+        //      // resetData();
+        //    //  if (!ConfigParser.parse(this))
+        //      registerInitialAdmin("admin", "admin12345");
+        //      try {
+//                //New users
+//                int nadavID = enterNewSiteVisitor();
+//                int nadiaID = enterNewSiteVisitor();
+//                int natalieID = enterNewSiteVisitor();
+//                int majdID = enterNewSiteVisitor();
+//                int denisID = enterNewSiteVisitor();
+//                int nikitaID = enterNewSiteVisitor();
 //
-                // // MajdStore discounts:
-                // BooleanAfterFilterCondition majdBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
-                // BooleanAfterFilterCondition majdDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
-                // XorCondition majdXorCondition=new XorCondition(majdBreadCondition,majdDairyCondition);
-                // MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
-                // majdMultiAndCondition.addCondition(majdXorCondition);
-                // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
 //
-                // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
-
-                // addDiscount(majdBasicDiscount,majdStoreID);
-                // DenisStore discounts:
-                // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
-                // MinBagPriceCondition denisMinBagPriceCondition=new MinBagPriceCondition(200);
-                // AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
-                // FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
-                // BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
+//                register(nadavID, "Nadav", "123456789");
+//                register(nadiaID, "Nadia", "123456789");
+//                register(natalieID, "Natalie", "123456789");
+//                register(majdID, "Majd", "123456789");
+//                register(denisID, "Denis", "123456789");
+//                register(nikitaID, "Nikita", "123456789");
 //
-                //        " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
+//                login(nadavID, "Nadav", "123456789");
+//                login(nadiaID, "Nadia", "123456789");
+//                login(natalieID, "Natalie", "123456789");
+//                login(majdID, "Majd", "123456789");
+//                login(denisID, "Denis", "123456789");
+//                login(nikitaID, "Nikita", "123456789");
 //
-                //addDiscount(denisBasicDiscount,denisStoreID);
-                // NikitaStore discounts:
-                NameCondition milkCondition = new NameCondition("Milk 15%");
-                CategoryCondition meatCategoryCondition = new CategoryCondition("Meat");
-                BasicDiscount meatsDiscount = new BasicDiscount("20% discount on all 15% milk cartons", 1, 20, milkCondition);
-                BasicDiscount milkDiscount = new BasicDiscount("25% discount on all meat products", 2, 25, meatCategoryCondition);
-                MaxSelectiveDiscount maxSelectiveDiscount = new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them", 3);
-                maxSelectiveDiscount.addDiscount(meatsDiscount);
-                maxSelectiveDiscount.addDiscount(milkDiscount);
-                //add policies
-                //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
-//                BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
-                //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
-                //    appointNewStoreOwner(nadavID,"Denis",0);
-                //    appointNewStoreOwner(1,"Nadia",0);
-                //    acceptEmploymentRequest(denisID,0,"Nadia");
-                Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",999);
-                //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
-                //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
-                //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
-                AddStorePolicy(nadavID, nadavStoreID, DairyPolicy);
-                //addPolicy(BreadPolicy,nadavStoreID);
-                //addPolicy(Meatpolicy,nadiaStoreID);
-                //addPolicy(BreadPolicy,denisStoreID);
-                //addPolicy(BreadPolicy,nadiaStoreID);
-                //addPolicy(BagPolicy,denisStoreID);
-                //addPolicy(BagPolicy,nadiaStoreID);
-                //addPolicy(BagPolicy,natalieStoreID);
+//                //New Stores
+//                int nadavStoreID = OpenNewStore(nadavID, "NadavStore");
+//                int nadiaStoreID = OpenNewStore(nadiaID, "NadiaStore");
+//                int natalieStoreID = OpenNewStore(natalieID, "NatalieStore");
+//                int majdStoreID = OpenNewStore(majdID, "MajdStore");
+//                int denisStoreID = OpenNewStore(denisID, "DenisStore");
+//                int nikitaStoreID = OpenNewStore(nikitaID, "NikitaStore");
+//
+//                //New Products
+//
+//                //new
+//                AddProduct(nadavID, nadavStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+//                AddProduct(nadavID, nadavStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+//                AddProduct(nadavID, nadavStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+//                AddProduct(nadavID, nadavStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+//                AddProduct(nadavID, nadavStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+//
+//                AddProduct(nadiaID, nadiaStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+//                AddProduct(nadiaID, nadiaStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+//                AddProduct(nadiaID, nadiaStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+//                AddProduct(nadiaID, nadiaStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+//                AddProduct(nadiaID, nadiaStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+//
+//                AddProduct(natalieID, natalieStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+//                AddProduct(natalieID, natalieStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+//                AddProduct(natalieID, natalieStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+//                AddProduct(natalieID, natalieStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+//                AddProduct(natalieID, natalieStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+//
+//                AddProduct(majdID, majdStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+//                AddProduct(majdID, majdStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+//                AddProduct(majdID, majdStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+//                AddProduct(majdID, majdStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+//                AddProduct(majdID, majdStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+//
+//                AddProduct(denisID, denisStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+//                AddProduct(denisID, denisStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+//                AddProduct(denisID, denisStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+//                AddProduct(denisID, denisStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+//                AddProduct(denisID, denisStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+//
+//                AddProduct(nikitaID, nikitaStoreID, "Milk 15%", 6, "Milk", 1, "Freshly milked");
+//                AddProduct(nikitaID, nikitaStoreID, "Bread", 10, "Wheat Foods", 1, "Made of whole wheat");
+//                AddProduct(nikitaID, nikitaStoreID, "Yogurt", 15, "Dairy", 1, "Extra chunky");
+//                AddProduct(nikitaID, nikitaStoreID, "Chicken", 30, "Meat", 1, "40% chicken");
+//                AddProduct(nikitaID, nikitaStoreID, "Steak", 100, "Meat", 1, "May contain peanuts");
+//
+//                //old
+//                AddProduct(nadiaID, nadiaStoreID, "Orange Juice", 16, "Juice", 90, "Good juice");
+//                AddProduct(natalieID, natalieStoreID, "Apples", 900, "Fruits", 1, "Good apples");
+//                AddProduct(majdID, majdStoreID, "Milk", 6, "Milk", 30, "Good milk");
+//                AddProduct(denisID, denisStoreID, "Milk", 6, "Milk", 30, "Good milk");
+//                AddProduct(nikitaID, nikitaStoreID, "Milk", 6, "Milk", 30, "Good milk");
+//                //new Discounts
+//                // NadavStore discounts:
+//                 addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
+//                addDiscount(new BasicDiscount("5% Discount on milk!",2,10,new NameCondition("Milk")),nadavStoreID);// MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
+//                // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
+//                // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
+//                // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
+//                // AdditiveDiscount nadavAdditiveDiscount=new AdditiveDiscount("10% Discount on steaks and another 50% discount on steaks if you buy 2",1);
+//                // nadavAdditiveDiscount.addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")));
+//                // nadavAdditiveDiscount.addDiscount(new BasicDiscount("50% Discount on steaks if you buy 2",1,50,nameAndMinQuantityCondition));
+//                // addDiscount(nadavAdditiveDiscount,nadavStoreID);
+//                // // NadiaStore discounts:
+//                // BooleanAfterFilterCondition nadiabreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+//                // BooleanAfterFilterCondition nadiadairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+//                // AndCondition andCondition=new AndCondition(nadiabreadCondition,nadiadairyCondition);
+//                // MultiAndCondition nadiaMultiAndCondition=new MultiAndCondition();
+//                // nadiaMultiAndCondition.addCondition(andCondition);
+//                // nadiaMultiAndCondition.addCondition(new CategoryCondition("Meat"));
+//                // BasicDiscount nadiaDiscount =new BasicDiscount(" 50% discount on all meat products if you buy least 5 bread loafs and also at least 6 dairy products",1,50,nadiaMultiAndCondition);
+//                // CategoryCondition dairyCategoryCondition=new CategoryCondition("Dairy");
+//                // BasicDiscount storeDiscount=new BasicDiscount("20% on the whole store",1,20);
+//                // BasicDiscount dairyDiscount =new BasicDiscount("50% discount dairy products",2,50,dairyCategoryCondition);
+//                // AdditiveDiscount additiveDiscount=new AdditiveDiscount("20% discount on the whole store, and 5 discount on all dairy products",3);
+//                // additiveDiscount.addDiscount(storeDiscount);
+//                // additiveDiscount.addDiscount(dairyDiscount);
+//                // addDiscount(nadiaDiscount,nadiaStoreID);
+//                // addDiscount(additiveDiscount,nadiaStoreID);
+//                // // NatalieStore discounts:
+//                // BooleanAfterFilterCondition natalieBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+//                // BooleanAfterFilterCondition natalieDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+//                // OrCondition natalieorCondition=new OrCondition(natalieBreadCondition,natalieDairyCondition);
+//                // MultiAndCondition NataliemultiAndCondition=new MultiAndCondition();
+//                // NataliemultiAndCondition.addCondition(natalieorCondition);
+//                // NataliemultiAndCondition.addCondition(new CategoryCondition("Meat"));
+//                // BasicDiscount basicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products",1,50,NataliemultiAndCondition);
+//                // addDiscount(basicDiscount,natalieStoreID);
+////
+//                // // MajdStore discounts:
+//                // BooleanAfterFilterCondition majdBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(5));
+//                // BooleanAfterFilterCondition majdDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(6));
+//                // XorCondition majdXorCondition=new XorCondition(majdBreadCondition,majdDairyCondition);
+//                // MultiAndCondition majdMultiAndCondition=new MultiAndCondition();
+//                // majdMultiAndCondition.addCondition(majdXorCondition);
+//                // majdMultiAndCondition.addCondition(new CategoryCondition("Meat"));
+////
+//                // BasicDiscount majdBasicDiscount =new BasicDiscount(" 50% meat discount if you buy least 5 breads or at least 6 dairy products, but not both",1,50,majdMultiAndCondition);
+//
+//                // addDiscount(majdBasicDiscount,majdStoreID);
+//                // DenisStore discounts:
+//                // BooleanAfterFilterCondition denisMinYogurtAmount=new BooleanAfterFilterCondition(new NameCondition("Yogurt"),new MinTotalProductAmountCondition(3));
+//                // MinBagPriceCondition denisMinBagPriceCondition=new MinBagPriceCondition(200);
+//                // AndCondition denisAndCondition=new AndCondition(denisMinBagPriceCondition,denisMinYogurtAmount);
+//                // FilterOnlyIfCondition denisCondition=new FilterOnlyIfCondition(denisAndCondition,new CategoryCondition("Dairy"));
+//                // BasicDiscount denisBasicDiscount =new BasicDiscount("If the value of the basket is higher than NIS 200" +
+////
+//                //        " and the basket also contains at least 3 yogurts, then there is a 50% discount on dairy products",1,50,denisCondition);
+////
+//                //addDiscount(denisBasicDiscount,denisStoreID);
+//                // NikitaStore discounts:
+//                NameCondition milkCondition = new NameCondition("Milk 15%");
+//                CategoryCondition meatCategoryCondition = new CategoryCondition("Meat");
+//                BasicDiscount meatsDiscount = new BasicDiscount("20% discount on all 15% milk cartons", 1, 20, milkCondition);
+//                BasicDiscount milkDiscount = new BasicDiscount("25% discount on all meat products", 2, 25, meatCategoryCondition);
+//                MaxSelectiveDiscount maxSelectiveDiscount = new MaxSelectiveDiscount("20% discount on all milk cartons or 25% discount on all meat products, the larger of them", 3);
+//                maxSelectiveDiscount.addDiscount(meatsDiscount);
+//                maxSelectiveDiscount.addDiscount(milkDiscount);
+//                //add policies
+//                //BooleanAfterFilterCondition policyBreadCondition=new BooleanAfterFilterCondition(new NameCondition("Bread"),new MinTotalProductAmountCondition(3));
+//                //BooleanAfterFilterCondition policyDairyCondition=new BooleanAfterFilterCondition(new CategoryCondition("Dairy"),new MaxTotalProductAmountCondition(5));
+//                //BooleanAfterFilterCondition policyMeatCondition=new BooleanAfterFilterCondition(new CategoryCondition("Steak"),new DateCondition(15));
+//                //    appointNewStoreOwner(nadavID,"Denis",0);
+//                //    appointNewStoreOwner(1,"Nadia",0);
+//                //    acceptEmploymentRequest(denisID,0,"Nadia");
+//                //Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",policyDairyCondition);
+//                //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
+//                //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
+//                //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
+//                //addPolicy(DairyPolicy,nadavStoreID);
+//                //addPolicy(BreadPolicy,nadavStoreID);
+//                //addPolicy(Meatpolicy,nadiaStoreID);
+//                //addPolicy(BreadPolicy,denisStoreID);
+//                //addPolicy(BreadPolicy,nadiaStoreID);
+//                //addPolicy(BagPolicy,denisStoreID);
+//                //addPolicy(BagPolicy,nadiaStoreID);
+//                //addPolicy(BagPolicy,natalieStoreID);
+//
+//                logout(nadavID);
+//                logout(nadiaID);
+//                logout(natalieID);
+//                logout(majdID);
+//                logout(denisID);
+//                logout(nikitaID);
+//                dataLoaded = true;
+//
+//
+//        }
+//        catch(Exception e){
+//            throw new Exception(e);
+//        }
 
-                Map<String, Integer> x= getVisitorsAmountBetweenDates(nadavID,21,6,2023,21,6,2023);
-
-                logout(nadavID);
-                logout(nadiaID);
-                logout(natalieID);
-                logout(majdID);
-                logout(denisID);
-                logout(nikitaID);
-                dataLoaded = true;
-
-            } catch (Exception e) {
-                throw new Exception(e);
-            }
-        }
-
+        //  }
     }
-
 //------------UserPackege-----------------------
     public int enterNewSiteVisitor() throws Exception {//1.1
             SiteVisitor visitor = new SiteVisitor();
@@ -355,6 +381,7 @@ public class Facade {
         }
     }
     public void registerAdmin(int visitorid,String userName,String password) throws Exception{
+        DS = DALService.getInstance();
         logger.info("Starting admin registration");
         if(!(onlineList.get(visitorid) instanceof Admin)){
             logger.info("Failed admin registration: only admin can register other admins");
@@ -366,6 +393,11 @@ public class Facade {
         }
         else{
             Admin admin=new Admin(userName, password);
+
+            //DB save
+            DS.saveUser(admin.getUserName(), admin.getPassword());
+            DS.saveAdmin(admin.getUserName());
+            //DB end save
             registeredUserList.replace(userName,admin);
             logger.fine("New admin successfully registered");
             registeredUserList.get(userName).update("You are an Admin now!");
@@ -386,8 +418,14 @@ public class Facade {
         }
         else{
             try {
-
+                DS = DALService.getInstance();
                 Admin admin = new Admin(userName, password);
+
+                //DB save
+                DS.saveUser(admin.getUserName(), admin.getPassword());
+                DS.saveAdmin(admin.getUserName());
+                //DB end save
+
                 registeredUserList.put(userName,admin);
             }
             catch (Exception e) {
@@ -399,6 +437,7 @@ public class Facade {
 
     }
     public void register(int visitorId, String userName, String password) throws Exception {//1.3
+        DS = DALService.getInstance();
         //Valid visitorID
         if (!SiteVisitor.checkVisitorId(visitorId)) {
             logger.warning("maybe we have a null visitor!");
@@ -408,21 +447,40 @@ public class Facade {
             if (registeredUserList.get(userName) != null) {
                 throw new Exception("This userName already taken");
             }
+        //checking if the user exists in DB
+        registeredUserDTO userDTO = DS.getUser(userName);
+        if(userDTO != null) {
+            if(DS.isAdmin(userName)) {
+                Admin admin = new Admin(userDTO);
+                registeredUserList.put(userName, admin);
+            }
+            else {
+                RegisteredUser r = new RegisteredUser(userDTO);
+                registeredUserList.put(userName, r);
+            }
+            throw new Exception("This userName already taken");
+        }
 
-            //get site visitor object
-            //SiteVisitor visitor = onlineList.get(visitorId);
-            // visitor =new RegisteredUser(visitor, userName, password);
-            //onlineList.put(visitorId,visitor);
-            // create new register user
-            logger.info("new visitor has register");
-            RegisteredUser r = new RegisteredUser(userName, password);
-            //onlineList.replace(visitorId,r);
-            registeredUserList.put(userName, r);
-            registeredUserList.get(userName).update("Registered to Site");
+
+        //get site visitor object
+        //SiteVisitor visitor = onlineList.get(visitorId);
+       // visitor =new RegisteredUser(visitor, userName, password);
+        //onlineList.put(visitorId,visitor);
+        // create new register user
+        logger.info("new visitor has register");
+        RegisteredUser r = new RegisteredUser(userName, password);
+
+        //Save into Db
+        DS.saveUser(r.getUserName(),r.getPassword());
+        //End save
+
+        //onlineList.replace(visitorId,r);
+        registeredUserList.put(userName, r);
+        registeredUserList.get(userName).update("Registered to Site");
     }
 
     public void login(int visitorId, String userName, String password) throws Exception {//1.4
-
+        //
         RegisteredUser user;
         user = registeredUserList.get(userName);
         boolean b = registeredUserList.get("admin") != null;
@@ -431,8 +489,20 @@ public class Facade {
             throw new Exception("Invalid Visitor ID");
         }
         if (user == null) {//check if he has account
-            logger.warning("User is already have an account");
-            throw new Exception("UserName not Found");
+            registeredUserDTO userDTO = DS.getUser(userName);
+            if(userDTO != null) {
+                if(DS.isAdmin(userName)){
+                    user = new Admin(userDTO);
+                }
+                else {
+                    user = new RegisteredUser(userDTO);
+                }
+                registeredUserList.put(userName, user);
+            }
+            else {
+                logger.warning("User is already have an account");
+                throw new Exception("UserName not Found");
+            }
         }
         logger.info("User log in successfully");
         user.login(password, visitorId);
@@ -512,6 +582,8 @@ public class Facade {
         //Get product lock
         try {
             Store store = storesList.get(storeId);
+            if(store==null)
+                store=fetchStoreIfExists(storeId);
             if (store == null) {
                 logger.warning("trying to add product to store that not exist");
                 throw new Exception("Invalid product ID");
@@ -525,6 +597,8 @@ public class Facade {
                 logger.warning("trying to add a nul product");
                 throw new Exception("Invalid product ID");
             }
+            if(user instanceof RegisteredUser)
+                DALService.getInstance().saveCartProduct(productId,((RegisteredUser)user).getUserName(),amount);
             user.addProductToCart(storeId, product,amount, store.generateStoreCallback());
             logger.fine("new product by name:" + product.getName()+" added successful ");
         }
@@ -545,6 +619,8 @@ public class Facade {
         try {
 
             Store store = storesList.get(storeId);
+            if(store==null)
+                fetchStoreIfExists(storeId);
             if (store == null) {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
@@ -558,6 +634,8 @@ public class Facade {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
             }
+            if(user instanceof RegisteredUser)
+                DALService.getInstance().removeCartProduct(productId,((RegisteredUser)user).getUserName());
             user.removeProductFromCart(storeId, product);
         }
         catch (Exception e){
@@ -580,6 +658,8 @@ public class Facade {
        //     int storeId = getStoreIdByProductId(productId);
 
             Store store = storesList.get(storeId);
+            if(store==null)
+                store=fetchStoreIfExists(storeId);
             if (store == null) {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
@@ -593,6 +673,8 @@ public class Facade {
                 logger.warning("Invalid product ID");
                 throw new Exception("Invalid product ID");
             }
+            if(user instanceof RegisteredUser)
+                DALService.getInstance().updateCartProduct(productId,((RegisteredUser)user).getUserName(),newAmount);
             user.changeCartProductQuantity(storeId, product,newAmount);
         } catch (Exception e) {
             //release lock
@@ -601,9 +683,31 @@ public class Facade {
         }
     }
 
-
+private void fetchCartIfExists(RegisteredUser user){
+        try {
+            if (user.getCart().getBags().isEmpty()) {
+                Collection<CartProductDTO> products = DS.getCartProducts(user.getUserName());
+                for (CartProductDTO cartProductDTO : products) {
+                    int storeId = cartProductDTO.getStoreProduct().getStoreId();
+                    if (!storesList.containsKey(storeId)) {
+                        StoreDTO storeDTO = DS.getStoreById(storeId);
+                        if (storeDTO == null) {
+                            throw new RuntimeException("User has product that belongs to a non existent store");
+                        }
+                        storesList.put(storeId, new Store(storeDTO));
+                    }
+                    user.addProductToCart(storeId,storesList.get(storeId).getProductByID(cartProductDTO.getProductId()), cartProductDTO.getAmount(),storesList.get(storeId).generateStoreCallback());
+                }
+            }
+        }
+        catch (SQLException e){
+            throw new RuntimeException(e.getMessage());
+        }
+}
     public Cart getProductsInMyCart(int visitorId) throws Exception {//2.4
         SiteVisitor user = onlineList.get(visitorId);
+        if(user instanceof RegisteredUser)
+            fetchCartIfExists((RegisteredUser) user);
         if (user == null) {
             logger.warning("trying to add from a null user");
             throw  new Exception("Invalid Visitor ID");
@@ -626,10 +730,13 @@ public class Facade {
         if (user == null) {
             throw  new Exception("Invalid Visitor ID");
         }
+        if(user instanceof RegisteredUser)
+            fetchCartIfExists((RegisteredUser) user);
         return user.getCart();
     }
 
       public void appointNewStoreOwner(int appointerId, String appointedUserName, int storeId) throws Exception {//4.4
+        DS = DALService.getInstance();
         //check appointerId and registerd user
         SiteVisitor appointer = onlineList.get(appointerId);
         //lock appointer
@@ -642,8 +749,16 @@ public class Facade {
         // check if store id exist
         Store store = storesList.get(storeId);
         if (store == null) {
-            logger.warning("null store warning ");
-            throw  new Exception("inValid store Id");
+            //TODO get store from db - DONE
+            StoreDTO storeDTO = DS.getStoreById(storeId);
+            if(storeDTO != null) {
+                store = new Store(storeDTO);
+                storesList.put(storeId,store);
+            }
+            else {
+                logger.warning("null store warning ");
+                throw new Exception("inValid store Id");
+            }
         }
         if(!store.getActive()){
             logger.warning("add to store that is closed warning");
@@ -651,47 +766,156 @@ public class Facade {
         }
         // check appointer is owner of storeId
         Employment appointerEmployment = null;
-        try {
-            appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);//check this
-            logger.warning("the appointer is not owner of store id warning");
-        } catch (Exception e) {
-            throw  new Exception("the appointer is not owner of store id");
+        if(employmentList.get(((RegisteredUser) appointer).getUserName()) != null)
+        {
+            appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+        }
+        else {
+            //TODO get employment from db by appointer username and storeId - done
+            EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+            //TODO if the DTO we get is null then throw the exception else - done
+            if(employmentDTO == null){
+                logger.warning("the appointer is not owner of store id warning");
+                throw new Exception("the appointer is not owner of store id");
+            }
+            //TODO create it in the employment list and set appointerEmployment to be the DTO - done
+            else{
+                appointerEmployment = new Employment(employmentDTO);
+                Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+                employmentList.put(((RegisteredUser) appointer).getUserName(), newEmploymentMap);
+                employmentList.get(((RegisteredUser) appointer).getUserName()).put(storeId,appointerEmployment);
+            }
         }
 
         if (appointerEmployment == null || !appointerEmployment.canAppointOwner()) {
-            throw  new Exception("User cannot appoint store owner");
+            //TODO get employment from db by appointer username and storeId(this could happen if the - done
+            EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+            if(employmentDTO == null){
+                logger.warning("the appointer is not owner of store id warning");
+                throw new Exception("the appointer is not owner of store id");
+            }
+            else{
+                appointerEmployment = new Employment(employmentDTO);
+                employmentList.get(((RegisteredUser) appointer).getUserName()).put(storeId,appointerEmployment);
+                if(!appointerEmployment.canAppointOwner())
+                {
+                    throw  new Exception("User cannot appoint store owner");
+                }
+            }
+            //TODO appointer has an appointment but not at this store(in the runtime) so we need to pull from db to make sure) - done
         }
         // check if appointedUserName is registered
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
         if (appointed == null) {
-            logger.warning("null appointer ");
-            throw  new Exception("inValid appointed UserName");
+            //TODO pull user from db to check if he exists if doesnt throw exception - done
+            registeredUserDTO userDTO = DS.getUser(appointedUserName);
+            if(userDTO != null) {
+                if(DS.isAdmin(appointedUserName)){
+                    appointed = new Admin(userDTO);
+                }
+                else {
+                    appointed = new RegisteredUser(userDTO);
+                }
+                registeredUserList.put(appointedUserName, appointed);
+            }
+            else {
+                logger.warning("null appointer ");
+                throw  new Exception("inValid appointed UserName");
+            }
         }
         // check if appointedUserName has appointment with storeId as storeOwner
         Employment appointedEmployment = null;
-        try {
-            appointedEmployment = employmentList.get(appointedUserName).get(storeId);//check this
-            //lock appointedlock
-        } catch (Exception e) {
-
+        boolean hadEmployment = false;
+        if(employmentList.get(appointedUserName) != null)
+        {
+            appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+            if(appointedEmployment == null)
+                hadEmployment = true;
+        }
+        else{
+            //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store - done
+            EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(appointedUserName,storeId);
+            if(employmentDTO != null)
+                appointedEmployment = new Employment(employmentDTO);
         }
         if(appointedEmployment!=null && appointedEmployment.checkIfOwner()){
             throw  new Exception("appointedUserName is already Owner of store Id");
         }
+        //TODO load all storeowners of this storeId into the runtime -done
+        LinkedList<registeredUserDTO> owners = DS.getStoreOwnersByStoreId(storeId);
+        if(owners!=null && !owners.isEmpty())
+        {
+            for (registeredUserDTO userDTO: owners) {
+                if(!(registeredUserList.containsKey(userDTO.getUserName()))){
+                    //meaning this user isnt in the runtime
+                    if(DS.isAdmin(userDTO.getUserName()))
+                    {
+                        Admin toAdd = new Admin(userDTO);
+                        registeredUserList.put(toAdd.getUserName(),toAdd);
+                        //todo set them as listeners - done
+                        store.addNewListener(toAdd);
+                        store.addNewOwnerListener(toAdd);
+                    }
+                    else {
+                        RegisteredUser toAdd = new RegisteredUser(userDTO);
+                        registeredUserList.put(toAdd.getUserName(), toAdd);
+                        //todo set them as listeners - done
+                        store.addNewListener(toAdd);
+                        store.addNewOwnerListener(toAdd);
+                    }
+                }
+                //todo load their employment if needed
+                if(employmentList.get(userDTO.getUserName()) == null && employmentList.get(userDTO.getUserName()).get(storeId) == null)
+                {
+                    //meaning that he is an owner but his employment isnt loded
+                    EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(userDTO.getUserName(),storeId);
+                    if(employmentList.get(userDTO.getUserName()) == null)
+                    {
+                        Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+                        employmentList.put(((RegisteredUser) appointer).getUserName(), newEmploymentMap);
+                    }
+                    Employment employmenttoAdd = new Employment(employmentDTO);
+                    employmentList.get(userDTO.getUserName()).put(storeId,employmenttoAdd);
+
+                }
+                //in the case the if is false that means the the employment is already loaded so we dont need to load it
+            }
+        }
         //add appointedUserName as store owner
+          System.out.println("got past all the dal work");
           if(appointmentsRequests.get(storeId) == null){
               appointmentsRequests.put(storeId,new HashMap<>());
           }
           appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
           appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
+
+          appointmentsRequests.putIfAbsent(storeId, new HashMap<>());
+          appointmentsRequests.get(storeId).put(appointed, new LinkedList<>());
+          if(!appointerEmployment.checkIfManager()) {
+              appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
+          }
+
           store.notifyOwnersAboutNewEmploymentRequests(((RegisteredUser) appointer).getUserName(),appointedUserName);
 
+          System.out.println("got into this code");
           if(checkIfAllOwnersAgreedOnEmploymentRequest(storeId,appointedUserName)){
-              appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+              appointedEmployment = new Employment(((RegisteredUser) appointer).getUserName(), appointed.getUserName(), store.getID(), Role.StoreOwner);
               if (employmentList.get(appointedUserName) == null) {
                   Map<Integer, Employment> newEmploymentMap = new HashMap<>();
                   employmentList.put(appointedUserName, newEmploymentMap);
               }
+
+              if(hadEmployment){
+                  //update Db
+                  DS.updateEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
+                  //end update
+              }
+              else {
+                  //save into db
+                  DS.saveEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
+                  //end save into db
+              }
+
               employmentList.get(appointedUserName).put(storeId, appointedEmployment);
               store.addNewListener(appointed);
               store.addNewOwnerListener(appointed);
@@ -722,44 +946,114 @@ public class Facade {
         }
         // check if store id exist
         Store store=storesList.get(storeId);
-        if(store==null){
-            logger.warning("null store warning ");
-            throw  new Exception("inValid store Id");
-        }
+       if (store == null) {
+           //TODO get store from db - DONE
+           StoreDTO storeDTO = DS.getStoreById(storeId);
+           if(storeDTO != null) {
+               store = new Store(storeDTO);
+               storesList.put(storeId,store);
+           }
+           else {
+               logger.warning("null store warning ");
+               throw new Exception("inValid store Id");
+           }
+       }
         if(!store.getActive()){
             logger.warning("closed store you cant work while its close");
             throw  new Exception("this is closed Store");
         }
         // check if appointer is owner (or founder) of storeId
         Employment appointerEmployment =null;
-        try{
-            appointerEmployment =employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
-            logger.warning("the appointer is not owner of store id ");
-        }catch (Exception e){
-            throw  new Exception("the appointer is not owner of store id");
-        }
+       if(employmentList.get(((RegisteredUser) appointer).getUserName()) != null)
+       {
+           appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+       }
+       else {
+           //TODO get employment from db by appointer username and storeId - done
+           EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+           //TODO if the DTO we get is null then throw the exception else - done
+           if(employmentDTO == null){
+               logger.warning("the appointer is not owner of store id warning");
+               throw new Exception("the appointer is not owner of store id");
+           }
+           //TODO create it in the employment list and set appointerEmployment to be the DTO - done
+           else{
+               appointerEmployment = new Employment(employmentDTO);
+               Map<Integer, Employment> newEmploymentMap = new HashMap<>();
+               employmentList.put(((RegisteredUser) appointer).getUserName(), newEmploymentMap);
+               employmentList.get(((RegisteredUser) appointer).getUserName()).put(storeId,appointerEmployment);
+           }
+       }
 
-        if(appointerEmployment==null || !appointerEmployment.canAppointManager()){
-            throw  new Exception("User isnt allowed to appoint store manager");
-        }
+       if (appointerEmployment == null || !appointerEmployment.canAppointManager()) {
+           //TODO get employment from db by appointer username and storeId(this could happen if the - done
+           EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(((RegisteredUser) appointer).getUserName(),storeId);
+           if(employmentDTO == null){
+               logger.warning("the appointer is not owner of store id warning");
+               throw new Exception("the appointer is not owner of store id");
+           }
+           else{
+               appointerEmployment = new Employment(employmentDTO);
+               employmentList.get(((RegisteredUser) appointer).getUserName()).put(storeId,appointerEmployment);
+               if(!appointerEmployment.canAppointManager())
+               {
+                   throw  new Exception("User cannot appoint store owner");
+               }
+           }
+           //TODO appointer has an appointment but not at this store(in the runtime) so we need to pull from db to make sure) - done
+       }
         // check if appointedUserName is registered to system
         RegisteredUser appointed = registeredUserList.get(appointedUserName);
-        if(appointed==null){
-            throw  new Exception("inValid appointed UserName");
-        }
+       if (appointed == null) {
+           //TODO pull user from db to check if he exists if doesnt throw exception - done
+           registeredUserDTO userDTO = DS.getUser(appointedUserName);
+           if(userDTO != null) {
+               if(DS.isAdmin(appointedUserName)){
+                   appointed = new Admin(userDTO);
+               }
+               else {
+                   appointed = new RegisteredUser(userDTO);
+               }
+               registeredUserList.put(appointedUserName, appointed);
+           }
+           else {
+               logger.warning("null appointer ");
+               throw  new Exception("inValid appointed UserName");
+           }
+       }
         // check if appointedUserName has appointment with storeId as storeOwner or as storeManager
-        Employment appointedEmployment=null;
-        try{
-            appointedEmployment = employmentList.get(appointedUserName).get(storeId);
-        }catch (Exception e){
-
-        }
+       Employment appointedEmployment=null;
+       boolean hadEmployment = false;
+       if(employmentList.get(appointedUserName) != null)
+       {
+           appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+           if(appointedEmployment == null)
+               hadEmployment = true;
+       }
+       else{
+           //TODO get from db with apointedUsername and storeId to make sure he doesnt have an appointment at this store - done
+           EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(appointedUserName,storeId);
+           if(employmentDTO != null)
+               appointedEmployment = new Employment(employmentDTO);
+       }
 
         if(appointedEmployment!=null && (appointedEmployment.checkIfOwner() || appointedEmployment.checkIfManager())){
             throw  new Exception("appointedUserName is already owner or manager of store Id");
         }
         //add appointedUserName as store manager
-        appointedEmployment = new Employment((RegisteredUser) appointer,appointed,store,Role.StoreManager);
+        appointedEmployment = new Employment(((RegisteredUser) appointer).getUserName(),appointed.getUserName(),store.getID(),Role.StoreManager);
+
+       if(hadEmployment){
+           //update Db
+           DS.updateEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
+           //end update
+       }
+       else {
+           //save into db
+           DS.saveEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
+           //end save into db
+       }
+
         if(employmentList.get(appointedUserName)== null) {
             Map<Integer, Employment> newEmploymentMap = new HashMap<>();
             employmentList.put(appointedUserName, newEmploymentMap);
@@ -773,6 +1067,38 @@ public class Facade {
         //release lockappointed if locked
         //throw e
 
+    }
+    private void loadUserFromDb(String userName) throws Exception {
+        //TODO pull user from db to check if he exists if doesnt throw exception - done
+        if(!registeredUserList.containsKey(userName)) {
+            registeredUserDTO userDTO = DS.getUser(userName);
+            RegisteredUser user;
+            if (userDTO != null) {
+                if (DS.isAdmin(userName)) {
+                    user = new Admin(userDTO);
+                } else {
+                    user = new RegisteredUser(userDTO);
+                }
+                registeredUserList.put(userName, user);
+            }
+        }
+    }
+    private Employment fetchEmploymentForDBIfExists(String username,int storeId) throws SQLException {
+        Employment appointerEmployment =null;
+        if(employmentList.get(username) != null)
+        {
+            appointerEmployment = employmentList.get(username).get(storeId);
+            if(appointerEmployment != null)
+                return appointerEmployment;
+        }
+        EmploymentDTO employmentDTO = DS.getEmploymentByUsernameAndStoreId(username,storeId);
+        if(employmentDTO == null){
+            return null;
+        }
+        else{
+            appointerEmployment = new Employment(employmentDTO);
+            return appointerEmployment;
+        }
     }
 
     public void removeEmployee(int appointerId, String appointedUserName, int storeId) throws Exception{
@@ -788,6 +1114,8 @@ public class Facade {
         }
         // check if store id exist
         Store store=storesList.get(storeId);
+        if(store == null)
+            store = fetchStoreIfExists(storeId);
         if(store==null){
             logger.warning("remove failed: no store with "+storeId+" store id");
             throw  new Exception("invalid store Id");
@@ -796,37 +1124,30 @@ public class Facade {
             logger.info("remove failed: store is closed");
             throw  new Exception("cant remove workers from closed store");
         }
-//        try {
-//            Map<Integer, Employment> appointerEmploymentMap = employmentList.get(((RegisteredUser) appointer).getUserName());
-//            if (appointerEmploymentMap == null) {
-//                throw new Exception("user " + ((RegisteredUser) appointer).getUserName()+" has no appointed employees");
-//            }
-//            boolean found=false;
-//            for(Integer userId:appointerEmploymentMap.keySet()){
-//                String workerName=appointerEmploymentMap.get(storeId).getEmployee().getUserName();
-//                if (workerName.equals(appointedUserName)) {
-//                    found = true;
-//                    cascadeRemoveAllEmployees(workerName);
-//                    appointerEmploymentMap.remove(userId);
-//                    break;
-//                }
-//            }
-//            if(!found)
-//                throw new Exception("user has no employee named "+appointedUserName);
-//
-//        }
-//            catch (Exception e){
-//            logger.warning("remove employee failed- probably failed while casting");
-//            throw new Exception(e.getMessage());
-//        }
+       // Employment appointedEmployment = fetchEmploymentForDBIfExists(appointedUserName,storeId);
+       //if(appointedEmployment != null)
+       //{
+
+       //}
+       // else {
+       //     throw new Exception("this userName not appointed to this store");
+       // }
         try{
-            Employment appointedEmployment = employmentList.get(appointedUserName).get(storeId);
+            Collection<EmploymentDTO> employmentDTOS=DALService.getInstance().getStoreEmployment(storeId);
+            for(EmploymentDTO employmentDTO:employmentDTOS){
+                if(!employmentList.containsKey(employmentDTO.getEmployee()))
+                    employmentList.put(employmentDTO.getEmployee(),new HashMap<>());
+                if(!employmentList.get(employmentDTO.getEmployee()).containsKey(employmentDTO.getStoreID()))
+                    employmentList.get(employmentDTO.getEmployee()).put(employmentDTO.getStoreID(),new Employment(employmentDTO));
+            }
+            Employment appointedEmployment=employmentList.get(appointedUserName).get(storeId);
             if(appointedEmployment == null){
                 throw new Exception("this userName not appointed to this store");
             }
-            if(!appointedEmployment.getAppointer().equals(appointer)){
+            if(!appointedEmployment.getAppointer().equals(((RegisteredUser) appointer).getUserName())){
                 throw new Exception("you are not the appointer to this user so you cant remove him");
             }
+            DALService.getInstance().removeEmployee(appointedUserName,storeId);
             RemoveAllEmployee(appointedUserName,storeId);
             employmentList.get(appointedUserName).remove(storeId);
             store.addNewListener(registeredUserList.get(appointedUserName));
@@ -841,7 +1162,7 @@ public class Facade {
         for(Map<Integer,Employment> employmentMap : employmentList.values()){
             Employment employment =employmentMap.get(storeId);
             if(employment!=null && employment.getAppointer()!=null && employment.getAppointer().equals(registeredUserList.get(appointerUserName))){
-                String appointedUserName =employment.getEmployee().getUserName();
+                String appointedUserName =employment.getEmployee();
                 RemoveAllEmployee(appointedUserName,storeId);
                 employmentList.get(appointedUserName).remove(storeId);
                 if(employmentList.get(appointedUserName).isEmpty()){
@@ -852,16 +1173,7 @@ public class Facade {
             }
         }
     }
-
-//    private void cascadeRemoveAllEmployees(String userName){
-//            Map<Integer,Employment> employmentMap=employmentList.get(userName);
-//            for(Integer id:employmentMap.keySet()) {
-//                cascadeRemoveAllEmployees(employmentMap.get(id).getAppointer().getUserName());
-//                employmentMap.remove(id);
-//            }
-//            employmentList.remove(userName);
-//        }
-        public Employment changeStoreManagerPermission(int visitorID, String username, int storeID, List<Permission> permissions) throws Exception {
+    public Employment changeStoreManagerPermission(int visitorID, String username, int storeID, List<Permission> permissions) throws Exception {
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorID);
         //lock appointer
@@ -937,15 +1249,22 @@ public class Facade {
     public String getRolesData(int visitorId,int storeId) throws Exception {//4.11
         //Check if visitorID is logged in and registered to system
         SiteVisitor appointer = onlineList.get(visitorId);
-        if(!(appointer instanceof RegisteredUser)){
+        if(!(appointer instanceof RegisteredUser user)){
             logger.warning("invalid visitor ID");
             throw  new Exception("invalid visitor Id");
         }
-
+        Collection<EmploymentDTO> employmentDTOS=DALService.getInstance().getStoreEmployment(storeId);
+        for(EmploymentDTO employmentDTO:employmentDTOS){
+            if(!employmentList.containsKey(employmentDTO.getEmployee()))
+                employmentList.put(employmentDTO.getEmployee(),new HashMap<>());
+            if(!employmentList.get(employmentDTO.getEmployee()).containsKey(employmentDTO.getStoreID()))
+                employmentList.get(employmentDTO.getEmployee()).put(employmentDTO.getStoreID(),new Employment(employmentDTO));
+        }
+        Employment appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
         if(!(appointer instanceof Admin)) {
             //is he storeowner
             try {
-                Employment appointerEmployment = employmentList.get(((RegisteredUser) appointer).getUserName()).get(storeId);
+
                 if(!appointerEmployment.CanSeeStaffAndPermissions()){
                     throw new Exception("You do not have the permission to see staff and permissions.");
                 }
@@ -964,14 +1283,13 @@ public class Facade {
         return output;
     }
 
-    public LinkedList<String> purchaseCart(int visitorID,String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip) throws Exception{
+    public synchronized LinkedList<String> purchaseCart(int visitorID,String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip) throws Exception{
         if(!supplier.handShake()){
 
             throw new Exception("supplier does not hand shake");
 
         }
         if(!paymentProvider.handShake()){
-
             throw new Exception("payment provider does not handshake");
         }
 
@@ -982,7 +1300,8 @@ public class Facade {
             logger.warning("visitor is null");
             throw new Exception("Invalid Visitor ID");
         }
-
+        if(visitor instanceof RegisteredUser)
+            fetchCartIfExists((RegisteredUser) visitor);
         LinkedList<String> failedPurchases = new LinkedList<>();
 
         Cart c1 = visitor.getCart();
@@ -992,8 +1311,10 @@ public class Facade {
             //Calculate amount
             double amount = b.calculateTotalAmount();
             Store s = storesList.get(b.getStoreID());
+            if(s==null)
+                s=fetchStoreIfExists(b.getStoreID());
             if (!b.passesPolicy()) {
-                throw new RuntimeException("Bag doesn't pass the store policy");
+                failedPurchases.add("Some products' purchases were failed due to them not being passed the store policy. Those products are still in your cart.");
             }
             else {
                 boolean foundProductWithLowQuantity = false;
@@ -1003,16 +1324,17 @@ public class Facade {
                     }
                 }
                 if (foundProductWithLowQuantity) {
-                    failedPurchases.add(b.getStoreID().toString());
+                    failedPurchases.add("Some products' purchases were failed due lack of quantity in the store. Those products are still in your cart.");
                 } else {
                     //Check if possible to create a supply
                     if (supplier.supply(holder, address, city, country,zip).equals("-1")) {
                         logger.fine("we can avoid this supply");
-                        failedPurchases.add(b.getStoreID().toString());
+                        failedPurchases.add("Some products' purchases were failed because the supplier didn't accept the request to supply those products. Those products are still in your cart.");
                     } else {
                         //Create a transaction for the store
                         if (paymentProvider.pay(holder,visitorCard,expireDate,cvv,id).equals("-1")) {
-                            failedPurchases.add(b.getStoreID().toString());
+
+                            failedPurchases.add("Some products' purchases were failed because the payment provider didn't accept the request to pay. Those products are still in your cart.");
                         } else {
                             LinkedList<String> productsId = new LinkedList<>();
                             productsId.add(b.bagToString());
@@ -1022,16 +1344,16 @@ public class Facade {
                                 s.ReduceProductQuantity(s.getProduct(p).getProductId(),p.getAmount());
                             }
                             InstantPurchase p = new InstantPurchase(visitor, b, amount);
-                            if (visitor instanceof RegisteredUser) {
-                                ((RegisteredUser) visitor).addPurchaseToHistory(p);
-                                storesList.get(b.getStoreID()).NewBuyNotification(((RegisteredUser) visitor).getUserName());
+                            if (visitor instanceof RegisteredUser user) {
+                                user.addPurchaseToHistory(p);
+                                storesList.get(b.getStoreID()).NewBuyNotification((user.getUserName()));
+                                user.removeBag(b.getStoreID());
                             }
                             else{
                                 storesList.get(b.getStoreID()).NewBuyNotification("A site visitor (with visitor ID :"+visitorID+")");
+                                visitor.removeBag(b.getStoreID());
                             }
                             storesList.get(b.getStoreID()).addToStoreHistory(p);
-                            visitor.removeBag(b.getStoreID());
-
                         }
                     }
                 }
@@ -1117,8 +1439,6 @@ public class Facade {
 
         product.addRatingAndComment(((RegisteredUser) rater).getUserName(),rate,comment);
         logger.info("Exiting method addProductRateAndComment() with success");
-
-
     }
 
 
@@ -1126,6 +1446,7 @@ public class Facade {
         //----------Store-----------
     // open Store
     public Integer OpenNewStore(int visitorId,String storeName) throws Exception {
+        DS = DALService.getInstance();
         // check if register user
         SiteVisitor User = onlineList.get(visitorId);
         if(! (User instanceof RegisteredUser)){
@@ -1137,10 +1458,14 @@ public class Facade {
         store.addNewListener((RegisteredUser)User);
         store.addNewOwnerListener((RegisteredUser)User);
         store.documentOwner(((RegisteredUser) User).getUserName());
+        DS.saveStore(store.getId(),store.getName(),store.getActive(),store.getRate());
         // add to store list
-        storesList.put(store.getID(),store);
+
         //new Employment
-        Employment employment = new Employment((RegisteredUser) User,store,Role.StoreFounder);
+        Employment employment = new Employment(((RegisteredUser) User).getUserName(),store.getID(),Role.StoreFounder);
+        DS.saveEmployment(employment.getEmployee(),employment.getStore(),employment.getAppointer(),employment.getRole().ordinal(),employment.getPermissionString());
+
+        storesList.put(store.getID(),store);
         logger.config("adding new employment to the new store ");
         // andd to employment list
         if (employmentList.get(((RegisteredUser) User).getUserName()) == null) {
@@ -1149,11 +1474,13 @@ public class Facade {
         }
         employmentList.get(((RegisteredUser) User).getUserName()).put(store.getID(),employment);
         logger.fine("open new store with name" + storeName+" done successfully");
+
         return store.getID();
     }
 
     //StoreRate
     public double GetStoreRate(int visitorId,int StoreId) throws Exception {
+
         SiteVisitor User = onlineList.get(visitorId);
         if(User==null){
             logger.severe("Invalid visitor Id: " + visitorId);
@@ -1181,7 +1508,6 @@ public class Facade {
         }
 
         return store.getProductByID(productId).getAverageRating();
-
     }
     //close store
      public void CloseStore(int visitorId, int StoreId) throws Exception {
@@ -1330,6 +1656,8 @@ public class Facade {
             throw  new Exception("there is no employee with this id ");
         if (employment.CanManageStock()) {
             Store store = storesList.get(storeId);
+            if(store==null)
+                store=fetchStoreIfExists(storeId);
             if (store == null) {
                 throw  new Exception("there is no store with this id ");
             }
@@ -1464,12 +1792,13 @@ public class Facade {
         //throw e
     }
     public void UpdateProductQuantity(int visitorId,int storeId, int productID,int quantity) throws Exception{
-        //lock product (get product object)
         //try
         logger.fine("Entering method UpdateProductQuantity() with visitorId: " + visitorId + ", productID: " + productID + ", quantity: " + quantity);
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productID);
         Store store = storesList.get(storeId);
+        if(store==null)
+            store=fetchStoreIfExists(storeId);
         if(store == null)
             throw  new Exception("there is no store with this storeID:"+storeId);
         if(!store.getActive())
@@ -1487,9 +1816,12 @@ public class Facade {
         //lock product (get product object)
         //try
                 logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", quantity: " + quantity);
-
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store==null)
+            store=fetchStoreIfExists(storeId);
+        if(store==null)
+            throw  new Exception("there is no store with this storeID:"+storeId);
         if(store.getActive()) {
             store.IncreaseProductQuantity(productId, quantity);
             logger.fine("Exiting method IncreaseProductQuantity()");
@@ -1498,11 +1830,6 @@ public class Facade {
             logger.warning("Failed on method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", quantity: " + quantity);
             throw new Exception("Store is closed");
         }
-
-        //catch
-        //release lock product
-        //throw e
-
     }
 
     public void UpdateProductName(int visitorId, int productId,int storeId,String Name) throws Exception{
@@ -1512,13 +1839,14 @@ public class Facade {
         }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store==null)
+            store=fetchStoreIfExists(storeId);
         if(store == null)
             throw  new Exception("there is no store with this storeID:"+storeId);
         if(!store.getActive())
             throw  new Exception("store is closed");
         store.UpdateProductName(productId,Name);
         logger.fine("Exiting method UpdateProductName()");
-
     }
 
     public void UpdateProductPrice(int visitorId, int productId,int storeId,double price) throws Exception{
@@ -1528,6 +1856,8 @@ public class Facade {
 
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store==null)
+            store=fetchStoreIfExists(storeId);
         if(store == null)
             throw  new Exception("there is no store with this storeID:"+storeId);
         if(!store.getActive())
@@ -1540,14 +1870,33 @@ public class Facade {
         //throw e
 
     }
-
+    private Store fetchStoreIfExists(int storeId){
+        try {
+            StoreDTO storeDTO = DALService.getInstance().getStoreById(storeId);
+            if (storeDTO != null) {
+                Store store = new Store(storeDTO);
+                storesList.put(storeId, store);
+                return store;
+            }
+            else{
+                return null;
+            }
+        }
+        catch (Exception e){
+            throw new RuntimeException("Database error");
+        }
+    }
     public void UpdateProductCategory(int visitorId, int productId,int storeId,String category) throws Exception{
         logger.fine("Entering method IncreaseProductQuantity() with visitorId: " + visitorId + ", productID: " + productId + ", category: " + category);
         if(category==null){
             throw new NullPointerException("Null category while updating product category");
         }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
+
         Store store = storesList.get(storeId);
+        if(store==null){
+           store=fetchStoreIfExists(storeId);
+        }
         if(store == null)
             throw  new Exception("there is no store with this storeID:"+storeId);
         if(!store.getActive())
@@ -1565,6 +1914,9 @@ public class Facade {
         }
         checkifUserCanUpdateStoreProduct(visitorId,storeId,productId);
         Store store = storesList.get(storeId);
+        if(store==null){
+            store=fetchStoreIfExists(storeId);
+        }
         if(store != null) {
             if(!store.getActive())
                 throw  new Exception("store is closed");
@@ -1667,32 +2019,43 @@ public class Facade {
     }
 
     /**
-     *
+     * using filters, filters stuff
      * @param storeFilters filters for store in which products are to be filtered
      * @param productFilters filters who the returned products have to pass
      * @return product list of all products who passed the filter in the store who passed the filters
      */
     public Map<Store,List<StoreProduct>> FilterProductSearch(List<StoreFilter> storeFilters,List<ProductFilter> productFilters) {
-        logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
+       // logger.info("Entering method FilterProductSearch with productFilters: " + productFilters.toString());
         HashMap<Store,List<StoreProduct>> storeProducts=new HashMap<>();
-        for(Store store: storesList.values()){ //for each store
-            boolean passStoreFilter=true;
-            if(!storeFilters.isEmpty()) {
-            for(StoreFilter storeFilter:storeFilters){
-                    if (!storeFilter.PassFilter(store)) {
-                        passStoreFilter = false;
-                        break;
+        try {
+            if(DALService.getInstance().storeCounter()>storesList.keySet().size()) {
+                DS = DALService.getInstance();
+                for (StoreDTO storeDTO : DS.getStores())
+                    if (!storesList.containsKey(storeDTO.getId()))
+                        storesList.put(storeDTO.getId(), new Store(storeDTO));
+            }
+            for (Store store : storesList.values()) { //for each store
+                boolean passStoreFilter = true;
+                if (!storeFilters.isEmpty()) {
+                    for (StoreFilter storeFilter : storeFilters) {
+                        if (!storeFilter.PassFilter(store)) {
+                            passStoreFilter = false;
+                            break;
+                        }
                     }
                 }
+                if (passStoreFilter) {
+                    ArrayList<StoreProduct> products = new ArrayList<>(store.filterProducts(productFilters));
+                    if (!products.isEmpty())
+                        storeProducts.put(store, products);
+                }
             }
-            if(passStoreFilter) {
-                ArrayList<StoreProduct> products = new ArrayList<>(store.filterProducts(productFilters));
-                if(!products.isEmpty())
-                    storeProducts.put(store,products);
-            }
+            logger.info("Filtered products done, stores found: " + storeProducts.keySet().size());
+            return storeProducts;
         }
-        logger.info("Filtered products done, stores found: "+storeProducts.keySet().size());
-        return storeProducts;
+        catch (SQLException e){
+            throw new RuntimeException("Database error");
+        }
     }
 
     public void deleteUser(int visitorId, String userName) throws Exception {
@@ -1717,6 +2080,11 @@ public class Facade {
 //    }
     public LinkedList<Store> getStoresName() throws Exception {
         LinkedList<Store> storesName = new LinkedList<>();
+        Collection<StoreDTO> storeDTOS=DALService.getInstance().getStores();
+        for(StoreDTO storeDTO:storeDTOS){
+            if(!storesList.containsKey(storeDTO.getId()))
+                storesList.put(storeDTO.getId(),new Store(storeDTO));
+        }
         for(Store store : storesList.values()){
             if(store.getActive()){
                 storesName.add(store);
@@ -1769,12 +2137,28 @@ public class Facade {
         return storesList.get(storeId).getDiscounts();
     }
     public List<Store> getStoresByUserName(int visitorId) throws Exception {
+        DS=DALService.getInstance();
         SiteVisitor visitor = onlineList.get(visitorId);
         if(! (visitor instanceof RegisteredUser user)){
             throw new Exception("invalid visitor Id");
         }
-        List<Integer> storesID = new LinkedList<>();
-        Map<Integer,Employment> employmentMap = employmentList.get(((RegisteredUser)visitor).getUserName());
+        String userName=user.getUserName();
+        Collection<EmploymentDTO> employmentDTOS=DS.getEmploymentsByName(userName);
+        for(EmploymentDTO employmentDTO:employmentDTOS){
+            if(!employmentList.containsKey(userName)){
+                employmentList.put(userName,new HashMap<>());
+            }
+            employmentList.get(userName).put(employmentDTO.getStoreID(),new Employment(employmentDTO));
+        }
+        Map<Integer,Employment> employmentMap = employmentList.get(userName);
+        for(StoreDTO storeDTO:DS.getStoresFromOwner(userName)) {
+            if (!employmentMap.containsKey(storeDTO.getId()))
+                employmentMap.put(storeDTO.getId(), new Employment(userName, storeDTO.getId(), Role.StoreOwner));
+            if(!storesList.containsKey(storeDTO.getId())){
+                storesList.put(storeDTO.getId(),new Store(storeDTO));
+            }
+        }
+
         LinkedList<Store> stores = new LinkedList<>();
         for(Integer i :employmentMap.keySet()){
             stores.add(storesList.get(i));
@@ -1909,6 +2293,8 @@ public class Facade {
         }
         Double totalPrice = user.getCart().getTotalPrice();
         Cart userCart = user.getCart();
+        if(user instanceof RegisteredUser && userCart.getBags().isEmpty())
+            fetchCartIfExists((RegisteredUser) user);
         for (Bag currbag: userCart.getBags().values()) {
             Store s = storesList.get(currbag.getStoreID());
             if(s  == null)
@@ -1998,7 +2384,8 @@ public class Facade {
         //If all store owners accepted, create new employment
         Store store = storesList.get(storeID);
         if(checkIfAllOwnersAgreedOnEmploymentRequest(storeID,appointedUserName)){
-            Employment appointedEmployment = new Employment((RegisteredUser) appointer, appointed, store, Role.StoreOwner);
+            Employment appointedEmployment = new Employment(appointer.getUserName(), appointed.getUserName(), store.getID(), Role.StoreOwner);
+            DS.saveEmployment(appointedEmployment.getEmployee(), appointedEmployment.getStore(), appointedEmployment.getAppointer(), appointedEmployment.getRole().ordinal(), appointedEmployment.getPermissionString());
             if (employmentList.get(appointedUserName) == null) {
                 Map<Integer, Employment> newEmploymentMap = new HashMap<>();
                 employmentList.put(appointedUserName, newEmploymentMap);
@@ -2217,7 +2604,7 @@ public class Facade {
         return outputMap;
 
     }
-    public Map<Product,Bid> getUserBids(int visitorId) throws Exception{
+    public Map<StoreProduct,Bid> getUserBids(int visitorId) throws Exception{
 
         SiteVisitor visitor = onlineList.get(visitorId);
         if(visitor == null){

@@ -1,10 +1,12 @@
 package DomainLayer.Users;
 
+import DAL.DALService;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Products.*;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.logging.*;
 
@@ -143,4 +145,13 @@ public class Bag {
     }
 
 
+    public void empty(String userName) {
+        try{
+            for(CartProduct product:productList.values())
+                DALService.getInstance().removeCartProduct(product.getId(),userName);
+        }
+        catch (SQLException e){
+            throw new RuntimeException("db error");
+        }
+    }
 }

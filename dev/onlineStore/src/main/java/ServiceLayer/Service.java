@@ -294,7 +294,7 @@ public class Service {
     public Response<Integer> OpenStore(String storeName) {
 
         try {
-            return new Response<Integer>(facade.OpenNewStore(visitorId, storeName));
+            return new Response<>(facade.OpenNewStore(visitorId, storeName));
         }
         catch (Exception e){
             return new Response<>(e.getMessage(),true);
@@ -827,9 +827,9 @@ public class Service {
     }
     public Response<Collection<ServiceBid>> getUserBids() {
         try {
-            Map<Product,Bid> userBids=facade.getUserBids(visitorId);
+            Map<StoreProduct,Bid> userBids=facade.getUserBids(visitorId);
             HashSet<ServiceBid> serviceBids=new HashSet<>();
-            for(Product product:userBids.keySet()){
+            for(StoreProduct product:userBids.keySet()){
                 serviceBids.add(new ServiceBid(userBids.get(product),new ServiceProduct(product.getName(),product.getPrice(),product.getCategory(),product.getDescription())));
             }
             return new Response<>(serviceBids);

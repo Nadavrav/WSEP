@@ -1,5 +1,6 @@
 package DomainLayer.Users;
 
+import DAL.DALService;
 import DomainLayer.Stores.Bid;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Products.BidProduct;

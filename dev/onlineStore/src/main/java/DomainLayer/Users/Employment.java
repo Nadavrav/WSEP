@@ -1,25 +1,22 @@
 package DomainLayer.Users;
 
-import DomainLayer.Stores.Store;
+import DAL.DTOs.EmploymentDTO;
 import DomainLayer.Logging.UniversalHandler;
-import java.util.logging.*;
+
 import java.util.LinkedList;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class Employment {
-    private RegisteredUser appointer;
-    private RegisteredUser employee;
-    private Store store;
+    private String appointer;
+    private String employee;
+    private int storeID;
     private Role role;
     private LinkedList<Permission> permissions;
     private static final Logger logger=Logger.getLogger("Employment logger");
 
 
 
-     public Employment (RegisteredUser appointer, RegisteredUser employee, Store store, Role role){
+     public Employment (String appointer, String employee, int storeID, Role role){
        try{
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
@@ -28,7 +25,7 @@ public class Employment {
         }
             this.appointer=appointer;
             this.employee=employee;
-            this.store=store;
+            this.storeID=storeID;
             this.role=role;
             permissions = new LinkedList<>();
 
@@ -46,7 +43,7 @@ public class Employment {
             }
     }
 
-    public Employment ( RegisteredUser employee, Store store, Role role){
+    public Employment ( String employee, int storeID, Role role){
         try{
             UniversalHandler.GetInstance().HandleError(logger);
             UniversalHandler.GetInstance().HandleInfo(logger);
@@ -55,7 +52,7 @@ public class Employment {
         }
         this.appointer = null;
         this.employee = employee;
-        this.store = store;
+        this.storeID = storeID;
         this.role = role;
         permissions = new LinkedList<>();
 
@@ -65,17 +62,26 @@ public class Employment {
 
     }
 
+    public Employment(EmploymentDTO employmentDTO)
+    {
+        this.appointer = employmentDTO.getAppointer();
+        this.employee = employmentDTO.getEmployee();
+        this.storeID = employmentDTO.getStoreID();
+        this.role = Role.values()[employmentDTO.getRole()];
+        this.permissions = getPermissionList(employmentDTO.getPermissions());
+    }
 
-    public RegisteredUser getAppointer() {
+
+    public String getAppointer() {
         return appointer;
     }
 
-    public RegisteredUser getEmployee() {
+    public String getEmployee() {
         return employee;
     }
 
-    public Store getStore() {
-        return store;
+    public int getStore() {
+        return storeID;
     }
 
     public Role getRole() {
@@ -132,11 +138,11 @@ public class Employment {
          if(appointer == null)
              appointerUserName= " no appointer ";
          else  {
-             appointerUserName = appointer.getUserName();
+             appointerUserName = appointer;
          }
         String output =  "Employment{" +
                 "appointer=" + appointerUserName +
-                ", employee=" + employee.getUserName() +
+                ", employee=" + employee +
                 ", role=" + role +
                 ", permissions=" + permissions +
                 '}';
@@ -183,5 +189,38 @@ public class Employment {
 
     public LinkedList<Permission> getPermisssions() {
          return permissions;
+    }
+
+    /**
+     * Creates a string out of the permission list
+     * @return a string of the permission list that looks like "0,1,2,3"
+     */
+    public String getPermissionString()
+    {
+        String permissionString = "";
+        for (Permission p: permissions) {
+            permissionString += p.ordinal()+",";
+        }
+        if (!permissionString.isEmpty()) {
+            permissionString = permissionString.substring(0, permissionString.length() - 1);
+        }
+        return permissionString;
+    }
+
+    /**
+     * Creates a LinkedList of permissions from a permission string
+     * @param permissionsString - a string that represents the permission like "0,1,2,3"
+     * @return a linked list of the permissions
+     */
+    private LinkedList<Permission> getPermissionList(String permissionsString)
+    {
+        LinkedList<Permission> permissionList = new LinkedList<>();
+        String[] permissionArray = permissionsString.split(",");
+        for (String permissionValue : permissionArray) {
+            int permissionInt = Integer.parseInt(permissionValue);
+            Permission permission = Permission.values()[permissionInt];
+            permissionList.add(permission);
+        }
+        return permissionList;
     }
 }

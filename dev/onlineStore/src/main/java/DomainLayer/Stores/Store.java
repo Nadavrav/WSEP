@@ -1,6 +1,11 @@
 package DomainLayer.Stores;
+import DAL.DALService;
+import DAL.DTOs.StoreProductDTO;
+import DAL.DTOs.StoreDTO;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Response;
+
+import java.sql.SQLException;
 import java.util.concurrent.locks.ReadWriteLock;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
 import DomainLayer.Stores.Conditions.ConditionFactory;
@@ -80,6 +85,36 @@ public class Store {
         listeners = new LinkedList<>();
         ownersCount=0;
         this.Active = true;
+    }
+
+    public Store(StoreDTO storeDTO) {
+        ownerlisteners=new LinkedList<>();
+        votingTracker=new HashMap<>();
+        ownerIdSet=new HashSet<>();
+        votingCounter=new HashMap<>();
+        storeDiscounts = new HashMap<>();
+        storePolicies = new HashMap<>();
+        rateMapForStore = new HashMap<>();
+        pendingBids = new HashSet<>();
+        conditionFactory.setStore(this);
+        UniversalHandler.GetInstance().HandleError(logger);
+        UniversalHandler.GetInstance().HandleInfo(logger);
+        Id = storeDTO.getId();
+        Name = storeDTO.getName();
+        History = new History();
+        products = new ConcurrentHashMap<>();
+        for(StoreProductDTO productDTO: storeDTO.getProducts())
+            products.put(productDTO.getProductId(),new StoreProduct(productDTO));
+        listeners = new LinkedList<>();
+        ownersCount=0;
+        this.Active = true;
+    }
+
+    public static void setStoreIdCounter(Integer maxStoreId) {
+        StoreID_GENERATOR.set(maxStoreId);
+    }
+    public static void setProductIdCounter(Integer maxProductId) {
+        ProductID_GENERATOR.set(maxProductId);
     }
 
     public void addNewListener(RegisteredUser storeWorker) {
@@ -172,7 +207,7 @@ public class Store {
     /**
      * rare enough of an action to be done while fully while locking this object
      */
-    public synchronized void CloseStore() {
+    public void CloseStore() {
 
         ratingLock.writeLock().lock();
         productLock.writeLock().lock();
@@ -191,7 +226,7 @@ public class Store {
         }
     }
 
-    public synchronized void OpenStore() {
+    public void OpenStore() {
         ratingLock.writeLock().lock();
         productLock.writeLock().lock();
         policyLock.writeLock().lock();
@@ -251,11 +286,17 @@ public class Store {
     public Integer AddNewProduct(String productName, Double price, int Quantity, String category, String desc) {
         productLock.writeLock().lock();
         try {
-            StoreProduct storeProduct = new StoreProduct(getNewProductId(), productName, price, category, Quantity, desc);
+            DALService DS=DALService.getInstance();
+            int id=getNewProductId();
+            StoreProduct storeProduct = new StoreProduct(id, productName, price, category, Quantity, desc);
             products.put(storeProduct.getProductId(), storeProduct);
+            DS.saveProduct(id,this.Id,productName,price,Quantity,category,desc,0);
             logger.info("New product added to store. Product ID: " + storeProduct.getProductId());
             return storeProduct.getProductId();
-        } finally {
+        } catch (SQLException e){
+            throw new RuntimeException(e.getMessage());
+        }
+        finally {
             productLock.writeLock().unlock();
         }
     }
@@ -266,7 +307,7 @@ public class Store {
      * @param storeProduct --
      * @return --
      */
-    public Integer AddNewProduct(StoreProduct storeProduct) {
+    public Integer AddNewProduct(StoreProduct storeProduct) throws SQLException {
         productLock.writeLock().lock();
         try {
             products.put(storeProduct.getProductId(), storeProduct);
@@ -277,7 +318,7 @@ public class Store {
         }
     }
 
-    public Response<?> RemoveProduct(Integer productID) {
+    public Response<?> RemoveProduct(Integer productID) throws SQLException {
         productLock.writeLock().lock();
         try {
             if (!products.containsKey(productID)) {
@@ -285,6 +326,7 @@ public class Store {
                 throw new IllegalArgumentException("There is no product in our products with this ID");
                 // return new Response<>("There is no product in our products with this ID", true);
             }
+            DALService.getInstance().removeStoreProduct(productID);
             products.get(productID).notifyRemoval();
             products.remove(productID);
             logger.info("Product removed from store. Product ID: " + productID);
@@ -374,59 +416,77 @@ public class Store {
         return products;
     }
 
-    public void UpdateProductQuantity(Integer productId, int quantity) {
+    public void UpdateProductQuantity(Integer productId, int quantity)throws SQLException {
         productLock.readLock().lock();
         try {
-            products.get(productId).UpdateQuantity(quantity);
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.UpdateQuantity(quantity);
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
         }
     }
 
-    public void IncreaseProductQuantity(Integer productId, int quantity) {
+    public void IncreaseProductQuantity(Integer productId, int quantity)throws SQLException {
         productLock.readLock().lock();
 
         try {
-            products.get(productId).IncreaseQuantity(quantity);
-        } finally {
-            productLock.readLock().unlock();
-
-        }
-    }
-
-    public void UpdateProductName(Integer productId, String name) {
-        productLock.readLock().lock();
-        try {
-            products.get(productId).setName(name);
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.IncreaseQuantity(quantity);
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
 
         }
     }
 
-    public void UpdateProductPrice(Integer productId, double price) {
+    public void UpdateProductName(Integer productId, String name)throws SQLException {
         productLock.readLock().lock();
         try {
-            products.get(productId).setPrice(price);
-        } finally {
-            productLock.readLock().unlock();
-        }
-    }
-
-    public void UpdateProductCategory(Integer productId, String category) {
-        productLock.readLock().lock();
-        try {
-            products.get(productId).setCategory(category);
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.setName(name);
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
 
         }
     }
 
-    public void UpdateProductDescription(Integer productId, String description) {
+    public void UpdateProductPrice(Integer productId, double price)throws SQLException {
         productLock.readLock().lock();
         try {
-            products.get(productId).setDescription(description);
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.setPrice(price);
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
+        } finally {
+            productLock.readLock().unlock();
+        }
+    }
+
+    public void UpdateProductCategory(Integer productId, String category)throws SQLException {
+        productLock.readLock().lock();
+        try {
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.setCategory(category);
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
+        } finally {
+            productLock.readLock().unlock();
+
+        }
+    }
+
+    public void UpdateProductDescription(Integer productId, String description) throws SQLException {
+        productLock.readLock().lock();
+        try {
+            StoreProduct storeProduct=products.get(productId);
+            storeProduct.setDescription(description);
+            DALService.getInstance().updateStoreProduct(storeProduct.getProductId(),Id,storeProduct.getName(),storeProduct.getPrice(),
+                    storeProduct.getCategory(),storeProduct.getDescription(),storeProduct.getQuantity(),storeProduct.getAverageRating());
         } finally {
             productLock.readLock().unlock();
 
@@ -574,11 +634,11 @@ public class Store {
     }
 
     public Discount removeDiscount(int id) {
-        discountLock.readLock().lock();
+        discountLock.writeLock().lock();
         try {
             return storeDiscounts.remove(id);
         } finally {
-            discountLock.readLock().unlock();
+            discountLock.writeLock().unlock();
         }
     }
 
