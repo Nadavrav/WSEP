@@ -47,4 +47,10 @@ public class Policy {
     public boolean passesPolicy(Bag bag){
         return !condition.passCondition(bag).isEmpty();
     }
+
+    public String toString(){
+        return description;
+    }
+
+
 }

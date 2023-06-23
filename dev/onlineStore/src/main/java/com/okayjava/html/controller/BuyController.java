@@ -68,12 +68,18 @@ public class BuyController {
             model.addAttribute("alert", alert.copy());
         }
         else{
-            alert.setSuccess(true);
-            alert.setMessage("Thank You ;)");
-            model.addAttribute("buy", response.getValue()); //List<String>
-            model.addAttribute("alert", alert.copy());
-            model.addAttribute("purchaseSuccessful", true);
-            System.out.println("successful buy");
+            if (response.getValue().isEmpty()){
+                alert.setSuccess(true);
+                alert.setMessage("Thank You ;)");
+                model.addAttribute("buy", response.getValue()); //List<String>
+                model.addAttribute("alert", alert.copy());
+                model.addAttribute("purchaseSuccessful", true);
+                System.out.println("successful buy");
+            } else {
+                alert.setFail(true);
+                alert.setMessage(response.getValue().get(0));
+                model.addAttribute("alert", alert.copy());
+            }
         }
         alert.reset();
         return "Buy";

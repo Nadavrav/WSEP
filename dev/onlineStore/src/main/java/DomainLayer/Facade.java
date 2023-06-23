@@ -4,9 +4,14 @@ package DomainLayer;
 import DAL.TestsFlags;
 import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
+import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MaxTotalProductAmountCondition;
+import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
+import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
 //import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
+import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
+import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
@@ -881,6 +886,13 @@ private void fetchCartIfExists(RegisteredUser user){
           }
           appointmentsRequests.get(storeId).put(appointed,new LinkedList<>());
           appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
+
+          appointmentsRequests.putIfAbsent(storeId, new HashMap<>());
+          appointmentsRequests.get(storeId).put(appointed, new LinkedList<>());
+          if(!appointerEmployment.checkIfManager()) {
+              appointmentsRequests.get(storeId).get(appointed).add((RegisteredUser) appointer);
+          }
+
           store.notifyOwnersAboutNewEmploymentRequests(((RegisteredUser) appointer).getUserName(),appointedUserName);
 
           System.out.println("got into this code");
@@ -1301,7 +1313,7 @@ private void fetchCartIfExists(RegisteredUser user){
             if(s==null)
                 s=fetchStoreIfExists(b.getStoreID());
             if (!b.passesPolicy()) {
-                throw new RuntimeException("Bag doesn't pass the store policy");
+                failedPurchases.add("Some products' purchases were failed due to them not being passed the store policy. Those products are still in your cart.");
             }
             else {
                 boolean foundProductWithLowQuantity = false;
@@ -1311,16 +1323,17 @@ private void fetchCartIfExists(RegisteredUser user){
                     }
                 }
                 if (foundProductWithLowQuantity) {
-                    failedPurchases.add(b.getStoreID().toString());
+                    failedPurchases.add("Some products' purchases were failed due lack of quantity in the store. Those products are still in your cart.");
                 } else {
                     //Check if possible to create a supply
                     if (supplier.supply(holder, address, city, country,zip).equals("-1")) {
                         logger.fine("we can avoid this supply");
-                        failedPurchases.add(b.getStoreID().toString());
+                        failedPurchases.add("Some products' purchases were failed because the supplier didn't accept the request to supply those products. Those products are still in your cart.");
                     } else {
                         //Create a transaction for the store
                         if (paymentProvider.pay(holder,visitorCard,expireDate,cvv,id).equals("-1")) {
-                            failedPurchases.add(b.getStoreID().toString());
+
+                            failedPurchases.add("Some products' purchases were failed because the payment provider didn't accept the request to pay. Those products are still in your cart.");
                         } else {
                             LinkedList<String> productsId = new LinkedList<>();
                             productsId.add(b.bagToString());

@@ -30,7 +30,10 @@ public class PaymentProvider {
         String[] date = expireDate.split("/");
         try {
             String response = HTTPPostClient.send(HTTPPostClient.makePayParams(cardNumber, date[0], date[1], holder, String.valueOf(cvv), id));
-            return response;
+            if(isNumeric(response)){
+                return response;
+            }
+            return "-1";
         }catch (IOException e){
             System.out.println("Time out !");
             return "-1";
@@ -43,7 +46,17 @@ public class PaymentProvider {
         return HTTPPostClient.send(HTTPPostClient.makeCancelPayParams(tId));
     }
 
-  
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
   
   
   
