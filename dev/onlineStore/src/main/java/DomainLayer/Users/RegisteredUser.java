@@ -13,14 +13,20 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.logging.*;
 
+import DAL.DTOs.registeredUserDTO;
+
 
 public class RegisteredUser extends SiteVisitor{
     private static final Logger logger=Logger.getLogger("RegisteredUser logger");
     String userName;
 
+    public byte[] getPassword() {
+        return password;
+    }
+
     byte[] password;
     PurchaseHistory purchaseHistory;
-    private final HashMap<Product,Bid> counterOffers;
+    private final HashMap<StoreProduct,Bid> counterOffers;
     private boolean loggedIn;
     //add lock
 
@@ -58,6 +64,19 @@ public class RegisteredUser extends SiteVisitor{
         waitingMessages=new LinkedList<String>();
         
     }
+
+    /**
+     * A constructor that loads from db
+     */
+    public RegisteredUser(registeredUserDTO userDTO)
+    {
+        super(0);
+        this.userName = userDTO.getUserName();
+        this.password = userDTO.getPassword();
+        this.loggedIn = false;
+        counterOffers=new HashMap<>();
+        waitingMessages=new LinkedList<String>();
+    }
     private byte[] hashString(String str) throws NoSuchAlgorithmException{
         byte[] unHashedBytes = str.getBytes();
 
@@ -88,7 +107,7 @@ public class RegisteredUser extends SiteVisitor{
                 super.ReplaceCart(visitor.getCart());
             }
     }
-    public Map<Product,Bid> getCounterOffers(){
+    public Map<StoreProduct,Bid> getCounterOffers(){
         return counterOffers;
     }
     private void checkPassword(String password) {
@@ -167,7 +186,7 @@ public class RegisteredUser extends SiteVisitor{
     }
 
 
-    public void addCounterOffer(Bid bid, Product product) {
+    public void addCounterOffer(Bid bid, StoreProduct product) {
         counterOffers.put(product,bid);
     }
     public void acceptCounterOff(int productId, Store store){

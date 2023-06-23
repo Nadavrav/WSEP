@@ -4,6 +4,7 @@ import DomainLayer.Stores.History;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.Cart;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ class HistoryTest {
     History h;
     @BeforeEach
     void setup(){
+        TestsFlags.getInstance().setTests();
         shoppingCart = new Cart();
         h= new History();
         StoreProduct p1 = new StoreProduct(0,"Milk",5,"Milk",5,"Its Milk what did you expect");

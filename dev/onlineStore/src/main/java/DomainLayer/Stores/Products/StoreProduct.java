@@ -1,11 +1,14 @@
 package DomainLayer.Stores.Products;
 
 import java.lang.ref.WeakReference;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.logging.Logger;
 
+import DAL.DALService;
+import DAL.DTOs.StoreProductDTO;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.Rating;
 
@@ -65,6 +68,17 @@ public class StoreProduct extends Product {
         RateMap=new HashMap<>();
     }
 
+    public StoreProduct(StoreProductDTO productDTO) {
+        super(productDTO.getName(), productDTO.getPrice(), productDTO.getCategory(), productDTO.getDesc());
+        this.productId= productDTO.getProductId();
+        this.name = productDTO.getName();
+        this.price = productDTO.getPrice();
+        Category = productDTO.getCategory();
+        Quantity = productDTO.getQuantity();
+        description =productDTO.getDesc();
+        RateMap=new HashMap<>();
+    }
+
     public void setName(String name) {
         this.name = name;
         notifyObservers();
@@ -82,6 +96,7 @@ public class StoreProduct extends Product {
 
     public void setDescription(String desc) {
         description = desc;
+
     }
     public Integer getProductId() {
         return productId;

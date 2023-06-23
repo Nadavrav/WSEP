@@ -1,5 +1,6 @@
 package Bridge;
 
+import DAL.TestsFlags;
 import DomainLayer.Response;
 import ServiceLayer.ServiceObjects.Fiters.ProductFilters.ProductFilter;
 import ServiceLayer.Service;
@@ -12,16 +13,18 @@ import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscount;
 import ServiceLayer.ServiceObjects.ServiceDiscounts.ServiceDiscountInfo;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicy;
 import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
-import ServiceLayer.ServiceObjects.ServiceProducts.ServiceCartProduct;
 import ServiceLayer.ServiceObjects.ServiceStore;
 import org.opentest4j.TestSkippedException;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 public class RealBridge implements Bridge {
-    Service service=new Service();
+    Service service;
+    public RealBridge(){
+        TestsFlags.getInstance().setTests();
+        service=new Service();
+    }
     @Override
     public boolean initialize() {
         service.loadData();

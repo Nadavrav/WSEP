@@ -1,13 +1,21 @@
 package UnitTests;
 
 import DomainLayer.Stores.Rating;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RatingTest {
+
+
     Rating rate;
+    @BeforeEach
+    public void setUp(){
+        TestsFlags.getInstance().setTests();
+    }
     @Test
     void CreateRate_Good() {
         rate = new Rating(3);

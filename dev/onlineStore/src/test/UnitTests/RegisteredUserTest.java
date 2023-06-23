@@ -1,7 +1,7 @@
 package UnitTests;
 
 import DomainLayer.Users.RegisteredUser;
-import DomainLayer.Users.SiteVisitor;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +10,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RegisteredUserTest {
     RegisteredUser user;
-
+    @BeforeEach
+    public void setUp(){
+        TestsFlags.getInstance().setTests();
+    }
 
     @Test
     void Register_ValidInput()

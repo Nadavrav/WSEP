@@ -9,12 +9,13 @@ import DomainLayer.Stores.Conditions.ComplexConditions.CheckForCondition;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PolicyTests {
-    Facade facade=Facade.getInstance();
+    Facade facade;
     int storeId=0;
     private Bag fullBag;
     int visitorId;
@@ -30,6 +31,8 @@ public class PolicyTests {
     @BeforeEach
     public void setUp(){
         try {
+            TestsFlags.getInstance().setTests();
+            facade=Facade.getInstance();
             facade.resetData();
             visitorId = facade.enterNewSiteVisitor();
             facade.register(visitorId, "user", "admin123456");

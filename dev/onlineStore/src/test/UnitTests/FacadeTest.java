@@ -5,6 +5,7 @@ import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.Bag;
 import DomainLayer.Users.Permission;
 import DomainLayer.Users.Role;
+import DAL.TestsFlags;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +19,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FacadeTest {
-    Facade f = Facade.getInstance();
+    Facade f;
     private String adminUname= "admin";
     private String adminPass = "admin12345";
     @BeforeEach
     void setup()
     {
+        TestsFlags.getInstance().setTests();
         f = Facade.getInstance();
     }
     @AfterEach
