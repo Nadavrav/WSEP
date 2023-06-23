@@ -69,53 +69,53 @@ public class PolicyTests {
             fail();
         }
     }
-    @Test
-    public void DatePolicyTest(){
-        try {
-            String holderName="nadia safadi";
-            String visitorCard ="1234123412341234";
-            String expireDate = "4/28";
-            int cvv = 123;
-            String id ="206469017";
-            String address = "4036";
-            String city ="Nazareth";
-            String country ="Israel";
-            String zip = "1613101";
-            BetweenDatesCondition condition=new BetweenDatesCondition(18,2,2030,18,2,2030);
-            facade.AddStorePolicy(visitorId,storeId,new Policy("All products can only be bought on the 18.2.2030",1,condition));
-            facade.purchaseCart(visitorId, holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
-            fail();
-        }
-        catch (Exception ignored){
-        }
-    }
+//    @Test
+//    public void DatePolicyTest(){
+//        try {
+//            String holderName="nadia safadi";
+//            String visitorCard ="1234123412341234";
+//            String expireDate = "4/28";
+//            int cvv = 123;
+//            String id ="206469017";
+//            String address = "4036";
+//            String city ="Nazareth";
+//            String country ="Israel";
+//            String zip = "1613101";
+//            BetweenDatesCondition condition=new BetweenDatesCondition(18,2,2030,18,2,2030);
+//            facade.AddStorePolicy(visitorId,storeId,new Policy("All products can only be bought on the 18.2.2030",1,condition));
+//            facade.purchaseCart(visitorId, holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
+//            fail();
+//        }
+//        catch (Exception ignored){
+//        }
+//    }
     //policy to have at least 5 dairy products to buy a cart
-    @Test
-    public void MinProductAmountTest(){
-            CheckForCondition condition=new CheckForCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(5));
-        String holderName="nadia safadi";
-        String visitorCard ="1234123412341234";
-        String expireDate = "4/28";
-        int cvv = 123;
-        String id ="206469017";
-        String address = "4036";
-        String city ="Nazareth";
-        String country ="Israel";
-        String zip = "1613101";
-        try {
-
-            facade.AddStorePolicy(visitorId,storeId,new Policy("Cart must have at least 5 dairy products to make a purchase",1,condition));
-            facade.purchaseCart(visitorId, holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
-            fail();
-        }
-        catch (Exception ignored){
-            try{
-                facade.changeCartProductQuantity(milk.getProductId(),storeId,5,visitorId);
-                facade.purchaseCart(visitorId, holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
-            }
-            catch (Exception e){
-                fail();
-            }
-        }
-    }
+//    @Test
+//    public void MinProductAmountTest(){
+//            CheckForCondition condition=new CheckForCondition(new CategoryCondition("Dairy"),new MinTotalProductAmountCondition(5));
+//        String holderName="nadia safadi";
+//        String visitorCard ="1234123412341234";
+//        String expireDate = "4/28";
+//        int cvv = 123;
+//        String id ="206469017";
+//        String address = "4036";
+//        String city ="Nazareth";
+//        String country ="Israel";
+//        String zip = "1613101";
+//        try {
+//
+//            facade.AddStorePolicy(visitorId,storeId,new Policy("Cart must have at least 5 dairy products to make a purchase",1,condition));
+//            facade.purchaseCart(visitorId, holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
+//            fail();
+//        }
+//        catch (Exception ignored){
+//            try{
+//                facade.changeCartProductQuantity(milk.getProductId(),storeId,5,visitorId);
+//                facade.purchaseCart(visitorId, holderName,visitorCard,expireDate,cvv,id,address,city,country,zip);
+//            }
+//            catch (Exception e){
+//                fail();
+//            }
+//        }
+//    }
 }

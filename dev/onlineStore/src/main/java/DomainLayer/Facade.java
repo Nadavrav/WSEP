@@ -966,7 +966,7 @@ public class Facade {
         return output;
     }
 
-    public LinkedList<String> purchaseCart(int visitorID,String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip) throws Exception{
+    public synchronized LinkedList<String> purchaseCart(int visitorID,String holder,String visitorCard,String expireDate,int cvv,String id,String address, String city, String country, String zip) throws Exception{
         if(!supplier.handShake()){
 
             throw new Exception("supplier does not hand shake");
