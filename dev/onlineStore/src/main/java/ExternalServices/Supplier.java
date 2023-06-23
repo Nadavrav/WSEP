@@ -33,7 +33,10 @@ public class Supplier {
             HTTPPostClient.makeSupplyParams(name, address, city, country, zip)
     );
 
-    return response;
+    if(isNumeric(response)){
+      return response;
+    }
+    return "-1";
 
   }
 
@@ -45,6 +48,19 @@ public class Supplier {
 
     return !response.equals("-1");
   }
+
+  public static boolean isNumeric(String strNum) {
+    if (strNum == null) {
+      return false;
+    }
+    try {
+      double d = Double.parseDouble(strNum);
+    } catch (NumberFormatException nfe) {
+      return false;
+    }
+    return true;
+  }
+
 
 
   ////////////////// to delete /////////////////
