@@ -995,7 +995,7 @@ public class Facade {
             double amount = b.calculateTotalAmount();
             Store s = storesList.get(b.getStoreID());
             if (!b.passesPolicy()) {
-                throw new RuntimeException("Bag doesn't pass the store policy");
+                failedPurchases.add("Some products' purchases were failed due to them not being passed the store policy. Those products are still in your cart.");
             }
             else {
                 boolean foundProductWithLowQuantity = false;
@@ -1005,16 +1005,17 @@ public class Facade {
                     }
                 }
                 if (foundProductWithLowQuantity) {
-                    failedPurchases.add(b.getStoreID().toString());
+                    failedPurchases.add("Some products' purchases were failed due lack of quantity in the store. Those products are still in your cart.");
                 } else {
                     //Check if possible to create a supply
                     if (supplier.supply(holder, address, city, country,zip).equals("-1")) {
                         logger.fine("we can avoid this supply");
-                        failedPurchases.add(b.getStoreID().toString());
+                        failedPurchases.add("Some products' purchases were failed because the supplier didn't accept the request to supply those products. Those products are still in your cart.");
                     } else {
                         //Create a transaction for the store
                         if (paymentProvider.pay(holder,visitorCard,expireDate,cvv,id).equals("-1")) {
-                            failedPurchases.add(b.getStoreID().toString());
+
+                            failedPurchases.add("Some products' purchases were failed because the payment provider didn't accept the request to pay. Those products are still in your cart.");
                         } else {
                             LinkedList<String> productsId = new LinkedList<>();
                             productsId.add(b.bagToString());
