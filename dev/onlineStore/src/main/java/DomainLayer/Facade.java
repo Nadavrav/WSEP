@@ -286,7 +286,7 @@ public class Facade {
                 //    appointNewStoreOwner(nadavID,"Denis",0);
                 //    appointNewStoreOwner(1,"Nadia",0);
                 //    acceptEmploymentRequest(denisID,0,"Nadia");
-                Policy DairyPolicy=new Policy("you have to take at least 3 loafs of bread",999);
+                Policy DairyPolicy=new Policy("No Condition here",999);
                 //Policy BreadPolicy=new Policy("you can buy at most 5 dairy products",policyBreadCondition);
                 //Policy Meatpolicy=new Policy("you can buy steaks only on the 15th day of the month",policyMeatCondition);
                 //Policy BagPolicy=new Policy("you cart price must be above 50 or contains at least 5 products",new AndCondition(new MinBagPriceCondition(50),new MinTotalProductAmountCondition(5)));
