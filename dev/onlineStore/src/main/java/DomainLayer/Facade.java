@@ -216,7 +216,7 @@ public class Facade {
                 //new Discounts
                 // NadavStore discounts:
                  addDiscount(new BasicDiscount("10% Discount on steaks!",1,10,new NameCondition("Steak")),nadavStoreID);
-                addDiscount(new BasicDiscount("5% Discount on milk!",2,10,new NameCondition("Milk")),nadavStoreID);// MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
+                addDiscount(new BasicDiscount("5% Discount on milk!",2,5,new NameCondition("Milk")),nadavStoreID);// MinQuantityCondition minQuantityCondition=new MinQuantityCondition(2);
                 // MultiAndCondition nameAndMinQuantityCondition=new MultiAndCondition();
                 // nameAndMinQuantityCondition.addCondition(new NameCondition("Steak"));
                 // nameAndMinQuantityCondition.addCondition(minQuantityCondition);
