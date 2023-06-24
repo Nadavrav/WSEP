@@ -514,4 +514,5 @@ public class DALService {
             throw new SQLException("SQL fail in getEmployment, username and storeId");
         }
     }
+
 }
