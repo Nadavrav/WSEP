@@ -4,21 +4,11 @@ package DomainLayer;
 import DAL.TestsFlags;
 import DomainLayer.Config.ConfigParser;
 import DomainLayer.Stores.Bid;
-import DomainLayer.Stores.Conditions.BasicConditions.BooleanConditions.MaxTotalProductAmountCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.CategoryCondition;
-import DomainLayer.Stores.Conditions.BasicConditions.FilterConditions.NameCondition;
-//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
-//import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.FilterOnlyIfCondition;
-//import DomainLayer.Stores.Conditions.ComplexConditions.MultiFilters.MultiAndCondition;
-import DomainLayer.Stores.Conditions.ComplexConditions.CompositeConditions.BooleanAfterFilterCondition;
-import DomainLayer.Stores.Discounts.BasicDiscount;
 import DomainLayer.Stores.Discounts.Discount;
 import DomainLayer.Stores.Policies.Policy;
 import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Purchases.InstantPurchase;
-
 import DomainLayer.Logging.UniversalHandler;
-
 import DomainLayer.Stores.Store;
 import DomainLayer.Stores.Products.StoreProduct;
 import DomainLayer.Users.*;

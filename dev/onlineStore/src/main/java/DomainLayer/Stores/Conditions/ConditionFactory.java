@@ -232,28 +232,28 @@ public class ConditionFactory {
     public Policy addPolicy(AndConditionRecord andConditionRecord, String description) {
         if(!store.containsPolicy(andConditionRecord.id1()) || !store.containsPolicy(andConditionRecord.id2()))
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
-        Condition c1=store.getPolicy(andConditionRecord.id1()).getCondition();
-        Condition c2=store.getPolicy(andConditionRecord.id2()).getCondition();
+        Condition c1=store.removePolicy(andConditionRecord.id1()).getCondition();
+        Condition c2=store.removePolicy(andConditionRecord.id2()).getCondition();
         return new Policy(description,PolicyID_GENERATOR.getAndIncrement(),new AndCondition(c1,c2));
     }
     public Policy addPolicy(OrConditionRecord andConditionRecord, String description) {
         if(!store.containsPolicy(andConditionRecord.id1()) || !store.containsPolicy(andConditionRecord.id2()))
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
-        Condition c1=store.getPolicy(andConditionRecord.id1()).getCondition();
-        Condition c2=store.getPolicy(andConditionRecord.id2()).getCondition();
+        Condition c1=store.removePolicy(andConditionRecord.id1()).getCondition();
+        Condition c2=store.removePolicy(andConditionRecord.id2()).getCondition();
         return new Policy(description,PolicyID_GENERATOR.getAndIncrement(),new OrCondition(c1,c2));
     }
     public Policy addPolicy(XorConditionRecord andConditionRecord, String description) {
         if(!store.containsPolicy(andConditionRecord.id1()) || !store.containsPolicy(andConditionRecord.id2()))
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
-        Condition c1=store.getPolicy(andConditionRecord.id1()).getCondition();
-        Condition c2=store.getPolicy(andConditionRecord.id2()).getCondition();
+        Condition c1=store.removePolicy(andConditionRecord.id1()).getCondition();
+        Condition c2=store.removePolicy(andConditionRecord.id2()).getCondition();
         return new Policy(description,PolicyID_GENERATOR.getAndIncrement(),new XorCondition(c1,c2));
     }
     public Policy addPolicy(NotConditionRecord andConditionRecord, String description) {
         if(!store.containsPolicy(andConditionRecord.id()))
             throw new RuntimeException("ID ERROR WHILE ADDING 'AND' DISCOUNT");
-        Condition c=store.getPolicy(andConditionRecord.id()).getCondition();
+        Condition c=store.removePolicy(andConditionRecord.id()).getCondition();
         return new Policy(description,PolicyID_GENERATOR.getAndIncrement(),new NotCondition(c));
     }
 }

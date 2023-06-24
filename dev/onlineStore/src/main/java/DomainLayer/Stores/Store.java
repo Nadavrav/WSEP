@@ -31,7 +31,6 @@ public class Store {
     private static final AtomicInteger StoreID_GENERATOR = new AtomicInteger(0);
     private static final AtomicInteger ProductID_GENERATOR = new AtomicInteger(0);
     private final ConditionFactory conditionFactory = new ConditionFactory();
-
     private int Id;
     private String Name;
     private Boolean Active;
