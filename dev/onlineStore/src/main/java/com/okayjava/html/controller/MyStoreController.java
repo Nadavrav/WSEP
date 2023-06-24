@@ -795,7 +795,7 @@ public class MyStoreController {
 
         Response<?> response = server.voteOnBid(request, productId, storeID, userName, true);
         if (response.isError()) {
-            System.out.println("acceptBid success.");
+            System.out.println("acceptBid fails.");
             alert.setFail(true);
             alert.setMessage(response.getMessage());
             model.addAttribute("alert", alert.copy());
