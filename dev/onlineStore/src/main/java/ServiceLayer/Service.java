@@ -803,7 +803,7 @@ public class Service {
     public Response<?> voteOnBid(int productId,int storeId,String userName,boolean vote) {
         try {
             facade.voteOnBid(visitorId,productId,userName,storeId,vote);
-            return new Response<>("Bid rejected",false);
+            return new Response<>("Voted on bid",false);
         }
         catch (Exception e)
         {
