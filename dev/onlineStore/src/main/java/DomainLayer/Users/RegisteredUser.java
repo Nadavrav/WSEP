@@ -197,7 +197,7 @@ public class RegisteredUser extends SiteVisitor{
         Bid bid=counterOffers.get(store.getProductByID(productId));
         if(bid==null)
             throw new RuntimeException("User has no product with id "+productId);
-        getCart().addBidToCart(store.getId(),store.getProductByID(productId), bid.getAmount(), bid.getNewPrice());
+        getCart().addBidToCart(store.getId(),store.getProductByID(productId), bid.getAmount(), bid.getNewPrice(), store.generateStoreCallback());
         counterOffers.remove(store.getProductByID(productId));
 
     }

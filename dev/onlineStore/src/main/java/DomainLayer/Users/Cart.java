@@ -1,7 +1,9 @@
 package DomainLayer.Users;
 
+import DAL.DALService;
 import DomainLayer.Logging.UniversalHandler;
 import DomainLayer.Stores.CallBacks.StoreCallbacks;
+import DomainLayer.Stores.Products.CartProduct;
 import DomainLayer.Stores.Products.StoreProduct;
 
 import java.util.HashMap;
@@ -43,11 +45,11 @@ public class Cart {
             bag.addProduct(product,amount);
             logger.info("Product added to cart for store with ID: " + storeId);
     }
-    public void addBidToCart (int storeId, StoreProduct product,int amount,double newPrice){
+    public void addBidToCart (int storeId, StoreProduct product,int amount,double newPrice,StoreCallbacks callback){
         Bag bag = bagList.get(storeId);
         if (bag == null) {
             // If bag doesn't exist, create a new bag and add it to the bag list
-            bag = new Bag(storeId);
+            bag = new Bag(storeId,callback);
             bagList.put(storeId, bag);
             logger.info("New bag created for store with ID: " + storeId);
         }

@@ -89,7 +89,7 @@ public class SiteVisitor{
         cart.addProductToCart(storeId,product,amount,callback);
     }
     public void addBidProduct(int storeId,Bid bid, StoreProduct storeProduct,StoreCallbacks callback) {
-        cart.addBidToCart(storeId,storeProduct,bid.getAmount(),bid.getNewPrice());
+        cart.addBidToCart(storeId,storeProduct,bid.getAmount(),bid.getNewPrice(),callback);
     }
     public void removeProductFromCart(int storeId, StoreProduct product) {//2.3
         logger.info("Removing product with ID " + product.getProductId() + " from cart for store with ID " + storeId);

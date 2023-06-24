@@ -1,8 +1,6 @@
 package DAL.DAOs;
 
 import DAL.DTOs.StoreProductDTO;
-import DAL.Entities.CartproductEntity;
-import DAL.Entities.CartproductEntityPK;
 import DAL.Entities.StoreproductEntity;
 import org.hibernate.*;
 
@@ -160,6 +158,27 @@ public class StoreProductDAO {
                 session.disconnect(); // Disconnect the session if it's still connected
                 session.close();
             }
+        }
+    }
+
+    public void changeStoreProductAmount(int productId, int newAmount) throws SQLException {
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            StoreproductEntity storeProduct = session.get(StoreproductEntity.class,productId);
+            if (storeProduct != null) {
+                storeProduct.setQuantity(newAmount);
+                session.update(storeProduct);
+            }
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            throw new SQLException("Cant connect to DB");
+        }
+        finally {
+            if (session.isConnected()) {
+                session.disconnect(); // Disconnect the session if it's still connected
+            }
+            session.close();
         }
     }
 }

@@ -515,4 +515,14 @@ public class DALService {
         }
     }
 
+    public void changeStoreProductAmount(int productId, int newAmount) throws SQLException {
+        try{
+            if(!TestsFlags.getInstance().isTests())
+                storeProductDAO.changeStoreProductAmount(productId,newAmount);
+        }
+        catch (Exception e)
+        {
+            throw new SQLException("SQL fail in getStores");
+        }
+    }
 }

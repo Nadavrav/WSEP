@@ -376,6 +376,12 @@ public class Store {
     }
 
     public void ReduceProductQuantity(Integer productId, int quantity) {
+        try {
+            DALService.getInstance().changeStoreProductAmount(productId, products.get(productId).getQuantity() - quantity);
+        }
+        catch (SQLException e){
+            throw new RuntimeException("DB error while reducing store product amount");
+        }
         products.get(productId).ReduceQuantity(quantity);
     }
 
