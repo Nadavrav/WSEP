@@ -10,6 +10,7 @@ import ServiceLayer.ServiceObjects.ServicePolicies.ServicePolicyInfo;
 import com.okayjava.html.CommunicateToServer.Alert;
 import com.okayjava.html.CommunicateToServer.Server;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -113,23 +114,25 @@ public class MyStoreController {
     }
 
     @PostMapping("/add-discount")
-    public String processDiscountOption(@RequestParam("discountId") Integer[] discountIds,
-                                        @RequestParam("description") String description,
-                                        @RequestParam("amount") Integer amount,
-                                        @RequestParam("condition") String condition,
+    public String processDiscountOption(@RequestParam(value = "discountId", required = false) Integer[] discountIds,
+                                        @RequestParam(value = "description", required = false) String description,
+                                        @RequestParam(value = "amount", required = false) Integer amount,
+                                        @RequestParam(value = "condition", required = false) String condition,
                                         Model model) {
 
+        System.out.println("addDiscountFun");
         model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
         model.addAttribute("storeName", StoreName);
-        Integer id1 = discountIds[0]; //first selected discount
-        Integer id2 = discountIds[1]; // second selected discount
 
         ServiceMultiDiscount serviceMultiDiscount;
         ServiceBasicDiscount serviceBasicDiscount;
         Response<ServiceDiscountInfo> response = null;
 
         if (discountIds.length == 2){
+            Integer id1 = discountIds[0]; //first selected discount
+            Integer id2 = discountIds[1]; // second selected discount
+
             if (condition.equals("AndCondition")) {
                 AndConditionRecord andConditionRecord = new AndConditionRecord(id1, id2);
                 serviceBasicDiscount = new ServiceBasicDiscount(description, amount, andConditionRecord);
@@ -154,6 +157,11 @@ public class MyStoreController {
                 serviceMultiDiscount = new ServiceMultiDiscount(DiscountType.MaxBetweenDiscounts, description, Arrays.asList(discountIds));
                 response = server.addDiscount(request, serviceMultiDiscount, storeID);
             }
+        } else {
+            System.out.println("didnt choose 2 discounts");
+            alert.setFail(true);
+            alert.setMessage("you need at least 2 discounts in order to assemble them.");
+            model.addAttribute("alert", alert.copy());
         }
 
         if (response.isError()) {
@@ -210,7 +218,11 @@ public class MyStoreController {
                             new BetweenDatesConditionRecord(fromDay, fromMonth, fromYear, untilDay, untilMonth, untilYear);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, betweenDatesConditionRecord);
                     Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
-                    if (!response.isError()) {
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
                         alert.setSuccess(true);
                         alert.setMessage(response.getMessage());
                         model.addAttribute("alert", alert.copy());
@@ -218,7 +230,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setFail(true);
-                    alert.setMessage("failed to add discount!");
+                    alert.setMessage("failed to add discount! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -238,7 +250,11 @@ public class MyStoreController {
 
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, localHourRangeConditionRecord);
                     Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
-                    if (!response.isError()) {
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
                         alert.setSuccess(true);
                         alert.setMessage(response.getMessage());
                         model.addAttribute("alert", alert.copy());
@@ -246,7 +262,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setFail(true);
-                    alert.setMessage("failed to add discount!");
+                    alert.setMessage("failed to add discount! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -255,7 +271,11 @@ public class MyStoreController {
                     CategoryConditionRecord categoryConditionRecord = new CategoryConditionRecord(category);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, categoryConditionRecord);
                     Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
-                    if (!response.isError()) {
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
                         alert.setSuccess(true);
                         alert.setMessage(response.getMessage());
                         model.addAttribute("alert", alert.copy());
@@ -263,16 +283,21 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setFail(true);
-                    alert.setMessage("failed to add discount!");
+                    alert.setMessage("failed to add discount! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
             case "NameCondition" -> {
+                System.out.println("NameCondition");
                 if (name != null) {
                     NameConditionRecord nameConditionRecord = new NameConditionRecord(name);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, nameConditionRecord);
                     Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
-                    if (!response.isError()) {
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
                         alert.setSuccess(true);
                         alert.setMessage(response.getMessage());
                         model.addAttribute("alert", alert.copy());
@@ -280,7 +305,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setFail(true);
-                    alert.setMessage("failed to add discount!");
+                    alert.setMessage("failed to add discount! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -289,7 +314,11 @@ public class MyStoreController {
                     MaxBagPriceConditionRecord maxBagPriceConditionRecord = new MaxBagPriceConditionRecord(maxBagPrice);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, maxBagPriceConditionRecord);
                     Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
-                    if (!response.isError()) {
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
                         alert.setSuccess(true);
                         alert.setMessage(response.getMessage());
                         model.addAttribute("alert", alert.copy());
@@ -297,7 +326,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setFail(true);
-                    alert.setMessage("failed to add discount!");
+                    alert.setMessage("failed to add discount! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -306,7 +335,11 @@ public class MyStoreController {
                     MinBagPriceConditionRecord minBagPriceConditionRecord = new MinBagPriceConditionRecord(minBagPrice);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, minBagPriceConditionRecord);
                     Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
-                    if (!response.isError()) {
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
                         alert.setSuccess(true);
                         alert.setMessage(response.getMessage());
                         model.addAttribute("alert", alert.copy());
@@ -314,7 +347,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setFail(true);
-                    alert.setMessage("failed to add discount!");
+                    alert.setMessage("failed to add discount! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -324,7 +357,11 @@ public class MyStoreController {
                             new MaxTotalProductAmountConditionRecord(maxTotalProductAmount);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, maxTotalProductAmountConditionRecord);
                     Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
-                    if (!response.isError()) {
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
                         alert.setSuccess(true);
                         alert.setMessage(response.getMessage());
                         model.addAttribute("alert", alert.copy());
@@ -332,7 +369,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setFail(true);
-                    alert.setMessage("failed to add discount!");
+                    alert.setMessage("failed to add discount! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -342,7 +379,11 @@ public class MyStoreController {
                             new MinTotalProductAmountConditionRecord(minTotalProductAmount);
                     ServiceBasicDiscount serviceBasicDiscount = new ServiceBasicDiscount(description, amount, minTotalProductAmountConditionRecord);
                     Response<ServiceDiscountInfo> response = server.addDiscount(request, serviceBasicDiscount, storeID);
-                    if (!response.isError()) {
+                    if (response.isError()) {
+                        alert.setFail(true);
+                        alert.setMessage(response.getMessage());
+                        model.addAttribute("alert", alert.copy());
+                    } else {
                         alert.setSuccess(true);
                         alert.setMessage(response.getMessage());
                         model.addAttribute("alert", alert.copy());
@@ -350,7 +391,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setFail(true);
-                    alert.setMessage("failed to add discount!");
+                    alert.setMessage("failed to add discount! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -363,69 +404,80 @@ public class MyStoreController {
     }
 
     @PostMapping("/assemble-policy")
-    public String assemblePolicy(@RequestParam("policyId") Integer[] policyIds,
-                                 @RequestParam("policyDescription") String description,
-                                 @RequestParam("policyCondition") String condition,
+    public String assemblePolicy(@RequestParam(value = "policyId", required = false) Integer[] policyIds,
+                                 @RequestParam(value = "policyDescription", required = false) String description,
+                                 @RequestParam(value = "policyCondition", required = false) String condition,
                                  Model model) {
 
         System.out.println("in assemble policy function");
         model.addAttribute("logged", server.isLogged(request));
         model.addAttribute("Admin", server.isAdmin(request).getValue());
         model.addAttribute("storeName", StoreName);
-        Integer id1 = policyIds[0]; //first selected discount
-        Integer id2 = policyIds[1]; // second selected discount
-        System.out.println("ids: " + id1 + " , " + id2);
         ServiceBasicPolicy serviceBasicPolicy;
 
         if (policyIds.length == 2){
+            Integer id1 = policyIds[0]; //first selected discount
+            Integer id2 = policyIds[1]; // second selected discount
+            System.out.println("ids: " + id1 + " , " + id2);
             if (condition.equals("AndCondition")) {
+                System.out.println("AndCondition: ");
                 AndConditionRecord andConditionRecord = new AndConditionRecord(id1, id2);
                 serviceBasicPolicy = new ServiceBasicPolicy(description, andConditionRecord);
                 Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
                 if (response.isError()) {
+                    System.out.println("AndCondition: failed " + response.getMessage());
                     alert.setFail(true);
                     alert.setMessage(response.getMessage());
                     model.addAttribute("alert", alert.copy());
                 } else {
+                    System.out.println("AndCondition: succeeded ");
                     alert.setSuccess(true);
                     alert.setMessage(response.getMessage());
                     model.addAttribute("alert", alert.copy());
                     model.addAttribute("policyInfo", response.getValue());
                 }
             } else if (condition.equals("OrCondition")) {
+                System.out.println("OrCondition: ");
                 OrConditionRecord orConditionRecord = new OrConditionRecord(id1, id2);
                 serviceBasicPolicy = new ServiceBasicPolicy(description, orConditionRecord);
                 Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
                 if (response.isError()) {
+                    System.out.println("OrCondition: failed " + response.getMessage());
                     alert.setFail(true);
                     alert.setMessage(response.getMessage());
                     model.addAttribute("alert", alert.copy());
                 } else {
+                    System.out.println("OrCondition: succeeded ");
                     alert.setSuccess(true);
                     alert.setMessage(response.getMessage());
                     model.addAttribute("alert", alert.copy());
                     model.addAttribute("policyInfo", response.getValue());
                 }
             } else if (condition.equals("XorCondition")) {
+                System.out.println("XorCondition: ");
                 XorConditionRecord xorConditionRecord = new XorConditionRecord(id1, id2);
                 serviceBasicPolicy = new ServiceBasicPolicy(description, xorConditionRecord);
                 Response<ServicePolicyInfo> response = server.addPolicy(request, serviceBasicPolicy, storeID);
                 if (response.isError()) {
+                    System.out.println("XorCondition: failed " + response.getMessage());
                     alert.setFail(true);
                     alert.setMessage(response.getMessage());
                     model.addAttribute("alert", alert.copy());
                 } else {
+                    System.out.println("XorCondition: succeeded ");
                     alert.setSuccess(true);
                     alert.setMessage(response.getMessage());
                     model.addAttribute("alert", alert.copy());
                     model.addAttribute("policyInfo", response.getValue());
                 }
+            } else {
+                alert.setFail(true);
+                alert.setMessage("ERROR !");
+                model.addAttribute("alert", alert.copy());
             }
-        }
-
-        else {
+        } else {
             alert.setFail(true);
-            alert.setMessage("You should choose only 2 policies in order to assemble them!");
+            alert.setMessage("Choose 2 policies in order to assemble them!");
             model.addAttribute("alert", alert.copy());
         }
         alert.reset();
@@ -483,7 +535,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setSuccess(true);
-                    alert.setMessage("Failed to add new policy");
+                    alert.setMessage("Failed to add new policy! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -515,7 +567,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setSuccess(true);
-                    alert.setMessage("Failed to add new policy");
+                    alert.setMessage("Failed to add new policy! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -536,7 +588,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setSuccess(true);
-                    alert.setMessage("Failed to add new policy");
+                    alert.setMessage("Failed to add new policy! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -558,7 +610,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setSuccess(true);
-                    alert.setMessage("Failed to add new policy");
+                    alert.setMessage("Failed to add new policy! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -579,7 +631,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setSuccess(true);
-                    alert.setMessage("Failed to add new policy");
+                    alert.setMessage("Failed to add new policy! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -600,7 +652,7 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setSuccess(true);
-                    alert.setMessage("Failed to add new policy");
+                    alert.setMessage("Failed to add new policy! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
@@ -644,16 +696,26 @@ public class MyStoreController {
                     }
                 } else {
                     alert.setSuccess(true);
-                    alert.setMessage("Failed to add new policy");
+                    alert.setMessage("Failed to add new policy! check the values you entered.");
                     model.addAttribute("alert", alert.copy());
                 }
             }
             default -> {
             }
         }
+        System.out.println("policy added");
         alert.reset();
 //        return "redirect:/MyStore/" + storeID + "?storeName=" + StoreName;
         return "MyStore";
+    }
+
+    @GetMapping("/policies")
+    public ResponseEntity<HashSet<ServicePolicy>> showPolicies() {
+        // Retrieve the updated policy information
+        HashSet<ServicePolicy> policyInfo = server.getStorePolicy(request, storeID).getValue(); // Replace this with your logic to retrieve the updated policy information
+
+        // Return the policy information as a response
+        return ResponseEntity.ok(policyInfo);
     }
 
     @RequestMapping(value="/dailyStoreIncome", method = RequestMethod.GET)

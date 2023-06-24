@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>MyStore</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             background-image: url('https://media.istockphoto.com/id/1339686269/photo/the-mans-hand-pointing-at-a-home-icon-on-the-versual-screen-the-concept-of-installment-and.jpg?s=612x612&w=0&k=20&c=PiItgSuFP827gYPr3H2ewJbnDnveSI116hRt7QNoXnE=');
@@ -333,7 +334,7 @@
 </div>
 
 <!------------------- choose condition for 2+ discounts ------------------->
-<form class="discount-checklist" action="/add-discount" method="post">
+<form class="discount-checklist" action="/add-discount" method="post" onsubmit="return validateDiscountForm()">
     <h4>Select Discounts</h4>
     <div id="selectedDiscounts">
         <!-- Selected discounts will be dynamically added here -->
@@ -415,6 +416,31 @@
             conditionInput.placeholder = 'Condition';
             additionalInfoContainer.appendChild(conditionInput);
         }
+    }
+
+    function validateDiscountForm() {
+        if (selectedDiscounts.length < 2) {
+            alert('Please choose 2 discounts to assemble.');
+            return false;
+        }
+
+        const selectedCondition = document.querySelector('input[name="condition"]:checked');
+        if (!selectedCondition) {
+            alert('Please choose a condition.');
+            return false;
+        }
+
+        const descriptionInput = document.querySelector('input[name="description"]');
+        const amountInput = document.querySelector('input[name="amount"]');
+
+        if (selectedDiscounts.length === 2) {
+            if (!descriptionInput.value || !amountInput.value) {
+                alert('Please enter a description and amount.');
+                return false;
+            }
+        }
+
+        return true;
     }
 </script>
 <!------------------- choose condition for basic discount ------------------->
@@ -788,24 +814,26 @@
 </script>
 
 <!------------------- choose condition for 2+ policies ------------------->
-<form class="policy-checklist" action="/assemble-policy" method="post">
+<form class="policy-checklist" action="/assemble-policy" method="post" onsubmit="return validateForm()">
     <h4>Select Policies</h4>
     <div id="selectedPolicies">
         <!-- Selected discounts will be dynamically added here -->
     </div>
     <h4>Select Arithmetic Condition</h4>
-    <input type="radio" name="policyCondition" value="AndCondition"> AND Condition<br>
-    <input type="radio" name="policyCondition" value="OrCondition"> OR Condition<br>
-    <input type="radio" name="policyCondition" value="XorCondition"> XOR Condition<br>
+    <input type="checkbox" name="policyCondition" value="AndCondition"> AND Condition<br>
+    <input type="checkbox" name="policyCondition" value="OrCondition"> OR Condition<br>
+    <input type="checkbox" name="policyCondition" value="XorCondition"> XOR Condition<br>
 
     <h4>Enter Description</h4>
     <div id="additionalPolicyInfo">
         <!-- Additional input fields will be dynamically added here -->
+        <input type="text" name="policyDescription" placeholder="enter policy description" required>
     </div>
 
     <br><input type="submit" value="Submit">
 </form>
 
+<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
 <script>
     let selectedConditionsForPolicy = [];
 
@@ -854,6 +882,7 @@
             descriptionInput.type = 'text';
             descriptionInput.name = 'policyDescription';
             descriptionInput.placeholder = 'enter policy description';
+            descriptionInput.required = true;
             additionalPolicyInfoContainer.appendChild(descriptionInput);
 
         } else if (selectedConditionsForPolicy.length > 2) {
@@ -861,11 +890,26 @@
             conditionInput.type = 'text';
             conditionInput.name = 'policyCondition';
             conditionInput.placeholder = 'Condition';
+            conditionInput.required = true;
             additionalPolicyInfoContainer.appendChild(conditionInput);
         }
     }
+
+    function validateForm() {
+        if (selectedConditionsForPolicy.length < 2) {
+            alert('Please choose at least 2 policies to assemble.');
+            return false;
+        }
+
+        const checkedConditions = document.querySelectorAll('input[name="policyCondition"]:checked');
+        if (checkedConditions.length !== 1) {
+            alert('Please select exactly one policy condition.');
+            return false;
+        }
+        return true;
+    }
 </script>
-<!----------------------------------------- adding policies and discounts ----------------------------------------->
+<!----------------- adding policies and discounts buttons ----------------->
 <div>
     <button class="add-button" onclick="toggleDiscountChecklist()">Assemble Discounts</button>
     <button class="add-button" onclick="togglePolicyChecklist()">Assemble Policies</button>
