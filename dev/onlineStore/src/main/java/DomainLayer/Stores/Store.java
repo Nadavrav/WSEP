@@ -1,5 +1,6 @@
 package DomainLayer.Stores;
 import DAL.DALService;
+import DAL.DTOs.EmploymentDTO;
 import DAL.DTOs.StoreProductDTO;
 import DAL.DTOs.StoreDTO;
 import DomainLayer.Logging.UniversalHandler;
@@ -106,6 +107,19 @@ public class Store {
             products.put(productDTO.getProductId(),new StoreProduct(productDTO));
         listeners = new LinkedList<>();
         ownersCount=0;
+        try {
+            Collection<EmploymentDTO> owners = DALService.getInstance().getStoreOwnersEmployment(storeDTO.getId());
+            for(EmploymentDTO owner:owners){
+                if(!ownerIdSet.contains(owner.getEmployee())) {
+                    ownerIdSet.add(owner.getEmployee());
+                    votingTracker.put(owner.getEmployee(), new HashMap<>());
+                }
+            }
+        }
+        catch (SQLException e){
+            throw new RuntimeException("Error while fetching store owner names");
+        }
+
         this.Active = true;
     }
 
