@@ -864,6 +864,9 @@ public class Store {
             for (Bid bid : pendingBids) {
                 if (bid.getProductId() == productId && bid.getUserId() == user.getVisitorId()) {
                         pendingBids.remove(bid);
+                        for(String ownerUserName:ownerIdSet){
+                           votingTracker.get(ownerUserName).remove(bid);
+                        }
                         user.update(message);
                         return bid;
                 }
@@ -878,6 +881,9 @@ public class Store {
         bidLock.writeLock().lock();
         try {
             pendingBids.remove(bid);
+            for(String ownerUserName:ownerIdSet){
+                votingTracker.get(ownerUserName).remove(bid);
+            }
         } finally {
             bidLock.writeLock().unlock();
         }
