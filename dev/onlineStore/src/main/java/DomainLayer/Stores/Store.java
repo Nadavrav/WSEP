@@ -87,6 +87,7 @@ public class Store {
         this.Active = true;
     }
 
+
     public Store(StoreDTO storeDTO) {
         ownerlisteners=new LinkedList<>();
         votingTracker=new HashMap<>();
@@ -114,6 +115,7 @@ public class Store {
                     ownerIdSet.add(owner.getEmployee());
                     ownersCount++;
                     votingTracker.put(owner.getEmployee(), new HashMap<>());
+                    ownersCount++;
                 }
             }
         }
@@ -134,10 +136,16 @@ public class Store {
     public void addNewListener(RegisteredUser storeWorker) {
         listeners.add(storeWorker);
     }
+    public void removeListener(RegisteredUser storeWorker) {
+        listeners.remove(storeWorker);
+    }
     public void addNewOwnerListener(RegisteredUser storeOwner){
         ownerlisteners.add(storeOwner);
         ownersCount++;
-
+    }
+    public void removeOwnerListener(RegisteredUser storeOwner){
+        ownerlisteners.remove(storeOwner);
+        ownersCount--;
     }
     public void documentOwner(String userName){
         ownerIdSet.add(userName);
@@ -856,6 +864,9 @@ public class Store {
             for (Bid bid : pendingBids) {
                 if (bid.getProductId() == productId && bid.getUserId() == user.getVisitorId()) {
                         pendingBids.remove(bid);
+                        for(String ownerUserName:ownerIdSet){
+                           votingTracker.get(ownerUserName).remove(bid);
+                        }
                         user.update(message);
                         return bid;
                 }
@@ -870,6 +881,9 @@ public class Store {
         bidLock.writeLock().lock();
         try {
             pendingBids.remove(bid);
+            for(String ownerUserName:ownerIdSet){
+                votingTracker.get(ownerUserName).remove(bid);
+            }
         } finally {
             bidLock.writeLock().unlock();
         }

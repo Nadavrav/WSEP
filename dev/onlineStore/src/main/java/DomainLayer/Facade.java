@@ -1140,7 +1140,12 @@ private void fetchCartIfExists(RegisteredUser user){
             DALService.getInstance().removeEmployee(appointedUserName,storeId);
             RemoveAllEmployee(appointedUserName,storeId);
             employmentList.get(appointedUserName).remove(storeId);
-            store.addNewListener(registeredUserList.get(appointedUserName));
+            if(appointedEmployment.checkIfOwner()){
+                store.removeOwnerListener(registeredUserList.get(appointedUserName));
+            }
+            else {
+                store.removeListener(registeredUserList.get(appointedUserName));
+            }
             registeredUserList.get(appointedUserName).update("You are no longer an employee of store "+storesList.get(storeId).getName());
         }catch (Exception e){
             throw new Exception(e.getMessage());
