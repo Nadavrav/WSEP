@@ -169,7 +169,7 @@ public class DALService {
     public void updateEmployment(String employee,int storeId, String appointer,int role, String permissions) throws SQLException {
         try{
             if(!TestsFlags.getInstance().isTests())
-                 employmentDAO.saveEmployment(employee,storeId,appointer,role,permissions);
+                 employmentDAO.updateEmployment(employee,storeId,appointer,role,permissions);
         }
         catch (Exception e)
         {

@@ -74,6 +74,7 @@ public class employmentDAO {
      */
     public void updateEmployment(String employee,int storeId, String appointer,int role, String permissions) throws SQLException {
         Session session = sessionFactory.openSession();
+        session.beginTransaction();
         try {
             EmploymentEntityPK key=new EmploymentEntityPK(employee,storeId);
             EmploymentEntity employmentEntity = session.get(EmploymentEntity.class,key);

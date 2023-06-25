@@ -1199,6 +1199,17 @@ private void fetchCartIfExists(RegisteredUser user){
 
         //Check if username is registered to system
         RegisteredUser appointed = registeredUserList.get(username);
+        if(appointed==null) {
+            registeredUserDTO userDTO = DALService.getInstance().getUser(username);
+            if (userDTO != null)
+                if (DS.isAdmin(username)) {
+                    appointed = new Admin(userDTO);
+                } else {
+                    appointed = new RegisteredUser(userDTO);
+                }
+            registeredUserList.put(username, appointed);
+        }
+        appointed = registeredUserList.get(username);
         if(appointed==null){
             logger.warning("null appointed ");
             throw  new Exception("invalid appointed UserName");
@@ -1220,6 +1231,7 @@ private void fetchCartIfExists(RegisteredUser user){
         //Change permission
         for(Permission permission:permissions)
             appointedEmployment.togglePermission(permission);
+        DALService.getInstance().updateEmployment(appointedEmployment.getEmployee(),storeID,appointedEmployment.getAppointer(),0,appointedEmployment.getPermissionString());
         logger.config("all permission has been changed");
         logger.info("changes successfully");
         registeredUserList.get(username).update("Your permissions of store "+storesList.get(storeID).getName() + " has been changed!");
